@@ -16,7 +16,7 @@ Follow this quick start document for setup
 
 ## Create a Model Analysis using the CLI
 Responsible AI job creation in the CLI is based on .YAML config files that you as a user can create. We have provided samples of these .YAML files that you can update with your specific settings. Follow this quickstart guide to create Responsible AI jobs with the CLI
-- [How to create an Responsible AI job with the CLI]()
+- [How to create an Responsible AI job with the CLI](https://github.com/RachelKellam/RAI-vNext-Preview/blob/main/docs/cli/how-to-create-model-analysis-cli.md)
 
 # Python SDK Support for Responsible AI
 TBD
