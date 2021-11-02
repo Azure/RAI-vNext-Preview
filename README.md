@@ -1,33 +1,24 @@
-# Project
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+# RAI-vNext-Preview
+Welcome to the PRIVATE PREVIEW of Azure Machine Learning Responsible AI. This is an early PREVIEW, still not announced and not supported publicly.
 
-As the maintainer of this project, please make a few updates:
+# Scope for RAI in vNext versions
+- CLI (Common-Line Interface) support for Responsible AI
+- AML Python SDK vNext for Responsible AI 
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+# Prerequisites
+An Azure subscription. If you don't have an Azure subscription, [create a free account](https://aka.ms/AMLFree) before you begin.
 
-## Contributing
+# CLI support for Responsible AI
+## Install Azure CLI and setup the AzureML extension
+Follow this quick start document for setup
+- [How to install the CLI and setup the Azure ML extension](https://github.com/Azure/AutoML-vNext-Preview/blob/main/docs/cli/cli-installation.rst)
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+## Create a Model Analysis using the CLI
+Responsible AI job creation in the CLI is based on .YAML config files that you as a user can create. We have provided samples of these .YAML files that you can update with your specific settings. Follow this quickstart guide to create Responsible AI jobs with the CLI
+- [How to create an Responsible AI job with the CLI](https://github.com/RachelKellam/RAI-vNext-Preview/blob/main/docs/cli/how-to-create-model-analysis-cli.md)
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+# Python SDK Support for Responsible AI
+TBD
 
-## Trademarks
-
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
