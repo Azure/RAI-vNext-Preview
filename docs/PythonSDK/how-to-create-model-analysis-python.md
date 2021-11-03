@@ -75,6 +75,11 @@ pipeline_job = PipelineJob(
 )
 
 ```
-
-
+## SUbmit the pipeline job
+```Python
+#submit the pipeline job
+returned_job = ml_client.jobs.create_or_update(pipeline_job)
+#get a URL for the status of the job
+returned_job.services["Studio"].endpoint
+```
 
