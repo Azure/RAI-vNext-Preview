@@ -34,9 +34,9 @@ setup_model_analysis_outputs = {'score_report': None}
 
 setup_model_analysis_job = CommandJob(
     code=Code(local_path="./src/score"),
-    command = score_cmd,
-    inputs = score_job_inputs,
-    outputs=score_job_outputs,
+    command = setup_model_analysis_cmd,
+    inputs = setup_model_analysis_inputs,
+    outputs=setup_model_analysis_outputs,
     environment = "AzureML-sklearn-0.24-ubuntu18.04-py37-cuda11-gpu:9",
     #compute = "<override with some other compute if needed>"
 )
@@ -54,9 +54,9 @@ error_analysis_outputs = {'score_report': None}
 
 error_analysis_job = CommandJob(
     code=Code(local_path="./src/score"),
-    command = score_cmd,
-    inputs = score_job_inputs,
-    outputs=score_job_outputs,
+    command = error_analysis_cmd,
+    inputs = error_analysis_inputs,
+    outputs=error_analysis_outputs,
     environment = "AzureML-sklearn-0.24-ubuntu18.04-py37-cuda11-gpu:9",
     #compute = "<override with some other compute if needed>"
 )
