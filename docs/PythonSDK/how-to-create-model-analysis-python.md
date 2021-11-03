@@ -1,4 +1,4 @@
-# How to create a Model Analysis Job in AzureML CLI
+# How to create a Model Analysis Job in AzureML Python SDK
 1. Setup
 To use responsible AI in AzureML, there are a few pre-requisites that should be setup. The following code allows you to do so.
 ## Required libraries
