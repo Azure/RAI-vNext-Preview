@@ -11,7 +11,7 @@ from azure.ml.entities import CommandJob, Code, PipelineJob, Dataset, InputDatas
 ## Your Azure ML Details
 ```Python
 #Enter details of your AML workspace
-subscription_id = 'ENTER_SUB_ID
+subscription_id = 'ENTER_SUB_ID'
 resource_group = 'ENTER_RG'
 workspace = 'ENTER_WORKSPACE'
 ```
