@@ -21,7 +21,8 @@ workspace = 'ENTER_WORKSPACE'
 ml_client = MLClient(subscription_id, resource_group, workspace)
 ```
 
-3. Initiate Model Analysis
+## Initiate Model Analysis
+
 Below is a sample job config - exact config for RAI to be updated
 ```Python
 #define the model analysis setup to run in the pipeline
@@ -41,6 +42,39 @@ setup_model_analysis_job = CommandJob(
 )
 ```
 
+## Add desired model analysis components
+Below is a sample job config - exact config for RAI to be updated
+```Python
+#define which responsible AI components to use in your model analysis
+error_analysis_cmd = 'python score.py --predictions ${{inputs.predictions}} --model ${{inputs.model}} --score_report ${{outputs.score_report}}'
+error_analysis_inputs = {
+    'predictions': '${{jobs.predict-job.outputs.predictions}}', #use the predictions from predict job so we can score
+    'model': '${{jobs.train-job.outputs.model_output}}'} #use the model from the training job
+error_analysis_outputs = {'score_report': None}
+
+error_analysis_job = CommandJob(
+    code=Code(local_path="./src/score"),
+    command = score_cmd,
+    inputs = score_job_inputs,
+    outputs=score_job_outputs,
+    environment = "AzureML-sklearn-0.24-ubuntu18.04-py37-cuda11-gpu:9",
+    #compute = "<override with some other compute if needed>"
+)
+```
+## Create a pipeline with the jobs defined above
+```Python
+# lets create the pipeline
+pipeline_job = PipelineJob(
+    description = 'nyc-taxi-pipeline-example',
+    jobs= {
+        'setup_model_analysis_job':setup_model_analysis_job, 
+        'error_analysis_job': error_analysis_job}, #add all the jobs into this pipeline
+    inputs= pipeline_job_inputs, #top level inputs to the pipeline
+    outputs=prep_job_outputs,
+    compute = "gpu-cluster"
+)
+
+```
 
 
 
