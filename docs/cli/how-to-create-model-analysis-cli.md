@@ -1,10 +1,30 @@
 # How to create a Model Analysis Job in AzureML CLI
 
-1. Installing Responsible AI Components
+## Installing Responsible AI Components
 
-2. Training a simple Logistic Regression Model
+## Setting up the CLI and useful CLI commands
 
-1. Initiate Model Analysis
+Login from CLI:
+```CLI
+az login --tenant <your_tenant_name_such_us_microsoft.onmicrosoft.com>
+```
+Check defaults set:
+```CLI
+az configure
+```
+Set by default Resource Group:
+```CLI
+az configure --defaults group=<your_resource_group_name> location=<your_azure_region>
+```
+Set by default AML Workspace:
+```CLI
+az configure --defaults workspace=<your_workspace_name>
+```
+
+## Understanding Model Analysis Job Specification
+
+
+## Initiate Model Analysis Job
 
 The .YAML config below will initiate your model analysis. There are a few parameters that will need to be ready in advance.
 
