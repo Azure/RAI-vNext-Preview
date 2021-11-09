@@ -1,5 +1,7 @@
 # How to create a Model Analysis Job in AzureML CLI
 
+This sample will walk you through creating a simple Model analysis dashboard with a single component attatched.
+
 ## Installing Responsible AI Components
 
 ## Setting up the CLI and useful CLI commands
