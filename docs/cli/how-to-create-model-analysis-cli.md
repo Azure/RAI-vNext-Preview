@@ -77,7 +77,7 @@ Once your initiate Model Analysis component is set, you will be able to add any 
 
 ``` YAML
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: AzureMLModelAnalysisExplanation
+name: ExplainModel
 display_name: Explanation with azureml-responsibleai
 version: VERSION_REPLACEMENT_STRING
 type: command
@@ -101,8 +101,24 @@ command: >-
 ```
 
 ### Step 4: construct a pipeline job with your Model Analysis Components
+Lastly in the pipeline_model_analysis.YAML file, you will notice that for this example we have already setup the pipeline to run and should look like below.
+```YAML
+type: pipeline_job
 
-### Step 5: submit your job through az ml CLI
+compute:
+  target: azureml:cpu-cluster #include your compute cluster
+
+jobs:
+  InitiateModelAnlaysis_job:
+    type: component_job
+    component: file:./InitiateModelAnlaysis.yml
+  componentA_job:
+    type: component_job
+    component: file:./ExplainModel.yml
+```
+Any other components that you would like to include for your model analysis will be added here.
+
+### Step 5: Submit your job through the CLI
 ```
 az ml job create –file pipeline_model_analysis.yaml
 ```
