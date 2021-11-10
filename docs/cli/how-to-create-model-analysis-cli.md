@@ -2,7 +2,7 @@
 
 This sample will walk you through creating a simple Model analysis dashboard with a single component attatched.
 
-## Installing Responsible AI Components
+## Installing Responsible AI Components for Private Preview
 
 ## Setting up the CLI and useful CLI commands
 
