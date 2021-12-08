@@ -30,7 +30,7 @@ New-item -Path . -Name "component_config.json" -ItemType "file"
 nano component_config.json
 ```
 10. Add the text ```{version:1}``` to the file, save and hit enter
-11. Got to portal.azure.com
+11. Go to portal.azure.com
 12. Click on "Machine Learning"
 ![image](https://user-images.githubusercontent.com/53354089/145263293-46ad90f4-a624-4bce-ac6d-10e82fe30061.png)
 
