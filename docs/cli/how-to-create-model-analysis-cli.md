@@ -13,6 +13,11 @@ If you don't have it, create a compute cluster called ```cpu-cluster``` by runni
 ``` Powershell
 az ml compute create -n cpu-cluster --type amlcompute --min-instances 0 --max-instances 10
 ```
+Now, create a pipeline job with the following command
+``` Powershell
+az ml job create --file pipeline.yml
+```
+
 Then, register your 'InitiateModelAnalysis.YAML' component and your 'GenerateExplanations' components from that directory. 
 ```YAML
 az ml component create –file <InitiateModelAnalysis.yaml>
