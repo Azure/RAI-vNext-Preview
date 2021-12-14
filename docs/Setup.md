@@ -96,7 +96,6 @@ nano component_config.json
 
 14. Click download config.json
 
-![image](https://user-images.githubusercontent.com/53354089/145263548-d4373ac8-7ee5-45fd-89b3-e7d3d9bbd77e.png)
 
 15. Load this file into your Cloud shell by clicking "upload" and finding the config file in your downloads
 
