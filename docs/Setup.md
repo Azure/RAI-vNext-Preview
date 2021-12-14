@@ -19,8 +19,14 @@ cd AutoML-vNext-Preview
 8. Run the following pip installs
 ``` powershell
 pip install jupyter responsibleai pyarrow pandas shap
+```
+``` powershell
 pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2 azure-ml
+```
+``` powershell
 pip install azureml-core azureml-mlflow
+```
+``` powershell
 pip install -e src/azureml-ml-rai
 ```
 9. Create a JSON file called component_config.json containing: '{version:1}' as follows...
