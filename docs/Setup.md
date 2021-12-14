@@ -10,7 +10,8 @@ The goal of this document is to get your Responsible AI components registered an
 3. Once the CLI is installed, add the CLI v2 bits here https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli
 4. Set your environment variables such as workspace, region, and subscription ID that you would like to work in.
 ```powershell
-az configure --defaults group=<your_resource_group_name> location=<your_azure_region> workspace=<your_workspace_name>
+az account set -s "<YOUR_SUBSCRIPTION_NAME_OR_ID>"
+az configure --defaults group="<your_resource_group_name>" location="<your_azure_region>" workspace="<your_workspace_name>"
 ```
 
 ### RAI Private Package install
@@ -42,11 +43,7 @@ pip install -e src/azure-ml-rai
 ```powershell
 echo {version:1} > component_config.json
 ```
-7. Create a config file that has your workspace name, resource group, and region so that az ml cli knows where you would like to register your components.
-```powershell
-echo {"subscription_id": "YOUR SUB ID", "resource_group": "YOUR RG", "workspace_name": "YOUR WS"
-} > config.json
-```
+
 8. Run the following command to register the private preview components in your workspace
 
 ```powershell
@@ -129,3 +126,9 @@ scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
 ## Cloud Shell
 If you accidentally minimize your cloud shell, you can retrieve it by clicking here
 ![image](https://user-images.githubusercontent.com/53354089/145258468-2c5c5e02-03bb-4aa6-9961-67fa1a32af77.png)
+
+Create a config file that has your workspace name, resource group, and region so that az ml cli knows where you would like to register your components.
+```powershell
+echo {"subscription_id": "YOUR SUB ID", "resource_group": "YOUR RG", "workspace_name": "YOUR WS"
+} > config.json
+```
