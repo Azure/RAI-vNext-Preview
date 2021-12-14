@@ -27,7 +27,7 @@ pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v
 pip install azureml-core azureml-mlflow
 ```
 ``` powershell
-pip install -e src/azureml-ml-rai
+pip install -e src/azure-ml-rai
 ```
 9. Create a JSON file called component_config.json containing: '{version:1}' as follows...
 ```powershell
