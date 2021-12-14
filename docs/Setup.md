@@ -1,12 +1,64 @@
 # Setup for Responsible AI
 The goal of this document is to get your Responsible AI components registered and ready for use in your Azure Machine Learning Workspace
 
-## Setup through Cloud shell (Recommended)
+## Setup on local machine (Recommended)
+
+### Pre-requisites
+
+1. AzureML Workspace with a compute cluster. We strongly recommend using an existing test or sandbox Workspace or creating a new Workspace because the private preview bits can have bugs. DO NOT TRY THE PREVIEW ON A WORKSPACE WITH PRODUCTION ASSETS.
+2. If you do not have the Azure CLI installed, follow the installation instructions at https://docs.microsoft.com/cli/azure/install-azure-cli. 2.15 is the minimum version your need. Check the version with az version. You can use Azure Cloud Shell which has Azure CLI pre-installed: https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart.
+3. Once the CLI is installed, add the CLI v2 bits here https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli
+4. Ensure that your az ml cli setup installs have succeeded by running  ``` az -h ```
+
+
+### RAI Private Package install
+5. Create a local conda enviornment with Python 3.8
+```
+conda create -n [env name] python=3.8
+```
+7. Setup the git repo 
+```powershell
+git clone https://github.com/Azure/AutoML-vNext-Preview
+```
+```powershell
+cd AutoML-vNext-Preview
+```
+8. Run the following pip installs
+``` powershell
+pip install jupyter responsibleai pyarrow pandas shap
+```
+``` powershell
+pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2 azure-ml
+```
+``` powershell
+pip install azureml-core azureml-mlflow
+```
+``` powershell
+pip install -e src/azure-ml-rai
+```
+6. Create a JSON file called component_config.json containing: '{version:1}'. This will track the version of the components that you are registering in your workspace and will be needed when you run a jupyter notebook.
+```powershell
+echo {version:1} > component_config.json
+```
+7. Create a config file that has your workspace name, resource group, and region so that az ml cli knows where you would like to register your components.
+```powershell
+echo {"subscription_id": "YOUR SUB ID", "resource_group": "YOUR RG", "workspace_name": "YOUR WS"
+} > config.json
+```
+8. Run
+
+```powershell
+scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
+
+```
+9. Validate that your components have been registered in your workspace at ml.azure.com
+
+## Setup through Cloud shell 
 1. Go to https://shell.azure.com
 2. (first time) Select a subscription to create a storage account and Microsoft Azure Files share.
 3. (first time) Select "Create storage"
 4. The cloud shell should have AML CLI pre-installed. To ensure you have the latest cmdlets installed run ```az extension add -n ml -y``` 
-5. Make sure your setup is working with any of the list commands: ``` az ml compute list ```, ``` az ml jobs list ```, ``` az ml data list ```
+5. Make sure your setup is working with any of the list commands: ``` az -h ```
 6. Run the following command to enable the private preview features in your environment
 ```powershell 
 $Env:AZURE_ML_CLI_PRIVATE_FEATURES_ENABLED=$true
@@ -67,23 +119,7 @@ scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
 
 
 
-## Setup on local machine
-Prerequisites
-### Pre-requisites
 
-1. AzureML Workspace with a compute cluster. We strongly recommend using an existing test or sandbox Workspace or creating a new Workspace because the private preview bits can have bugs. DO NOT TRY THE PREVIEW ON A WORKSPACE WITH PRODUCTION ASSETS.
-2. If you do not have the Azure CLI installed, follow the installation instructions at https://docs.microsoft.com/cli/azure/install-azure-cli. 2.15 is the minimum version your need. Check the version with az version. You can use Azure Cloud Shell which has Azure CLI pre-installed: https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart.
-3. Once the CLI is installed, add the CLI v2 bits here https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli
-
-You should get the following message
-![image](https://user-images.githubusercontent.com/53354089/146026244-e47a881a-5363-4cbc-b988-96dbc2152010.png)
-
-### RAI Private Package install
-4. Create a local conda enviornment with Python 3.8
-```
-conda create -n [env name] python=3.8
-```
-6. echo {version:1} > component_config.json
 
  
 
