@@ -8,8 +8,10 @@ The goal of this document is to get your Responsible AI components registered an
 1. AzureML Workspace with a compute cluster. We strongly recommend using an existing test or sandbox Workspace or creating a new Workspace because the private preview bits can have bugs. DO NOT TRY THE PREVIEW ON A WORKSPACE WITH PRODUCTION ASSETS.
 2. If you do not have the Azure CLI installed, follow the installation instructions at https://docs.microsoft.com/cli/azure/install-azure-cli. 2.15 is the minimum version your need. Check the version with az version. You can use Azure Cloud Shell which has Azure CLI pre-installed: https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart.
 3. Once the CLI is installed, add the CLI v2 bits here https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli
-4. Ensure that your az ml cli setup installs have succeeded by running  ``` az -h ```
-
+4. Set your environment variables such as workspace, region, and subscription ID that you would like to work in.
+```powershell
+az configure --defaults group=<your_resource_group_name> location=<your_azure_region> workspace=<your_workspace_name>
+```
 
 ### RAI Private Package install
 5. Create a local conda enviornment with Python 3.8
