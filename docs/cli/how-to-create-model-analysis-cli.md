@@ -5,10 +5,14 @@ This sample will walk you through creating a simple Model analysis dashboard wit
 - Install the ``` az ml ``` CLI via [these instructions](https://github.com/Azure/AutoML-vNext-Preview/blob/main/docs/cli/cli-installation.rst)
 
 
-## Create a Model Analysis Pipeline
-### Step 1: Download and register Model Analysis components for Private Preview
+## Create your first Model Analysis
+### Download and register Model Analysis components for Private Preview
 To install the private preview components for RAI model analysis first [download this zip file and save it in a retrievable location]().
 
+If you don't have it, create a compute cluster called ```cpu-cluster``` by running
+``` Powershell
+az ml compute create -n cpu-cluster --type amlcompute --min-instances 0 --max-instances 10
+```
 Then, register your 'InitiateModelAnalysis.YAML' component and your 'GenerateExplanations' components from that directory. 
 ```YAML
 az ml component create –file <InitiateModelAnalysis.yaml>
