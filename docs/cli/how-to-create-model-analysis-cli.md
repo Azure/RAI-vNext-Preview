@@ -2,7 +2,7 @@
 
 This sample will walk you through creating a simple Model analysis dashboard with a single component attatched.
 ## Prequisites
-- Install the ``` az ml ``` CLI via [these instructions](https://github.com/Azure/AutoML-vNext-Preview/blob/main/docs/cli/cli-installation.rst)
+- Complete [setup for RAI Private preview.](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md)
 
 
 ## Create a Model Analysis Pipeline
