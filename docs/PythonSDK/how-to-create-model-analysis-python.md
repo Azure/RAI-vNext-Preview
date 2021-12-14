@@ -139,5 +139,70 @@ pipeline_job = PipelineJob(
 submit_and_wait(ml_client, pipeline_job)
 ```
 
+### Sample exploring....
+```Python
+from azure.ml import dsl, load_component, MLClient
+from contoso.components import (
+    data_ingestion,
+    data_preprocess,
+    train_cool_model,
+    evaluate_model,
+    rai_dashboard,
+    deploy,
+)
+
+
+# This is the only "pointer" to an authenticated object.
+ml_client = MLClient("420e53f3-bf59-43cd-9595-4259eeceb54c", "my-rg", "my-ws")
+
+
+# Components may be obtained directly from local YAML files or workspace clients.
+alpha_component = load_component(yaml_file="path/to/spec.yaml")
+beta_component = load_component(ml_client, "beta-component")
+
+
+@dsl.pipeline(name="object classification", default_compute_target="cpu-cluster")
+def object_classification(
+    num_images=100,
+    image_dim=200,
+    num_epochs=10,
+    batch_size=16,
+    learning_rate=0.001,
+    momentum=0.9,
+):
+    data = data_ingestion(num_images=num_images)
+    preprocessed_data = data_preprocess(
+        data.outputs.raw_data, image_dimension=image_dim
+    )
+    training = train_cool_model(
+        # Both attribute and dictionary style output access work.
+        training=preprocessed_data.outputs["train_dir"],
+        validation=preprocessed_data.outputs.valid_dir,
+        num_epochs=num_epochs,
+        learning_rate=learning_rate,
+        batch_size=batch_size,
+        momentum=momentum,
+    )
+    training.compute.target = "gpu-cluster"
+
+    evaluate_model(
+        model=training.outputs.model,
+        accuracy=training.outputs.accuracy_file,
+        test=training.outputs.test_model,
+    )
+    rai = rai_dashboard(
+        model = training.outputs.model
+        test = training.outputs.test_model
+        training=preprocessed_data.outputs["train_dir"],
+        explain = true
+    )
+    deploy(training.outputs.model)
+
+
+pipeline = object_classification()
+
+job = pipeline.submit(ml_client, description="my cool pipeline")
+print(f"Submitted pipeline: {job.get_portal_url()}")
+```
 
 

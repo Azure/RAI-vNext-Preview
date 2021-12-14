@@ -123,10 +123,6 @@ Any other components that you would like to include for your model analysis will
 az ml job create –file pipeline_model_analysis.yaml
 ```
 
-You can also specify the Job's name as a CLI parameter so it'll override any job name specified in the .YAML config file, so you don't need to change the .YAML every time you create another run with the same .YAML (Since each Job's name need to be unique and cannot be repeated)
-```
-az ml job create --file AzureMLModelAnalysis.yaml --name <my-specific-job-name-02>
-```
 
 ## Useful CLI Commands
 
