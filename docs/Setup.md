@@ -45,13 +45,13 @@ echo {version:1} > component_config.json
 echo {"subscription_id": "YOUR SUB ID", "resource_group": "YOUR RG", "workspace_name": "YOUR WS"
 } > config.json
 ```
-8. Run
+8. Run the following command to register the private preview components in your workspace
 
 ```powershell
 scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
 
 ```
-9. Validate that your components have been registered in your workspace at ml.azure.com
+9. Validate that your components have been registered in your workspace at https://ml.azure.com
 
 ## Setup through Cloud shell 
 1. Go to https://shell.azure.com
