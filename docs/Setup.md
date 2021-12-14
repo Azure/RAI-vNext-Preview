@@ -14,8 +14,7 @@ $Env:AZURE_ML_CLI_PRIVATE_FEATURES_ENABLED=$true
 7. Setup the git repo 
 ```powershell
 git clone https://github.com/Azure/AutoML-vNext-Preview
-cd AutoML-vNext-Preview```
-git checkout -b riedgar-ms/full-notebook 
+cd AutoML-vNext-Preview
 ```
 8. Run the following pip installs
 ``` powershell
