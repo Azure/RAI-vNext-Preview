@@ -2,12 +2,23 @@
 
 This sample will walk you through creating a simple Model analysis dashboard with a single component attatched.
 ## Prequisites
-- Complete [setup for RAI Private preview.](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md)
+
+- Install the ``` az ml ``` CLI and register your Responsible AI components via [these instructions](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md)
 
 
-## Create a Model Analysis Pipeline
-### Step 1: Download and register Model Analysis components for Private Preview
+
+## Create your first Model Analysis
+### Download and register Model Analysis components for Private Preview
 To install the private preview components for RAI model analysis first [download this zip file and save it in a retrievable location]().
+
+If you don't have it, create a compute cluster called ```cpu-cluster``` by running
+``` Powershell
+az ml compute create -n cpu-cluster --type amlcompute --min-instances 0 --max-instances 10
+```
+Now, create a pipeline job with the following command
+``` Powershell
+az ml job create --file pipeline.yml
+```
 
 Then, register your 'InitiateModelAnalysis.YAML' component and your 'GenerateExplanations' components from that directory. 
 ```YAML
