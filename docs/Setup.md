@@ -13,6 +13,7 @@ The goal of this document is to get your Responsible AI components registered an
 az account set -s "<YOUR_SUBSCRIPTION_NAME_OR_ID>"
 az configure --defaults group="<your_resource_group_name>" location="<your_azure_region>" workspace="<your_workspace_name>"
 ```
+5. (Optional) Familiarize yourself with CLI 2.0 Jobs: https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli
 
 ### RAI Private Package install
 5. Create a local conda enviornment with Python 3.8
