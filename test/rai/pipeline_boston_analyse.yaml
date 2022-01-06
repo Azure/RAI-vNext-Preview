@@ -1,0 +1,112 @@
+name: AML_RAI_Analysis_Boston_VERSION_REPLACEMENT_STRING
+experiment_name: AML_RAI_Boston_VERSION_REPLACEMENT_STRING
+type: pipeline
+
+inputs:
+  target_column_name: 'y'
+  my_training_data:
+    dataset: azureml:Boston_Train_PQ:VERSION_REPLACEMENT_STRING
+    mode: ro_mount
+  my_test_data:
+    dataset: azureml:Boston_Test_PQ:VERSION_REPLACEMENT_STRING
+    mode: ro_mount
+
+outputs:
+  my_model_directory:
+    # datastore: azureml:workspaceblobstore
+    mode: upload
+  rai_insights_dashboard:
+    # datastore: azureml:workspaceblobstore
+    mode: upload
+  model_info:
+    # datastore: azureml:workspaceblobstore
+    mode: upload
+
+compute: azureml:cpucluster
+
+settings:
+  component_job:
+    datastore: azureml:workspaceblobstore
+    environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+
+jobs:
+  train-model-job:
+    type: component_job
+    component: azureml:TrainBostonForRAI:VERSION_REPLACEMENT_STRING
+    inputs:
+      training_data: ${{inputs.my_training_data}}
+      target_column_name: ${{inputs.target_column_name}}
+      categorical_features: '[]'
+      continuous_features: '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]'
+    outputs:
+      model_output: ${{outputs.my_model_directory}}
+
+  register-model-job:
+    type: component_job
+    component: azureml:RegisterModel:VERSION_REPLACEMENT_STRING
+    inputs:
+      model_input_path: ${{jobs.train-model-job.outputs.model_output}}
+      model_base_name: component_registered_boston_01
+    outputs:
+      model_info_output_path: ${{outputs.model_info}}
+
+  create-rai-job:
+    type: component_job
+    component: azureml:RAIInsightsConstructor:VERSION_REPLACEMENT_STRING
+    inputs:
+      title: Boston Housing Analysis
+      task_type: regression
+      model_info_path: ${{jobs.register-model-job.outputs.model_info_output_path}}
+      train_dataset: ${{inputs.my_training_data}}
+      test_dataset: ${{inputs.my_test_data}}
+      target_column_name: ${{inputs.target_column_name}}
+      # X_column_names: '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]'
+      # datastore_name: workspaceblobstore
+      categorical_column_names: '[]'
+    outputs:
+      rai_insights_dashboard: ${{outputs.rai_insights_dashboard}}
+
+  explain_01:
+    type: component_job
+    component: azureml:RAIInsightsExplanation:VERSION_REPLACEMENT_STRING
+    inputs:
+      comment: Some random string
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+
+  causal_01:
+    type: component_job
+    component: azureml:RAIInsightsCausal:VERSION_REPLACEMENT_STRING
+    inputs:
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      treatment_features: '["ZN", "NOX"]'
+      heterogeneity_features: '[]'
+      nuisance_model: linear
+      skip_cat_limit_checks: True
+
+  counterfactual_01:
+    type: component_job
+    component: azureml:RAIInsightsCounterfactual:VERSION_REPLACEMENT_STRING
+    inputs:
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      total_CFs: 10
+      desired_range: '[10, 300]'
+      feature_importance: True
+
+  error_analysis_01:
+    type: component_job
+    component: azureml:RAIInsightsErrorAnalysis:VERSION_REPLACEMENT_STRING
+    inputs:
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      max_depth: 3
+      filter_features: '[]'
+
+  
+  gather_01:
+    type: component_job
+    component: azureml:RAIInsightsGather:VERSION_REPLACEMENT_STRING
+    inputs:
+      constructor: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      insight_1: ${{jobs.causal_01.outputs.causal}}
+      insight_2: ${{jobs.counterfactual_01.outputs.counterfactual}}
+      insight_3: ${{jobs.error_analysis_01.outputs.error_analysis}}
+      insight_4: ${{jobs.explain_01.outputs.explanation}}
