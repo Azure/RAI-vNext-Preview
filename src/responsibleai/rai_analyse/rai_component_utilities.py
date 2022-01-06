@@ -100,6 +100,10 @@ def copy_insight_to_raiinsights(
     dir_items = list(insight_dir.iterdir())
     assert len(dir_items) == 2
 
+    print("Contents of insight_dir")
+    print_dir_tree(str(insight_dir))
+    print("====")
+
     # We want the directory, not the JSON file
     if dir_items[0].name == DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME:
         tool_dir_name = dir_items[1].name
