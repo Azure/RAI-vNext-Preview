@@ -1,0 +1,92 @@
+# ---------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# ---------------------------------------------------------
+
+parameters:
+- name: pythonVersion
+  displayName: Python Version
+  type: string
+  default: 3.7
+  values:
+    - 3.7
+    - 3.8
+    - 3.9
+# Defines workspace lifetime
+# Workspaces are used for workspaceWindowSeconds
+# and optionally deleted after another
+# workspaceWindowSeconds have elapsed
+- name: workspaceWindowSeconds
+  displayName: Workspace Active Window (seconds)
+  type: number
+  default: 86000 # Just less than one day
+  # Specifies whether to remove workspaces
+  # older than 2*worksapceWindowSeconds
+- name: oldWorkspaceHandling
+  displayName: How to handle old workspaces
+  type: string
+  default: Cull
+  values:
+    - Cull
+    - Keep
+  # Specifies the region in which to create
+  # any new workspace
+- name: workspaceLocation
+  displayName: Workspace Location
+  type: string
+  default: EastUS
+  values:
+    - CentralUSEUAP
+    - EastUS
+    - EastUS2EUAP
+    - WestUS
+- name: cliSource
+  displayName: Installation source for CLI
+  type: string
+  default: LatestRelease
+  values:
+    - LatestRelease
+    - LatestDev
+- name: sdkSource
+  displayName: Installation source for Python SDK
+  type: string
+  default: LatestRelease
+  values:
+    - LatestRelease
+    - LatestDev
+
+variables:
+- name: SubscriptionName
+  value: "Project Vienna INT (589c7ae9-223e-45e3-a191-98433e0821a9) - RAI"
+
+pr:
+  - main
+
+trigger: none # No CI build
+
+schedules:
+  - cron: "0 10 * * *" # Time is UTC
+    displayName: Nightly Build
+    branches:
+      include:
+        - main
+    always: true
+
+pool:
+  vmImage: "ubuntu-latest"
+
+jobs:
+  - job: ObtainWorkspaceAndRunTests
+    displayName: Obtain Workspace and run all tests
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - template: templates/obtain-workspace-run-tests-step-template.yaml
+      parameters:
+        pythonVersion: ${{parameters.pythonVersion}}
+        workspaceWindowSeconds: ${{parameters.workspaceWindowSeconds}}
+        oldWorkspaceHandling: ${{parameters.oldWorkspaceHandling}}
+        workspaceLocation: ${{parameters.workspaceLocation}}
+        cliSource: ${{parameters.cliSource}}
+        sdkSource: ${{parameters.sdkSource}}
+        subscriptionName: $(SubscriptionName)
+        
