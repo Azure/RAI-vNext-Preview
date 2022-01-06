@@ -12,6 +12,7 @@ import tempfile
 from typing import Dict
 
 from responsibleai import RAIInsights
+from responsibleai.rai_analyse.rai_component_utilities import print_dir_tree
 from responsibleai.serialization_utilities import serialize_json_safe
 
 from constants import DashboardInfo, RAIToolType
@@ -92,6 +93,10 @@ def main(args):
 
         rai_i.save(args.dashboard)
         _logger.info("Saved dashboard to oputput")
+
+        print("Contents of output port:")
+        print_dir_tree(args.dashboard)
+        print("======")
 
         rai_data = rai_i.get_data()
         rai_dict = serialize_json_safe(rai_data)
