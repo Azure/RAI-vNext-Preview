@@ -1,0 +1,17 @@
+{
+    "environments" : [
+        "responsibleai-environment.yaml"
+    ],
+    "components" : [
+        "component_register_model.yaml",
+        "component_fetch_registered_model.yaml",
+        "component_causal.yaml",
+        "component_counterfactual.yaml",
+        "component_error_analysis.yaml",
+        "component_explain.yaml",
+        "component_rai_insights.yaml",
+        "component_gather_rai_insights.yaml"
+    ],
+    "data" : [],
+    "nested_directories": []
+}
