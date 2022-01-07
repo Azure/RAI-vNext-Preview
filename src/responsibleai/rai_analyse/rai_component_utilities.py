@@ -45,7 +45,7 @@ def print_dir_tree(base_dir):
         # Files
         for filename in sorted(files):
             print("\t" + filename)
-    print("END DIRTREE\n")
+    print("END DIRTREE\n", flush=True)
 
 
 def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
