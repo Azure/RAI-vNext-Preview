@@ -71,17 +71,18 @@ def main(args):
             RAIToolType.EXPLANATION: False,
         }
         for i in range(len(insight_paths)):
-            ip = insight_paths[i]
-            if ip is not None:
+            current_insight_arg = insight_paths[i]
+            if current_insight_arg is not None:
+                current_insight_path = Path(current_insight_arg)
                 _logger.info("Checking dashboard info")
-                insight_info = load_dashboard_info_file(Path(ip))
+                insight_info = load_dashboard_info_file(current_insight_path)
                 _logger.info("Insight info: {0}".format(insight_info))
                 if insight_info != dashboard_info:
                     err_string = _DASHBOARD_CONSTRUCTOR_MISMATCH.format(i + 1)
                     raise ValueError(err_string)
 
                 _logger.info("Copying insight {0}".format(i + 1))
-                tool = copy_insight_to_raiinsights(incoming_dir, Path(ip))
+                tool = copy_insight_to_raiinsights(incoming_dir, current_insight_path)
                 included_tools[tool] = True
             else:
                 _logger.info("Insight {0} is None".format(i + 1))
