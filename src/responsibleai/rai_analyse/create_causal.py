@@ -94,6 +94,10 @@ def main(args):
     rai_i.compute()
     _logger.info("Computation complete")
 
+    # Show some output
+    print(rai_i.list())
+    print(rai_i.causal.list())
+
     # Save
     save_to_output_port(rai_i, args.causal_path, RAIToolType.CAUSAL)
     _logger.info("Saved computation to output port")
