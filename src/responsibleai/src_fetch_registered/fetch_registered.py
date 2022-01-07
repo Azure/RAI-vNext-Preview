@@ -13,8 +13,9 @@ def parse_args():
 
     # add arguments
     parser.add_argument("--model_id", type=str, help="Path to input model")
-    parser.add_argument("--model_info_output_path", type=str,
-                        help="Path to write model info JSON")
+    parser.add_argument(
+        "--model_info_output_path", type=str, help="Path to write model info JSON"
+    )
 
     args = parser.parse_args()
 

@@ -25,9 +25,15 @@ def parse_args():
 
     # add arguments
     parser.add_argument("--model_input_path", type=str, help="Path to input model")
-    parser.add_argument("--model_info_output_path", type=str, help="Path to write model info JSON")
-    parser.add_argument("--model_base_name", type=str, help="Name of the registered model")
-    parser.add_argument("--model_name_suffix", type=int, help="Set negative to use epoch_secs")
+    parser.add_argument(
+        "--model_info_output_path", type=str, help="Path to write model info JSON"
+    )
+    parser.add_argument(
+        "--model_base_name", type=str, help="Name of the registered model"
+    )
+    parser.add_argument(
+        "--model_name_suffix", type=int, help="Set negative to use epoch_secs"
+    )
 
     # parse args
     args = parser.parse_args()
@@ -55,7 +61,9 @@ def main(args):
 
     print("Registering via MLFlow")
     mlflow.sklearn.log_model(
-        sk_model=mlflow_model, registered_model_name=registered_name, artifact_path=registered_name
+        sk_model=mlflow_model,
+        registered_model_name=registered_name,
+        artifact_path=registered_name,
     )
 
     print("Writing JSON")

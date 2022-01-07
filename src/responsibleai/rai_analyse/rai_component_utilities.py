@@ -33,17 +33,19 @@ _tool_directory_mapping: Dict[str, str] = {
 
 
 def print_dir_tree(base_dir):
+    print("\nBEGIN DIRTREE")
     for current_dir, subdirs, files in os.walk(base_dir):
         # Current Iteration Directory
         print(current_dir)
 
         # Directories
-        for dirname in subdirs:
-            print("\t" + dirname)
+        for dirname in sorted(subdirs):
+            print("\t" + dirname + "/")
 
         # Files
-        for filename in files:
+        for filename in sorted(files):
             print("\t" + filename)
+    print("END DIRTREE\n", flush=True)
 
 
 def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
@@ -117,14 +119,24 @@ def copy_insight_to_raiinsights(
     tool_dir_items = list(tool_dir.iterdir())
     assert len(tool_dir_items) == 1
 
+    if tool_type == RAIToolType.EXPLANATION:
+        # Explanations will have a directory already present for some reason
+        # Furthermore we only support one explanation per dashboard for
+        # some other reason
+        # Put together, if we have an explanation, we need to remove
+        # what's there already or we can get confused
+        _logger.info("Detected explanation, removing existing directory")
+        for item in (rai_insights_dir / tool_dir_name).iterdir():
+            _logger.info("Removing directory {0}".format(str(item)))
+            shutil.rmtree(item)
+
     src_dir = insight_dir / tool_dir_name / tool_dir_items[0].parts[-1]
     dst_dir = rai_insights_dir / tool_dir_name / tool_dir_items[0].parts[-1]
-    print("Copy source:", str(src_dir))
-    print("Copy dest  :", str(dst_dir))
     shutil.copytree(
         src=src_dir,
         dst=dst_dir,
     )
+
     _logger.info("Copy complete")
     return tool_type
 
