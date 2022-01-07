@@ -12,7 +12,6 @@ import tempfile
 from typing import Dict
 
 from responsibleai import RAIInsights
-from responsibleai.rai_analyse.rai_component_utilities import print_dir_tree
 from responsibleai.serialization_utilities import serialize_json_safe
 
 from constants import DashboardInfo, RAIToolType
@@ -21,6 +20,7 @@ from rai_component_utilities import (
     copy_insight_to_raiinsights,
     load_dashboard_info_file,
     add_properties_to_gather_run,
+    print_dir_tree
 )
 
 _DASHBOARD_CONSTRUCTOR_MISMATCH = (
