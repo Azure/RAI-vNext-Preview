@@ -102,10 +102,6 @@ def copy_insight_to_raiinsights(
     dir_items = list(insight_dir.iterdir())
     assert len(dir_items) == 2
 
-    print("Contents of insight_dir")
-    print_dir_tree(str(insight_dir))
-    print("====")
-
     # We want the directory, not the JSON file
     if dir_items[0].name == DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME:
         tool_dir_name = dir_items[1].name
@@ -122,6 +118,17 @@ def copy_insight_to_raiinsights(
 
     tool_dir_items = list(tool_dir.iterdir())
     assert len(tool_dir_items) == 1
+
+    if tool_type == RAIToolType.EXPLANATION:
+        # Explanations will have a directory already present for some reason
+        # Furthermore we only support one explanation per dashboard for
+        # some other reason
+        # Put together, if we have an explanation, we need to remove
+        # what's there already or we can get confused
+        _logger.info("Detected explanation, removing existing directory")
+        for item in (rai_insights_dir/tool_dir_name).iterdir():
+            _logger.info("Removing directory {0}".format(str(item)))
+            item.rmdir()
 
     src_dir = insight_dir / tool_dir_name / tool_dir_items[0].parts[-1]
     dst_dir = rai_insights_dir / tool_dir_name / tool_dir_items[0].parts[-1]
