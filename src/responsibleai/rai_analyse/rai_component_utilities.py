@@ -126,7 +126,7 @@ def copy_insight_to_raiinsights(
         # Put together, if we have an explanation, we need to remove
         # what's there already or we can get confused
         _logger.info("Detected explanation, removing existing directory")
-        for item in (rai_insights_dir/tool_dir_name).iterdir():
+        for item in (rai_insights_dir / tool_dir_name).iterdir():
             _logger.info("Removing directory {0}".format(str(item)))
             shutil.rmtree(item)
 

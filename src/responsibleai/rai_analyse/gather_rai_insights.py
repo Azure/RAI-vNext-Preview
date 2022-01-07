@@ -20,7 +20,7 @@ from rai_component_utilities import (
     copy_insight_to_raiinsights,
     load_dashboard_info_file,
     add_properties_to_gather_run,
-    print_dir_tree
+    print_dir_tree,
 )
 
 _DASHBOARD_CONSTRUCTOR_MISMATCH = (
