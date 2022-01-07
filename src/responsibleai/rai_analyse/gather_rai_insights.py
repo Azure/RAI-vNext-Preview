@@ -92,6 +92,16 @@ def main(args):
         rai_i = RAIInsights.load(incoming_dir)
         _logger.info("Object loaded")
 
+        print("Object loaded, listing contents")
+        print(rai_i.list())
+        print("----")
+
+        rai_i_contents = rai_i.list()
+        for tool_name in included_tools.keys():
+            if included_tools[tool_name]:
+                assert rai_i_contents[tool_name] is not None
+        _logger.info("Sanity check complete")
+
         rai_i.save(args.dashboard)
         _logger.info("Saved dashboard to oputput")
 
