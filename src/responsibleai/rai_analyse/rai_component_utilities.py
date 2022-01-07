@@ -33,17 +33,19 @@ _tool_directory_mapping: Dict[str, str] = {
 
 
 def print_dir_tree(base_dir):
+    print("\nBEGIN DIRTREE")
     for current_dir, subdirs, files in os.walk(base_dir):
         # Current Iteration Directory
         print(current_dir)
 
         # Directories
-        for dirname in subdirs:
-            print("\t" + dirname)
+        for dirname in sorted(subdirs):
+            print("\t" + dirname + "/")
 
         # Files
-        for filename in files:
+        for filename in sorted(files):
             print("\t" + filename)
+    print("END DIRTREE\n")
 
 
 def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
