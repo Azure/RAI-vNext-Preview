@@ -132,17 +132,10 @@ def copy_insight_to_raiinsights(
 
     src_dir = insight_dir / tool_dir_name / tool_dir_items[0].parts[-1]
     dst_dir = rai_insights_dir / tool_dir_name / tool_dir_items[0].parts[-1]
-    print("Copy source:", str(src_dir))
-    print("Copy dest  :", str(dst_dir))
     shutil.copytree(
         src=src_dir,
         dst=dst_dir,
     )
-    print("Contents of src_dir")
-    print_dir_tree(str(src_dir))
-    print("Contents of rai_insights_dir after copy")
-    print_dir_tree(str(rai_insights_dir))
-    print("=====")
 
     _logger.info("Copy complete")
     return tool_type
