@@ -128,7 +128,7 @@ def copy_insight_to_raiinsights(
         _logger.info("Detected explanation, removing existing directory")
         for item in (rai_insights_dir/tool_dir_name).iterdir():
             _logger.info("Removing directory {0}".format(str(item)))
-            item.rmdir()
+            shutil.rmtree(item)
 
     src_dir = insight_dir / tool_dir_name / tool_dir_items[0].parts[-1]
     dst_dir = rai_insights_dir / tool_dir_name / tool_dir_items[0].parts[-1]
