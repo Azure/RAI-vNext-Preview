@@ -92,14 +92,6 @@ def main(args):
         rai_i = RAIInsights.load(incoming_dir)
         _logger.info("Object loaded")
 
-        print("Object loaded, listing contents")
-        print(rai_i.list())
-        print(rai_i.causal.list())
-        print(rai_i.counterfactual.list())
-        print(rai_i.error_analysis.list())
-        print(rai_i.explainer.list())
-        print("----")
-
         rai_i.save(args.dashboard)
         _logger.info("Saved dashboard to oputput")
 
