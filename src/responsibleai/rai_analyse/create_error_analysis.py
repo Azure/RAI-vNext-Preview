@@ -56,6 +56,10 @@ def main(args):
     # Compute
     rai_i.compute()
     _logger.info("Computation complete")
+    
+    # Show some output
+    _logger.info(rai_i.list())
+    _logger.info(rai_i.counterfactual.list())
 
     # Save
     save_to_output_port(rai_i, args.error_analysis_path, RAIToolType.ERROR_ANALYSIS)

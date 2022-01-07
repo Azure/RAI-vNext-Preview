@@ -45,6 +45,10 @@ def main(args):
     # Compute
     rai_i.compute()
     _logger.info("Computation complete")
+    
+    # Show some output
+    _logger.info(rai_i.list())
+    _logger.info(rai_i.explainer.list())
 
     # Save
     save_to_output_port(rai_i, args.explanation_path, RAIToolType.EXPLANATION)

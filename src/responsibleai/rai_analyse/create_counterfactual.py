@@ -62,6 +62,10 @@ def main(args):
     rai_i.compute()
     _logger.info("Computation complete")
 
+    # Show some output
+    _logger.info(rai_i.list())
+    _logger.info(rai_i.counterfactual.list())
+
     # Save
     save_to_output_port(rai_i, args.counterfactual_path, RAIToolType.COUNTERFACTUAL)
     _logger.info("Saved to output port")
