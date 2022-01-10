@@ -55,7 +55,7 @@ scripts/Register-AzureML.ps1 src/responsibleai
 scripts/Register-AzureML.ps1 test
 ```
 
-12. Validate that your components have been registered in your workspace at https://ml.azure.com
+12. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab, and looking for entries like "Gather RAI Insights Dashboard"
 ## Next Steps
 - Build your first Model Analysis in the CLI or SDK
 
