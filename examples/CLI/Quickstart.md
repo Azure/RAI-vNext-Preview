@@ -7,7 +7,7 @@ To run the CLI and create a model analysis, make sure that you have completed th
 
 After following the setup instructions above, your AzureML workspace should have all the required RAI and training components in your workspace to train a simple model and run a model analysis on it. Next, we want to create a pipeline that will execute these components in order to create a model and model analysis.
 We have a sample pipeline.yml file ready for you to run and view a model analysis in your workspace via the instructions below.
-1. In test/rai/pipeline_boston_analyse.yaml, replace all "VERSION_REPLACEMENT_STRING" with the version number you set in step #6 of the setup instructions. (If copying straight from instructions, this will be "1").
+1. In test/rai/pipeline_boston_analyse.yaml, replace all `"VERSION_REPLACEMENT_STRING"` with the version number you set in step #6 of the setup instructions. (If copying straight from instructions, this will be "1"). Additionally replace the `compute: azureml:cpucluster` with the compute you would like to use.
 2. Run Pipeline CLI Command for Boston housing example
 ``` Powershell 
 az ml job create --file /test/rai/pipeline_boston_analyse.yaml
@@ -18,8 +18,9 @@ az ml job create --file pipeline.yml --set defaults.component_job.compute.target
 ```
 3. View the Pipeline run in ml.azure.com in the experiments tab.
 
-## Useful CLI Commands
-
+## Resources
+- [az ml cli v2 documentation](https://docs.microsoft.com/en-us/cli/azure/ml?view=azure-cli-latest)
+### Quick reference commands
 Login from CLI:
 ```CLI
 az login --tenant <your_tenant_name_such_us_microsoft.onmicrosoft.com>
