@@ -56,6 +56,8 @@ scripts/Register-AzureML.ps1 test
 ```
 
 12. Validate that your components have been registered in your workspace at https://ml.azure.com
+## Next Steps
+- Build your first Model Analysis in the CLI or SDK
 
 ## Setup through Cloud shell 
 1. Go to https://shell.azure.com
@@ -69,8 +71,8 @@ $Env:AZURE_ML_CLI_PRIVATE_FEATURES_ENABLED=$true
 ```
 7. Setup the git repo 
 ```powershell
-git clone https://github.com/Azure/AutoML-vNext-Preview
-cd AutoML-vNext-Preview
+git clone https://github.com/Azure/RAI-vNext-Preview
+cd RAI-vNext-Preview
 ```
 8. Run the following pip installs
 ``` powershell
@@ -131,8 +133,3 @@ scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
 If you accidentally minimize your cloud shell, you can retrieve it by clicking here
 ![image](https://user-images.githubusercontent.com/53354089/145258468-2c5c5e02-03bb-4aa6-9961-67fa1a32af77.png)
 
-Create a config file that has your workspace name, resource group, and region so that az ml cli knows where you would like to register your components.
-```powershell
-echo {"subscription_id": "YOUR SUB ID", "resource_group": "YOUR RG", "workspace_name": "YOUR WS"
-} > config.json
-```
