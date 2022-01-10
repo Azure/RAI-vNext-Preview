@@ -43,7 +43,7 @@ pip install -e src/azure-ml-rai
 ```
 10. Create a JSON file called component_config.json containing: '{version:1}'. This will track the version of the components that you are registering in your workspace and will be needed when you run a jupyter notebook.
 ```powershell
-echo {"version":1} > component_config.json
+echo '{"version":1}' > component_config.json
 ```
 
 11. Run the following command to register the private preview components in your workspace
