@@ -6,8 +6,8 @@ The goal of this document is to get your Responsible AI components registered an
 ### Pre-requisites
 
 1. AzureML Workspace with a compute cluster. We strongly recommend using an existing test or sandbox Workspace or creating a new Workspace because the private preview bits can have bugs. DO NOT TRY THE PREVIEW ON A WORKSPACE WITH PRODUCTION ASSETS.
-2. If you do not have the Azure CLI installed, follow the installation instructions at https://docs.microsoft.com/cli/azure/install-azure-cli. 2.15 is the minimum version your need. Check the version with az version. You can use Azure Cloud Shell which has Azure CLI pre-installed: https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart.
-3. Once the CLI is installed, add the CLI v2 bits here https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli
+2. If you do not have the Azure CLI installed, [follow the installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli). 2.15 is the minimum version your need. Check the version with az version. You can use [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart) which has Azure CLI pre-installed.
+3. Once the CLI is installed, [add the CLI v2 bits here](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli)
 4. Set your environment variables such as workspace, region, and subscription ID that you would like to work in.
 ```powershell
 az account set -s "<YOUR_SUBSCRIPTION_NAME_OR_ID>"
@@ -22,12 +22,13 @@ conda create -n [env name] python=3.8
 ```
 7. Setup the git repo 
 ```powershell
-git clone https://github.com/Azure/AutoML-vNext-Preview
+git clone https://github.com/Azure/RAI-vNext-Preview
 ```
 ```powershell
-cd AutoML-vNext-Preview
+cd RAI-vNext-Preview
 ```
-8. Run the following pip installs
+8. Download the config.json from your workspace in portal.azure.com and place it in the top level of RAI-vNext-Preview.
+9. Run the following pip installs
 ``` powershell
 pip install jupyter responsibleai pyarrow pandas shap
 ```
@@ -40,18 +41,23 @@ pip install azureml-core azureml-mlflow
 ``` powershell
 pip install -e src/azure-ml-rai
 ```
-6. Create a JSON file called component_config.json containing: '{version:1}'. This will track the version of the components that you are registering in your workspace and will be needed when you run a jupyter notebook.
+10. Create a JSON file called component_config.json containing: '{version:1}'. This will track the version of the components that you are registering in your workspace and will be needed when you run a jupyter notebook.
 ```powershell
-echo {version:1} > component_config.json
+echo {"version":1} > component_config.json
 ```
 
-8. Run the following command to register the private preview components in your workspace
+11. Run the following command to register the private preview components in your workspace
 
 ```powershell
-scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
-
+scripts/Register-AzureML.ps1 src/responsibleai
 ```
-9. Validate that your components have been registered in your workspace at https://ml.azure.com
+```powershell
+scripts/Register-AzureML.ps1 test
+```
+
+12. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab, and looking for entries like "Gather RAI Insights Dashboard"
+## Next Steps
+- Build your first Model Analysis in the CLI or SDK
 
 ## Setup through Cloud shell 
 1. Go to https://shell.azure.com
@@ -65,8 +71,8 @@ $Env:AZURE_ML_CLI_PRIVATE_FEATURES_ENABLED=$true
 ```
 7. Setup the git repo 
 ```powershell
-git clone https://github.com/Azure/AutoML-vNext-Preview
-cd AutoML-vNext-Preview
+git clone https://github.com/Azure/RAI-vNext-Preview
+cd RAI-vNext-Preview
 ```
 8. Run the following pip installs
 ``` powershell
@@ -127,8 +133,3 @@ scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
 If you accidentally minimize your cloud shell, you can retrieve it by clicking here
 ![image](https://user-images.githubusercontent.com/53354089/145258468-2c5c5e02-03bb-4aa6-9961-67fa1a32af77.png)
 
-Create a config file that has your workspace name, resource group, and region so that az ml cli knows where you would like to register your components.
-```powershell
-echo {"subscription_id": "YOUR SUB ID", "resource_group": "YOUR RG", "workspace_name": "YOUR WS"
-} > config.json
-```
