@@ -22,10 +22,10 @@ conda create -n [env name] python=3.8
 ```
 7. Setup the git repo 
 ```powershell
-git clone https://github.com/Azure/AutoML-vNext-Preview
+git clone https://github.com/Azure/RAI-vNext-Preview
 ```
 ```powershell
-cd AutoML-vNext-Preview
+cd RAI-vNext-Preview
 ```
 8. Run the following pip installs
 ``` powershell
@@ -48,9 +48,12 @@ echo {version:1} > component_config.json
 8. Run the following command to register the private preview components in your workspace
 
 ```powershell
-scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
-
+scripts/Register-AzureML.ps1 src/responsibleai
 ```
+```powershell
+scripts/Register-AzureML.ps1 test
+```
+
 9. Validate that your components have been registered in your workspace at https://ml.azure.com
 
 ## Setup through Cloud shell 
