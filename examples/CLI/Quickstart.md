@@ -12,10 +12,6 @@ We have a sample pipeline.yml file ready for you to run and view a model analysi
 ``` Powershell 
 az ml job create --file /test/rai/pipeline_boston_analyse.yaml
 ```
-You can also override the compute via command line
-``` Powershell
-az ml job create --file pipeline.yml --set defaults.component_job.compute.target=<your_compute>
-```
 3. View the Pipeline run in ml.azure.com in the experiments tab.
 
 ## Resources
