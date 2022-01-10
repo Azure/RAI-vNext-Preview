@@ -27,7 +27,8 @@ git clone https://github.com/Azure/RAI-vNext-Preview
 ```powershell
 cd RAI-vNext-Preview
 ```
-8. Run the following pip installs
+8. Download the config.json from your workspace in portal.azure.com and place it in the top level of RAI-vNext-Preview.
+9. Run the following pip installs
 ``` powershell
 pip install jupyter responsibleai pyarrow pandas shap
 ```
@@ -40,12 +41,12 @@ pip install azureml-core azureml-mlflow
 ``` powershell
 pip install -e src/azure-ml-rai
 ```
-6. Create a JSON file called component_config.json containing: '{version:1}'. This will track the version of the components that you are registering in your workspace and will be needed when you run a jupyter notebook.
+10. Create a JSON file called component_config.json containing: '{version:1}'. This will track the version of the components that you are registering in your workspace and will be needed when you run a jupyter notebook.
 ```powershell
 echo {version:1} > component_config.json
 ```
 
-8. Run the following command to register the private preview components in your workspace
+11. Run the following command to register the private preview components in your workspace
 
 ```powershell
 scripts/Register-AzureML.ps1 src/responsibleai
@@ -54,7 +55,7 @@ scripts/Register-AzureML.ps1 src/responsibleai
 scripts/Register-AzureML.ps1 test
 ```
 
-9. Validate that your components have been registered in your workspace at https://ml.azure.com
+12. Validate that your components have been registered in your workspace at https://ml.azure.com
 
 ## Setup through Cloud shell 
 1. Go to https://shell.azure.com
