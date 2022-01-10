@@ -10,7 +10,7 @@ We have a sample pipeline.yml file ready for you to run and view a model analysi
 1. In test/rai/pipeline_boston_analyse.yaml, replace all "VERSION_REPLACEMENT_STRING" with the version number you set in step #6 of the setup instructions. (If copying straight from instructions, this will be "1").
 2. Run Pipeline CLI Command for Boston housing example
 ``` Powershell 
-az ml job create –-file /test/rai/pipeline_boston_analyse.yaml
+az ml job create --file /test/rai/pipeline_boston_analyse.yaml
 ```
 You can also override the compute via command line
 ``` Powershell
