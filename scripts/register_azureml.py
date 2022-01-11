@@ -65,6 +65,7 @@ def process_file(input_file, output_file, replacements) -> None:
 
 def process_directory(directory: Path, ml_client: MLClient, version: int) -> None:
     _logger.info("Processing: {0}".format(directory))
+    assert directory.is_absolute()
 
     registration_file = directory / REG_CONFIG_FILENAME
     reg_config = read_json_path(registration_file.resolve())
