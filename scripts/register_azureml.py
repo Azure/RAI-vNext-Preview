@@ -12,7 +12,7 @@ from typing import Any
 from azure.identity import DefaultAzureCredential
 
 from azure.ml import MLClient
-from azure.ml.entities import Environment
+from azure.ml.entities import Component, Environment
 
 
 _logger = logging.getLogger(__file__)
@@ -77,8 +77,22 @@ def process_directory(directory: Path, ml_client: MLClient, version: int):
             _logger.info("Registering environment: {0}".format(e))
             processed_file = e + ".processed"
             process_file(e, processed_file, replacements)
-            curr_env = Environment.load(processed_file)
+            curr_env: Environment = Environment.load(processed_file)
             ml_client.environments.create_or_update(curr_env)
+            _logger.info("Registered {0}".format(curr_env.name))
+    else:
+        _logger.info("No key for environments")
+
+    if COMP_KEY in reg_config.keys():
+        for c in reg_config[COMP_KEY]:
+            _logger.info("Registering component: {0}".format(c))
+            processed_file = c + ".processed"
+            process_file(c, processed_file, replacements)
+            curr_component: Component = Component.load(processed_file)
+            ml_client.components.create_or_update(curr_component)
+            _logger.info("Registered {0}".format(curr_component.name))
+    else:
+        _logger.info("No key for components")
 
 
 def main(args):
