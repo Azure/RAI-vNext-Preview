@@ -144,15 +144,15 @@ steps:
     inlineScript: |
       python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
 
-- task: AzureCLI@2
-  displayName: Register AzureML items for Test
-  inputs:
-    azureSubscription: "${{parameters.subscriptionName}}"
-    scriptType: pscore
-    scriptLocation: scriptPath
-    scriptPath: scripts/Register-AzureML.ps1
-    arguments: test/
-    failOnStandardError: false # Since the new CLI writes stuff there
+  - task: AzureCLI@2
+    displayName: Register AzureML itemts for Test (Python)
+    inputs:
+      azureSubscription: "${{parameters.subscriptionName}}"
+      scriptType: pscore
+      scriptLocation: inlineScript
+      failOnStandardError: false # Since the new CLI writes stuff there
+      inlineScript: |
+        python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test/
 
 - task: AzureCLI@2
   displayName: Run tests
