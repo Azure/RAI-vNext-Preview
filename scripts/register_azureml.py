@@ -6,13 +6,15 @@ import argparse
 import json
 import logging
 import os
+import subprocess
+
 from pathlib import Path
 from typing import Any
 
 from azure.identity import DefaultAzureCredential
 
 from azure.ml import MLClient
-from azure.ml.entities import Component, Environment
+from azure.ml.entities import Component, Dataset, Environment
 
 
 _logger = logging.getLogger(__file__)
@@ -53,7 +55,7 @@ def read_json_path(path: str) -> Any:
     return result
 
 
-def process_file(input_file, output_file, replacements):
+def process_file(input_file, output_file, replacements) -> None:
     with open(input_file, "r") as infile, open(output_file, "w") as outfile:
         for line in infile:
             for f, r in replacements.items():
@@ -61,7 +63,7 @@ def process_file(input_file, output_file, replacements):
             outfile.write(line)
 
 
-def process_directory(directory: Path, ml_client: MLClient, version: int):
+def process_directory(directory: Path, ml_client: MLClient, version: int) -> None:
     _logger.info("Processing: {0}".format(directory))
 
     registration_file = directory / REG_CONFIG_FILENAME
@@ -93,6 +95,30 @@ def process_directory(directory: Path, ml_client: MLClient, version: int):
             _logger.info("Registered {0}".format(curr_component.name))
     else:
         _logger.info("No key for components")
+
+    if DATA_KEY in reg_config.keys():
+        _logger.info("Working through data entries")
+        for data_info in reg_config[DATA_KEY]:
+            script_file = data_info["script"]
+            _logger.info("Running script {0}".format(script_file))
+            subprocess.run(["python", script_file], check=True)
+            for d in data_info['data_yamls']:
+                _logger.info("Processing {0}".format(d))
+                processed_file = d + ".processed"
+                process_file(d, processed_file, replacements)
+                curr_dataset: Dataset = Dataset.load(processed_file)
+                ml_client.datasets.create_or_update(curr_dataset)
+                _logger.info("Registered {0}".format(curr_dataset.name))
+    else:
+        _logger.info("No key for datasets")
+
+    if SUBDIR_KEY in reg_config.keys():
+        _logger.info("Working through nested directories")
+        for d in reg_config[SUBDIR_KEY]:
+            next_dir = directory / d
+            process_directory(next_dir, ml_client, version)
+    else:
+        _logger.info("No subdirectories found for {0}".format(directory))
 
 
 def main(args):
