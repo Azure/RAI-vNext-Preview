@@ -14,7 +14,7 @@ from typing import Any
 from azure.identity import DefaultAzureCredential
 
 from azure.ml import MLClient
-from azure.ml.entities import Component, Dataset, Environment
+from azure.ml.entities import Component, Data, Environment
 
 
 _logger = logging.getLogger(__file__)
@@ -106,8 +106,8 @@ def process_directory(directory: Path, ml_client: MLClient, version: int) -> Non
                 _logger.info("Processing {0}".format(d))
                 processed_file = d + ".processed"
                 process_file(d, processed_file, replacements)
-                curr_dataset: Dataset = Dataset.load(processed_file)
-                ml_client.datasets.create_or_update(curr_dataset)
+                curr_dataset: Data = Data.load(processed_file)
+                ml_client.data.create_or_update(curr_dataset)
                 _logger.info("Registered {0}".format(curr_dataset.name))
     else:
         _logger.info("No key for datasets")
