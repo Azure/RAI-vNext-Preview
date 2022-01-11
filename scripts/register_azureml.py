@@ -67,7 +67,7 @@ def process_directory(directory: Path, ml_client: MLClient, version: int) -> Non
     _logger.info("Processing: {0}".format(directory))
 
     registration_file = directory / REG_CONFIG_FILENAME
-    reg_config = read_json_path(registration_file)
+    reg_config = read_json_path(registration_file.resolve())
 
     replacements = {"VERSION_REPLACEMENT_STRING": str(version)}
 
@@ -116,7 +116,8 @@ def process_directory(directory: Path, ml_client: MLClient, version: int) -> Non
         _logger.info("Working through nested directories")
         for d in reg_config[SUBDIR_KEY]:
             next_dir = directory / d
-            process_directory(next_dir, ml_client, version)
+            process_directory(next_dir.resolve(), ml_client, version)
+            os.chdir(directory)
     else:
         _logger.info("No subdirectories found for {0}".format(directory))
 
@@ -135,7 +136,7 @@ def main(args):
 
     version: int = component_config["version"]
 
-    process_directory(Path(args.base_directory), ml_client, version)
+    process_directory(Path(args.base_directory).resolve(), ml_client, version)
 
 
 if __name__ == "__main__":
