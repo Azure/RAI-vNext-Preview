@@ -152,7 +152,7 @@ steps:
     scriptLocation: inlineScript
     failOnStandardError: false # Since the new CLI writes stuff there
     inlineScript: |
-      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_path src/responsibleai
+      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
 
 - task: AzureCLI@2
   displayName: Register AzureML items for Test
