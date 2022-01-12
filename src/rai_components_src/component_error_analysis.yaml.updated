@@ -1,0 +1,35 @@
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: RAIInsightsErrorAnalysis
+display_name: Add Error Analysis to RAI Insights Dashboard
+version: 4
+type: command
+
+inputs:
+  rai_insights_dashboard:
+    type: path
+  max_depth:
+    type: integer
+    default: 3
+  num_leaves:
+    type: integer
+    default: 31
+  filter_features:
+    type: string
+    default: 'null'
+
+outputs:
+  error_analysis:
+    type: path
+
+code:
+  local_path: ./rai_analyse/
+
+environment: azureml:AML-RAI-Environment:4
+
+command: >-
+  python create_error_analysis.py
+  --rai_insights_dashboard ${{inputs.rai_insights_dashboard}}
+  --max_depth ${{inputs.max_depth}}
+  --num_leaves ${{inputs.num_leaves}}
+  --filter_features '${{inputs.filter_features}}'
+  --error_analysis_path ${{outputs.error_analysis}}

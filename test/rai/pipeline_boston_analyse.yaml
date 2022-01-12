@@ -1,14 +1,14 @@
-name: AML_RAI_Analysis_Boston_VERSION_REPLACEMENT_STRING
-experiment_name: AML_RAI_Boston_VERSION_REPLACEMENT_STRING
+name: AML_RAI_Analysis_Boston_4_try2
+experiment_name: AML_RAI_Boston_4
 type: pipeline
 
 inputs:
   target_column_name: 'y'
   my_training_data:
-    dataset: azureml:Boston_Train_PQ:VERSION_REPLACEMENT_STRING
+    dataset: azureml:Boston_Train_PQ:4
     mode: ro_mount
   my_test_data:
-    dataset: azureml:Boston_Test_PQ:VERSION_REPLACEMENT_STRING
+    dataset: azureml:Boston_Test_PQ:4
     mode: ro_mount
 
 outputs:
@@ -22,17 +22,17 @@ outputs:
     # datastore: azureml:workspaceblobstore
     mode: upload
 
-compute: azureml:cpucluster
+compute: azureml:Rakellam1
 
 settings:
   component_job:
     datastore: azureml:workspaceblobstore
-    environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+    environment: azureml:AML-RAI-Environment:4
 
 jobs:
   train-model-job:
     type: component_job
-    component: azureml:TrainBostonForRAI:VERSION_REPLACEMENT_STRING
+    component: azureml:TrainBostonForRAI:4
     inputs:
       training_data: ${{inputs.my_training_data}}
       target_column_name: ${{inputs.target_column_name}}
@@ -43,7 +43,7 @@ jobs:
 
   register-model-job:
     type: component_job
-    component: azureml:RegisterModel:VERSION_REPLACEMENT_STRING
+    component: azureml:RegisterModel:4
     inputs:
       model_input_path: ${{jobs.train-model-job.outputs.model_output}}
       model_base_name: component_registered_boston_01
@@ -52,7 +52,7 @@ jobs:
 
   create-rai-job:
     type: component_job
-    component: azureml:RAIInsightsConstructor:VERSION_REPLACEMENT_STRING
+    component: azureml:RAIInsightsConstructor:4
     inputs:
       title: Boston Housing Analysis
       task_type: regression
@@ -68,14 +68,14 @@ jobs:
 
   explain_01:
     type: component_job
-    component: azureml:RAIInsightsExplanation:VERSION_REPLACEMENT_STRING
+    component: azureml:RAIInsightsExplanation:4
     inputs:
       comment: Some random string
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
 
   causal_01:
     type: component_job
-    component: azureml:RAIInsightsCausal:VERSION_REPLACEMENT_STRING
+    component: azureml:RAIInsightsCausal:4
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       treatment_features: '["ZN", "NOX"]'
@@ -85,7 +85,7 @@ jobs:
 
   counterfactual_01:
     type: component_job
-    component: azureml:RAIInsightsCounterfactual:VERSION_REPLACEMENT_STRING
+    component: azureml:RAIInsightsCounterfactual:4
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       total_CFs: 10
@@ -94,7 +94,7 @@ jobs:
 
   error_analysis_01:
     type: component_job
-    component: azureml:RAIInsightsErrorAnalysis:VERSION_REPLACEMENT_STRING
+    component: azureml:RAIInsightsErrorAnalysis:4
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       max_depth: 3
@@ -103,7 +103,7 @@ jobs:
   
   gather_01:
     type: component_job
-    component: azureml:RAIInsightsGather:VERSION_REPLACEMENT_STRING
+    component: azureml:RAIInsightsGather:4
     inputs:
       constructor: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       insight_1: ${{jobs.causal_01.outputs.causal}}
