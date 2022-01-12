@@ -1,4 +1,4 @@
-# Getting Started
+# Getting Started with Examples
 Before running our samples ensure
 1. You have installed the required packages via the [installation instructions]()
 2. You have an SKlearn model ready and registered in AzureML and accesss to the data that you used to train the model.
