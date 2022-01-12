@@ -27,6 +27,7 @@ def parse_args():
     parser.add_argument("--rai_insights_dashboard", type=str, required=True)
     parser.add_argument("--max_depth", type=int)
     parser.add_argument("--num_leaves", type=int)
+    parser.add_argument("--min_child_samples", type=int)
     parser.add_argument("--filter_features", type=json.loads, help="List")
     parser.add_argument("--error_analysis_path", type=str)
 
@@ -49,6 +50,7 @@ def main(args):
     rai_i.error_analysis.add(
         max_depth=args.max_depth,
         num_leaves=args.num_leaves,
+        min_child_samples=args.min_child_samples,
         filter_features=args.filter_features,
     )
     _logger.info("Added error analysis")
