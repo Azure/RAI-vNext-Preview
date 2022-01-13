@@ -198,7 +198,7 @@ class TestRAIGatherErrors:
             outputs=causal_outputs,
         )
 
-        causal_inputs['treatment_cost'] = '0.01'
+        causal_inputs['treatment_cost'] = '[0.01, 0.02]'
         causal_job_02 = ComponentJob(
             component=f"RAIInsightsCausal:{version_string}",
             inputs=causal_inputs,
