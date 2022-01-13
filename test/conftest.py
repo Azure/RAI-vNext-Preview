@@ -84,7 +84,7 @@ def registered_adult_model(ml_client, component_config):
     )
             # Assemble into a pipeline
     register_pipeline = PipelineJob(
-        experiment_name=f"Register_Model_{version_string}",
+        experiment_name=f"Register_Adult_Model_Fixture_{version_string}",
         description="Python submitted Adult model registration",
         jobs={
             "train-model-job": train_job,
