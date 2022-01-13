@@ -12,7 +12,7 @@ from azure.ml import MLClient
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, PipelineJob
 
-from utilities_for_test import submit_and_wait
+from test.utilities_for_test import submit_and_wait
 
 @pytest.fixture(scope='session')
 def component_config():
