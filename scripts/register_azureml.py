@@ -128,7 +128,7 @@ def main(args):
     component_config = read_json_path(args.component_config)
 
     ml_client = MLClient(
-        credential=DefaultAzureCredential(),
+        credential=DefaultAzureCredential(exclude_shared_token_cache_credential=True),
         subscription_id=ws_config["subscription_id"],
         resource_group_name=ws_config["resource_group"],
         workspace_name=ws_config["workspace_name"],
