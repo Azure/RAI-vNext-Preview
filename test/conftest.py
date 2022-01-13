@@ -45,7 +45,7 @@ def ml_client(workspace_config):
     return client
 
 @pytest.fixture(scope='session')
-def registered_adult_model(ml_client, component_config):
+def registered_adult_model_id(ml_client, component_config):
     version_string = component_config["version"]
 
     model_name_suffix = int(time.time())
