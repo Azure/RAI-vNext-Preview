@@ -32,7 +32,7 @@ def workspace_config():
 
     return result
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='session')
 def ml_client(workspace_config):
     client = MLClient(
         credential=DefaultAzureCredential(),
