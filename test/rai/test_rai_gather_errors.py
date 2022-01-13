@@ -152,6 +152,13 @@ class TestRAIGatherErrors:
     def test_multiple_tool_instances(self, ml_client: MLClient, component_config, registered_adult_model_id:str):
         version_string = component_config["version"]
 
+        # Pipeline globals
+        pipeline_inputs = {
+            "target_column_name": "income",
+            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
+            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
+        }
+
         # The job to fetch the model
         fetch_job_inputs = {"model_id": registered_adult_model_id}
         fetch_job_outputs = {"model_info_output_path": None}
