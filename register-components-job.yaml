@@ -10,13 +10,18 @@ command: |
   set -o xtrace
   apt-get update
   apt-get install git --yes
+  echo
   cd /tmp
   git clone https://github.com/Azure/RAI-vNext-Preview.git
   cd RAI-vNext-Preview
+  git checkout riedgar-ms/registration-job
+  echo
   pip install -r requirements-dev.txt
   pip install colorama
+  echo
   echo '{"version": ${{inputs.version}} }' > component_config.json
   echo '{ "subscription_id": "$AZUREML_ARM_SUBSCRIPTION", "resource_group": "$AZUREML_ARM_RESOURCEGROUP", "workspace_name": "$AZUREML_ARM_WORKSPACE_NAME" }' > config.json
+  echo
   python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
 
   
