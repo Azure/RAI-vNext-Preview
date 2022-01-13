@@ -5,7 +5,8 @@
 import logging
 import time
 
-from azure.ml import MLClient, PipelineJob
+from azure.ml import MLClient
+from azure.ml.entities import PipelineJob
 
 
 _logger = logging.getLogger(__file__)
