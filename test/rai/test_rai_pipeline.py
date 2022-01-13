@@ -10,7 +10,7 @@ from azure.ml import MLClient
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, Job, PipelineJob
 
-from utilities_for_test import submit_and_wait
+from test.utilities_for_test import submit_and_wait
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
