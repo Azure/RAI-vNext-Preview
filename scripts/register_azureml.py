@@ -103,7 +103,7 @@ def process_directory(directory: Path, ml_client: MLClient, version: int) -> Non
             script_file = data_info["script"]
             _logger.info("Running script {0}".format(script_file))
             subprocess.run(["python", script_file], check=True)
-            for d in data_info['data_yamls']:
+            for d in data_info["data_yamls"]:
                 _logger.info("Processing {0}".format(d))
                 processed_file = d + ".processed"
                 process_file(d, processed_file, replacements)
