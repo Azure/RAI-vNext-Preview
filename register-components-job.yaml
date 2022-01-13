@@ -6,12 +6,16 @@ environment: azureml:AzureML-minimal-ubuntu18.04-py37-cpu-inference:25
 display_name: Register Components
 experiment_name: RAI_Setup
 description: Register the RAI components
-command: >-
+command: |
   echo $AZUREML_ARM_SUBSCRIPTION
   echo $AZUREML_ARM_RESOURCEGROUP
   echo $AZUREML_ARM_WORKSPACE_NAME
+  apt-get install git
+  cd /tmp
   git clone https://github.com/Azure/RAI-vNext-Preview.git
   cd RAI-vNext-Preview
   echo "{'version': ${{inputs.version}} }" > component_config.json
   echo "{ 'subscription_id': '$AZUREML_ARM_SUBSCRIPTION', 'resource_group': '$AZUREML_ARM_RESOURCEGROUP', 'workspace_name': '$AZUREML_ARM_WORKSPACE_NAME' }" > config.json
   python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
+
+  
