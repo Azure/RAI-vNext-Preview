@@ -1,0 +1,9 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+inputs:
+  version: 1
+compute: azureml:cpucluster
+display_name: Register Components
+experiment_name: RAI_Setup
+description: Register the RAI components
+command: >-
+  printenv
