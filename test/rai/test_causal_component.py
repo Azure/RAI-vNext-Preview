@@ -96,7 +96,7 @@ class TestCausalComponent:
             jobs={
                 "fetch-model-job": fetch_job,
                 "create-rai-job": create_rai_job,
-                "causal-rai-job-01": causal_job,
+                "causal-rai-job": causal_job,
                 "gather-job": gather_job,
             },
             inputs=pipeline_inputs,
