@@ -19,7 +19,7 @@ inputs:
   heterogeneity_model:
     type: string # Enum
     default: linear
-    enum: ['linear', 'automl']
+    enum: ['linear', 'forest']
   alpha:
     type: number
     default: 0.05

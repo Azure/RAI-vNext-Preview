@@ -58,7 +58,7 @@ class TestCausalComponent:
             "treatment_features": '["Age", "Sex"]',
             "heterogeneity_features": '["Marital Status"]',
             "nuisance_model": "automl",
-            "heterogeneity_model": "automl",
+            "heterogeneity_model": "forest",
             "alpha": "0.06",
             "upper_bound_on_cat_expansion": "51",
             "treatment_cost": "[0.1, 0.2]",
