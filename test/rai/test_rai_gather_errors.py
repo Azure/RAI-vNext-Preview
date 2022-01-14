@@ -237,3 +237,5 @@ class TestRAIGatherErrors:
         # Send it
         insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job, "Failed")
         assert insights_pipeline_job is not None
+
+        _logger.info(str(insights_pipeline_job))
