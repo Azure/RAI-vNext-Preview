@@ -14,37 +14,41 @@ from azure.ml.entities import ComponentJob, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 
-@pytest.fixture(scope='session')
-def component_config():
-    config_file = 'component_config.json'
 
-    with open(config_file, 'r') as cf:
+@pytest.fixture(scope="session")
+def component_config():
+    config_file = "component_config.json"
+
+    with open(config_file, "r") as cf:
         result = json.load(cf)
 
     return result
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def workspace_config():
-    ws_config_file = 'config.json'
+    ws_config_file = "config.json"
 
     with open(ws_config_file) as cf:
         result = json.load(cf)
 
     return result
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def ml_client(workspace_config):
     client = MLClient(
         credential=DefaultAzureCredential(),
-        subscription_id=workspace_config['subscription_id'],
-        resource_group_name=workspace_config['resource_group'],
-        workspace_name=workspace_config['workspace_name'],
-        logging_enable=True
+        subscription_id=workspace_config["subscription_id"],
+        resource_group_name=workspace_config["resource_group"],
+        workspace_name=workspace_config["workspace_name"],
+        logging_enable=True,
     )
 
     return client
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def registered_adult_model_id(ml_client, component_config):
     version_string = component_config["version"]
 
@@ -82,7 +86,7 @@ def registered_adult_model_id(ml_client, component_config):
         inputs=register_job_inputs,
         outputs=register_job_outputs,
     )
-            # Assemble into a pipeline
+    # Assemble into a pipeline
     register_pipeline = PipelineJob(
         experiment_name=f"Register_Adult_Model_Fixture_{version_string}",
         description="Python submitted Adult model registration",

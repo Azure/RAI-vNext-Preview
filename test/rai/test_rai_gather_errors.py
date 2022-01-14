@@ -149,7 +149,9 @@ class TestRAIGatherErrors:
         # Problem is, the job might have failed for some other reason
         assert pipeline_job is not None
 
-    def test_multiple_tool_instances(self, ml_client: MLClient, component_config, registered_adult_model_id:str):
+    def test_multiple_tool_instances(
+        self, ml_client: MLClient, component_config, registered_adult_model_id: str
+    ):
         version_string = component_config["version"]
 
         # Pipeline globals
@@ -198,7 +200,7 @@ class TestRAIGatherErrors:
             outputs=causal_outputs,
         )
 
-        causal_inputs['treatment_cost'] = '[0.01, 0.02]'
+        causal_inputs["treatment_cost"] = "[0.01, 0.02]"
         causal_job_02 = ComponentJob(
             component=f"RAIInsightsCausal:{version_string}",
             inputs=causal_inputs,
@@ -235,6 +237,8 @@ class TestRAIGatherErrors:
         )
 
         # Send it
-        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job, "Failed")
+        insights_pipeline_job = submit_and_wait(
+            ml_client, insights_pipeline_job, "Failed"
+        )
         assert insights_pipeline_job is not None
         # Unfortunately we can't check anything else right now
