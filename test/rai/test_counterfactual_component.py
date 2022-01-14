@@ -73,7 +73,7 @@ class TestCounterfactuallComponent:
         # Configure the gather component
         gather_inputs = {
             "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "insight_1": "${{jobs.counterfactual-rai-job.outputs.causal}}",
+            "insight_1": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
         gather_job = ComponentJob(
