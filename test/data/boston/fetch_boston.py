@@ -3,15 +3,13 @@ from sklearn.datasets import load_boston
 from sklearn.model_selection import train_test_split
 
 data = load_boston()
-target_feature = 'y'
+target_feature = "y"
 continuous_features = data.feature_names
 data_df = pd.DataFrame(data.data, columns=data.feature_names)
 
 X_train, X_test, y_train, y_test = train_test_split(
-    data_df,
-    data.target,
-    test_size=0.2,
-    random_state=7)
+    data_df, data.target, test_size=0.2, random_state=7
+)
 
 train_data = X_train.copy()
 test_data = X_test.copy()
