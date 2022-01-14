@@ -86,13 +86,15 @@ def main(args):
                     err_string = _DASHBOARD_CONSTRUCTOR_MISMATCH.format(i + 1)
                     raise ValueError(err_string)
 
+                # Copy the data
+                _logger.info("Copying insight {0}".format(i + 1))
+                tool = copy_insight_to_raiinsights(incoming_dir, current_insight_path)
+
                 # Can only have one instance of each tool
                 if included_tools[tool]:
                     err_string = _DUPLICATE_TOOL.format(i+1, tool)
                     raise ValueError(err_string)
 
-                _logger.info("Copying insight {0}".format(i + 1))
-                tool = copy_insight_to_raiinsights(incoming_dir, current_insight_path)
                 included_tools[tool] = True
             else:
                 _logger.info("Insight {0} is None".format(i + 1))
