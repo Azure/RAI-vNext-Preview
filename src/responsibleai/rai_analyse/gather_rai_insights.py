@@ -26,9 +26,7 @@ from rai_component_utilities import (
 _DASHBOARD_CONSTRUCTOR_MISMATCH = (
     "Insight {0} was not " "computed from the constructor specified"
 )
-_DUPLICATE_TOOL = (
-    "Insight {0} is of type {1} which is already present"
-)
+_DUPLICATE_TOOL = "Insight {0} is of type {1} which is already present"
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -92,7 +90,7 @@ def main(args):
 
                 # Can only have one instance of each tool
                 if included_tools[tool]:
-                    err_string = _DUPLICATE_TOOL.format(i+1, tool)
+                    err_string = _DUPLICATE_TOOL.format(i + 1, tool)
                     raise ValueError(err_string)
 
                 included_tools[tool] = True
