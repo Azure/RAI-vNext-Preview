@@ -239,3 +239,5 @@ class TestRAIGatherErrors:
         assert insights_pipeline_job is not None
 
         _logger.info(str(insights_pipeline_job))
+        print(insights_pipeline_job)
+        assert False
