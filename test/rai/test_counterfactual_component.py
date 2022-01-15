@@ -59,8 +59,8 @@ class TestCounterfactuallComponent:
             "total_CFs": "10",
             "method": "kdtree",
             "desired_class": "opposite",
-            "permitted_range": '{"Capital Gain": [0, 2000], "Hours per Week": [0, 10]}',
-            "features_to_vary": '["Capital Gain", "Hours per Week", "Age", "Country", "Sex"]',
+            "permitted_range": '{"Capital Gain": [0, 2000], "Hours per week": [0, 10]}',
+            "features_to_vary": '["Capital Gain", "Hours per week", "Age", "Country", "Sex"]',
             "feature_importance": "True",
         }
         counterfactual_outputs = {"counterfactual": None}
