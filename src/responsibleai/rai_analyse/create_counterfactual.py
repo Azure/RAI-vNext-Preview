@@ -15,7 +15,7 @@ from rai_component_utilities import (
     save_to_output_port,
     copy_dashboard_info_file,
 )
-from arg_helpers import boolean_parser, str_or_int_parser, str_or_list_parser
+from arg_helpers import boolean_parser, str_or_int_parser, str_or_list_parser, json_empty_is_none_parser
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -29,8 +29,8 @@ def parse_args():
     parser.add_argument("--total_CFs", type=int, required=True)
     parser.add_argument("--method", type=str)
     parser.add_argument("--desired_class", type=str_or_int_parser)
-    parser.add_argument("--desired_range", type=json.loads, help="List")
-    parser.add_argument("--permitted_range", type=json.loads, help="Dict")
+    parser.add_argument("--desired_range", type=json_empty_is_none_parser, help="List")
+    parser.add_argument("--permitted_range", type=json_empty_is_none_parser, help="Dict")
     parser.add_argument("--features_to_vary", type=str_or_list_parser)
     parser.add_argument("--feature_importance", type=boolean_parser)
     parser.add_argument("--counterfactual_path", type=str)
