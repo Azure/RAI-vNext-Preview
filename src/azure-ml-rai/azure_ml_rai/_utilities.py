@@ -24,6 +24,8 @@ def _get_storage_account_key(ml_client: MLClient, storage_account_name: str) -> 
         subscription_id=ml_client._workspace_scope.subscription_id,
     )
 
-    keys = smc.storage_accounts.list_keys(ml_client._workspace_scope.resource_group_name, storage_account_name)
+    keys = smc.storage_accounts.list_keys(
+        ml_client._workspace_scope.resource_group_name, storage_account_name
+    )
 
     return keys.keys[0].value
