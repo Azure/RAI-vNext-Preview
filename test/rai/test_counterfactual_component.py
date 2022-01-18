@@ -57,9 +57,9 @@ class TestCounterfactuallComponent:
         counterfactual_inputs = {
             "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
             "total_CFs": "10",
-            "method": "kdtree",
+            "method": "random",
             "desired_class": "opposite",
-            "permitted_range": '{"Capital Gain": [0, 2000], "Hours per week": [0, 10]}',
+            "permitted_range": '{"Capital Gain": [0, 20000], "Hours per week": [0, 20]}',
             "features_to_vary": '["Capital Gain", "Hours per week", "Age", "Country", "Sex"]',
             "feature_importance": "True",
         }
