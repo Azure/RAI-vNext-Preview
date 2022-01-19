@@ -58,7 +58,7 @@ class TestErrorAnalysisComponent:
             "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
             "max_depth": "4",
             "num_leaves": "25",
-            "min_child_samples": "10000",
+            "min_child_samples": "10",
             "filter_features": '["Marital Status", "Workclass"]'
         }
         erroranalysis_outputs = {"counterfactual": None}
@@ -71,7 +71,7 @@ class TestErrorAnalysisComponent:
         # Configure the gather component
         gather_inputs = {
             "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "insight_1": "${{jobs.erroranalysis-rai-job.outputs.erroranalysis}}",
+            "insight_1": "${{jobs.erroranalysis-rai-job.outputs.error_analysis}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
         gather_job = ComponentJob(
