@@ -51,7 +51,7 @@ After activating your environment, if this is your first time running the RAI Da
 ### Generating Responsibleai AI Dashboard insights
 Once you have created an Azure workspace and registered your components in the one-time setup above, you can create a Responsible AI dashboard via the CLI or SDK. Start here for `examples` [folder](examples) to get started.
 
-### Viewing your Responsible AI Toolbox Dashboard in the AzureML studio portal
+### Viewing your Responsible AI Dashboard in the AzureML studio portal
 After generating the Responsible AI insights, you can view them in your associated workspace in AzureML studio, under your model registry.
 
 ![01](images/01_model_registry.png)
