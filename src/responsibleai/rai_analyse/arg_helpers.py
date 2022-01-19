@@ -5,7 +5,7 @@
 import json
 import logging
 
-from typing import Any, Union
+from typing import Any, Dict, List, Union
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -72,3 +72,11 @@ def int_or_none_parser(target: str) -> Union[None, int]:
         if "None" in target:
             return None
         raise ValueError("int_or_none_parser failed on: {0}".format(target))
+
+
+def json_empty_is_none_parser(target: str) -> Union[Dict, List]:
+    parsed = json.loads(target)
+    if len(parsed) == 0:
+        return None
+    else:
+        return parsed

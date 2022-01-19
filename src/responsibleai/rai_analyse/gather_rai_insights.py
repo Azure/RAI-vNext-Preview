@@ -26,6 +26,7 @@ from rai_component_utilities import (
 _DASHBOARD_CONSTRUCTOR_MISMATCH = (
     "Insight {0} was not " "computed from the constructor specified"
 )
+_DUPLICATE_TOOL = "Insight {0} is of type {1} which is already present"
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -77,12 +78,21 @@ def main(args):
                 _logger.info("Checking dashboard info")
                 insight_info = load_dashboard_info_file(current_insight_path)
                 _logger.info("Insight info: {0}".format(insight_info))
+
+                # Cross check against the constructor
                 if insight_info != dashboard_info:
                     err_string = _DASHBOARD_CONSTRUCTOR_MISMATCH.format(i + 1)
                     raise ValueError(err_string)
 
+                # Copy the data
                 _logger.info("Copying insight {0}".format(i + 1))
                 tool = copy_insight_to_raiinsights(incoming_dir, current_insight_path)
+
+                # Can only have one instance of each tool
+                if included_tools[tool]:
+                    err_string = _DUPLICATE_TOOL.format(i + 1, tool)
+                    raise ValueError(err_string)
+
                 included_tools[tool] = True
             else:
                 _logger.info("Insight {0} is None".format(i + 1))

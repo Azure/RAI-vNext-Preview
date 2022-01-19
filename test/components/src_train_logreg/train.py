@@ -73,7 +73,10 @@ def main(args):
             print("  Copying: ", file_name)
             # As of Python 3.8, copytree will acquire dirs_exist_ok as
             # an option, removing the need for listdir
-            shutil.copy2(src=os.path.join(tmp_output_dir, file_name), dst=os.path.join(args.model_output, file_name))
+            shutil.copy2(
+                src=os.path.join(tmp_output_dir, file_name),
+                dst=os.path.join(args.model_output, file_name),
+            )
 
 
 # run script
