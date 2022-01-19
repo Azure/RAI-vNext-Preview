@@ -62,7 +62,7 @@ After generating the Responsible AI insights, you can view them in your associat
 3. Click on the tab for `Responsible AI dashboard (preview)` under your model details page
 
 ![03](images/03_responsibleaitoolbox.png)
-4. Under the `Responsible AI dashboard (preview)` tab of your model details, you will see a list of your uploaded Responsible AI insights. You can upload more than one Responsible AI toolbox dashboards for each model. Each row represents one dashboard, with information on which components were uploaded to each dashboard (i.e. explanations, counterfactuals, etc).
+4. Under the `Responsible AI dashboard (preview)` tab of your model details, you will see a list of your uploaded Responsible AI insights. You can upload more than one Responsible AI dashboards for each model. Each row represents one dashboard, with information on which components were uploaded to each dashboard (i.e. explanations, counterfactuals, etc).
 
 ![04](images/04_dashboard.png)
 5. At anytime viewing the dashboard, if you wish to return to the model details page, click on `Back to model details`
@@ -77,10 +77,10 @@ After generating the Responsible AI insights, you can view them in your associat
 ❗ **Please note:** Error Analysis, if generated, will always be at the top of the component list in your dashboard. Selecting on the nodes of the error tree or tiles of the error heatmap will automatically generate a temporary cohort that will be populated in the components below so that you can easily experiment with looking at insights for different areas of your error distribution.
 
 ![05](images/05_add_dashboard.png)
-6. In between each component you can add components by clicking the blue circular button with a plus sign. This will pop up a tooltip that will give you an option of adding whichever Responsible AI toolbox component you enabled with your SDK.
+6. In between each component you can add components by clicking the blue circular button with a plus sign. This will pop up a tooltip that will give you an option of adding whichever Responsible AI component you enabled with your SDK.
 
 #### Known limitations of viewing dashboard in AzureML studio
-Due to current lack of active compute and backend storing and recomputing your Responsible AI toolbox insights in real time, the dashboard in AzureML studio is much less robust than the dashboard generated with the open source package. To generate the full dashboard in a Jupyter python notebook, please download and use our [open source Responsible AI Toolbox SDK](https://github.com/microsoft/responsible-ai-widgets). 
+Due to current lack of active compute and backend storing and recomputing your Responsible AI dashboard insights in real time, the dashboard in AzureML studio is much less robust than the dashboard generated with the open source package. To generate the full dashboard in a Jupyter python notebook, please download and use our [open source Responsible AI Dashboard SDK](https://github.com/microsoft/responsible-ai-widgets). 
 
 Some limitations in AzureML studio include:
 - Retraining of the Error analysis tree on different features is disabled
