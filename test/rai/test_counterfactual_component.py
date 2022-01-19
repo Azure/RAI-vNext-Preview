@@ -14,7 +14,7 @@ _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
 
-class TestCounterfactuallComponent:
+class TestCounterfactualComponent:
     def test_classification_all_args(
         self, ml_client: MLClient, component_config, registered_adult_model_id: str
     ):
