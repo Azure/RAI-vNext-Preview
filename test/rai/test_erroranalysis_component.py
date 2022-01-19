@@ -61,7 +61,7 @@ class TestErrorAnalysisComponent:
             "min_child_samples": "10",
             "filter_features": '["Marital Status", "Workclass"]'
         }
-        erroranalysis_outputs = {"counterfactual": None}
+        erroranalysis_outputs = {"error_analysis": None}
         erroranalysis_job = ComponentJob(
             component=f"RAIInsightsErrorAnalysis:{version_string}",
             inputs=erroranalysis_inputs,
