@@ -24,7 +24,7 @@ def process_file(input_file, output_file, replacements):
             outfile.write(line)
 
 
-class TestRAI:
+class TestRAISmoke:
     def test_classification_pipeline_from_yaml(self, ml_client, component_config):
         current_dir = pathlib.Path(__file__).parent.absolute()
         pipeline_file = current_dir / "pipeline_adult_analyse.yaml"
