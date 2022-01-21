@@ -143,7 +143,7 @@ class TestErrorAnalysisComponent:
             "max_depth": "4",
             "num_leaves": "25",
             "min_child_samples": "10",
-            "filter_features": '[]',
+            "filter_features": "[]",
         }
         erroranalysis_outputs = {"error_analysis": None}
         erroranalysis_job = ComponentJob(
