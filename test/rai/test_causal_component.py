@@ -108,7 +108,6 @@ class TestCausalComponent:
         insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
         assert insights_pipeline_job is not None
 
-    
     def test_regression_all_args(
         self, ml_client: MLClient, component_config, registered_boston_model_id: str
     ):
