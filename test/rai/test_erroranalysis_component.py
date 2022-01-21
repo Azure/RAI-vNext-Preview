@@ -106,7 +106,7 @@ class TestErrorAnalysisComponent:
 
         # Pipeline globals
         pipeline_inputs = {
-            "target_column_name": "income",
+            "target_column_name": "y",
             "my_training_data": JobInput(dataset=f"Boston_Train_PQ:{version_string}"),
             "my_test_data": JobInput(dataset=f"Boston_Test_PQ:{version_string}"),
         }
