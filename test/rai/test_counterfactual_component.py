@@ -85,7 +85,7 @@ class TestCounterfactualComponent:
         # Pipeline to construct the RAI Insights
         insights_pipeline_job = PipelineJob(
             experiment_name=f"Counterfactual_Classification_All_Args_{version_string}",
-            description="Expected failure due to multiple tool instances",
+            description="Test counterfactual component with all arguments",
             jobs={
                 "fetch-model-job": fetch_job,
                 "create-rai-job": create_rai_job,

@@ -92,7 +92,7 @@ class TestCausalComponent:
         # Pipeline to construct the RAI Insights
         insights_pipeline_job = PipelineJob(
             experiment_name=f"Causal_Component_Classification_All_Args_{version_string}",
-            description="Expected failure due to multiple tool instances",
+            description="Test causal component with all arguments",
             jobs={
                 "fetch-model-job": fetch_job,
                 "create-rai-job": create_rai_job,
