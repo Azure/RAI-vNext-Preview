@@ -146,7 +146,7 @@ class TestCounterfactualComponent:
             "total_CFs": "10",
             "method": "kdtree",
             "desired_range": "[20, 100]",
-            "permitted_range": '{"ZN": [0, 0.1], "AGE": [0, 0.2], "CRIM": [25, 50], "INDUS": [0, 10]}',
+            "permitted_range": '{"ZN": [0, 10], "AGE": [0, 50], "CRIM": [25, 50], "INDUS": [0, 10]}',
             "features_to_vary": '["ZN", "AGE", "CRIM", "INDUS"]',
             "feature_importance": "True",
         }
