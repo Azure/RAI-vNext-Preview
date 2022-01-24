@@ -157,6 +157,7 @@ steps:
 - powershell: |
     cd src/azure-ml-rai
     pip install -e .
+    pip install responsibleai
   displayName: Install miniSDK
 
 - task: AzureCLI@2
