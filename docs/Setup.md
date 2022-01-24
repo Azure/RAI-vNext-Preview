@@ -6,56 +6,57 @@ The goal of this document is to get your Responsible AI components registered an
 ### Pre-requisites
 
 1. AzureML Workspace with a compute cluster. We strongly recommend using an existing test or sandbox Workspace or creating a new Workspace because the private preview bits can have bugs. DO NOT TRY THE PREVIEW ON A WORKSPACE WITH PRODUCTION ASSETS.
-2. If you do not have the Azure CLI installed, [follow the installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli). 2.15 is the minimum version your need. Check the version with az version. You can use [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart) which has Azure CLI pre-installed.
-3. Once the CLI is installed, [add the CLI v2 bits here](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli)
-4. Set your environment variables such as workspace, region, and subscription ID that you would like to work in.
-```powershell
-az account set -s "<YOUR_SUBSCRIPTION_NAME_OR_ID>"
-az configure --defaults group="<your_resource_group_name>" location="<your_azure_region>" workspace="<your_workspace_name>"
-```
-5. (Optional) Familiarize yourself with CLI 2.0 Jobs: https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli
+1. If you do not have the Azure CLI installed, [follow the installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli). 2.15 is the minimum version you'll need. Check the version with `az version`. You can use [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart) which has Azure CLI pre-installed.
+1. Once the CLI is installed, [add the CLI v2 bits here](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli)
+1. Set your environment variables such as workspace, region, and subscription ID that you would like to work in.
+    ```powershell
+    az login
+    az account set -s "<YOUR_SUBSCRIPTION_NAME_OR_ID>"
+    az configure --defaults group="<your_resource_group_name>" location="<your_azure_region>" workspace="<your_workspace_name>"
+    ```
+1. (Optional) Familiarize yourself with [CLI 2.0 Jobs](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli)
 
 ### RAI Private Package install
-5. Create a local conda enviornment with Python 3.8
-```
-conda create -n [env name] python=3.8
-```
-7. Setup the git repo 
-```powershell
-git clone https://github.com/Azure/RAI-vNext-Preview
-```
-```powershell
-cd RAI-vNext-Preview
-```
-8. Download the config.json from your workspace in portal.azure.com and place it in the top level of RAI-vNext-Preview.
-9. Run the following pip installs
-``` powershell
-pip install jupyter responsibleai pyarrow pandas shap
-```
-``` powershell
-pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2 azure-ml
-```
-``` powershell
-pip install azureml-core azureml-mlflow
-```
-``` powershell
-pip install -e src/azure-ml-rai
-```
-10. Create a JSON file called component_config.json containing: '{version:1}'. This will track the version of the components that you are registering in your workspace and will be needed when you run a jupyter notebook.
-```powershell
-echo {"version":1} > component_config.json
-```
 
-11. Run the following command to register the private preview components in your workspace
+1. Create a local conda environment with Python 3.8
+    ```
+    conda create -n [env name] python=3.8
+    conda activate [env name]
+    ```
+1. Clone the git repo 
+    ```powershell
+    git clone https://github.com/Azure/RAI-vNext-Preview
+    cd RAI-vNext-Preview
+    ```
+1. In the repo root:
 
-```powershell
-scripts/Register-AzureML.ps1 src/responsibleai
-```
-```powershell
-scripts/Register-AzureML.ps1 test
-```
+    a. Install the prerequisites
 
-12. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab, and looking for entries like "Gather RAI Insights Dashboard"
+    ```powershell
+    pip install -r requirements-dev.txt
+    ```
+
+    b. Generate the both configuration files by answering prompts from:
+
+    ```powershell
+    python ./scripts/generate_registration_files.py
+    ```
+
+    c. Register all the RAI components:
+
+    ```powershell
+    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
+    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test
+    ```
+
+
+1. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab on the left hand workspace navigation list, and looking for entries like "Gather RAI Insights Dashboard"
+
+
+1. (Optional) Install the miniature SDK for the RAI components. This allows dashboards created in AzureML to be downloaded to your local machine.
+    ``` powershell
+    pip install -e src/azure-ml-rai
+    ```
 ## Next Steps
 - Build your first Model Analysis in the CLI or SDK
 
