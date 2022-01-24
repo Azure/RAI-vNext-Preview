@@ -9,8 +9,8 @@ AzureML currently supports both [model explanations](https://docs.microsoft.com/
 - Data Explorer: explore your dataset by feature sets and other metrics such as predicted Y or true Y
 - Model Statistics: explore the distribution of your model outcomes and performance metrics
 - Interpretability: view the aggregate and individual feature importances across your model and dataset
-- Counterfactual Example What-If's (new): create automatically generated diverse sets of counterfactual examples for each datapoint that is minimally perturbed in order to switch its predicted class or output. Also create your own counterfactual datapoint by perturbing feature values manually to observe the new outcome of your model prediction.
-- Causal Analysis (new): view the aggregate and individual causal effects of *treatment features* (features which you are interested in controlling to affect the outcome) on the outcome in order to make informed real-life business decisions. See recommended treatment policies for segmentations of your population for features in your dataset to see its effect on your real-life outcome. 
+- Counterfactual What-If's (new): create automatically generated diverse sets of counterfactual examples for each datapoint that is minimally perturbed in order to switch its predicted class or output. Also create your own counterfactual datapoint by perturbing feature values manually to observe the new outcome of your model prediction.
+- Causal Analysis (new): view the aggregate and individual causal effects of *treatment features* (features which you are interested in controlling to affect the outcome) on the outcome in order to make informed real-life business decisions. See recommended treatment policies for segmentations of your population for features in your dataset to see the effect on your real-life outcomes. 
 
 This new feature offers users a new powerful and robust toolkit for understanding your model and data in order to develop your machine learning models responsibly, now all in one place and integrated with your AzureML workspace.
 
@@ -18,7 +18,7 @@ This new feature offers users a new powerful and robust toolkit for understandin
 
 ## Supported scenarios, models and datasets
 
-`azureml-responsibleai` supports computation of Responsible AI insights for `scikit-learn` models that are trained on `pandas.DataFrame`. The `azureml-responsibleai` accept both models and pipelines as input as long as the model or pipeline implements a `predict` or `predict_proba` function that conforms to the `scikit-learn` convention. If not compatible, you can wrap your model's prediction function into a wrapper class that transforms the output into the format that is supported (`predict` or `predict_proba` of `scikit-learn`), and pass that wrapper class to modules in `azureml-responsibleai`.
+`azureml-responsibleai` supports computation of Responsible AI insights for `scikit-learn` models that are trained on `pandas.DataFrame`. The `azureml-responsibleai` package accepts both models and SciKit-Learn pipelines as input as long as the model or pipeline implements a `predict` or `predict_proba` function that conforms to the `scikit-learn` convention. If not compatible, you can wrap your model's prediction function into a wrapper class that transforms the output into the format that is supported (`predict` or `predict_proba` of `scikit-learn`), and pass that wrapper class to modules in `azureml-responsibleai`.
 
 Currently, we support datasets having numerical and categorical features. The following table provides the scenarios supported for each of the four responsible AI insights:-
 
@@ -26,7 +26,7 @@ Currently, we support datasets having numerical and categorical features. The fo
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | -- |
 | Explainability | Yes | Yes | No | Yes | No | Yes | No | No | No | No |
 | Error Analysis | Yes | Yes | No | Yes | No | Yes | No | No | No | No |
-| Causal Analysis | Yes | No | No | Yes | No | Yes (max 5 features due to expensiveness) | No | No | No | No |
+| Causal Analysis | Yes | No | No | Yes | No | Yes (max 5 features due to computational cost) | No | No | No | No |
 | Counterfactual | Yes | Yes | No | Yes | No | Yes | No | No | No | No |
 
 This is all available via Python SDK or CLI.
@@ -34,8 +34,8 @@ This is all available via Python SDK or CLI.
 ## Set Up
 In this section, we will go over the basic setup steps that you need in order to generate Responsible AI insights for your models from SDK v2, CLI v2 and visualize the generated Responsible AI insights in [AML studio](https://ml.azure.com/).
 
-### Create an Azure subscription
-Create an Azure workspace by using the [configuration notebook](https://github.com/Azure/MachineLearningNotebooks/blob/master/configuration.ipynb)
+### Create an AzureML workspace
+Create an AzureML workspace by using the [configuration notebook](https://github.com/Azure/MachineLearningNotebooks/blob/master/configuration.ipynb)
 
 ### Install the required packages
 In order to install `azureml-responsibleai` package you will need a python virtual environment. You can create a python virtual environment using `conda`.
@@ -56,16 +56,16 @@ After generating the Responsible AI insights, you can view them in your associat
 
 ![01](images/01_model_registry.png)
 1. Go to your model registry in your AzureML studio workspace
-2. Click on the model you've uploaded your Responsible AI insights for
+2. Click on the model for which you've uploaded your Responsible AI insights
 
 ![02](images/02_model_details.png)
 3. Click on the tab for `Responsible AI dashboard (preview)` under your model details page
 
 ![03](images/03_responsibleaitoolbox.png)
-4. Under the `Responsible AI dashboard (preview)` tab of your model details, you will see a list of your uploaded Responsible AI insights. You can upload more than one Responsible AI dashboards for each model. Each row represents one dashboard, with information on which components were uploaded to each dashboard (i.e. explanations, counterfactuals, etc).
+4. Under the `Responsible AI dashboard (preview)` tab of your model details, you will see a list of your uploaded Responsible AI insights. You can upload more than one Responsible AI dashboard for each model. Each row represents one dashboard, with information on which components were uploaded to each dashboard (i.e. explanations, counterfactuals, etc).
 
 ![04](images/04_dashboard.png)
-5. At anytime viewing the dashboard, if you wish to return to the model details page, click on `Back to model details`
+5. At anytime while viewing the dashboard, if you wish to return to the model details page, click on `Back to model details`
 <ol type="A">
   <li>You can view the dashboard insights for each component filtered down on a global cohort you specify. Hovering over the global cohort name will show the number of datapoints and filters in that cohort as a tooltip.</li>
   <li>Switch which global cohort you are applying to the dashboard.</li>
@@ -86,7 +86,7 @@ Some limitations in AzureML studio include:
 - Retraining of the Error analysis tree on different features is disabled
 - Switching the Error analysis heat map to different features is disabled
 - Viewing the Error analysis tree or heatmap on a smaller subset of your full dataset passed into the dashboard (requires retraining of the tree) is disabled
-- ICE (Individual Conditional Expectation) plots in the feature importance tab for explanations is disabled
+- ICE (Individual Conditional Expectation) plots in the feature importance tab for explanations are disabled
 - Manually creating a What-If datapoint is disabled; you can only view the counterfactual examples already pre-generated by the SDK
 - Causal analysis individual what-if is disabled; you can only view the individual causal effects of each individual datapoint
 
