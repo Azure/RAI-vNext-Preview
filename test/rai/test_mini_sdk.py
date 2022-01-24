@@ -60,9 +60,10 @@ class TestMiniSDK:
             outputs=create_rai_outputs,
         )
 
-        # Setup counterfactual
+        # Setup explanation
         explain_inputs = {
             "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
+            "comment": "For miniSDK testing",
         }
         explain_outputs = {"explanation": None}
         explain_job = ComponentJob(
@@ -116,3 +117,7 @@ class TestMiniSDK:
 
             rai_i = RAIInsights.load(target_dir)
             assert rai_i is not None
+            assert len(rai_i.explainer.list()) == 1
+            assert len(rai_i.causal.list()) == 0
+            assert len(rai_i.counterfactual.list()) == 0
+            assert len(rai_i.error_analysis.list()) == 0
