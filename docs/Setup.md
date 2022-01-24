@@ -18,7 +18,7 @@ The goal of this document is to get your Responsible AI components registered an
 
 ### RAI Private Package install
 
-1. Create a local conda enviornment with Python 3.8
+1. Create a local conda environment with Python 3.8
     ```
     conda create -n [env name] python=3.8
     conda activate [env name]
@@ -29,6 +29,7 @@ The goal of this document is to get your Responsible AI components registered an
     cd RAI-vNext-Preview
     ```
 1. In the repo root:
+
     a. Install the prerequisites
 
     ```powershell
