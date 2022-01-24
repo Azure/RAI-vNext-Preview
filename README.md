@@ -71,7 +71,7 @@ After generating the Responsible AI insights, you can view them in your associat
   <li>Switch which cohort you are applying to the dashboard.</li>
   <li>Create a new cohort based on filters you can apply in a flyout panel.</li>
   <li>View a list of all cohorts created and duplicate, edit or delete them.</li>
-  <li>View a list of all Responsible AI components you've uploaded to this dashboard as well as deleting components. The layout of the dashboard will reflect the order of the components in this list.</li>
+  <li>View a list of all Responsible AI components you've uploaded to this dashboard as well as hiding components. The layout of the dashboard will reflect the order of the components in this list.</li>
 </ol>
 
 ❗ **Please note:** Error Analysis, if generated, will always be at the top of the component list in your dashboard. Selecting on the nodes of the error tree or tiles of the error heatmap will automatically generate a temporary cohort that will be populated in the components below so that you can easily experiment with looking at insights for different areas of your error distribution.
