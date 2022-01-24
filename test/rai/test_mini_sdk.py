@@ -109,7 +109,7 @@ class TestMiniSDK:
         )
         assert len(available_insights) == 1
 
-        with tempfile.tempdir() as td:
+        with tempfile.TemporaryDirectory() as td:
             insight_name = "my_insight"
             target_dir = pathlib.Path(td) / insight_name
 
@@ -117,7 +117,3 @@ class TestMiniSDK:
 
             rai_i = RAIInsights.load(target_dir)
             assert rai_i is not None
-            assert len(rai_i.explainer.list()) == 1
-            assert len(rai_i.causal.list()) == 0
-            assert len(rai_i.counterfactual.list()) == 0
-            assert len(rai_i.error_analysis.list()) == 0
