@@ -6,7 +6,7 @@ The goal of this document is to get your Responsible AI components registered an
 ### Pre-requisites
 
 1. AzureML Workspace with a compute cluster. We strongly recommend using an existing test or sandbox Workspace or creating a new Workspace because the private preview bits can have bugs. DO NOT TRY THE PREVIEW ON A WORKSPACE WITH PRODUCTION ASSETS.
-1. If you do not have the Azure CLI installed, [follow the installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli). 2.15 is the minimum version your need. Check the version with az version. You can use [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart) which has Azure CLI pre-installed.
+1. If you do not have the Azure CLI installed, [follow the installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli). 2.15 is the minimum version you'll need. Check the version with `az version`. You can use [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart) which has Azure CLI pre-installed.
 1. Once the CLI is installed, [add the CLI v2 bits here](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli)
 1. Set your environment variables such as workspace, region, and subscription ID that you would like to work in.
     ```powershell
@@ -14,7 +14,7 @@ The goal of this document is to get your Responsible AI components registered an
     az account set -s "<YOUR_SUBSCRIPTION_NAME_OR_ID>"
     az configure --defaults group="<your_resource_group_name>" location="<your_azure_region>" workspace="<your_workspace_name>"
     ```
-1. (Optional) Familiarize yourself with CLI 2.0 Jobs: https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli
+1. (Optional) Familiarize yourself with [CLI 2.0 Jobs](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli)
 
 ### RAI Private Package install
 
@@ -50,7 +50,7 @@ The goal of this document is to get your Responsible AI components registered an
     ```
 
 
-1. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab, and looking for entries like "Gather RAI Insights Dashboard"
+1. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab on the left hand workspace navigation list, and looking for entries like "Gather RAI Insights Dashboard"
 
 
 1. (Optional) Install the miniature SDK for the RAI components. This allows dashboards created in AzureML to be downloaded to your local machine.
