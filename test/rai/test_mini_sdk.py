@@ -20,8 +20,10 @@ from test.utilities_for_test import submit_and_wait
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
+
 class TestMiniSDK:
-    def test_sdk_smoke(self, ml_client: MLClient, component_config, registered_adult_model_id: str
+    def test_sdk_smoke(
+        self, ml_client: MLClient, component_config, registered_adult_model_id: str
     ):
         version_string = component_config["version"]
 
@@ -101,12 +103,14 @@ class TestMiniSDK:
         insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
         assert insights_pipeline_job is not None
 
-        available_insights = list_rai_insights(ml_client, experiment_name, registered_adult_model_id)
-        assert len(available_insights)==1
+        available_insights = list_rai_insights(
+            ml_client, experiment_name, registered_adult_model_id
+        )
+        assert len(available_insights) == 1
 
         with tempfile.tempdir() as td:
             insight_name = "my_insight"
-            target_dir = pathlib.Path(td)/insight_name
+            target_dir = pathlib.Path(td) / insight_name
 
             download_rai_insights(ml_client, available_insights[0], target_dir)
 
