@@ -113,7 +113,7 @@ class TestMiniSDK:
             insight_name = "my_insight"
             target_dir = pathlib.Path(td) / insight_name
 
-            download_rai_insights(ml_client, available_insights[0], target_dir)
+            download_rai_insights(ml_client, available_insights[0], target_dir, auth_method='fetch_key')
 
             rai_i = RAIInsights.load(target_dir)
             assert rai_i is not None
