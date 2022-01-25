@@ -35,15 +35,17 @@ def _get_output_port_info(
 
     return port_info
 
+
 def _get_credential(ml_client: MLClient, storage_account_name: str, auth_method):
     result = None
-    if auth_method == 'arm_direct':
+    if auth_method == "arm_direct":
         result = ml_client._credential
-    elif auth_method == 'fetch_key':
+    elif auth_method == "fetch_key":
         result = _get_storage_account_key(ml_client, storage_account_name)
     else:
         raise ValueError(f"Unrecognised auth_method: {auth_method}")
     return result
+
 
 def _download_port_files(
     ml_client: MLClient,
@@ -74,7 +76,9 @@ def _download_port_files(
     abar.download_artifacts("", target_directory)
 
 
-def download_rai_insights(ml_client: MLClient, rai_insight_id: str, path: str, auth_method:str='arm_direct') -> None:
+def download_rai_insights(
+    ml_client: MLClient, rai_insight_id: str, path: str, auth_method: str = "arm_direct"
+) -> None:
     v1_ws = _get_v1_workspace_client(ml_client)
 
     mlflow.set_tracking_uri(v1_ws.get_mlflow_tracking_uri())
