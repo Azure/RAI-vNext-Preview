@@ -120,21 +120,38 @@ def download_rai_insights(
 
 
 def download_rai_insights_ux(
-    ml_client: MLClient, rai_insight_id: str, path: str
+    ml_client: MLClient, rai_insight_id: str, path: str, auth_method: str = "arm_direct"
 ) -> None:
+    """Download the UX JSON for an RAIInsight dashboard from AzureML
+
+    This is a workaround, pending implementation of the required functionality in SDKv2.
+    Authentication to Azure is the largest pain point, due to how permissions on the storage
+    account are set up.
+
+    If the current user (specifically, their `DefaultAzureCredential()`) has the
+    "Storage Blob Data Contributor" role on the storage account containing the dashboard output
+    (this will normally be the default workspace store), then the `arm_direct` method can
+    be used. Howevever, even if a user created the storage account, they will not have
+    this role by default. It can be added manually in the portal, or if the user
+    is the owner of the storage account, they the `fetch_key` can be used instead.
+    This will fetch one of the storage account keys and use it for authentication
+
+    param MLCient ml_client: Instance of MLClient to use for communicating with AzureML
+    param str rai_insight_id: The id of the dashboard to be downloaded (will be the run id of the Gather component)
+    param str path: Path to download the dashboard (must not exist)
+    param str auth_method: See above. `arm_direct` or `fetch_key`
+    """
     v1_ws = _get_v1_workspace_client(ml_client)
 
     mlflow.set_tracking_uri(v1_ws.get_mlflow_tracking_uri())
-
-    mlflow_client = MlflowClient()
 
     output_directory = Path(path)
     output_directory.mkdir(parents=True, exist_ok=False)
 
     _download_port_files(
-        mlflow_client,
+        ml_client,
         rai_insight_id,
         OutputPortNames.RAI_INSIGHTS_GATHER_RAIINSIGHTS_UX_PORT,
         output_directory,
-        ml_client._credential,
+        auth_method,
     )
