@@ -4,6 +4,7 @@
 
 import logging
 import pathlib
+import pytest
 import tempfile
 
 from responsibleai import RAIInsights
@@ -22,6 +23,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 class TestMiniSDK:
+    @pytest.mark.skip(reason="Auth problems when running in build")
     def test_sdk_smoke(
         self, ml_client: MLClient, component_config, registered_adult_model_id: str
     ):
