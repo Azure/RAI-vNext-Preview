@@ -13,8 +13,7 @@ from azure.ml import MLClient
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, PipelineJob
 
-from azure_ml_rai._list_rai_runs import list_rai_insights
-from azure_ml_rai._download_rai_insights import download_rai_insights
+from azure_ml_rai import download_rai_insights, list_rai_insights
 
 from test.utilities_for_test import submit_and_wait
 
