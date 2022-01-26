@@ -1,7 +1,12 @@
 # How to create a Model Analysis Job in AzureML Python SDK
-1. Setup
+
 To use responsible AI in AzureML, there are a few pre-requisites that should be setup. The following code allows you to do so.
+
 ## Setup
+
+First, you need to download the `config.json` file for your target workspace from Azure.
+This needs to be placed in the directory from where you run `python` (or `jupyter`).
+
 ### Required libraries
 ```Python
 #import required libraries
@@ -11,22 +16,18 @@ from azure.ml.entities import CommandJob, Code, PipelineJob, Dataset, InputDatas
 
 ### Your Azure ML Details
 ```Python
-#Enter details of your AML workspace
-subscription_id = 'ENTER_SUB_ID'
-resource_group = 'ENTER_RG'
-workspace = 'ENTER_WORKSPACE'
-```
-### Getting a handle to the AML workspace
-```Python
-#get a handle to the workspace
-ml_client = MLClient(subscription_id, resource_group, workspace)
+# Obtain a client
+from azure.ml import MLClient
+from azure.identity import DefaultAzureCredential
+ml_client = MLClient.from_config(credential=DefaultAzureCredential(exclude_shared_token_cache_credential=True),
+                     logging_enable=True)
 ```
 
 ## Constructing jobs for our pipeline
 Each job requires a specification of inputs, outputs, and task to be performed to convert those inputs to outputs. Each section below specifies a job that will be connected in our resulting pipeline.
 
 ### Set your global pipeline inputs
-Now we will start to construct our pipeline using jobs. To start, we first want to set any inputs that are used across the entire pipeline, from inputting the data to training the model to conducting the analysis. For this sample we will save our target column, training data and testing data as global pipeliine inputs. In this example, we have a dataset called Adult_train loaded into our workspace and we will be using version 1 of that dataset that is stored.
+Now we will start to construct our pipeline using jobs. To start, we first want to set any inputs that are used across the entire pipeline, from inputting the data to training the model to conducting the analysis. For this sample we will save our target column, training data and testing data as global pipeliine inputs. In this example, the classic 'Adult' loaded into our workspace, presplit into train and test subsets, and stored in a Parquet file. We will be using version 1 of this dataset:
 ```Python
 pipeline_inputs = { 
     'target_column_name': 'income',
