@@ -120,9 +120,9 @@ class TestMiniSDK:
             rai_i = RAIInsights.load(target_dir)
             assert rai_i is not None
 
-         with tempfile.TemporaryDirectory() as td2:
+        with tempfile.TemporaryDirectory() as td2:
             insight_name = "my_insight_ux"
-            target_dir = pathlib.Path(td) / insight_name
+            target_dir = pathlib.Path(td2) / insight_name
 
             download_rai_insights_ux(
                 ml_client, available_insights[0], target_dir
