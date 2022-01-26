@@ -9,7 +9,15 @@ name = "azure_ml_rai"
 
 long_description = "Figuring out client side operations for RAI components"
 
-install_requires = ["azure-ml", "azureml-core", "azureml-mlflow"]
+install_requires = [
+    "azure-ml",
+    "azureml-core",
+    "azureml-mlflow",
+    "azure-mgmt-storage",
+    "azure-storage-blob",
+    "azureml-dataset-runtime",
+    "azure-identity==1.7.0",
+]
 
 setuptools.setup(
     name=name,  # noqa: F821
