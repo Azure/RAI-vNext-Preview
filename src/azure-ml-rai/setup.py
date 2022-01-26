@@ -16,7 +16,7 @@ install_requires = [
     "azure-mgmt-storage",
     "azure-storage-blob",
     "azureml-dataset-runtime",
-    "azure-identity==1.7.0"
+    "azure-identity==1.7.0",
 ]
 
 setuptools.setup(
