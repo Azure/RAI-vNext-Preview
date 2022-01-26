@@ -13,7 +13,7 @@ from azure.ml import MLClient
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, PipelineJob
 
-from azure_ml_rai import download_rai_insights, list_rai_insights
+from azure_ml_rai import download_rai_insights, download_rai_insights_ux, list_rai_insights
 
 from test.utilities_for_test import submit_and_wait
 
@@ -115,8 +115,17 @@ class TestMiniSDK:
             target_dir = pathlib.Path(td) / insight_name
 
             download_rai_insights(
-                ml_client, available_insights[0], target_dir, auth_method="fetch_key"
+                ml_client, available_insights[0], target_dir
             )
 
             rai_i = RAIInsights.load(target_dir)
             assert rai_i is not None
+
+         with tempfile.TemporaryDirectory() as td2:
+            insight_name = "my_insight_ux"
+            target_dir = pathlib.Path(td) / insight_name
+
+            download_rai_insights_ux(
+                ml_client, available_insights[0], target_dir
+            )
+

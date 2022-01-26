@@ -15,6 +15,8 @@ install_requires = [
     "azureml-mlflow",
     "azure-mgmt-storage",
     "azure-storage-blob",
+    "azureml-dataset-runtime",
+    "azure-identity==1.7.0"
 ]
 
 setuptools.setup(
