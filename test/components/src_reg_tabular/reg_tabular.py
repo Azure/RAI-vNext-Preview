@@ -54,7 +54,7 @@ def main(args):
     if args.dataset_name_suffix < 0:
         suffix = int(time.time())
     else:
-        suffix = args.model_name_suffix
+        suffix = args.dataset_name_suffix
     registered_name = "{0}_{1}".format(args.dataset_base_name, suffix)
     print(f"Registering dataset as {registered_name}")
 
