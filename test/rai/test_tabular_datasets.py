@@ -78,7 +78,7 @@ class TestRegisterTabularDataset:
         )
 
         # Define the pipeline
-        experiment_name = f"Register_Tabular_{version_string}"
+        experiment_name = f"Register_Tabular_for_Use_{version_string}"
         conversion_pipeline_job = PipelineJob(
             experiment_name=experiment_name,
             description="Test registering tabular dataset",
