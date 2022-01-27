@@ -1,0 +1,22 @@
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: RegisterTabularDataset
+display_name: Register a FileDataset as a Tabular Dataset
+version: VERSION_REPLACEMENT_STRING
+type: command
+is_deterministic: False
+inputs:
+  dataset_input_path:
+    type: path
+  dataset_base_name:
+    type: string
+  dataset_name_suffix:
+    type: integer
+    default: -1
+code:
+  local_path: ./src_reg_tabular/
+environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+command: >-
+  python reg_tabular.py
+  --dataset_input_path ${{inputs.dataset_input_path}}
+  --dataset_base_name ${{inputs.dataset_base_name}}
+  --dataset_name_suffix ${{inputs.dataset_name_suffix}}

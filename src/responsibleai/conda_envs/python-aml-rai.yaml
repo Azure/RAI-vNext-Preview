@@ -12,3 +12,5 @@ dependencies:
     - mlflow
     - azureml-mlflow~=1.37.0
     - responsibleai~=0.16.0
+    - azureml-dataset-runtime
+    - azureml-core
