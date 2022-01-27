@@ -70,7 +70,7 @@ class TestRegisterTabularDataset:
         reg_tabular_job_inputs = {
             "dataset_input_path": "${{inputs.my_parquet_file}}",
             "dataset_base_name": "train_tabular_base",
-            "dataset_name_suffix": epoch_secs
+            "dataset_name_suffix": epoch_secs,
         }
         reg_tabular_job = ComponentJob(
             component=f"RegisterTabularDataset:{version_string}",
@@ -114,7 +114,9 @@ class TestRegisterTabularDataset:
         )
 
         # The job to convert the tabular dataset to a file
-        to_parquet_inputs = {"tabular_dataset_name": f"{train_tabular_base}_{epoch_secs}"}
+        to_parquet_inputs = {
+            "tabular_dataset_name": f"{train_tabular_base}_{epoch_secs}"
+        }
         to_parquet_outputs = {"dataset_output_path": None}
         to_parquet_job = ComponentJob(
             component=f"TabularToParquet:{version_string}",
@@ -163,14 +165,14 @@ class TestRegisterTabularDataset:
             outputs=gather_outputs,
         )
 
-                # Pipeline to construct the RAI Insights
+        # Pipeline to construct the RAI Insights
         experiment_name = f"Use_Tabular_Dataset_{version_string}"
         insights_pipeline_job = PipelineJob(
             experiment_name=experiment_name,
             description="Simple test for mini SDK",
             jobs={
                 "fetch-model-job": fetch_job,
-                "to-parquet-job": to_parquet_job
+                "to-parquet-job": to_parquet_job,
                 "create-rai-job": create_rai_job,
                 "explain-rai-job": explain_job,
                 "gather-job": gather_job,
