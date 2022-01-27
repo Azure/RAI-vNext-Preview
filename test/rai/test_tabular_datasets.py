@@ -69,7 +69,7 @@ class TestRegisterTabularDataset:
         train_tabular_base = "train_tabular_adult"
         reg_tabular_job_inputs = {
             "dataset_input_path": "${{inputs.my_parquet_file}}",
-            "dataset_base_name": "train_tabular_base",
+            "dataset_base_name": train_tabular_base,
             "dataset_name_suffix": epoch_secs,
         }
         reg_tabular_job = ComponentJob(
