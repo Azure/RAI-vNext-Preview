@@ -129,7 +129,7 @@ class TestRegisterTabularDataset:
             "title": "Run built from Python",
             "task_type": "classification",
             "model_info_path": "${{jobs.fetch-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{jobs.to-parquet-job.dataset_output_path}}",
+            "train_dataset": "${{jobs.to-parquet-job.outputs.dataset_output_path}}",
             "test_dataset": "${{inputs.my_test_data}}",
             "target_column_name": "${{inputs.target_column_name}}",
             "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
