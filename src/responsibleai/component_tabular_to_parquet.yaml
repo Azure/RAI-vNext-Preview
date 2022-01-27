@@ -1,0 +1,18 @@
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: TabularToParquet
+display_name: TabularDataset to Parquet file
+version: VERSION_REPLACEMENT_STRING
+type: command
+inputs:
+  tabular_dataset_name:
+    type: string
+outputs:
+  dataset_output_path:
+    type: path
+code:
+  local_path: ./src_tabular_to_parquet/
+environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+command: >-
+  python tabular_to_parquet.py
+  --tabular_dataset_name ${{inputs.model_input_path}}
+  --dataset_output_path ${{outputs.dataset_output_path}}
