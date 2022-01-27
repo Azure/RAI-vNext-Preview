@@ -14,5 +14,5 @@ code:
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
   python tabular_to_parquet.py
-  --tabular_dataset_name ${{inputs.model_input_path}}
+  --tabular_dataset_name ${{inputs.tabular_dataset_name}}
   --dataset_output_path ${{outputs.dataset_output_path}}
