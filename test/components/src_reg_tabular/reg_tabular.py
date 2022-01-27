@@ -41,6 +41,7 @@ def load_dataset(parquet_path: str):
     print(df.head(10))
     return df
 
+
 def main(args):
     current_run = Run.get_context()
     ws = current_run.experiment.workspace
@@ -58,10 +59,10 @@ def main(args):
     print(f"Registering dataset as {registered_name}")
 
     datastore_path = (datastore, registered_name)
-    tabular_dataset = Dataset.Tabular.register_pandas_dataframe(df, datastore_path, registered_name)
+    tabular_dataset = Dataset.Tabular.register_pandas_dataframe(
+        df, datastore_path, registered_name
+    )
     _logger.info("Registered Dataset: {}".format(tabular_dataset))
-
-
 
 
 # run script
