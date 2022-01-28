@@ -90,3 +90,20 @@ jobs:
         sdkSource: ${{parameters.sdkSource}}
         subscriptionName: $(SubscriptionName)
         
+  - job: WindowsCheck
+    pool:
+      vmImage: windows-22
+      steps:
+      - bash: |
+          pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2-public azure-ml
+          python -c "from azure.ml import MLClient"
+        displayName: Install and smoke SDKv2
+  
+  - job: WindowsCheck
+    pool:
+      vmImage: ubuntu-latest
+      steps:
+      - bash: |
+          pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2-public azure-ml
+          python -c "from azure.ml import MLClient"
+        displayName: Install and smoke SDKv2
