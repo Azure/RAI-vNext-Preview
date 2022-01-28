@@ -93,7 +93,7 @@ jobs:
   - job: WindowsCheck
     pool:
       vmImage: windows-latest
-      steps:
+    steps:
       - task: UsePythonVersion@0
         displayName: "Use Python 3.7"
         inputs:
@@ -108,7 +108,7 @@ jobs:
   - job: UbuntuCheck
     pool:
       vmImage: ubuntu-latest
-      steps:
+    steps:
       - task: UsePythonVersion@0
         displayName: "Use Python 3.7"
         inputs:
