@@ -99,7 +99,7 @@ jobs:
           python -c "from azure.ml import MLClient"
         displayName: Install and smoke SDKv2
   
-  - job: WindowsCheck
+  - job: UbuntuCheck
     pool:
       vmImage: ubuntu-latest
       steps:
