@@ -100,9 +100,8 @@ jobs:
           versionSpec: 3.7
       - bash: |
           pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2-public azure-ml
-          echo "Starting Python"
+          echo "==================================================================================="
           python -c "from azure.ml import MLClient"
-          echo "Python complete"
         displayName: Install and smoke SDKv2
   
   - job: UbuntuCheck
@@ -115,7 +114,6 @@ jobs:
           versionSpec: 3.7
       - bash: |
           pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2-public azure-ml
-          echo "Starting Python"
+          echo "==================================================================================="
           python -c "from azure.ml import MLClient"
-          echo "Python complete"
         displayName: Install and smoke SDKv2
