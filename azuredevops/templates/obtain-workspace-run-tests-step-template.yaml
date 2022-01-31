@@ -39,6 +39,7 @@ parameters:
     - EastUS
     - EastUS2EUAP
     - WestUS
+    - UKSouth
 - name: cliSource
   displayName: Installation source for CLI
   type: string
