@@ -22,10 +22,10 @@ inputs:
     default: 5000
   categorical_column_names:
     type: string # Optional[List[str]]
-    default: []
+    default: ''
   classes:
     type: string # Optional[List[str]]
-    default: []
+    default: ''
 outputs:
   rai_insights_dashboard:
     type: path
