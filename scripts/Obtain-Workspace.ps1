@@ -43,7 +43,9 @@ function Get-RecentResourceGroups(
         }
     )
 
-    return $filtered_groups
+    $sorted_groups = Sort-Object -Descending -Property name $filtered_groups
+
+    return $sorted_groups
 }
 
 
