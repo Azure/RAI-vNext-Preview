@@ -16,7 +16,7 @@ from azureml.core import Model, Run, Workspace
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
-from arg_helpers import get_from_args
+from arg_helpers import get_from_args, json_empty_is_none_parser
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -103,7 +103,7 @@ def main(args):
     )
 
     _logger.info("Getting class names")
-    class_names = get_from_args( args, "classes", custom_parser=json.loads, allow_none=True)
+    class_names = get_from_args( args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True)
 
     _logger.info("Creating RAIInsights object")
     insights = RAIInsights(
