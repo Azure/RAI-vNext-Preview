@@ -49,6 +49,8 @@ def parse_args():
         "--classes", type=str, help="Optional[List[str]]"
     )
 
+    parser.add_argument("--classes", type=str, help="Optional[List[str]]")
+
     parser.add_argument("--output_path", type=str, help="Path to output JSON")
 
     # parse args
@@ -102,8 +104,10 @@ def main(args):
         args, "categorical_column_names", custom_parser=json.loads, allow_none=True
     )
 
-    _logger.info("Getting class names")
-    class_names = get_from_args( args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True)
+    _logger.info("Getting classes")
+    class_names = get_from_args(
+        args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
+    )
 
     _logger.info("Creating RAIInsights object")
     insights = RAIInsights(
@@ -113,6 +117,7 @@ def main(args):
         target_column=args.target_column_name,
         task_type=args.task_type,
         categorical_features=cat_col_names,
+        classes=class_names,
         maximum_rows_for_test=args.maximum_rows_for_test_dataset,
         classes=class_names
     )
