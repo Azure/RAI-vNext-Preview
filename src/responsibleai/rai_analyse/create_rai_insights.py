@@ -45,9 +45,6 @@ def parse_args():
     parser.add_argument(
         "--categorical_column_names", type=str, help="Optional[List[str]]"
     )
-    parser.add_argument(
-        "--classes", type=str, help="Optional[List[str]]"
-    )
 
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
 
@@ -119,7 +116,6 @@ def main(args):
         categorical_features=cat_col_names,
         classes=class_names,
         maximum_rows_for_test=args.maximum_rows_for_test_dataset,
-        classes=class_names
     )
 
     _logger.info("Saving RAIInsights object")
