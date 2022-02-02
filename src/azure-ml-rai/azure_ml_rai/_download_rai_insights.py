@@ -9,77 +9,43 @@ import tempfile
 
 from typing import Any
 
-import mlflow
-from mlflow.store.artifact.azure_blob_artifact_repo import AzureBlobArtifactRepository
-from mlflow.tracking import MlflowClient
-
-from azure.identity import ChainedTokenCredential
-from azure.storage.blob import BlobServiceClient
+from azureml.core import Dataset, Run, Workspace
+from azureml.data import FileDataset
 
 from azure.ml import MLClient
 
 from ._constants import OutputPortNames
-from ._utilities import _get_v1_workspace_client
+from ._utilities import _get_v1_workspace_client, _get_storage_account_key
 
 
-def _get_output_port_info(
-    mlflow_client: MlflowClient, run_id: str, port_name: str
-) -> Any:
-    with tempfile.TemporaryDirectory() as temp_dir:
-        mlflow_client.download_artifacts(run_id, port_name, temp_dir)
+def _get_dataset_for_port(ws: Workspace, run_id: str, port_name: str) -> FileDataset:
+    result = None
 
-        json_filename = os.path.join(temp_dir, port_name)
+    my_run = Run.get(ws, run_id)
 
-        with open(json_filename, "r") as json_file:
-            port_info = json.load(json_file)
+    output_datasets = my_run.get_details()["outputDatasets"]
+    for od in output_datasets:
+        if od["outputDetails"]["outputName"] == port_name:
+            result = od["dataset"]
 
-    return port_info
-
-
-def _download_port_files(
-    mlflow_client: MlflowClient,
-    run_id: str,
-    port_name: str,
-    target_directory: Path,
-    credential: ChainedTokenCredential,
-) -> None:
-    port_info = _get_output_port_info(mlflow_client, run_id, port_name)
-
-    wasbs_tuple = AzureBlobArtifactRepository.parse_wasbs_uri(port_info["Uri"])
-    storage_account = wasbs_tuple[1]
-    if len(wasbs_tuple) == 4:
-        account_dns_suffix = wasbs_tuple[3]
-    else:
-        account_dns_suffix = "blob.core.windows.net"
-
-    account_url = "https://{account}.{suffix}".format(
-        account=storage_account, suffix=account_dns_suffix
-    )
-
-    bsc = BlobServiceClient(account_url=account_url, credential=credential)
-    abar = AzureBlobArtifactRepository(port_info["Uri"], client=bsc)
-
-    # Download everything
-    abar.download_artifacts("", target_directory)
+    return result
 
 
 def download_rai_insights(ml_client: MLClient, rai_insight_id: str, path: str) -> None:
+    """Download an RAIInsight dashboard from AzureML
+
+    This is a workaround, pending implementation of the required functionality in SDKv2.
+
+    param MLCient ml_client: Instance of MLClient to use for communicating with AzureML
+    param str rai_insight_id: The id of the dashboard to be downloaded (will be the run id of the Gather component)
+    param str path: Path to download the dashboard (must not exist)
+    """
     v1_ws = _get_v1_workspace_client(ml_client)
 
-    mlflow.set_tracking_uri(v1_ws.get_mlflow_tracking_uri())
-
-    mlflow_client = MlflowClient()
-
-    output_directory = Path(path)
-    output_directory.mkdir(parents=True, exist_ok=False)
-
-    _download_port_files(
-        mlflow_client,
-        rai_insight_id,
-        OutputPortNames.RAI_INSIGHTS_GATHER_RAIINSIGHTS_PORT,
-        output_directory,
-        ml_client._credential,
+    dataset = _get_dataset_for_port(
+        v1_ws, rai_insight_id, OutputPortNames.RAI_INSIGHTS_GATHER_RAIINSIGHTS_PORT
     )
+    dataset.download(target_path=path, overwrite=False)
 
     # Ensure empty directories are present
     tool_dirs = ["causal", "counterfactual", "error_analysis", "explainer"]
@@ -90,19 +56,17 @@ def download_rai_insights(ml_client: MLClient, rai_insight_id: str, path: str) -
 def download_rai_insights_ux(
     ml_client: MLClient, rai_insight_id: str, path: str
 ) -> None:
+    """Download the UX representation of an RAIInsight dashboard from AzureML
+
+    This is a workaround, pending implementation of the required functionality in SDKv2.
+
+    param MLCient ml_client: Instance of MLClient to use for communicating with AzureML
+    param str rai_insight_id: The id of the dashboard to be downloaded (will be the run id of the Gather component)
+    param str path: Path to download the dashboard (must not exist)
+    """
     v1_ws = _get_v1_workspace_client(ml_client)
 
-    mlflow.set_tracking_uri(v1_ws.get_mlflow_tracking_uri())
-
-    mlflow_client = MlflowClient()
-
-    output_directory = Path(path)
-    output_directory.mkdir(parents=True, exist_ok=False)
-
-    _download_port_files(
-        mlflow_client,
-        rai_insight_id,
-        OutputPortNames.RAI_INSIGHTS_GATHER_RAIINSIGHTS_UX_PORT,
-        output_directory,
-        ml_client._credential,
+    dataset = _get_dataset_for_port(
+        v1_ws, rai_insight_id, OutputPortNames.RAI_INSIGHTS_GATHER_RAIINSIGHTS_UX_PORT
     )
+    dataset.download(target_path=path, overwrite=False)

@@ -14,6 +14,18 @@ from ._utilities import _get_v1_workspace_client
 def list_rai_insights(
     ml_client: MLClient, experiment_name: str, model_id: Optional[str] = None
 ) -> List[str]:
+    """List RAI Insights available from an experiment.
+
+    This is a workaround, pending implementation of the required functionality in SDKv2.
+
+    For a given experiment and (optional) model id, list the available RAI Insights
+    which ahve been computed using the DPv2 components. The insights can
+    then be downloaded using download_rai_insights.
+
+    param MLCient ml_client: Instance of MLClient to use for communicating with AzureML
+    param str experiment_name: Name of the experiment to search under
+    param str model_id: Optional id in AzureML of the desired model
+    """
     # Return the Run ids for runs having RAI insights
 
     filter_properties = {

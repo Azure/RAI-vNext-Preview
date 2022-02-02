@@ -1,7 +1,12 @@
 # How to create a Model Analysis Job in AzureML Python SDK
-1. Setup
+
 To use responsible AI in AzureML, there are a few pre-requisites that should be setup. The following code allows you to do so.
+
 ## Setup
+
+First, you need to download the `config.json` file for your target workspace from Azure.
+This needs to be placed in the directory from where you run `python` (or `jupyter`).
+
 ### Required libraries
 ```Python
 #import required libraries
@@ -11,23 +16,27 @@ from azure.ml.entities import CommandJob, Code, PipelineJob, Dataset, InputDatas
 
 ### Your Azure ML Details
 ```Python
-#Enter details of your AML workspace
-subscription_id = 'ENTER_SUB_ID'
-resource_group = 'ENTER_RG'
-workspace = 'ENTER_WORKSPACE'
-```
-### Getting a handle to the AML workspace
-```Python
-#get a handle to the workspace
-ml_client = MLClient(subscription_id, resource_group, workspace)
+# Obtain a client
+from azure.ml import MLClient
+from azure.identity import DefaultAzureCredential
+ml_client = MLClient.from_config(credential=DefaultAzureCredential(exclude_shared_token_cache_credential=True),
+                     logging_enable=True)
 ```
 
 ## Constructing jobs for our pipeline
 Each job requires a specification of inputs, outputs, and task to be performed to convert those inputs to outputs. Each section below specifies a job that will be connected in our resulting pipeline.
 
+One thing we need to specify is the component version we are using.
+This will have been set when the components were registered into the workspace.
+For this sample, we shall assume that the components were also registered with a version of 1:
+```python
+version_string = "1"
+```
+
 ### Set your global pipeline inputs
-Now we will start to construct our pipeline using jobs. To start, we first want to set any inputs that are used across the entire pipeline, from inputting the data to training the model to conducting the analysis. For this sample we will save our target column, training data and testing data as global pipeliine inputs. In this example, we have a dataset called Adult_train loaded into our workspace and we will be using version 1 of that dataset that is stored.
-```Python
+Now we will start to construct our pipeline using jobs. To start, we first want to set any inputs that are used across the entire pipeline, from inputting the data to training the model to conducting the analysis. For this sample we will save our target column, training data and testing data as global pipeliine inputs. In this example, the classic 'Adult' loaded into our workspace, presplit into train and test subsets, and stored in a Parquet file. We will be using version 1 of this dataset:
+
+```python
 pipeline_inputs = { 
     'target_column_name': 'income',
     'my_training_data': InputDatasetEntry(dataset=f"Adult_Train_PQ:1"),
@@ -67,35 +76,33 @@ register_job = ComponentJob(
 )
 ```
 
-### Create a model analysis job
-Create a model analysis job by using inputs of your training data, test data, and the registered model that was output from your training job.
+### Create an RAIInsights constructor job
 
-Below is a sample job config for configuring the setup model analysis component. In this component, you will need to enter your datastore name.
+Creating `RAIInsights` through AzureML is a multi-step process.
+First, we use a 'constructor' component to configure all the common settings for a given analysis.
+These are things such as the model we wish to analyse, the datasets to use, and settings which are common to all analyses we might perform.
+
+Below is a sample job config for configuring the `RAIInsight` constructor component.
 ```Python
-#define the model analysis setup to run in the pipeline
-
-setup_model_analysis_inputs = {
-     'title': 'My Model Analysis',
-     'model_info_path': '${{jobs.register-model-job.outputs.model_info_output_path}}', #this will take the model that you registered in the previous step as input to your model analysis
-    'train_dataset': '${{inputs.my_training_data}}',
-    'test_dataset': '${{inputs.my_test_data}}',
-    'target_column_name': '${{inputs.target_column_name}}',
-    'X_column_names': '["Age", "Workclass", "Education-Num", "Marital Status", "Occupation", "Relationship", "Race", "Sex", "Capital Gain", "Capital Loss", "Hours per week", "Country"]',
-            
-    'datastore_name': 'YOURDATASTORENAME', #replace with your datastore name
-    'categorical_column_names': '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-
-setup_model_analysis_outputs = {'score_report': None}
-
-setup_model_analysis_job = CommandJob(
-    component=f"AzureMLModelAnalysis:{version_string}",
-    inputs=create_ma_inputs,
-    outputs=create_ma_outputs
+create_rai_inputs = {
+    "title": "Run built from Python",
+    "task_type": "classification",
+    "model_info_path": "${{jobs.register-model-job.outputs.model_info_output_path}}",
+    "train_dataset": "${{inputs.my_training_data}}",
+    "test_dataset": "${{inputs.my_test_data}}",
+    "target_column_name": "${{inputs.target_column_name}}",
+    "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
+}
+create_rai_outputs = {"rai_insights_dashboard": None}
+create_rai_job = ComponentJob(
+    component=f"RAIInsightsConstructor:{version_string}",
+    inputs=create_rai_inputs,
+    outputs=create_rai_outputs,
 )
 ```
 
-### Add desired model analysis components
-After setting up your model analysis component, choose which functionalities you would like to be computed and shown in your dashboard. We currently support
+### Add desired RAIInsights components
+After setting up your constructor component, choose which functionalities you would like to be computed and shown in your dashboard. We currently support
 - Explainability
 - Causal Analysis
 - Counterfactual Analysis
@@ -104,40 +111,128 @@ After setting up your model analysis component, choose which functionalities you
 For this example, we will be showing the explain component. Checkout [the components document]() to determine the other components other components you may like to include.
 
 ```Python
-#define which responsible AI components to use in your model analysis
- explain_inputs = {
-            'comment': 'Insert text here',
-            'model_analysis_info': '${{jobs.create-ma-job.outputs.model_analysis_info}}'
+explain_inputs = {
+    "comment": "This is our explanation",
+    "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
 }
+explain_outputs = {"explanation": None}
 explain_job = ComponentJob(
-    component=f"AzureMLModelAnalysisExplanation:{version_string}",
-    inputs = explain_inputs
+    component=f"RAIInsightsExplanation:{version_string}",
+    inputs=explain_inputs,
+    outputs=explain_outputs,
 )
 ```
-## Create a pipeline with the specified jobs
+
+### Gather the RAIInsights
+
+Finally, we have a 'gather' job which can assemble the model insights we have computed into a single dashboard.
+This also needs to be provided with the original constructor output:
+
+```python
+# Configure the gather component
+gather_inputs = {
+    "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
+    "insight_1": "${{jobs.explain-rai-job.outputs.explanation}}",
+}
+gather_outputs = {"dashboard": None, "ux_json": None}
+gather_job = ComponentJob(
+    component=f"RAIInsightsGather:{version_string}",
+    inputs=gather_inputs,
+    outputs=gather_outputs,
+)
+```
+Up to four insights (one of each type) can be gathered, but in this case we just have the explanation.
+
 ### Create a pipeline with the jobs defined above
-```Python
-# lets create the pipeline
+
+Now that we have defined all the components we need, we can assemble them into
+an AzureML pipeline:
+
+```python
 pipeline_job = PipelineJob(
-    experiment_name=f"Classification_from_Python_{version_string}",
-    description="My first Model analysis",
-    jobs = {
-        'train-model-job': train_job,
-        'register-model-job': register_job,
-        'create-ma-job': create_ma_job,
-        'explain-ma-job': explain_job,
+    experiment_name=f"classification_pipeline_from_python_{version_string}",
+    description="Python submitted Adult",
+    jobs={
+        "train-model-job": train_job,
+        "register-model-job": register_job,
+        "create-rai-job": create_rai_job,
+        "explain-rai-job": explain_job,
+        "gather-job": gather_job,
     },
     inputs=pipeline_inputs,
     outputs=train_job_outputs,
-    compute="cpucluster"
+    compute="cpucluster", # This is the name of our AMLCompute
+)
+```
+
+### Submit the pipeline
+
+Submitting the job is fairly straightforward:
+
+```python
+created_job = ml_client.jobs.create_or_update(pipeline_job)
+```
+
+Of course, it will take a few minutes to run (especially if compute nodes have to be spun up).
+Progress can be monitored via:
+```python
+latest_job = ml_client.jobs.get(created_job.name)
+print(latest_job.status)
+```
+(or by looking in the AzureML portal).
+
+
+## Downloading the dashboard
+
+Once the pipeline has completed, we can download the results to our local machine.
+Support for this is planned within the official SDK, but for now we provide a miniature SDK within this repository.
+It can be installed by running:
+
+```bash
+pip install src/azure-ml-rai
+```
+
+With this SDK installed, we can use its three APIs.
+The first lists all dashboards computed within a single AzureML experiment:
+
+```python
+experiment_name = f"classification_pipeline_from_python_{version_string}"
+
+from azure_ml_rai import list_rai_insights
+
+run_list = list_rai_insights(ml_client, experiment_name)
+print(run_list)
+```
+
+For the example above, this should only have a single entry.
+The ids listed will be the run ids of the gather jobs found.
+In addition, the `list_rai_insights()` function can take an optional `model_id` argument, to filter the returned list based on the model which was analysed
+
+We can download the `RAIInsights` object associated with one of these, and load it into the `RAIInsightsDashboard`:
+
+```python
+from azure_ml_rai import download_rai_insights
+
+download_dir = 'my_downloaded_insight'
+
+download_rai_insights(
+    ml_client,
+    rai_insight_id=run_list[0],
+    path=download_dir,
 )
 
+from responsibleai import RAIInsights
+from raiwidgets import ResponsibleAIDashboard
+
+rai_i = RAIInsights.load(download_dir)
+
+ResponsibleAIDashboard(rai_i)
 ```
-### Submit the pipeline job
-```Python
-#submit the pipeline job
-submit_and_wait(ml_client, pipeline_job)
-```
+
+There is a third API, `download_rai_insights_ux()` which only downloads the JSON file used by the static UX.
+However, this is mainly for use within the AzureML portal.
+
+## To be deleted?
 
 ### Sample exploring....
 ```Python

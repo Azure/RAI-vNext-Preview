@@ -39,6 +39,7 @@ parameters:
     - EastUS
     - EastUS2EUAP
     - WestUS
+    - UKSouth
 - name: cliSource
   displayName: Installation source for CLI
   type: string
@@ -77,6 +78,10 @@ steps:
     pip install --upgrade pip setuptools wheel
   failOnStderr: true
   displayName: Install pip etc.
+
+- script: |
+    pip install colorama
+  displayName: Workaround colorama issue
 
 - task: PowerShell@2
   inputs:
@@ -153,6 +158,12 @@ steps:
     failOnStandardError: false # Since the new CLI writes stuff there
     inlineScript: |
       python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test/
+
+- powershell: |
+    cd src/azure-ml-rai
+    pip install -e .
+    pip install responsibleai
+  displayName: Install miniSDK
 
 - task: AzureCLI@2
   displayName: Run tests
