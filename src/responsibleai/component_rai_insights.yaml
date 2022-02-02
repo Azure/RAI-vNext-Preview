@@ -22,6 +22,10 @@ inputs:
     default: 5000
   categorical_column_names:
     type: string # Optional[List[str]]
+    default: '[]'
+  classes:
+    type: string # Optional[List[str]]
+    default: '[]'
 outputs:
   rai_insights_dashboard:
     type: path
@@ -38,4 +42,5 @@ command: >-
   --target_column_name ${{inputs.target_column_name}}
   --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}}
   --categorical_column_names '${{inputs.categorical_column_names}}'
+  --classes '${{inputs.classes}}'
   --output_path ${{outputs.rai_insights_dashboard}}
