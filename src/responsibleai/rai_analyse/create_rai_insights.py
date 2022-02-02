@@ -46,8 +46,7 @@ def parse_args():
         "--categorical_column_names", type=str, help="Optional[List[str]]"
     )
 
-    parser.add_argument("--classes", type=str, help="Optional[List[str]]"
-    )
+    parser.add_argument("--classes", type=str, help="Optional[List[str]]")
 
     parser.add_argument("--output_path", type=str, help="Path to output JSON")
 
@@ -101,9 +100,11 @@ def main(args):
     cat_col_names = get_from_args(
         args, "categorical_column_names", custom_parser=json.loads, allow_none=True
     )
-    
+
     _logger.info("Getting classes")
-    class_names = get_from_args( args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True)
+    class_names = get_from_args(
+        args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
+    )
 
     _logger.info("Creating RAIInsights object")
     insights = RAIInsights(
