@@ -16,7 +16,7 @@ from azureml.core import Model, Run, Workspace
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
-from arg_helpers import get_from_args
+from arg_helpers import get_from_args, json_empty_is_none_parser
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -44,6 +44,9 @@ def parse_args():
     parser.add_argument("--maximum_rows_for_test_dataset", type=int, default=5000)
     parser.add_argument(
         "--categorical_column_names", type=str, help="Optional[List[str]]"
+    )
+
+    parser.add_argument("--classes", type=str, help="Optional[List[str]]"
     )
 
     parser.add_argument("--output_path", type=str, help="Path to output JSON")
@@ -98,6 +101,9 @@ def main(args):
     cat_col_names = get_from_args(
         args, "categorical_column_names", custom_parser=json.loads, allow_none=True
     )
+    
+    _logger.info("Getting classes")
+    class_names = get_from_args( args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True)
 
     _logger.info("Creating RAIInsights object")
     insights = RAIInsights(
@@ -107,6 +113,7 @@ def main(args):
         target_column=args.target_column_name,
         task_type=args.task_type,
         categorical_features=cat_col_names,
+        classes=class_names,
         maximum_rows_for_test=args.maximum_rows_for_test_dataset,
     )
 
