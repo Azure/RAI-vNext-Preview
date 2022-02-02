@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 inputs:
-  version: 1
-compute: azureml:cpucluster
+  version: 1001
+compute: azureml:idcluster
 environment: azureml:AzureML-minimal-ubuntu18.04-py37-cpu-inference:25
 display_name: Register Components
 experiment_name: RAI_Setup
