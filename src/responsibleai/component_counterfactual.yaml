@@ -28,7 +28,7 @@ inputs:
     default: all
   feature_importance:
     type: boolean
-    default: False
+    default: True
 
 
 outputs:
