@@ -6,9 +6,8 @@ import argparse
 import json
 import logging
 import os
+import shutil
 from typing import Any
-
-import pandas as pd
 
 from azureml.core import Run
 
@@ -97,18 +96,17 @@ def main(args):
 
     constructor_args = create_constructor_arg_dict(args)
 
+    # Make sure that it actuall loads
     _logger.info("Creating RAIInsights object")
-    insights = RAIInsights(
+    _ = RAIInsights(
         model=model_estimator, train=train_df, test=test_df, **constructor_args
     )
-
-    _logger.info("Saving RAIInsights object")
-    insights.save(args.output_path)
 
     _logger.info("Saving JSON for tool components")
     output_dict = {
         DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
         DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
+        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args
     }
     output_file = os.path.join(
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
@@ -116,13 +114,16 @@ def main(args):
     with open(output_file, "w") as of:
         json.dump(output_dict, of)
 
-    _logger.info("Adding properties to Run")
-    run_properties = {
-        PropertyKeyValues.RAI_INSIGHTS_TYPE_KEY: PropertyKeyValues.RAI_INSIGHTS_TYPE_CONSTRUCT,
-        PropertyKeyValues.RAI_INSIGHTS_RESPONSIBLEAI_VERSION_KEY: responsibleai_version,
-        PropertyKeyValues.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
-    }
-    my_run.add_properties(run_properties)
+    _logger.info("Copying train data files")
+    shutil.copytree(
+        src=args.train_dataset,
+        dst=os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR)
+    )
+    _logger.info("Copying test data files")
+    shutil.copytree(
+        src=args.test_dataset,
+        dst=os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR)
+    )
 
 
 # run script
