@@ -51,9 +51,7 @@ def print_dir_tree(base_dir):
 
 
 def fetch_model_id(model_info_path: str):
-    model_info_path = os.path.join(
-        model_info_path, DashboardInfo.MODEL_INFO_FILENAME
-    )
+    model_info_path = os.path.join(model_info_path, DashboardInfo.MODEL_INFO_FILENAME)
     with open(model_info_path, "r") as json_file:
         model_info = json.load(json_file)
     return model_info[DashboardInfo.MODEL_ID_KEY]
@@ -73,6 +71,7 @@ def load_dataset(parquet_path: str):
     print(df.dtypes)
     print(df.head(10))
     return df
+
 
 def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
     # Load the rai_insights_dashboard file info

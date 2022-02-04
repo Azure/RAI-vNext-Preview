@@ -56,9 +56,21 @@ def parse_args():
     # return args
     return args
 
+def create_constructor_arg_dict(args):
+    result=dict()
 
+    cat_col_names = get_from_args(
+        args, "categorical_column_names", custom_parser=json.loads, allow_none=True
+    )
+    class_names = get_from_args(
+        args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
+    )
 
-
+    result['target_column']=args.target_column_name
+    result['task_type']=args.task_type
+    result['categorical_features']=cat_col_names
+    result['classes']=class_names
+    result['maximum_rows_for_test']=args.maximum_rows_for_test_dataset
 
 def main(args):
 
@@ -74,26 +86,14 @@ def main(args):
     _logger.info("Loading model: {0}".format(model_id))
     model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
 
-    _logger.info("Getting categorical columns")
-    cat_col_names = get_from_args(
-        args, "categorical_column_names", custom_parser=json.loads, allow_none=True
-    )
-
-    _logger.info("Getting classes")
-    class_names = get_from_args(
-        args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
-    )
+    constructor_args = create_constructor_arg_dict(args)
 
     _logger.info("Creating RAIInsights object")
     insights = RAIInsights(
         model=model_estimator,
         train=train_df,
         test=test_df,
-        target_column=args.target_column_name,
-        task_type=args.task_type,
-        categorical_features=cat_col_names,
-        classes=class_names,
-        maximum_rows_for_test=args.maximum_rows_for_test_dataset,
+        **constructor_args
     )
 
     _logger.info("Saving RAIInsights object")
