@@ -218,7 +218,7 @@ def add_properties_to_gather_run(
 
 
 def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsights:
-    _logger("Creating RAIInsights")
+    _logger.info("Creating RAIInsights")
 
     port = Path(port_path)
 
