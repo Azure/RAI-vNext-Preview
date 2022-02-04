@@ -11,6 +11,7 @@ import tempfile
 import uuid
 
 from typing import Any, Dict
+from zipfile import Path
 
 import pandas as pd
 
@@ -214,3 +215,25 @@ def add_properties_to_gather_run(
     _logger.info("Making service call")
     gather_run.add_properties(run_properties)
     _logger.info("Properties added to gather run")
+
+
+def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsights:
+    _logger("Creating RAIInsights")
+
+    port = Path(port_path)
+
+    _logger.info("Loading data files")
+    df_train = load_dataset(port / DashboardInfo.TRAIN_FILES_DIR)
+    df_test = load_dataset(port / DashboardInfo.TEST_FILES_DIR)
+
+    _logger.info("Loading config file")
+    config = load_dashboard_info_file(port)
+    constructor_args = config[DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY]
+
+    _logger.info("Loading model")
+    model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
+    _logger.info("Loading model: {0}".format(model_id))
+    model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
+
+    rai_i = RAIInsights(model=model_estimator, train=df_train, test=df_test, **constructor_args)
+    return rai_i
