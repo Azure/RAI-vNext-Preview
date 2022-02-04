@@ -64,6 +64,11 @@ def main(args):
         my_run = Run.get_context()
         rai_temp = create_rai_insights_from_port_path(my_run, args.constructor)
         rai_temp.save(incoming_temp_dir)
+
+        print("Savied rai_temp")
+        print_dir_tree(incoming_temp_dir)
+        print("=======")
+
         create_rai_tool_directories(incoming_dir)
         _logger.info("Saved empty RAI Insights input to temporary directory")
 
