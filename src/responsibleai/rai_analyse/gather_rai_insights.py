@@ -100,9 +100,7 @@ def main(args):
 
                 # Copy the data
                 _logger.info("Copying insight {0}".format(i + 1))
-                tool = copy_insight_to_raiinsights(
-                    incoming_dir, current_insight_path
-                )
+                tool = copy_insight_to_raiinsights(incoming_dir, current_insight_path)
 
                 # Can only have one instance of each tool
                 if included_tools[tool]:

@@ -106,7 +106,7 @@ def main(args):
     output_dict = {
         DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
         DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
-        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args
+        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
     }
     output_file = os.path.join(
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
@@ -117,12 +117,12 @@ def main(args):
     _logger.info("Copying train data files")
     shutil.copytree(
         src=args.train_dataset,
-        dst=os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR)
+        dst=os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR),
     )
     _logger.info("Copying test data files")
     shutil.copytree(
         src=args.test_dataset,
-        dst=os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR)
+        dst=os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR),
     )
 
 
