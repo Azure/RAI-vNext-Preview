@@ -218,7 +218,7 @@ def add_properties_to_gather_run(
 
 
 def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsights:
-    _logger.info("Creating RAIInsights")
+    _logger.info("Creating RAIInsights from constructor component output")
 
     port = Path(port_path)
 
@@ -235,5 +235,6 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     _logger.info("Loading model: {0}".format(model_id))
     model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
 
+    _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(model=model_estimator, train=df_train, test=df_test, **constructor_args)
     return rai_i
