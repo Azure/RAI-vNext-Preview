@@ -56,8 +56,14 @@ def parse_args():
     # return args
     return args
 
+
 def create_constructor_arg_dict(args):
-    result=dict()
+    """Create a kwarg dict for RAIInsights constructor
+
+    Only does the 'parameters' for the component, not the
+    input ports
+    """
+    result = dict()
 
     cat_col_names = get_from_args(
         args, "categorical_column_names", custom_parser=json.loads, allow_none=True
@@ -66,11 +72,14 @@ def create_constructor_arg_dict(args):
         args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
     )
 
-    result['target_column']=args.target_column_name
-    result['task_type']=args.task_type
-    result['categorical_features']=cat_col_names
-    result['classes']=class_names
-    result['maximum_rows_for_test']=args.maximum_rows_for_test_dataset
+    result["target_column"] = args.target_column_name
+    result["task_type"] = args.task_type
+    result["categorical_features"] = cat_col_names
+    result["classes"] = class_names
+    result["maximum_rows_for_test"] = args.maximum_rows_for_test_dataset
+
+    return result
+
 
 def main(args):
 
@@ -90,10 +99,7 @@ def main(args):
 
     _logger.info("Creating RAIInsights object")
     insights = RAIInsights(
-        model=model_estimator,
-        train=train_df,
-        test=test_df,
-        **constructor_args
+        model=model_estimator, train=train_df, test=test_df, **constructor_args
     )
 
     _logger.info("Saving RAIInsights object")
