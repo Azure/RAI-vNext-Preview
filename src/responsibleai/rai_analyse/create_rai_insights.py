@@ -8,15 +8,15 @@ import logging
 import os
 from typing import Any
 
-import mlflow
 import pandas as pd
 
-from azureml.core import Model, Run, Workspace
+from azureml.core import Run
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
 from arg_helpers import get_from_args, json_empty_is_none_parser
+from rai_component_utilities import load_dataset, fetch_model_id, load_mlflow_model
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -57,29 +57,7 @@ def parse_args():
     return args
 
 
-def fetch_model_id(args):
-    model_info_path = os.path.join(
-        args.model_info_path, DashboardInfo.MODEL_INFO_FILENAME
-    )
-    with open(model_info_path, "r") as json_file:
-        model_info = json.load(json_file)
-    return model_info[DashboardInfo.MODEL_ID_KEY]
 
-
-def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
-    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
-
-    model = Model._get(workspace, id=model_id)
-    model_uri = "models:/{}/{}".format(model.name, model.version)
-    return mlflow.pyfunc.load_model(model_uri)._model_impl
-
-
-def load_dataset(parquet_path: str):
-    _logger.info("Loading parquet file: {0}".format(parquet_path))
-    df = pd.read_parquet(parquet_path)
-    print(df.dtypes)
-    print(df.head(10))
-    return df
 
 
 def main(args):
@@ -92,7 +70,7 @@ def main(args):
     _logger.info("Dealing with evaluation dataset")
     test_df = load_dataset(args.test_dataset)
 
-    model_id = fetch_model_id(args)
+    model_id = fetch_model_id(args.model_info_path)
     _logger.info("Loading model: {0}".format(model_id))
     model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
 

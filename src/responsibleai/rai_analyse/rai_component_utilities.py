@@ -12,7 +12,9 @@ import uuid
 
 from typing import Dict
 
-from azureml.core import Run
+import mlflow
+
+from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
@@ -47,6 +49,30 @@ def print_dir_tree(base_dir):
             print("\t" + filename)
     print("END DIRTREE\n", flush=True)
 
+
+def fetch_model_id(model_info_path: str):
+    model_info_path = os.path.join(
+        model_info_path, DashboardInfo.MODEL_INFO_FILENAME
+    )
+    with open(model_info_path, "r") as json_file:
+        model_info = json.load(json_file)
+    return model_info[DashboardInfo.MODEL_ID_KEY]
+
+
+def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
+    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+
+    model = Model._get(workspace, id=model_id)
+    model_uri = "models:/{}/{}".format(model.name, model.version)
+    return mlflow.pyfunc.load_model(model_uri)._model_impl
+
+
+def load_dataset(parquet_path: str):
+    _logger.info("Loading parquet file: {0}".format(parquet_path))
+    df = pd.read_parquet(parquet_path)
+    print(df.dtypes)
+    print(df.head(10))
+    return df
 
 def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
     # Load the rai_insights_dashboard file info
