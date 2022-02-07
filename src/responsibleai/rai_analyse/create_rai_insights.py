@@ -6,17 +6,16 @@ import argparse
 import json
 import logging
 import os
+import shutil
 from typing import Any
 
-import mlflow
-import pandas as pd
-
-from azureml.core import Model, Run, Workspace
+from azureml.core import Run
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
 from arg_helpers import get_from_args, json_empty_is_none_parser
+from rai_component_utilities import load_dataset, fetch_model_id, load_mlflow_model
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -57,29 +56,28 @@ def parse_args():
     return args
 
 
-def fetch_model_id(args):
-    model_info_path = os.path.join(
-        args.model_info_path, DashboardInfo.MODEL_INFO_FILENAME
+def create_constructor_arg_dict(args):
+    """Create a kwarg dict for RAIInsights constructor
+
+    Only does the 'parameters' for the component, not the
+    input ports
+    """
+    result = dict()
+
+    cat_col_names = get_from_args(
+        args, "categorical_column_names", custom_parser=json.loads, allow_none=True
     )
-    with open(model_info_path, "r") as json_file:
-        model_info = json.load(json_file)
-    return model_info[DashboardInfo.MODEL_ID_KEY]
+    class_names = get_from_args(
+        args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
+    )
 
+    result["target_column"] = args.target_column_name
+    result["task_type"] = args.task_type
+    result["categorical_features"] = cat_col_names
+    result["classes"] = class_names
+    result["maximum_rows_for_test"] = args.maximum_rows_for_test_dataset
 
-def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
-    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
-
-    model = Model._get(workspace, id=model_id)
-    model_uri = "models:/{}/{}".format(model.name, model.version)
-    return mlflow.pyfunc.load_model(model_uri)._model_impl
-
-
-def load_dataset(parquet_path: str):
-    _logger.info("Loading parquet file: {0}".format(parquet_path))
-    df = pd.read_parquet(parquet_path)
-    print(df.dtypes)
-    print(df.head(10))
-    return df
+    return result
 
 
 def main(args):
@@ -92,39 +90,23 @@ def main(args):
     _logger.info("Dealing with evaluation dataset")
     test_df = load_dataset(args.test_dataset)
 
-    model_id = fetch_model_id(args)
+    model_id = fetch_model_id(args.model_info_path)
     _logger.info("Loading model: {0}".format(model_id))
     model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
 
-    _logger.info("Getting categorical columns")
-    cat_col_names = get_from_args(
-        args, "categorical_column_names", custom_parser=json.loads, allow_none=True
-    )
+    constructor_args = create_constructor_arg_dict(args)
 
-    _logger.info("Getting classes")
-    class_names = get_from_args(
-        args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
-    )
-
+    # Make sure that it actuall loads
     _logger.info("Creating RAIInsights object")
-    insights = RAIInsights(
-        model=model_estimator,
-        train=train_df,
-        test=test_df,
-        target_column=args.target_column_name,
-        task_type=args.task_type,
-        categorical_features=cat_col_names,
-        classes=class_names,
-        maximum_rows_for_test=args.maximum_rows_for_test_dataset,
+    _ = RAIInsights(
+        model=model_estimator, train=train_df, test=test_df, **constructor_args
     )
-
-    _logger.info("Saving RAIInsights object")
-    insights.save(args.output_path)
 
     _logger.info("Saving JSON for tool components")
     output_dict = {
         DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
         DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
+        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
     }
     output_file = os.path.join(
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
@@ -132,13 +114,16 @@ def main(args):
     with open(output_file, "w") as of:
         json.dump(output_dict, of)
 
-    _logger.info("Adding properties to Run")
-    run_properties = {
-        PropertyKeyValues.RAI_INSIGHTS_TYPE_KEY: PropertyKeyValues.RAI_INSIGHTS_TYPE_CONSTRUCT,
-        PropertyKeyValues.RAI_INSIGHTS_RESPONSIBLEAI_VERSION_KEY: responsibleai_version,
-        PropertyKeyValues.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
-    }
-    my_run.add_properties(run_properties)
+    _logger.info("Copying train data files")
+    shutil.copytree(
+        src=args.train_dataset,
+        dst=os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR),
+    )
+    _logger.info("Copying test data files")
+    shutil.copytree(
+        src=args.test_dataset,
+        dst=os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR),
+    )
 
 
 # run script
