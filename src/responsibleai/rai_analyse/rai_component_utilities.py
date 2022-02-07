@@ -10,9 +10,14 @@ import shutil
 import tempfile
 import uuid
 
-from typing import Dict
+from typing import Any, Dict
+from zipfile import Path
 
-from azureml.core import Run
+import pandas as pd
+
+import mlflow
+
+from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
@@ -46,6 +51,29 @@ def print_dir_tree(base_dir):
         for filename in sorted(files):
             print("\t" + filename)
     print("END DIRTREE\n", flush=True)
+
+
+def fetch_model_id(model_info_path: str):
+    model_info_path = os.path.join(model_info_path, DashboardInfo.MODEL_INFO_FILENAME)
+    with open(model_info_path, "r") as json_file:
+        model_info = json.load(json_file)
+    return model_info[DashboardInfo.MODEL_ID_KEY]
+
+
+def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
+    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+
+    model = Model._get(workspace, id=model_id)
+    model_uri = "models:/{}/{}".format(model.name, model.version)
+    return mlflow.pyfunc.load_model(model_uri)._model_impl
+
+
+def load_dataset(parquet_path: str):
+    _logger.info("Loading parquet file: {0}".format(parquet_path))
+    df = pd.read_parquet(parquet_path)
+    print(df.dtypes)
+    print(df.head(10))
+    return df
 
 
 def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
@@ -187,3 +215,26 @@ def add_properties_to_gather_run(
     _logger.info("Making service call")
     gather_run.add_properties(run_properties)
     _logger.info("Properties added to gather run")
+
+
+def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsights:
+    _logger.info("Creating RAIInsights from constructor component output")
+
+    _logger.info("Loading data files")
+    df_train = load_dataset(os.path.join(port_path, DashboardInfo.TRAIN_FILES_DIR))
+    df_test = load_dataset(os.path.join(port_path, DashboardInfo.TEST_FILES_DIR))
+
+    _logger.info("Loading config file")
+    config = load_dashboard_info_file(port_path)
+    constructor_args = config[DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY]
+
+    _logger.info("Loading model")
+    model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
+    _logger.info("Loading model: {0}".format(model_id))
+    model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
+
+    _logger.info("Creating RAIInsights object")
+    rai_i = RAIInsights(
+        model=model_estimator, train=df_train, test=df_test, **constructor_args
+    )
+    return rai_i

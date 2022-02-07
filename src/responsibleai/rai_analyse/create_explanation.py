@@ -7,10 +7,11 @@ import logging
 
 from responsibleai import RAIInsights
 
+from azureml.core import Run
 
 from constants import RAIToolType
 from rai_component_utilities import (
-    load_rai_insights_from_input_port,
+    create_rai_insights_from_port_path,
     save_to_output_port,
     copy_dashboard_info_file,
 )
@@ -35,8 +36,13 @@ def parse_args():
 
 
 def main(args):
-    # Load the RAI Insights object
-    rai_i: RAIInsights = load_rai_insights_from_input_port(args.rai_insights_dashboard)
+
+    my_run = Run.get_context()
+
+    # Create the RAI Insights object
+    rai_i: RAIInsights = create_rai_insights_from_port_path(
+        my_run, args.rai_insights_dashboard
+    )
 
     # Add the explanation
     rai_i.explainer.add()

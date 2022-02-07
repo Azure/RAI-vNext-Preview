@@ -11,12 +11,15 @@ import tempfile
 
 from typing import Dict
 
+from azureml.core import Run
+
 from responsibleai import RAIInsights
 from responsibleai.serialization_utilities import serialize_json_safe
 
 from constants import DashboardInfo, RAIToolType
 from rai_component_utilities import (
     create_rai_tool_directories,
+    create_rai_insights_from_port_path,
     copy_insight_to_raiinsights,
     load_dashboard_info_file,
     add_properties_to_gather_run,
@@ -57,13 +60,24 @@ def main(args):
 
     with tempfile.TemporaryDirectory() as incoming_temp_dir:
         incoming_dir = Path(incoming_temp_dir)
-        shutil.copytree(args.constructor, incoming_dir, dirs_exist_ok=True)
-        _logger.info("Copied RAI Insights input to temporary directory")
+
+        my_run = Run.get_context()
+        rai_temp = create_rai_insights_from_port_path(my_run, args.constructor)
+        rai_temp.save(incoming_temp_dir)
+
+        print("Savied rai_temp")
+        print_dir_tree(incoming_temp_dir)
+        print("=======")
 
         create_rai_tool_directories(incoming_dir)
-        _logger.info("Copied empty RAIInsights")
+        _logger.info("Saved empty RAI Insights input to temporary directory")
 
-        insight_paths = [args.insight_1, args.insight_2, args.insight_3, args.insight_4]
+        insight_paths = [
+            args.insight_1,
+            args.insight_2,
+            args.insight_3,
+            args.insight_4,
+        ]
 
         included_tools: Dict[str, bool] = {
             RAIToolType.CAUSAL: False,
