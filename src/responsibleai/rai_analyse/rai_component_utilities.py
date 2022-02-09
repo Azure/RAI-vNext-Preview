@@ -67,7 +67,7 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     model = Model._get(workspace, id=model_id)
     model_uri = "models:/{}/{}".format(model.name, model.version)
     mlflow.deployments.run_local(
-        target="",
+        target="localhost",
         name="local_model",
         model_uri=model_uri,
         flavor='sklearn'
