@@ -13,7 +13,7 @@ outputs:
     type: path
 code:
   local_path: ./src_train_logreg/
-environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+environment: azureml:AML-RAI-Test-Environment:VERSION_REPLACEMENT_STRING
 command: >-
   python train.py
   --training_data ${{inputs.training_data}}
