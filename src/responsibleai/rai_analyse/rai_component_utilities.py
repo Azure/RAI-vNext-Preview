@@ -16,6 +16,7 @@ from zipfile import Path
 import pandas as pd
 
 import mlflow
+import mlflow.deployments
 
 from azureml.core import Model, Run, Workspace
 
@@ -67,11 +68,17 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
 
     model = Model._get(workspace, id=model_id)
     model_uri = "models:/{}/{}".format(model.name, model.version)
-    azureml.mlflow.deploy.run_local(
+    mlflow.deployments.run_local(
+        target="azureml",
         name="local_model",
         model_uri=model_uri,
         flavor='sklearn'
     )
+    #azureml.mlflow.deploy.run_local(
+    #    name="local_model",
+    #    model_uri=model_uri,
+    #    flavor='sklearn'
+    #)
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
