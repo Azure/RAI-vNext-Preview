@@ -9,3 +9,6 @@ dependencies:
     - pandas
     - pyarrow
     - scikit-learn
+    - mlflow
+    - azureml-mlflow~=1.37.0
+    - azureml-core
