@@ -72,7 +72,8 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
         target="azureml",
         name="local_model",
         model_uri=model_uri,
-        flavor='sklearn'
+        flavor='sklearn',
+        config={}
     )
     #azureml.mlflow.deploy.run_local(
     #    name="local_model",
