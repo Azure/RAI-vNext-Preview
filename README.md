@@ -44,7 +44,7 @@ conda create -n azureml_env python=3.8
 activate azureml_env
 ```
 
-After activating your environment, if this is your first time running the RAI Dashboard in private preview then continue to the [setup instructions](https://github.com/Azure/RAI-vNext-Preview/blob/mergePrivatePreview_MAD/docs/Setup.md) to do a one-time setup for your workspace.
+After activating your environment, if this is your first time running the RAI Dashboard in private preview then continue to the [setup instructions](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md) to do a one-time setup for your workspace.
 
 
 
