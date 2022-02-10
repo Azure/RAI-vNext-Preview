@@ -81,10 +81,13 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     #    model_uri=model_uri,
     #    flavor='sklearn'
     #)
-    subprocess.Popen(
+    server_process = subprocess.Popen(
         ['mlflow', 'models', 'serve', '--model-uri', model_uri],
     )
+    _logger.info("MLFlow server process spawned ==================================")
     mlflow_model = mlflow.pyfunc.load_model(model_uri)
+    server_process.kill()
+    _logger.info("MLFlow server process killed ========================")
     return mlflow_model._model_impl
 
 
