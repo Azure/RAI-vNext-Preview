@@ -9,6 +9,7 @@ import pathlib
 import shutil
 import subprocess
 import tempfile
+import time
 import uuid
 
 from typing import Any, Dict
@@ -84,10 +85,12 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     server_process = subprocess.Popen(
         ['mlflow', 'models', 'serve', '--model-uri', model_uri],
     )
-    _logger.info("MLFlow server process spawned ==================================")
+    _logger.info("===== MLFlow server process spawned ==================================")
+    time.sleep(90)
+    _logger.info("===== MLFlow sleep startup complete ===================")
     mlflow_model = mlflow.pyfunc.load_model(model_uri)
     server_process.kill()
-    _logger.info("MLFlow server process killed ========================")
+    _logger.info("===== MLFlow server process killed ========================")
     return mlflow_model._model_impl
 
 
