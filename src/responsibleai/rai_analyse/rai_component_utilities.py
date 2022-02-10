@@ -86,7 +86,7 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
         ['mlflow', 'models', 'serve', '--model-uri', model_uri],
     )
     _logger.info("===== MLFlow server process spawned ==================================")
-    time.sleep(90)
+    time.sleep(900)
     _logger.info("===== MLFlow sleep startup complete ===================")
     mlflow_model = mlflow.pyfunc.load_model(model_uri)
     server_process.kill()
