@@ -7,6 +7,7 @@ import logging
 import os
 import pathlib
 import shutil
+import subprocess
 import tempfile
 import uuid
 
@@ -68,19 +69,24 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
 
     model = Model._get(workspace, id=model_id)
     model_uri = "models:/{}/{}".format(model.name, model.version)
-    mlflow.deployments.run_local(
-        target="azureml",
-        name="local_model",
-        model_uri=model_uri,
-        flavor='sklearn',
-        config={}
-    )
+    #mlflow.deployments.run_local(
+    #    target="azureml",
+    #    name="local_model",
+    #    model_uri=model_uri,
+    #    flavor='sklearn',
+    #    config={}
+    #)
     #azureml.mlflow.deploy.run_local(
     #    name="local_model",
     #    model_uri=model_uri,
     #    flavor='sklearn'
     #)
-    return mlflow.pyfunc.load_model(model_uri)._model_impl
+    subprocess.run(
+        ['mlflow', 'models', 'serve', '--model', model_uri],
+        check=True
+    )
+    mlflow_model = mlflow.pyfunc.load_model(model_uri)
+    return mlflow_model._model_impl
 
 
 def load_dataset(parquet_path: str):
