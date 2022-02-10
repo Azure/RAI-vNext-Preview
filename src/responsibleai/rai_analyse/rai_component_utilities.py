@@ -82,7 +82,7 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     #    flavor='sklearn'
     #)
     subprocess.Popen(
-        ['mlflow', 'models', 'serve', '--model-uri', model_uri],
+        ['mlflow', 'models', 'serve', '--model-uri', model_uri, '&'],
     )
     mlflow_model = mlflow.pyfunc.load_model(model_uri)
     return mlflow_model._model_impl
