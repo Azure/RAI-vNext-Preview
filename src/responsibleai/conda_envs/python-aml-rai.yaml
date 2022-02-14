@@ -5,12 +5,12 @@ dependencies:
   - python=3.8
   - pip=20.0.2
   - pip:
-    - numpy<1.20
+    - numpy
     - pandas
     - pyarrow
     - scikit-learn
     - mlflow
-    - azureml-mlflow~=1.37.0
-    - responsibleai~=0.16.0
+    - azureml-mlflow
+    - responsibleai~=0.17.0
     - azureml-dataset-runtime
     - azureml-core
