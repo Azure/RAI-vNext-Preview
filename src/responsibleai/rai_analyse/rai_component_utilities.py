@@ -71,6 +71,8 @@ def download_model_to_dir(
 ) -> None:
     mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
     model = Model._get(workspace, id=model_id)
+    _logger.info("model type:{0}".format(type(model)))
+    _logger.info("model dir: {0}".format(dir(model)))
     temp_dir = tempfile.gettempdir()
     model.download(target_dir=temp_dir, exist_ok=True)
 
@@ -81,16 +83,7 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     model = Model._get(workspace, id=model_id)
     model_uri = "models:/{}/{}".format(model.name, model.version)
 
-    temp_dir = tempfile.gettempdir()
-
-    model.download(target_dir=temp_dir, exist_ok=True)
-
-    with DeployedModel(model_dir=model_dir) as dm:
-        _logger.info("Have started up deployed model")
-        time.sleep(10)
-        _logger.info("Minisleep completed")
-
-    return None  # Force other things to fail
+    return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
 def load_dataset(parquet_path: str):
