@@ -108,7 +108,12 @@ def main(args):
         )
         with DeployedModel(unwrapped_model_dir) as dm:
             _logger.info("Model Deployed")
-            time.sleep(10)
+            time.sleep(60)
+            _logger.info("Calling endpoint")
+            data = test_df.drop(args.target_column_name).iloc[0:2]
+            response = dm.predict(data)
+            _logger.info("Got response")
+            _logger.info(response)
             _logger.info("End of context")
 
     constructor_args = create_constructor_arg_dict(args)

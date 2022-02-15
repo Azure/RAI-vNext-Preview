@@ -7,7 +7,9 @@ import logging
 import subprocess
 import time
 
+import requests
 
+import pandas as pd
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -35,3 +37,9 @@ class DeployedModel:
         for line in self._server.stdout:
             _logger.info(line)
         _logger.info("End of process output")
+
+    def predict(self, input_df: pd.DataFrame):
+        payload = input_df.to_json(orient="split")
+        headers = {'Content-Type': 'application/json'}
+        r = requests.post("http://127.0.0.1:5000/invocations", headers=headers, data=payload)
+        return r.text
