@@ -106,7 +106,7 @@ def main(args):
         download_model_to_dir(
             my_run.experiment.workspace, model_id, unwrapped_model_dir
         )
-        with DeployedModel(unwrapped_model_dir) as dm:
+        with DeployedModel(os.path.join(unwrapped_model_dir, model_id)) as dm:
             _logger.info("Model Deployed")
             time.sleep(60)
             _logger.info("Calling endpoint")
