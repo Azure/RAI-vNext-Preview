@@ -27,6 +27,7 @@ import azureml.mlflow.deploy
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from deployed_model import DeployedModel
 
 
 _logger = logging.getLogger(__file__)
@@ -70,27 +71,10 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
 
     model = Model._get(workspace, id=model_id)
     model_uri = "models:/{}/{}".format(model.name, model.version)
-    #mlflow.deployments.run_local(
-    #    target="azureml",
-    #    name="local_model",
-    #    model_uri=model_uri,
-    #    flavor='sklearn',
-    #    config={}
-    #)
-    #azureml.mlflow.deploy.run_local(
-    #    name="local_model",
-    #    model_uri=model_uri,
-    #    flavor='sklearn'
-    #)
-    server_process = subprocess.Popen(
-        ['mlflow', 'models', 'serve', '--model-uri', model_uri],
-    )
-    _logger.info("===== MLFlow server process spawned ==================================")
-    time.sleep(900)
-    _logger.info("===== MLFlow sleep startup complete ===================")
-    mlflow_model = mlflow.pyfunc.load_model(model_uri)
-    server_process.kill()
-    _logger.info("===== MLFlow server process killed ========================")
+
+    with DeployedModel(model_uri=model_uri) as dm:
+        _logger.info("Have started up deployed model")
+
     return mlflow_model._model_impl
 
 
