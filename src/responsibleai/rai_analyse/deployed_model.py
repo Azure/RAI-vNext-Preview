@@ -35,8 +35,9 @@ class DeployedModel:
         )
 
         for line in self._server.stdout:
-            _logger.info(line)
-            if "Listening at: http://127.0.0.1:5000" in line:
+            _logger.info(line.strip())
+            target_string = "Booting worker with pid" # "Listening at: http://127.0.0.1:5000"
+            if target_string in line:
                 break
             if self._server.returncode is not None:
                 # Server has crashed
@@ -50,11 +51,12 @@ class DeployedModel:
         _logger.info("Process killed")
         _logger.info("Remaining output")
         for line in self._server.stdout:
-            _logger.info(line)
+            _logger.info(line.strip())
         _logger.info("End of process output")
 
     def predict(self, input_df: pd.DataFrame):
         payload = input_df.to_json(orient="split")
+        _logger.info("Payload: {0}".format(payload))
         headers = {"Content-Type": "application/json"}
         r = requests.post(
             "http://127.0.0.1:5000/invocations",
@@ -62,4 +64,5 @@ class DeployedModel:
             data=payload,
             timeout=100,
         )
+        _logger.info("Response received")
         return r.text
