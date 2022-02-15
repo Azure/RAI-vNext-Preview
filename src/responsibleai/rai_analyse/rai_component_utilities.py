@@ -75,6 +75,9 @@ def download_model_to_dir(
     _logger.info("model dir: {0}".format(dir(model)))
     temp_dir = tempfile.gettempdir()
     model.download(target_dir=temp_dir, exist_ok=True)
+    print("***************************")
+    print_dir_tree(temp_dir)
+    print("***************************")
 
 
 def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
