@@ -71,12 +71,9 @@ def download_model_to_dir(
 ) -> None:
     mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
     model = Model(workspace, id=model_id)
-    _logger.info("model type:{0}".format(type(model)))
-    _logger.info("model dir: {0}".format(dir(model)))
-    temp_dir = tempfile.gettempdir()
-    model.download(target_dir=temp_dir, exist_ok=True)
+    model.download(target_dir=target_path, exist_ok=True)
     print("***************************")
-    print_dir_tree(temp_dir)
+    print_dir_tree(target_path)
     print("***************************")
 
 
