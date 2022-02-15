@@ -6,7 +6,6 @@
 import logging
 import subprocess
 import time
-from nbformat import ValidationError
 
 import requests
 
@@ -41,7 +40,7 @@ class DeployedModel:
                 break
             if self._server.returncode is not None:
                 # Server has crashed
-                raise ValidationError("MLFlow server has crashed")
+                raise RuntimeError("MLFlow server has crashed")
 
         _logger.info("MLFlow model deployed")
 
