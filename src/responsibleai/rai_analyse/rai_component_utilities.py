@@ -75,7 +75,7 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     with DeployedModel(model_uri=model_uri) as dm:
         _logger.info("Have started up deployed model")
 
-    return mlflow_model._model_impl
+    return None # Force other things to fail
 
 
 def load_dataset(parquet_path: str):
