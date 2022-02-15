@@ -7,6 +7,8 @@ import json
 import logging
 import os
 import shutil
+import tempfile
+import time
 from typing import Any
 
 from azureml.core import Run
@@ -15,7 +17,13 @@ from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
 from arg_helpers import get_from_args, json_empty_is_none_parser
-from rai_component_utilities import load_dataset, fetch_model_id, load_mlflow_model
+from rai_component_utilities import (
+    load_dataset,
+    fetch_model_id,
+    load_mlflow_model,
+    download_model_to_dir,
+)
+from deployed_model import DeployedModel
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -94,9 +102,18 @@ def main(args):
     _logger.info("Loading model: {0}".format(model_id))
     model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
 
+    with tempfile.TemporaryDirectory() as unwrapped_model_dir:
+        download_model_to_dir(
+            my_run.experiment.workspace, model_id, unwrapped_model_dir
+        )
+        with DeployedModel(unwrapped_model_dir) as dm:
+            _logger.info("Model Deployed")
+            time.sleep(10)
+            _logger.info("End of context")
+
     constructor_args = create_constructor_arg_dict(args)
 
-    # Make sure that it actuall loads
+    # Make sure that it actually loads
     _logger.info("Creating RAIInsights object")
     _ = RAIInsights(
         model=model_estimator, train=train_df, test=test_df, **constructor_args

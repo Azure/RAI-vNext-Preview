@@ -7,15 +7,17 @@ import logging
 import subprocess
 import time
 
+
+
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
 class DeployedModel:
-    def __init__(self, model_uri: str):
-        self._target_model_uri = model_uri
+    def __init__(self, model_dir: str):
+        self._target_model_dir = model_dir
     
     def __enter__(self):
-        launch_args = ['mlflow', 'models', 'serve', '--model-uri', self._target_model_uri]
+        launch_args = ['mlflow', 'models', 'serve', '--model-uri', self._target_model_dir]
         self._server = subprocess.Popen(args=launch_args, stdout=subprocess.PIPE,stderr=subprocess.STDOUT, universal_newlines=True)
 
         for line in self._server.stdout:
