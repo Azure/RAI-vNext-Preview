@@ -160,6 +160,7 @@ if __name__ == "__main__":
 
     # run main function
     main(args)
+    _logger.info("main completed")
 
     # add space in logs
     print("*" * 60)

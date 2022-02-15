@@ -46,13 +46,12 @@ class DeployedModel:
         _logger.info("MLFlow model deployed")
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
-        _logger.info("Killing server process")
+        _logger.info("Sending SIGTERM to server process")
+        self._server.terminate()
+        time.sleep(5)
+        _logger.info("Sending SIGKILL to server process")
         self._server.kill()
         _logger.info("Process killed")
-        _logger.info("Remaining output")
-        for line in self._server.stdout:
-            _logger.info(line.strip())
-        _logger.info("End of process output")
 
     def predict(self, input_df: pd.DataFrame):
         payload = input_df.to_json(orient="split")
