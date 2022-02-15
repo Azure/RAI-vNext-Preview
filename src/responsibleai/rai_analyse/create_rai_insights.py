@@ -111,7 +111,7 @@ def main(args):
             _logger.info("Model Deployed")
             time.sleep(60)
             _logger.info("Calling endpoint")
-            data = test_df.drop(args.target_column_name).iloc[0:2]
+            data = test_df.drop(args.target_column_name, axis=1).iloc[0:2]
             response = dm.predict(data)
             _logger.info("Got response")
             _logger.info(response)
