@@ -58,11 +58,11 @@ class DeployedModel:
         payload = input_df.to_json(orient="split")
         _logger.info("Payload: {0}".format(payload))
         headers = {"Content-Type": "application/json"}
-        #r = requests.post(
-        #    "http://127.0.0.1:5000/invocations",
-        #    headers=headers,
-        #    data=payload,
-        #    timeout=100,
-        #)
-        _logger.info("Skipped call")
-        return "Call was skipped" # r.text
+        r = requests.post(
+            "http://127.0.0.1:5000/invocations",
+            headers=headers,
+            data=payload,
+            timeout=100,
+        )
+        _logger.info("Call to model completed: {0}".format(r.text))
+        return r.text
