@@ -26,7 +26,7 @@ class ModelWrapper:
     def wrap_mlflow_model(target_mlflow_dir: str):
         my_dir = tempfile.mkdtemp() # Won't be cleaned up
         _logger.info("Target directory: {0}".format(my_dir))
-        shutil.copytree(target_mlflow_dir, my_dir)
+        shutil.copytree(target_mlflow_dir, my_dir, dirs_exist_ok=True)
 
         target_pickle_file = os.path.join(my_dir, 'model.pkl')
         os.remove(target_pickle_file)
