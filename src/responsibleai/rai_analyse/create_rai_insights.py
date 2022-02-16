@@ -17,7 +17,9 @@ from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
 from arg_helpers import get_from_args, json_empty_is_none_parser
+from model_wrapper import ModelWrapper
 from rai_component_utilities import (
+    print_dir_tree,
     load_dataset,
     fetch_model_id,
     load_mlflow_model,
@@ -107,7 +109,15 @@ def main(args):
             my_run.experiment.workspace, model_id, unwrapped_model_dir
         )
         model_name = model_id.split(':')[0]
-        with DeployedModel(os.path.join(unwrapped_model_dir, model_name)) as dm:
+
+        _logger.info("Trying to create wrapped model")
+        wrapped_dir = ModelWrapper.wrap_mlflow_model(unwrapped_model_dir)
+        _logger.info("Model wrapped")
+        print("@@@@---------------@@@")
+        print_dir_tree(wrapped_dir)
+        print("@@@@---------------@@@")
+
+        with DeployedModel(os.path.join(wrapped_dir, model_name)) as dm:
             _logger.info("Model Deployed")
             time.sleep(60)
             _logger.info("Calling endpoint")
