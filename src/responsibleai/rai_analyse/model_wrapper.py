@@ -10,6 +10,8 @@ import tempfile
 import cloudpickle
 import mlflow
 
+from rai_component_utilities import print_dir_tree
+
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
@@ -27,6 +29,10 @@ class ModelWrapper:
         my_dir = tempfile.mkdtemp() # Won't be cleaned up
         _logger.info("Target directory: {0}".format(my_dir))
         shutil.copytree(target_mlflow_dir, my_dir, dirs_exist_ok=True)
+
+        print("---###---###---")
+        print_dir_tree(my_dir)
+        print("---###---###---")
 
         target_pickle_file = os.path.join(my_dir, 'model.pkl')
         os.remove(target_pickle_file)
