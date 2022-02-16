@@ -44,6 +44,7 @@ class DeployedModel:
                 raise RuntimeError("MLFlow server has crashed")
 
         _logger.info("MLFlow model deployed")
+        return self
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
         _logger.info("Sending SIGTERM to server process")
