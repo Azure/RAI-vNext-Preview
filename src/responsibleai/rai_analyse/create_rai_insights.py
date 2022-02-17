@@ -113,16 +113,13 @@ def main(args):
         _logger.info("Trying to create wrapped model")
         wrapped_dir = ModelWrapper.wrap_mlflow_model(unwrapped_model_dir)
         _logger.info("Model wrapped")
-        print("@@@@---------------@@@")
-        print_dir_tree(wrapped_dir)
-        print("@@@@---------------@@@")
 
         with DeployedModel(os.path.join(wrapped_dir, model_name)) as dm:
             _logger.info("Model Deployed")
             time.sleep(60)
             _logger.info("Calling endpoint")
             data = test_df.drop(args.target_column_name, axis=1).iloc[0:2]
-            response = dm.predict(data)
+            response = "Dummy value" # dm.predict(data)
             _logger.info("Got response")
             _logger.info(response)
             _logger.info("End of context")
