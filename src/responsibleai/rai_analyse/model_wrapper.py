@@ -19,10 +19,12 @@ logging.basicConfig(level=logging.INFO)
 class ModelWrapper:
     def __init__(self, target_mlflow_path: str):
         self._target_mlflow_path = target_mlflow_path
+        _logger.info("Created ModelWrapper for path: {0}".format(target_mlflow_path))
 
     def _load_model(self):
-        if self._model is None:
-            self._model = mlflow.sklearn.load_model()
+        if self._model is None:        
+            _logger.info("Loading wrapped model with mlflow")
+            self._model = mlflow.sklearn.load_model(self._target_mlflow_path)
 
 
     @staticmethod
