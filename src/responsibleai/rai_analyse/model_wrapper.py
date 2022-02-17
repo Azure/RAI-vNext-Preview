@@ -35,6 +35,7 @@ class ModelWrapper:
         mlflow_dirname = target_mlflow_path.parts[-1]
         wrapped_dirname = os.path.join(my_dir, mlflow_dirname)
         print("---###---###---")
+        print(target_mlflow_path.parts[-1])
         print_dir_tree(wrapped_dirname)
         print("---###---###---")
 
