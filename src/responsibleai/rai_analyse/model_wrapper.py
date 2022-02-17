@@ -27,15 +27,14 @@ class ModelWrapper:
 
     @staticmethod
     def wrap_mlflow_model(target_mlflow_dir: str):
+        _logger.info("target_mlflow_dir: {0}".format(target_mlflow_dir))
         my_dir = tempfile.mkdtemp() # Won't be cleaned up
         _logger.info("Target directory: {0}".format(my_dir))
         shutil.copytree(target_mlflow_dir, my_dir, dirs_exist_ok=True)
 
-        target_mlflow_path = pathlib.Path(target_mlflow_dir)
-        mlflow_dirname = target_mlflow_path.parts[-1]
+        mlflow_dirname = os.listdir(target_mlflow_dir)[0]
         wrapped_dirname = os.path.join(my_dir, mlflow_dirname)
         print("---###---###---")
-        print(target_mlflow_path.parts[-1])
         print_dir_tree(wrapped_dirname)
         print("---###---###---")
 
