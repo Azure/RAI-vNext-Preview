@@ -43,7 +43,8 @@ class ModelWrapper:
 
         wrapped_model = ModelWrapper(os.path.abspath(target_mlflow_dir))
 
-        cloudpickle.dump(wrapped_model, target_pickle_file)
+        with open(target_pickle_file, mode='wb') as pkl_file:
+            cloudpickle.dump(wrapped_model, pkl_file)
 
         return wrapped_dirname
         
