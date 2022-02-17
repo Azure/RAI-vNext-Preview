@@ -5,6 +5,7 @@
 import logging
 import shutil
 import os
+import pathlib
 import tempfile
 
 import cloudpickle
@@ -30,17 +31,20 @@ class ModelWrapper:
         _logger.info("Target directory: {0}".format(my_dir))
         shutil.copytree(target_mlflow_dir, my_dir, dirs_exist_ok=True)
 
+        target_mlflow_path = pathlib.Path(target_mlflow_dir)
+        mlflow_dirname = target_mlflow_path.parts[-1]
+        wrapped_dirname = os.path.join(my_dir, mlflow_dirname)
         print("---###---###---")
-        print_dir_tree(my_dir)
+        print_dir_tree(wrapped_dirname)
         print("---###---###---")
 
-        target_pickle_file = os.path.join(my_dir, 'model.pkl')
+        target_pickle_file = os.path.join(wrapped_dirname, 'model.pkl')
         os.remove(target_pickle_file)
 
         wrapped_model = ModelWrapper(os.path.abspath(target_mlflow_dir))
 
         cloudpickle.dump(wrapped_model, target_pickle_file)
 
-        return my_dir
+        return wrapped_dirname
         
 
