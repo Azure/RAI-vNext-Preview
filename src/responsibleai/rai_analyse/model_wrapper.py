@@ -55,10 +55,10 @@ class ModelWrapper:
         _logger.info("Nesting actual model")
         shutil.copytree(
             src=os.path.join(target_mlflow_dir, mlflow_dirname),
-            dst=os.path.join(wrapped_dirname, 'internal_model'),
+            dst=os.path.join(wrapped_dirname, mlflow_dirname),
         )
 
-        wrapped_model = ModelWrapper('internal_model')
+        wrapped_model = ModelWrapper(mlflow_dirname)
 
         _logger.info("Pickling wrapped model")
         with open(target_pickle_file, mode="wb") as pkl_file:
