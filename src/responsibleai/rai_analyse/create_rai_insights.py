@@ -119,7 +119,7 @@ def main(args):
             time.sleep(60)
             _logger.info("Calling endpoint")
             data = test_df.drop(args.target_column_name, axis=1).iloc[0:2]
-            response = "Dummy value" # dm.predict(data)
+            response = dm.predict(data)
             _logger.info("Got response")
             _logger.info(response)
             _logger.info("End of context")
