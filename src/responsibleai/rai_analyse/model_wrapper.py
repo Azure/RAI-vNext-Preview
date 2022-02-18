@@ -53,8 +53,10 @@ class ModelWrapper:
 
         # Nest the actual MLFlow model inside this directory
         _logger.info("Nesting actual model")
-        shutil.copytree(src=os.path.join(target_mlflow_dir, mlflow_dirname),
-                        dst=os.path.join(wrapped_dirname, mlflow_dirname))
+        shutil.copytree(
+            src=os.path.join(target_mlflow_dir, mlflow_dirname),
+            dst=os.path.join(wrapped_dirname, mlflow_dirname),
+        )
 
         wrapped_model = ModelWrapper(mlflow_dirname)
 
