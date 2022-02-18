@@ -53,6 +53,9 @@ class DeployedModel:
         _logger.info("Sending SIGKILL to server process")
         self._server.kill()
         _logger.info("Process killed")
+        for line in self._server.stdout:
+            _logger.info(line.strip())
+        _logger.info("End of cached output")
 
     def predict(self, input_df: pd.DataFrame):
         payload = input_df.to_json(orient="split")
