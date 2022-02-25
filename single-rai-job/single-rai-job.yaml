@@ -9,6 +9,8 @@ inputs:
   maximum_rows_for_test_dataset: 5000
   categorical_column_names: '[]' # Optional[List[str]]
   classes: '[]'  Optional[List[str]]
+  # ------
+  compute_explanation: True
 outputs:
   dashboard:
     mode: upload
