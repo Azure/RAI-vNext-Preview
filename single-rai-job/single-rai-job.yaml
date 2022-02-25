@@ -43,14 +43,14 @@ command: |
   cd single-rai-job
   # ========================================
   # Run the script
-  python ./src/run_rai.py 
-    --title '${{inputs.title}}'
-    --task_type ${{inputs.task_type}}
-    --model_id ${{inputs.model_id}}
-    --train_dataset ${{inputs.train_dataset}}
-    --test_dataset ${{inputs.test_dataset}}
-    --target_column_name ${{inputs.target_column_name}}
-    --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}}
-    --categorical_column_names '${{inputs.categorical_column_names}}'
-    --classes '${{inputs.classes}}'
+  python ./src/run_rai.py \
+    --title '${{inputs.title}}' \
+    --task_type ${{inputs.task_type}} \
+    --model_id ${{inputs.model_id}} \
+    --train_dataset ${{inputs.train_dataset}} \
+    --test_dataset ${{inputs.test_dataset}} \
+    --target_column_name ${{inputs.target_column_name}} \
+    --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}} \
+    --categorical_column_names '${{inputs.categorical_column_names}}' \
+    --classes '${{inputs.classes}}' \
     --enable_explanation ${{inputs.enable_explanation}}
