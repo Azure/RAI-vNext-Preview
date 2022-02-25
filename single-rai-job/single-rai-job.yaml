@@ -30,17 +30,6 @@ experiment_name: RAI_Single_Job_01
 description: Run RAI in a single job
 command: |
   set -o xtrace
-  # =======================================
-  # Get the code
-  apt-get update
-  apt-get install git --yes
-  echo
-  cd /tmp
-  git clone https://github.com/Azure/RAI-vNext-Preview.git
-  cd RAI-vNext-Preview
-  git checkout riedgar-ms/single-rai-job
-  echo
-  cd single-rai-job
   # ========================================
   # Run the script
   python ./src/run_rai.py \
@@ -53,4 +42,6 @@ command: |
     --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}} \
     --categorical_column_names '${{inputs.categorical_column_names}}' \
     --classes '${{inputs.classes}}' \
-    --enable_explanation ${{inputs.enable_explanation}}
+    --enable_explanation ${{inputs.enable_explanation}} \
+    --dashboard ${{outputs.dashboard}} \
+    --ux_json ${{outputs.ux_json}}

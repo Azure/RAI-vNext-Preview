@@ -17,6 +17,31 @@ def parse_args():
     # setup arg parser
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("--title", type=str, required=True)
+
+    parser.add_argument(
+        "--task_type", type=str, required=True, choices=["classification", "regression"]
+    )
+
+    parser.add_argument("--model_id", type=str, help="name:version", required=True)
+
+    parser.add_argument("--train_dataset", type=str, required=True)
+    parser.add_argument("--test_dataset", type=str, required=True)
+
+    parser.add_argument("--target_column_name", type=str, required=True)
+
+    parser.add_argument("--maximum_rows_for_test_dataset", type=int, default=5000)
+    parser.add_argument(
+        "--categorical_column_names", type=str, help="Optional[List[str]]"
+    )
+
+    parser.add_argument("--classes", type=str, help="Optional[List[str]]")
+
+    parser.add_argument("--enable_explanation", type=bool, required=True)
+
+    parser.add_argument("--dashboard", type=str, required=True)
+    parser.add_argument("--ux_json", type=str, required=True)
+
     # parse args
     args = parser.parse_args()
 
