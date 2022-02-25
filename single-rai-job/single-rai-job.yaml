@@ -73,20 +73,20 @@ command: |
     --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}} \
     --categorical_column_names '${{inputs.categorical_column_names}}' \
     --classes '${{inputs.classes}}' \
-    --enable_causal ${{inputs.enable_causal}} \\
-    --causal_treatment_features '${{inputs.causal_treatment_features}}'
-    --causal_heterogeneity_features '${{inputs.causal_heterogeneity_features}}'
-    --causal_nuisance_model ${{inputs.causal_nuisance_model}}
-    --causal_heterogeneity_model ${{inputs.causal_heterogeneity_model}}
-    --causal_alpha ${{inputs.causal_alpha}}
-    --causal_upper_bound_on_cat_expansion ${{inputs.causal_upper_bound_on_cat_expansion}}
-    --causal_treatment_cost '${{inputs.causal_treatment_cost}}'
-    --causal_min_tree_leaf_samples ${{inputs.causal_min_tree_leaf_samples}}
-    --causal_max_tree_depth ${{inputs.causal_max_tree_depth}}
-    --causal_categories ${{inputs.causal_categories}}
-    --causal_n_jobs ${{inputs.causal_n_jobs}}
-    --causal_verbose ${{inputs.causal_verbose}}
-    --causal_random_state '${{inputs.causal_random_state}}'
+    --enable_causal ${{inputs.enable_causal}} \
+    --causal_treatment_features '${{inputs.causal_treatment_features}}' \
+    --causal_heterogeneity_features '${{inputs.causal_heterogeneity_features}}' \
+    --causal_nuisance_model ${{inputs.causal_nuisance_model}} \
+    --causal_heterogeneity_model ${{inputs.causal_heterogeneity_model}} \
+    --causal_alpha ${{inputs.causal_alpha}} \
+    --causal_upper_bound_on_cat_expansion ${{inputs.causal_upper_bound_on_cat_expansion}} \
+    --causal_treatment_cost '${{inputs.causal_treatment_cost}}' \
+    --causal_min_tree_leaf_samples ${{inputs.causal_min_tree_leaf_samples}} \
+    --causal_max_tree_depth ${{inputs.causal_max_tree_depth}} \
+    --causal_categories ${{inputs.causal_categories}} \
+    --causal_n_jobs ${{inputs.causal_n_jobs}} \
+    --causal_verbose ${{inputs.causal_verbose}} \
+    --causal_random_state '${{inputs.causal_random_state}}' \
     --enable_counterfactual ${{inputs.enable_counterfactual}} \
     --counterfactual_total_CFs ${{inputs.counterfactual_total_CFs}} \
     --counterfactual_method ${{inputs.counterfactual_method}} \
