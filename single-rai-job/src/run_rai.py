@@ -194,6 +194,7 @@ def main(args):
             verbose=args.causal_verbose,
             random_state=args.causal_random_state,
         )
+        included_tools[RAIToolType.CAUSAL] = True
 
     if args.enable_counterfactual:
         _logger.info("Adding counterfactuals")
