@@ -58,13 +58,13 @@ command: |
     --categorical_column_names '${{inputs.categorical_column_names}}' \
     --classes '${{inputs.classes}}' \
     --enable_counterfactual ${{inputs.enable_counterfactual}} \
-    --counterfactual_total_CFs ${{inputs.counterfactual_total_CFs}}
-    --counterfactual_method ${{inputs.counterfactual_method}}
-    --counterfactual_desired_class ${{inputs.counterfactual_desired_class}}
-    --counterfactual_desired_range '${{inputs.counterfactual_desired_range}}'
-    --counterfactual_permitted_range '${{inputs.counterfactual_permitted_range}}'
-    --counterfactual_features_to_vary '${{inputs.counterfactual_features_to_vary}}'
-    --counterfactual_feature_importance '${{inputs.counterfactual_feature_importance}}'
+    --counterfactual_total_CFs ${{inputs.counterfactual_total_CFs}} \
+    --counterfactual_method ${{inputs.counterfactual_method}} \
+    --counterfactual_desired_class ${{inputs.counterfactual_desired_class}} \
+    --counterfactual_desired_range '${{inputs.counterfactual_desired_range}}' \
+    --counterfactual_permitted_range '${{inputs.counterfactual_permitted_range}}' \
+    --counterfactual_features_to_vary '${{inputs.counterfactual_features_to_vary}}' \
+    --counterfactual_feature_importance '${{inputs.counterfactual_feature_importance}}' \
     --enable_error_analysis ${{inputs.enable_error_analysis}} \
     --error_analysis_max_depth ${{inputs.error_analysis_max_depth}} \
     --error_analysis_num_leaves ${{inputs.error_analysis_num_leaves}} \
