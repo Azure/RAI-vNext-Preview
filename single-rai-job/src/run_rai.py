@@ -32,28 +32,34 @@ def parse_args():
     # setup arg parser
     parser = argparse.ArgumentParser()
 
+    # Constructor arguments
     parser.add_argument("--title", type=str, required=True)
-
     parser.add_argument(
         "--task_type", type=str, required=True, choices=["classification", "regression"]
     )
-
     parser.add_argument("--model_id", type=str, help="name:version", required=True)
-
     parser.add_argument("--train_dataset", type=str, required=True)
     parser.add_argument("--test_dataset", type=str, required=True)
-
     parser.add_argument("--target_column_name", type=str, required=True)
-
     parser.add_argument("--maximum_rows_for_test_dataset", type=int, default=5000)
     parser.add_argument(
         "--categorical_column_names", type=str, help="Optional[List[str]]"
     )
-
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
 
+    # Error analysis arguments
+    parser.add_argument("--enable_error_analysis", type=bool, required=True)
+    parser.add_argument("--error_analysis_max_depth", type=int)
+    parser.add_argument("--error_analysis_num_leaves", type=int)
+    parser.add_argument("--error_analysis_min_child_samples", type=int)
+    parser.add_argument(
+        "--error_analysis_filter_features", type=json.loads, help="List"
+    )
+
+    # Explanation arguments
     parser.add_argument("--enable_explanation", type=bool, required=True)
 
+    # Output arguments
     parser.add_argument("--dashboard", type=str, required=True)
     parser.add_argument("--ux_json", type=str, required=True)
 
@@ -114,6 +120,18 @@ def main(args):
         RAIToolType.ERROR_ANALYSIS: False,
         RAIToolType.EXPLANATION: False,
     }
+
+    _logger.info("Checking individual tools")
+
+    if args.enable_error_analysis:
+        _logger.info("Adding error analysis")
+        rai_i.error_analysis.add(
+            max_depth=args.error_analysis_max_depth,
+            num_leaves=args.error_analysis_num_leaves,
+            min_child_samples=args.error_analysis_min_child_samples,
+            filter_features=args.error_analysis_filter_features,
+        )
+        included_tools[RAIToolType.ERROR_ANALYSIS] = True
 
     if args.enable_explanation:
         _logger.info("Adding explanation")

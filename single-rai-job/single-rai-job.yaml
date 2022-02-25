@@ -14,6 +14,12 @@ inputs:
   categorical_column_names: '[]' # Optional[List[str]]
   classes: '[]'  # Optional[List[str]]
   # ------
+  enable_error_analysis: True
+  error_analysis_max_depth: 3
+  error_analysis_num_leaves: 31
+  error_analysis_min_child_samples: 20
+  error_analysis_filter_features: '["Marital Status", "Workclass"]'
+  # ------
   enable_explanation: True
   # ------
 outputs:
@@ -42,6 +48,11 @@ command: |
     --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}} \
     --categorical_column_names '${{inputs.categorical_column_names}}' \
     --classes '${{inputs.classes}}' \
+    --enable_error_analysis ${{inputs.enable_error_analysis}} \
+    --error_analysis_max_depth ${{inputs.error_analysis_max_depth}}
+    --error_analysis_num_leaves ${{inputs.error_analysis_num_leaves}}
+    --error_analysis_min_child_samples ${{inputs.error_analysis_min_child_samples}}
+    --error_analysis_filter_features '${{inputs.error_analysis_filter_features}}'
     --enable_explanation ${{inputs.enable_explanation}} \
     --dashboard ${{outputs.dashboard}} \
     --ux_json ${{outputs.ux_json}}
