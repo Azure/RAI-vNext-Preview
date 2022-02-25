@@ -7,6 +7,7 @@ import json
 import logging
 
 from pathlib import Path
+from typing import Dict
 
 from azureml.core import Run
 
@@ -14,8 +15,14 @@ from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.serialization_utilities import serialize_json_safe
 
 
+from constants import DashboardInfo, RAIToolType
 from arg_helpers import get_from_args, json_empty_is_none_parser
-from rai_component_utilities import load_dataset, load_mlflow_model
+from rai_component_utilities import (
+    add_properties_to_gather_run,
+    load_dataset,
+    load_mlflow_model,
+)
+
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -60,8 +67,7 @@ def parse_args():
 def create_constructor_arg_dict(args):
     """Create a kwarg dict for RAIInsights constructor
 
-    Only does the 'parameters' for the component, not the
-    input ports
+    Does not handle the model or dataframes
     """
     result = dict()
 
@@ -102,9 +108,17 @@ def main(args):
         model=model_estimator, train=train_df, test=test_df, **constructor_args
     )
 
+    included_tools: Dict[str, bool] = {
+        RAIToolType.CAUSAL: False,
+        RAIToolType.COUNTERFACTUAL: False,
+        RAIToolType.ERROR_ANALYSIS: False,
+        RAIToolType.EXPLANATION: False,
+    }
+
     if args.enable_explanation:
         _logger.info("Adding explanation")
         rai_i.explainer.add()
+        included_tools[RAIToolType.EXPLANATION] = True
 
     _logger.info("Triggering computation")
     rai_i.compute()
@@ -119,7 +133,16 @@ def main(args):
     output_path = Path(args.ux_json) / json_filename
     with open(output_path, "w") as json_file:
         json.dump(rai_dict, json_file)
-    _logger.info("main complete")
+
+    _logger.info("Adding properties to run")
+    dashboard_info = {
+        DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
+        DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: args.model_id,
+        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
+    }
+
+    add_properties_to_gather_run(dashboard_info, included_tools)
+    _logger.info("Processing completed")
 
 
 # run script
