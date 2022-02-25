@@ -18,8 +18,10 @@ from responsibleai.serialization_utilities import serialize_json_safe
 from constants import DashboardInfo, RAIToolType
 from arg_helpers import (
     boolean_parser,
+    float_or_json_parser,
     get_from_args,
     json_empty_is_none_parser,
+    int_or_none_parser,
     str_or_int_parser,
     str_or_list_parser,
 )
@@ -52,6 +54,37 @@ def parse_args():
         "--categorical_column_names", type=str, help="Optional[List[str]]"
     )
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
+
+    # Causal arguments
+    parser.add_argument("--enable_causal", type=bool, required=True)
+    parser.add_argument(
+        "--causal_treatment_features", type=json.loads, help="List[str]"
+    )
+    parser.add_argument(
+        "--causal_heterogeneity_features",
+        type=json.loads,
+        help="Optional[List[str]] use 'null' to skip",
+    )
+    parser.add_argument(
+        "--causal_nuisance_model", type=str, choices=["linear", "automl"]
+    )
+    parser.add_argument(
+        "--causal_heterogeneity_model", type=str, choices=["linear", "forest"]
+    )
+    parser.add_argument("--causal_alpha", type=float)
+    parser.add_argument("--causal_upper_bound_on_cat_expansion", type=int)
+    parser.add_argument(
+        "--causal_treatment_cost",
+        type=float_or_json_parser,
+        help="Union[float, List[Union[float, np.ndarray]]]",
+    )
+    parser.add_argument("--causal_min_tree_leaf_samples", type=int)
+    parser.add_argument("--causal_max_tree_depth", type=int)
+    parser.add_argument("--causal_skip_cat_limit_checks", type=boolean_parser)
+    parser.add_argument("--causal_categories", type=str_or_list_parser)
+    parser.add_argument("--causal_n_jobs", type=int)
+    parser.add_argument("--causal_verbose", type=int)
+    parser.add_argument("--causal_random_state", type=int_or_none_parser)
 
     # Counterfactual arguments
     parser.add_argument("--enable_counterfactual", type=bool, required=True)
@@ -142,6 +175,25 @@ def main(args):
     }
 
     _logger.info("Checking individual tools")
+
+    if args.enable_causal:
+        _logger.info("Adding causal")
+        rai_i.causal.add(
+            treatment_features=args.causal_treatment_features,
+            heterogeneity_features=args.causal_heterogeneity_features,
+            nuisance_model=args.causal_nuisance_model,
+            heterogeneity_model=args.causal_heterogeneity_model,
+            alpha=args.causal_alpha,
+            upper_bound_on_cat_expansion=args.causal_upper_bound_on_cat_expansion,
+            treatment_cost=args.causal_treatment_cost,
+            min_tree_leaf_samples=args.causal_min_tree_leaf_samples,
+            max_tree_depth=args.causal_max_tree_depth,
+            skip_cat_limit_checks=args.causal_skip_cat_limit_checks,
+            categories=args.causal_categories,
+            n_jobs=args.causal_n_jobs,
+            verbose=args.causal_verbose,
+            random_state=args.causal_random_state,
+        )
 
     if args.enable_counterfactual:
         _logger.info("Adding counterfactuals")
