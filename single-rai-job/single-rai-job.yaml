@@ -2,13 +2,15 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 inputs:
   title: 'My Single Job RAI'
   task_type: 'classification' # [classification, regression]
-  model_id: 
-  train_dataset: train_tabular_adult_1645800477:1
-  test_dataset:
+  model_id: common_fetch_model_adult_1645799670:3
+  train_dataset:
+     dataset: azureml:Adult_Train_PQ:1645799500
+     mode: ro_mount
+  test_dataset: Adult_Test_PQ:1645799500
   target_column_name: income
   maximum_rows_for_test_dataset: 5000
   categorical_column_names: '[]' # Optional[List[str]]
-  classes: '[]'  Optional[List[str]]
+  classes: '[]'  # Optional[List[str]]
   # ------
   compute_explanation: True
 outputs:
