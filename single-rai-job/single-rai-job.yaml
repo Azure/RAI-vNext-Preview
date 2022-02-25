@@ -7,7 +7,7 @@ inputs:
     dataset: azureml:Adult_Train_PQ:1645799500
     mode: ro_mount
   test_dataset:
-    dataset: Adult_Test_PQ:1645799500
+    dataset: azureml:Adult_Test_PQ:1645799500
     mode: ro_mount
   target_column_name: income
   maximum_rows_for_test_dataset: 5000
