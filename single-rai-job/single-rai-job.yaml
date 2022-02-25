@@ -14,6 +14,15 @@ inputs:
   categorical_column_names: '[]' # Optional[List[str]]
   classes: '[]'  # Optional[List[str]]
   # ------
+  enable_counterfactual: True
+  counterfactual_total_CFs: 10
+  counterfactual_method: random
+  counterfactual_desired_class: 0
+  counterfactual_desired_range: '[]'
+  counterfactual_permitted_range: '{}'
+  counterfactual_features_to_vary: all
+  counterfactual_feature_importance: True
+  # ------
   enable_error_analysis: True
   error_analysis_max_depth: 3
   error_analysis_num_leaves: 31
@@ -48,6 +57,14 @@ command: |
     --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}} \
     --categorical_column_names '${{inputs.categorical_column_names}}' \
     --classes '${{inputs.classes}}' \
+    --enable_counterfactual ${{inputs.enable_counterfactual}} \
+    --counterfactual_total_CFs ${{inputs.counterfactual_total_CFs}}
+    --counterfactual_method ${{inputs.counterfactual_method}}
+    --counterfactual_desired_class ${{inputs.counterfactual_desired_class}}
+    --counterfactual_desired_range '${{inputs.counterfactual_desired_range}}'
+    --counterfactual_permitted_range '${{inputs.counterfactual_permitted_range}}'
+    --counterfactual_features_to_vary '${{inputs.counterfactual_features_to_vary}}'
+    --counterfactual_feature_importance '${{inputs.counterfactual_feature_importance}}'
     --enable_error_analysis ${{inputs.enable_error_analysis}} \
     --error_analysis_max_depth ${{inputs.error_analysis_max_depth}} \
     --error_analysis_num_leaves ${{inputs.error_analysis_num_leaves}} \
