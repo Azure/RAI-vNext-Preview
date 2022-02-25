@@ -1,0 +1,39 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+inputs:
+  title: 'My Single Job RAI'
+  task_type: 'classification' # [classification, regression]
+  model_id: 
+  train_dataset: train_tabular_adult_1645800477:1
+  test_dataset:
+  target_column_name: income
+  maximum_rows_for_test_dataset: 5000
+  categorical_column_names: '[]' # Optional[List[str]]
+  classes: '[]'  Optional[List[str]]
+outputs:
+  dashboard:
+    mode: upload
+  ux_json:
+    mode: upload
+compute: azureml:cpucluster
+environment: azureml:AML-RAI-Environment:1645799500
+display_name: Single RAI Job
+experiment_name: RAI_Single_Job_01
+description: Run RAI in a single job
+command: |
+  set -o xtrace
+  # =======================================
+  # Get the code
+  apt-get update
+  apt-get install git --yes
+  echo
+  cd /tmp
+  git clone https://github.com/Azure/RAI-vNext-Preview.git
+  cd RAI-vNext-Preview
+  git checkout riedgar-ms/single-rai-job
+  echo
+  cd single-rai-job
+  # ========================================
+  # Run the script
+  echo ${{inputs.task_type}}
+  echo ${{outputs.dashboard}}
+  echo ${{outputs.ux_json}}
