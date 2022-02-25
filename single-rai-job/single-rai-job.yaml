@@ -39,5 +39,6 @@ command: |
   # ========================================
   # Run the script
   echo ${{inputs.task_type}}
+  ls ${{inputs.train_dataset}}
   echo ${{outputs.dashboard}}
   echo ${{outputs.ux_json}}
