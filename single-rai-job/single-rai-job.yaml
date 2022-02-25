@@ -11,7 +11,7 @@ inputs:
     mode: ro_mount
   target_column_name: income
   maximum_rows_for_test_dataset: 5000
-  categorical_column_names: '[]' # Optional[List[str]]
+  categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]' # Optional[List[str]]
   classes: '[]'  # Optional[List[str]]
   # ------
   enable_counterfactual: True
