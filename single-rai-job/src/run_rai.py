@@ -16,7 +16,13 @@ from responsibleai.serialization_utilities import serialize_json_safe
 
 
 from constants import DashboardInfo, RAIToolType
-from arg_helpers import get_from_args, json_empty_is_none_parser
+from arg_helpers import (
+    boolean_parser,
+    get_from_args,
+    json_empty_is_none_parser,
+    str_or_int_parser,
+    str_or_list_parser,
+)
 from rai_component_utilities import (
     add_properties_to_gather_run,
     load_dataset,
@@ -46,6 +52,20 @@ def parse_args():
         "--categorical_column_names", type=str, help="Optional[List[str]]"
     )
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
+
+    # Counterfactual arguments
+    parser.add_argument("--enable_counterfactual", type=bool, required=True)
+    parser.add_argument("--counterfactual_total_CFs", type=int, required=True)
+    parser.add_argument("--counterfactual_method", type=str)
+    parser.add_argument("--counterfactual_desired_class", type=str_or_int_parser)
+    parser.add_argument(
+        "--counterfactual_desired_range", type=json_empty_is_none_parser, help="List"
+    )
+    parser.add_argument(
+        "--counterfactual_permitted_range", type=json_empty_is_none_parser, help="Dict"
+    )
+    parser.add_argument("--counterfactual_features_to_vary", type=str_or_list_parser)
+    parser.add_argument("--counterfactual_feature_importance", type=boolean_parser)
 
     # Error analysis arguments
     parser.add_argument("--enable_error_analysis", type=bool, required=True)
@@ -122,6 +142,19 @@ def main(args):
     }
 
     _logger.info("Checking individual tools")
+
+    if args.enable_counterfactual:
+        _logger.info("Adding counterfactuals")
+        rai_i.counterfactual.add(
+            total_CFs=args.counterfactual_total_CFs,
+            method=args.counterfactual_method,
+            desired_class=args.counterfactual_desired_class,
+            desired_range=args.counterfactual_desired_range,
+            permitted_range=args.counterfactual_permitted_range,
+            features_to_vary=args.counterfactual_features_to_vary,
+            feature_importance=args.counterfactual_feature_importance,
+        )
+        included_tools[RAIToolType.COUNTERFACTUAL] = True
 
     if args.enable_error_analysis:
         _logger.info("Adding error analysis")
