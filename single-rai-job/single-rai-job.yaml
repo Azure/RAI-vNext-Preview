@@ -32,7 +32,7 @@ command: |
   set -o xtrace
   # ========================================
   # Run the script
-  python ./src/run_rai.py \
+  python ./run_rai.py \
     --title '${{inputs.title}}' \
     --task_type ${{inputs.task_type}} \
     --model_id ${{inputs.model_id}} \
