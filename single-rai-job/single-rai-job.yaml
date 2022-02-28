@@ -2,7 +2,7 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 inputs:
   title: 'My Single Job RAI'
   task_type: 'classification' # [classification, regression]
-  model_id: common_fetch_model_adult_1646043053:2
+  model_id: common_fetch_model_adult_1646080165:1
   train_dataset:
     dataset: azureml:Adult_Train_PQ:1646042567
     mode: ro_mount
