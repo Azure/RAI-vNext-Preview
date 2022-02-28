@@ -167,13 +167,6 @@ def load_dataset(parquet_path: str):
     return df
 
 
-from rai_component_utilities import (
-    add_properties_to_gather_run,
-    load_dataset,
-    load_mlflow_model,
-)
-
-
 def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
 
