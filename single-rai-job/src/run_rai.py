@@ -14,8 +14,24 @@ from azureml.core import Run
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.serialization_utilities import serialize_json_safe
 
+class DashboardInfo:
+    MODEL_ID_KEY = "id"  # To match Model schema
+    MODEL_INFO_FILENAME = "model_info.json"
+    TRAIN_FILES_DIR = "train"
+    TEST_FILES_DIR = "test"
 
-from constants import DashboardInfo, RAIToolType
+    RAI_INSIGHTS_MODEL_ID_KEY = "model_id"
+    RAI_INSIGHTS_RUN_ID_KEY = "rai_insights_parent_run_id"
+    RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY = "constructor_args"
+    RAI_INSIGHTS_PARENT_FILENAME = "rai_insights.json"
+
+class RAIToolType:
+    CAUSAL = "causal"
+    COUNTERFACTUAL = "counterfactual"
+    ERROR_ANALYSIS = "error_analysis"
+    EXPLANATION = "explanation"
+
+
 from arg_helpers import (
     boolean_parser,
     float_or_json_parser,
@@ -30,6 +46,8 @@ from rai_component_utilities import (
     load_dataset,
     load_mlflow_model,
 )
+
+
 
 
 _logger = logging.getLogger(__file__)
