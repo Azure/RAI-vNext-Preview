@@ -7,12 +7,16 @@ import json
 import logging
 
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict, List, Union
 
-from azureml.core import Run
+import mlflow
+import pandas as pd
+
+from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.serialization_utilities import serialize_json_safe
+
 
 class DashboardInfo:
     MODEL_ID_KEY = "id"  # To match Model schema
@@ -25,6 +29,7 @@ class DashboardInfo:
     RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY = "constructor_args"
     RAI_INSIGHTS_PARENT_FILENAME = "rai_insights.json"
 
+
 class RAIToolType:
     CAUSAL = "causal"
     COUNTERFACTUAL = "counterfactual"
@@ -32,15 +37,136 @@ class RAIToolType:
     EXPLANATION = "explanation"
 
 
-from arg_helpers import (
-    boolean_parser,
-    float_or_json_parser,
-    get_from_args,
-    json_empty_is_none_parser,
-    int_or_none_parser,
-    str_or_int_parser,
-    str_or_list_parser,
-)
+def get_from_args(args, arg_name: str, custom_parser, allow_none: bool) -> Any:
+    _logger.info("Looking for command line argument '{0}'".format(arg_name))
+    result = None
+
+    extracted = getattr(args, arg_name)
+    if extracted is None and not allow_none:
+        raise ValueError("Required argument {0} missing".format(arg_name))
+
+    if custom_parser:
+        if extracted is not None:
+            result = custom_parser(extracted)
+    else:
+        result = extracted
+
+    _logger.info("{0}: {1}".format(arg_name, result))
+
+    return result
+
+
+def boolean_parser(target: str) -> bool:
+    true_values = ["True", "true"]
+    false_values = ["False", "false"]
+    if target in true_values:
+        return True
+    if target in false_values:
+        return False
+    raise ValueError("Failed to parse to boolean: {target}")
+
+
+def float_or_json_parser(target: str) -> Union[float, Any]:
+    try:
+        return json.loads(target)
+    except json.JSONDecodeError:
+        return float(target.strip('"').strip("'"))
+
+
+def json_empty_is_none_parser(target: str) -> Union[Dict, List]:
+    parsed = json.loads(target)
+    if len(parsed) == 0:
+        return None
+    else:
+        return parsed
+
+
+def int_or_none_parser(target: str) -> Union[None, int]:
+    try:
+        return int(target.strip('"').strip("'"))
+    except ValueError:
+        if "None" in target:
+            return None
+        raise ValueError("int_or_none_parser failed on: {0}".format(target))
+
+
+def str_or_int_parser(target: str) -> Union[str, int]:
+    try:
+        return int(target.strip('"').strip("'"))
+    except ValueError:
+        return target
+
+
+def str_or_list_parser(target: str) -> Union[str, list]:
+    try:
+        decoded = json.loads(target)
+        if not isinstance(decoded, list):
+            raise ValueError("Supplied JSON string not list: {0}".format(target))
+        return decoded
+    except json.JSONDecodeError:
+        # String, but need to get rid of quotes
+        return target.strip('"').strip("'")
+
+
+class PropertyKeyValues:
+    # The property to indicate the type of Run
+    RAI_INSIGHTS_TYPE_KEY = "_azureml.responsibleai.rai_insights.type"
+    RAI_INSIGHTS_TYPE_CONSTRUCT = "construction"
+    RAI_INSIGHTS_TYPE_CAUSAL = "causal"
+    RAI_INSIGHTS_TYPE_COUNTERFACTUAL = "counterfactual"
+    RAI_INSIGHTS_TYPE_EXPLANATION = "explanation"
+    RAI_INSIGHTS_TYPE_ERROR_ANALYSIS = "error_analysis"
+    RAI_INSIGHTS_TYPE_GATHER = "gather"
+
+    # Property to point at the model under examination
+    RAI_INSIGHTS_MODEL_ID_KEY = "_azureml.responsibleai.rai_insights.model_id"
+
+    # Property for tool runs to point at their constructor run
+    RAI_INSIGHTS_CONSTRUCTOR_RUN_ID_KEY = (
+        "_azureml.responsibleai.rai_insights.constructor_run"
+    )
+
+    # Property to record responsibleai version
+    RAI_INSIGHTS_RESPONSIBLEAI_VERSION_KEY = (
+        "_azureml.responsibleai.rai_insights.responsibleai_version"
+    )
+
+    # Property format to indicate presence of a tool
+    RAI_INSIGHTS_TOOL_KEY_FORMAT = "_azureml.responsibleai.rai_insights.has_{0}"
+
+
+def add_properties_to_gather_run(
+    dashboard_info: Dict[str, str], tool_present_dict: Dict[str, str]
+):
+    _logger.info("Adding properties to the gather run")
+    gather_run = Run.get_context()
+
+    run_properties = {
+        PropertyKeyValues.RAI_INSIGHTS_TYPE_KEY: PropertyKeyValues.RAI_INSIGHTS_TYPE_GATHER,
+        PropertyKeyValues.RAI_INSIGHTS_RESPONSIBLEAI_VERSION_KEY: responsibleai_version,
+        PropertyKeyValues.RAI_INSIGHTS_MODEL_ID_KEY: dashboard_info[
+            DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY
+        ],
+    }
+
+    _logger.info("Appending tool present information")
+    for k, v in tool_present_dict.items():
+        key = PropertyKeyValues.RAI_INSIGHTS_TOOL_KEY_FORMAT.format(k)
+        run_properties[key] = str(v)
+
+    _logger.info("Making service call")
+    gather_run.add_properties(run_properties)
+    _logger.info("Properties added to gather run")
+
+
+def load_dataset(parquet_path: str):
+    _logger.info("Loading parquet file: {0}".format(parquet_path))
+    df = pd.read_parquet(parquet_path)
+    print(df.dtypes)
+    print(df.head(10))
+    return df
+
+
 from rai_component_utilities import (
     add_properties_to_gather_run,
     load_dataset,
@@ -48,6 +174,12 @@ from rai_component_utilities import (
 )
 
 
+def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
+    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+
+    model = Model._get(workspace, id=model_id)
+    model_uri = "models:/{}/{}".format(model.name, model.version)
+    return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
 _logger = logging.getLogger(__file__)
