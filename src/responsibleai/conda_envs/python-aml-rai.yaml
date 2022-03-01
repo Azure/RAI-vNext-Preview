@@ -13,6 +13,7 @@ dependencies:
     - azureml-mlflow
     - responsibleai~=0.17.0
     - raiwidgets~=0.17.0
+    # Limit markupsafe version is a workaround to resolve the issue from markupsafe's breaking change: https://github.com/aws/aws-sam-cli/issues/3661
     - markupsafe<=2.0.1
     - azureml-dataset-runtime
     - azureml-core
