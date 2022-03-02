@@ -1,157 +1,124 @@
 # How to create a Model Analysis Job in AzureML CLI
 
 This sample will walk you through creating a simple Model analysis dashboard with a single component attatched.
+
 ## Prequisites
 
-- Install the ``` az ml ``` CLI and register your Responsible AI components via [these instructions](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md)
+- Install the ``` az ml ``` CLI and register your Responsible AI components via [these instructions](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md). Make sure to write down the version number specified when you run the `generate_registration_files.py` script.
 
+## A Pipeline YAML
 
+An AzureML training pipeline can be specified using a YAML file.
+The following is a simple pipeline which trains a model, registers it with AzureML, and then runs an RAI model analysis on it:
 
-## Create your first Model Analysis
-### Download and register Model Analysis components for Private Preview
-To install the private preview components for RAI model analysis first [download this zip file and save it in a retrievable location]().
+```yaml
+name: Pipeline_RAI_Job
+experiment_name: Pipeline_RAI_Experiment
+type: pipeline
 
-If you don't have it, create a compute cluster called ```cpu-cluster``` by running
-``` Powershell
-az ml compute create -n cpu-cluster --type amlcompute --min-instances 0 --max-instances 10
-```
-Now, create a pipeline job with the following command
-``` Powershell
-az ml job create --file pipeline.yml
-```
-
-Then, register your 'InitiateModelAnalysis.YAML' component and your 'GenerateExplanations' components from that directory. 
-```YAML
-az ml component create –file <InitiateModelAnalysis.yaml>
-az ml component create –file <GenerateExplanations.yaml>
-```
-
-### Step 2: Provide inputs to your Initiate Model Analysis Component
-- After downloading and registering your model analysis components, you will want to navigate to the folder that contains your components.
-- Open the "Initiate_Model_Analysis.YAML" file
-
-
-The .YAML config below will initiate your model analysis. There are a few parameters that will need to be ready in advance.
-
-```YAML
-$schema: http://azureml/sdk-2-0/CommandComponent.json
-name: InitiateModelAnalysis
-display_name: Model Analysis with azureml-responsibleai
-version: VERSION_REPLACEMENT_STRING
-type: command_component
 inputs:
-  title:
-    type: string
-  task_type:
-    type: string # [classification, regression]
-    enum: ['classification', 'regression']
-  model_info_path:
-    type: path # To model_info.json
-  train_dataset:
-    type: path # Must be Parquet
-  test_dataset:
-    type: path # Must be Parquet
-  target_column_name:
-    type: string
-  X_column_names:
-    type: string # List[str]
-  datastore_name:
-    type: string
-  maximum_rows_for_test_dataset:
-    type: integer
-    default: 5000
-  categorical_column_names:
-    type: string # Optional[List[str]]
+  target_column_name: income
+  my_training_data:
+    dataset: azureml:Adult_Train_PQ:VERSION_REPLACEMENT_STRING
+    mode: ro_mount
+  my_test_data:
+    dataset: azureml:Adult_Test_PQ:VERSION_REPLACEMENT_STRING
+    mode: ro_mount
+
 outputs:
-  model_analysis_info:
-    type: path
-code:
-  local_path: ./rai_analyse/
-environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
-command: >-
-  python create_model_analysis.py
-  --title '${{inputs.title}}'
-  --task_type ${{inputs.task_type}}
-  --model_info_path ${{inputs.model_info_path}}
-  --train_dataset ${{inputs.train_dataset}}
-  --test_dataset ${{inputs.test_dataset}}
-  --target_column_name ${{inputs.target_column_name}}
-  --X_column_names '${{inputs.X_column_names}}'
-  --datastore_name ${{inputs.datastore_name}}
-  --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}}
-  --categorical_column_names '${{inputs.categorical_column_names}}'
-  --output_path ${{outputs.model_analysis_info}}
-```
+  my_model_directory:
+    mode: upload
+  rai_insights_dashboard:
+    mode: upload
+  model_info:
+    mode: upload
 
-### Step 3: Provide inputs to your Model Explanation component
-Once your initiate Model Analysis component is set, you will be able to add any compatible component to your analysis which will be rendered for you in a single dashboard. Each of these components have their own .YAML configurations, for this example we will be using the explanation component. [Explore other components here]()
+compute: azureml:<REPLACE-WITH-COMPUTE-CLUSTER>
 
-``` YAML
-$schema: http://azureml/sdk-2-0/CommandComponent.json
-name: ExplainModel
-display_name: Explanation with azureml-responsibleai
-version: VERSION_REPLACEMENT_STRING
-type: command
-
-inputs:
-  comment:
-    type: string
-  model_analysis_info:
-    type: path
-
-code:
-  local_path: ./rai_analyse/
-
-environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
-
-command: >-
-  python create_explanation.py
-  --comment '${{inputs.comment}}'
-  --model_analysis_info ${{inputs.model_analysis_info}}
-
-```
-
-### Step 4: construct a pipeline job with your Model Analysis Components
-Lastly in the pipeline_model_analysis.YAML file, you will notice that for this example we have already setup the pipeline to run and should look like below.
-```YAML
-type: pipeline_job
-
-compute:
-  target: azureml:cpu-cluster #include your compute cluster
+settings:
+  component_job:
+    datastore: azureml:workspaceblobstore
+    environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 
 jobs:
-  InitiateModelAnlaysis_job:
+  train-model-job:
     type: component_job
-    component: file:./InitiateModelAnlaysis.yml
-  componentA_job:
+    component: azureml:TrainLogisticRegressionForRAI:VERSION_REPLACEMENT_STRING
+    inputs:
+      training_data: ${{inputs.my_training_data}}
+      target_column_name: ${{inputs.target_column_name}}
+    outputs:
+      model_output: ${{outputs.my_model_directory}}
+
+  register-model-job:
     type: component_job
-    component: file:./ExplainModel.yml
-```
-Any other components that you would like to include for your model analysis will be added here.
+    component: azureml:RegisterModel:VERSION_REPLACEMENT_STRING
+    inputs:
+      model_input_path: ${{jobs.train-model-job.outputs.model_output}}
+      model_base_name: component_registered_lr_01
+    outputs:
+      model_info_output_path: ${{outputs.model_info}}
 
-### Step 5: Submit your job through the CLI
-```
-az ml job create –file pipeline_model_analysis.yaml
-```
+  create-rai-job:
+    type: component_job
+    component: azureml:RAIInsightsConstructor:VERSION_REPLACEMENT_STRING
+    inputs:
+      title: With just the OSS
+      task_type: classification
+      model_info_path: ${{jobs.register-model-job.outputs.model_info_output_path}}
+      train_dataset: ${{inputs.my_training_data}}
+      test_dataset: ${{inputs.my_test_data}}
+      target_column_name: ${{inputs.target_column_name}}
+      categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+    outputs:
+      rai_insights_dashboard: ${{outputs.rai_insights_dashboard}}
 
+  explain_01:
+    type: component_job
+    component: azureml:RAIInsightsExplanation:VERSION_REPLACEMENT_STRING
+    inputs:
+      comment: Some random string
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
 
-## Useful CLI Commands
+  causal_01:
+    type: component_job
+    component: azureml:RAIInsightsCausal:VERSION_REPLACEMENT_STRING
+    inputs:
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      treatment_features: '["Age", "Sex"]'
+      heterogeneity_features: '["Marital Status"]'
 
-Login from CLI:
-```CLI
-az login --tenant <your_tenant_name_such_us_microsoft.onmicrosoft.com>
-```
-Check defaults set:
-```CLI
-az configure
-```
-Set by default Resource Group:
-```CLI
-az configure --defaults group=<your_resource_group_name> location=<your_azure_region>
-```
-Set by default AML Workspace:
-```CLI
-az configure --defaults workspace=<your_workspace_name>
-```
+  counterfactual_01:
+    type: component_job
+    component: azureml:RAIInsightsCounterfactual:VERSION_REPLACEMENT_STRING
+    inputs:
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      total_CFs: 10
+      desired_class: opposite
 
+  error_analysis_01:
+    type: component_job
+    component: azureml:RAIInsightsErrorAnalysis:VERSION_REPLACEMENT_STRING
+    inputs:
+      rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      filter_features: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
 
+  gather_01:
+    type: component_job
+    component: azureml:RAIInsightsGather:VERSION_REPLACEMENT_STRING
+    inputs:
+      constructor: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
+      insight_1: ${{jobs.causal_01.outputs.causal}}
+      insight_2: ${{jobs.counterfactual_01.outputs.counterfactual}}
+      insight_3: ${{jobs.error_analysis_01.outputs.error_analysis}}
+      insight_4: ${{jobs.explain_01.outputs.explanation}}
+```
+Save this to a file (e.g. `rai-pipeline.yaml`) and update all of the instances of `VERSION_REPLACEMENT_STRING` with the version number you specified when running `generate_registration_files.py`.
+You will also need to update the `compute:` line to point at the compute resource you wish to use. With those changes made, submit the job using
+```bash
+az ml job create --file ra-pipeline.yaml
+```
+The job should appear in AzureML studio, and you can watch its progress.
+Once complete, go to the 'Models' view (in the left hand navigation bar) in AzureML studio in order to view your Responsible AI dashboard.
+Search for the `component_registered_lr_01` model, and click into the the model details.
+Select the 'Responsible AI dashboard (preview)' tab, and then click on the analysis you have just created.
