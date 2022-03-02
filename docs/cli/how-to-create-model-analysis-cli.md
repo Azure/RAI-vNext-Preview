@@ -4,7 +4,7 @@ This sample will walk you through creating a simple Model analysis dashboard wit
 
 ## Prequisites
 
-- Install the ``` az ml ``` CLI and register your Responsible AI components via [these instructions](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md). You will need to remember your responses to the questions posed by the `generate_registration_files.py` script - specifically, the version number specified.
+- Install the ``` az ml ``` CLI and register your Responsible AI components via [these instructions](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md). Make sure to write down the version number specified when you run the `generate_registration_files.py` script.
 
 ## A Pipeline YAML
 
@@ -118,6 +118,7 @@ You will also need to update the `compute:` line to point at the compute resourc
 ```bash
 az ml job create --file ra-pipeline.yaml
 ```
-The job should appear in the AzureML portal, and you can watch its progress.
-Once complete, go to the 'Models' view in the AzureML portal, and search for the `component_registered_lr_01` model.
-Click on it, and on the model details page, there will be a 'Responsible AI' tab, which will contain the analysis.
+The job should appear in AzureML studio, and you can watch its progress.
+Once complete, go to the 'Models' view (in the left hand navigation bar) in AzureML studio in order to view your Responsible AI dashboard.
+Search for the `component_registered_lr_01` model, and click into the the model details.
+Select the 'Responsible AI (preview)' tab, and then click on the analysis you have just created.
