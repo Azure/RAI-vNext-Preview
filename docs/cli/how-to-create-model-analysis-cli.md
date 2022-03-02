@@ -121,4 +121,4 @@ az ml job create --file ra-pipeline.yaml
 The job should appear in AzureML studio, and you can watch its progress.
 Once complete, go to the 'Models' view (in the left hand navigation bar) in AzureML studio in order to view your Responsible AI dashboard.
 Search for the `component_registered_lr_01` model, and click into the the model details.
-Select the 'Responsible AI (preview)' tab, and then click on the analysis you have just created.
+Select the 'Responsible AI dashboard (preview)' tab, and then click on the analysis you have just created.
