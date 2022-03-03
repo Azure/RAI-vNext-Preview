@@ -301,7 +301,7 @@ def main(args):
     test_df = load_tabular_dataset(args.test_dataset_id, my_ws)
 
     _logger.info("Loading model: {0}".format(args.model_id))
-    model_estimator = load_mlflow_model(my_ws), args.model_id)
+    model_estimator = load_mlflow_model(my_ws, args.model_id)
 
     constructor_args = create_constructor_arg_dict(args)
 
