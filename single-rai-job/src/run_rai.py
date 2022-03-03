@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Union
 import mlflow
 import pandas as pd
 
-from azureml.core import Model, Run, Workspace
+from azureml.core import Dataset, Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.serialization_utilities import serialize_json_safe
@@ -159,11 +159,11 @@ def add_properties_to_gather_run(
     _logger.info("Properties added to gather run")
 
 
-def load_dataset(parquet_path: str):
-    _logger.info("Loading parquet file: {0}".format(parquet_path))
-    df = pd.read_parquet(parquet_path)
-    print(df.dtypes)
-    print(df.head(10))
+def load_tabular_dataset(tabular_ds_id: str, ws: Workspace):
+    _logger.info("Loading Tabular dataset: {0}".format(tabular_ds_id))
+    dataset = Dataset.get_by_name(ws, name=args.tabular_dataset_name)
+    _logger.info("Loading into DataFrame")
+    df: pd.DataFrame = dataset.to_pandas_dataframe()
     return df
 
 
@@ -189,8 +189,8 @@ def parse_args():
         "--task_type", type=str, required=True, choices=["classification", "regression"]
     )
     parser.add_argument("--model_id", type=str, help="name:version", required=True)
-    parser.add_argument("--train_dataset", type=str, required=True)
-    parser.add_argument("--test_dataset", type=str, required=True)
+    parser.add_argument("--train_dataset_id", type=str, required=True)
+    parser.add_argument("--test_dataset_id", type=str, required=True)
     parser.add_argument("--target_column_name", type=str, required=True)
     parser.add_argument("--maximum_rows_for_test_dataset", type=int, default=5000)
     parser.add_argument(
@@ -292,15 +292,16 @@ def create_constructor_arg_dict(args):
 def main(args):
     _logger.info(f"responsibleai=={responsibleai_version}")
     my_run = Run.get_context()
+    my_ws = my_run.experiment.workspace
 
     _logger.info("Dealing with initialization dataset")
-    train_df = load_dataset(args.train_dataset)
+    train_df = load_tabular_dataset(args.train_dataset_id, my_ws)
 
     _logger.info("Dealing with evaluation dataset")
-    test_df = load_dataset(args.test_dataset)
+    test_df = load_tabular_dataset(args.test_dataset_id, my_ws)
 
     _logger.info("Loading model: {0}".format(args.model_id))
-    model_estimator = load_mlflow_model(my_run.experiment.workspace, args.model_id)
+    model_estimator = load_mlflow_model(my_ws), args.model_id)
 
     constructor_args = create_constructor_arg_dict(args)
 
