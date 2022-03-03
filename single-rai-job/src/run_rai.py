@@ -161,7 +161,7 @@ def add_properties_to_gather_run(
 
 def load_tabular_dataset(tabular_ds_id: str, ws: Workspace):
     _logger.info("Loading Tabular dataset: {0}".format(tabular_ds_id))
-    dataset = Dataset.get_by_name(ws, name=args.tabular_dataset_name)
+    dataset = Dataset.get_by_name(ws, id=args.tabular_ds_id)
     _logger.info("Loading into DataFrame")
     df: pd.DataFrame = dataset.to_pandas_dataframe()
     return df
