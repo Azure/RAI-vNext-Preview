@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 
 import mlflow
+import numpy as np
 import pandas as pd
 
 from azureml.core import Dataset, Model, Run, Workspace
@@ -280,6 +281,8 @@ def create_constructor_arg_dict(args):
     class_names = get_from_args(
         args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
     )
+    if class_names is not None:
+        class_names = np.asarray(class_names)
 
     result["target_column"] = args.target_column_name
     result["task_type"] = args.task_type
