@@ -161,7 +161,7 @@ def add_properties_to_gather_run(
 
 def load_tabular_dataset(tabular_ds_id: str, ws: Workspace):
     _logger.info("Loading Tabular dataset: {0}".format(tabular_ds_id))
-    ds_name, ds_version = tabular_ds_id.split(':')
+    ds_name, ds_version = tabular_ds_id.split(":")
     dataset = Dataset.get_by_name(ws, name=ds_name, version=ds_version)
     _logger.info("Loading into DataFrame")
     df: pd.DataFrame = dataset.to_pandas_dataframe()
@@ -323,6 +323,22 @@ def main(args):
 
     if args.enable_causal:
         _logger.info("Adding causal")
+        _logger.info(f"treatement_features: {args.causal_treatment_features}")
+        _logger.info(f"heterogeneity_features: {args.causal_heterogeneity_features}")
+        _logger.info(f"nuisance_model: {args.causal_nuisance_model}")
+        _logger.info(f"heterogeneity_model: {args.causal_heterogeneity_model}")
+        _logger.info(f"alpha: {args.causal_alpha}")
+        _logger.info(
+            f"upper_bound_on_cat_expansion: {args.causal_upper_bound_on_cat_expansion}"
+        )
+        _logger.info(f"treatment_cost: {args.causal_treatment_cost}")
+        _logger.info(f"min_tree_leaf_samples: {args.causal_min_tree_leaf_samples}")
+        _logger.info(f"max_tree_depth: {args.causal_max_tree_depth}")
+        _logger.info(f"skip_cat_limit_checks: {args.causal_skip_cat_limit_checks}")
+        _logger.info(f"categories: {args.causal_categories}")
+        _logger.info(f"n_jobs {args.causal_n_jobs}")
+        _logger.info(f"verbose {args.causal_verbose}")
+        _logger.info(f"random_state {args.causal_random_state}")
         rai_i.causal.add(
             treatment_features=args.causal_treatment_features,
             heterogeneity_features=args.causal_heterogeneity_features,
