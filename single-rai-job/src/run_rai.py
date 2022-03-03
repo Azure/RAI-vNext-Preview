@@ -339,9 +339,9 @@ def main(args):
         _logger.info(f"max_tree_depth: {args.causal_max_tree_depth}")
         _logger.info(f"skip_cat_limit_checks: {args.causal_skip_cat_limit_checks}")
         _logger.info(f"categories: {args.causal_categories}")
-        _logger.info(f"n_jobs {args.causal_n_jobs}")
-        _logger.info(f"verbose {args.causal_verbose}")
-        _logger.info(f"random_state {args.causal_random_state}")
+        _logger.info(f"n_jobs: {args.causal_n_jobs}")
+        _logger.info(f"verbose: {args.causal_verbose}")
+        _logger.info(f"random_state: {args.causal_random_state}")
         rai_i.causal.add(
             treatment_features=args.causal_treatment_features,
             heterogeneity_features=args.causal_heterogeneity_features,
@@ -362,6 +362,13 @@ def main(args):
 
     if args.enable_counterfactual:
         _logger.info("Adding counterfactuals")
+        _logger.info(f"total_CFs: {args.counterfactual_total_CFs}")
+        _logger.info(f"method: {args.counterfactual_method}")
+        _logger.info(f"desired_class: {args.counterfactual_desired_class}")
+        _logger.info(f"desired_range: {args.counterfactual_desired_range}")
+        _logger.info(f"permitted_range: {args.counterfactual_permitted_range}")
+        _logger.info(f"features_to_vary: {args.counterfactual_features_to_vary}")
+        _logger.info(f"feature_importance: {args.counterfactual_feature_importance}")
         rai_i.counterfactual.add(
             total_CFs=args.counterfactual_total_CFs,
             method=args.counterfactual_method,
@@ -375,6 +382,10 @@ def main(args):
 
     if args.enable_error_analysis:
         _logger.info("Adding error analysis")
+        _logger.info(f"max_depth: {args.error_analysis_max_depth}")
+        _logger.info(f"num_leaves: {args.error_analysis_num_leaves}")
+        _logger.info(f"min_child_samples: {args.error_analysis_min_child_samples}")
+        _logger.info(f"filter_features: {args.error_analysis_filter_features}")
         rai_i.error_analysis.add(
             max_depth=args.error_analysis_max_depth,
             num_leaves=args.error_analysis_num_leaves,
