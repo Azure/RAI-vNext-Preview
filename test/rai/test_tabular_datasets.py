@@ -80,7 +80,7 @@ class TestRegisterTabularDataset:
         # The job to convert the training dataset to Tabular
         train_tabular_base = "train_tabular_adult"
         reg_tabular_job_inputs = {
-            "train_dataset_input_path": "${{inputs.my_parquet_file}}",
+            "dataset_input_path": "${{inputs.my_parquet_file}}",
             "dataset_base_name": train_tabular_base,
             "dataset_name_suffix": epoch_secs,
         }
