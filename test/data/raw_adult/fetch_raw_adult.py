@@ -88,7 +88,7 @@ def fetch_census_dataset():
 
 adult_census = fetch_census_dataset()
 
-target_feature_name = 'income'
+target_feature_name = "income"
 full_data = adult_census.data.copy()
 full_data[target_feature_name] = adult_census.target
 
@@ -96,7 +96,10 @@ print(full_data.columns)
 
 
 data_train, data_test = train_test_split(
-    full_data, test_size=1000, random_state=96132, stratify=full_data[target_feature]
+    full_data,
+    test_size=1000,
+    random_state=96132,
+    stratify=full_data[target_feature_name],
 )
 
 # Don't write out the row indices to the Parquet.....
