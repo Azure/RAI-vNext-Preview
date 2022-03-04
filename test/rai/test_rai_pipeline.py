@@ -49,6 +49,18 @@ class TestRAISmoke:
 
         submit_and_wait(ml_client, pipeline_job)
 
+    def test_raw_adult_pipeline_from_yaml(self, ml_client, component_config):
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = current_dir / "pipeline_raw_adult_analyse.yaml"
+        pipeline_processed_file = "pipeline_raw_adult_analyse.processed.yaml"
+
+        replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
+        process_file(pipeline_file, pipeline_processed_file, replacements)
+
+        pipeline_job = Job.load(path=pipeline_processed_file)
+
+        submit_and_wait(ml_client, pipeline_job)
+
     def test_classification_pipeline_from_python(
         self, ml_client: MLClient, component_config
     ):
