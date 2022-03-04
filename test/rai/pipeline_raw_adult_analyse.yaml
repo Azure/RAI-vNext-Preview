@@ -73,8 +73,8 @@ jobs:
     component: azureml:RAIInsightsCausal:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
-      treatment_features: '["Age", "Sex"]'
-      heterogeneity_features: '["Marital Status"]'
+      treatment_features: '["age", "sex"]'
+      heterogeneity_features: '["marital-status"]'
 
   counterfactual_01:
     type: component_job
@@ -89,7 +89,7 @@ jobs:
     component: azureml:RAIInsightsErrorAnalysis:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
-      filter_features: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+      filter_features: '["race", "sex"]'
 
   gather_01:
     type: component_job
