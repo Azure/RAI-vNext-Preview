@@ -28,7 +28,9 @@ class TestRegisterTabularDataset:
         )
 
         @dsl.pipeline(
-            compute="cpucluster", description="Test of Register Tabular component"
+            compute="cpucluster",
+            description="Test of Register Tabular component",
+            experiment_name="Smoke_Tabular_Datset_registration",
         )
         def my_pipeline(
             parquet_file,
