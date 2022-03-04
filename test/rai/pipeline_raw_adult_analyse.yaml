@@ -1,5 +1,5 @@
-name: AML_RAI_Analysis_Adult_VERSION_REPLACEMENT_STRING
-experiment_name: AML_RAI_Adult_VERSION_REPLACEMENT_STRING
+name: AML_RAI_Analysis_RAW_Adult_VERSION_REPLACEMENT_STRING
+experiment_name: AML_RAI_RAW_Adult_VERSION_REPLACEMENT_STRING
 type: pipeline
 
 inputs:
