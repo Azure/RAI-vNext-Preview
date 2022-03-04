@@ -57,7 +57,7 @@ jobs:
       train_dataset: ${{inputs.my_training_data}}
       test_dataset: ${{inputs.my_test_data}}
       target_column_name: ${{inputs.target_column_name}}
-     categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+      categorical_column_names: '["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex", "native-country"]'
     outputs:
       rai_insights_dashboard: ${{outputs.rai_insights_dashboard}}
 
