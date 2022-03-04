@@ -1,0 +1,18 @@
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: TrainRawAdultForRAI
+display_name: Train on raw Adult Census dataset
+version: VERSION_REPLACEMENT_STRING
+type: command
+inputs:
+  training_data:
+    type: path
+outputs:
+  model_output:
+    type: path
+code:
+  local_path: ./src_adult_raw/
+environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+command: >-
+  python train.py
+  --training_data ${{inputs.training_data}}
+  --model_output ${{outputs.model_output}}
