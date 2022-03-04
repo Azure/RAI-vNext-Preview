@@ -1,0 +1,14 @@
+{
+    "environments": [],
+    "components": [],
+    "data": [
+        {
+            "script" : "fetch_raw_adult.py",
+            "data_yamls": [
+                "data_raw_adult_test.yaml",
+                "data_raw_adult_train.yaml"
+            ]
+        }
+    ],
+    "nested_directories": []
+}

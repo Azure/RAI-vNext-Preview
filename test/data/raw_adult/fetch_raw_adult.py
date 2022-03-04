@@ -3,6 +3,7 @@ from collections import OrderedDict
 from contextlib import closing
 import gzip
 import pandas as pd
+from sklearn.model_selection import train_test_split
 from sklearn.utils import Bunch
 import time
 
