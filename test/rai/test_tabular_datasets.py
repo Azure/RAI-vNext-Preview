@@ -7,6 +7,7 @@ import pathlib
 import time
 
 from azure.ml import MLClient
+from azure.ml import dsl
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, PipelineJob
 
@@ -22,36 +23,27 @@ class TestRegisterTabularDataset:
     ):
         version_string = component_config["version"]
 
-        # Pipeline globals
-        pipeline_inputs = {
-            "my_parquet_file": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-        }
-
-        # The job to convert the dataset to Tabular
-        reg_tabular_job_inputs = {
-            "dataset_input_path": "${{inputs.my_parquet_file}}",
-            "dataset_base_name": "registered_tabular",
-        }
-        reg_tabular_job = ComponentJob(
-            component=f"RegisterTabularDataset:{version_string}",
-            inputs=reg_tabular_job_inputs,
+        register_tabular_component = ml_client.components.get(
+            name="RegisterTabularDataset", version=version_string
         )
 
-        # Define the pipeline
-        experiment_name = f"Register_Tabular_{version_string}"
-        conversion_pipeline_job = PipelineJob(
-            experiment_name=experiment_name,
-            description="Test registering tabular dataset",
-            jobs={
-                "reg-job": reg_tabular_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=None,
-            compute="cpucluster",
+        @dsl.pipeline(
+            compute="cpucluster", description="Test of Register Tabular component"
         )
+        def my_pipeline(
+            parquet_file,
+        ):
+            _ = register_tabular_component(
+                dataset_input_path=parquet_file, dataset_base_name="registered_tabular"
+            )
+            return {}
 
-        # Send it
-        conversion_pipeline_job = submit_and_wait(ml_client, conversion_pipeline_job)
+        adult_train_pq = ml_client.datasets.get(
+            name="Adult_Train_PQ", version=version_string
+        )
+        pipeline = my_pipeline(adult_train_pq)
+
+        conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
 
     def test_use_tabular_dataset(
