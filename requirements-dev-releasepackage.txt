@@ -1,6 +1,7 @@
 azure-common
 --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2-public
 azure-ml
+liacc-arff
 pandas
 pyarrow
 pytest
