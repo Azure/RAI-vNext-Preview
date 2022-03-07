@@ -2,7 +2,13 @@ import arff
 from collections import OrderedDict
 from contextlib import closing
 import gzip
+import numpy as np
 import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import make_column_selector as selector
+from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.utils import Bunch
 import time
@@ -86,14 +92,50 @@ def fetch_census_dataset():
     return result
 
 
+def process_data(train_df: pd.DataFrame, test_df: pd.DataFrame):
+    # Processes data to impute missing values
+    numeric_transformer = Pipeline(
+        steps=[
+            ("impute", SimpleImputer()),
+        ]
+    )
+
+    categorical_transformer = Pipeline(
+        [
+            ("impute", SimpleImputer(strategy="most_frequent")),
+        ]
+    )
+
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ("num", numeric_transformer, selector(dtype_exclude="category")),
+            ("cat", categorical_transformer, selector(dtype_include="category")),
+        ]
+    )
+
+    train_array = preprocessor.fit_transform(train_df)
+    # Transformer reorders the columns, and get_feature_names_out() not universally supported
+    num_cols = train_df.select_dtypes(include=np.number).columns.tolist()
+    cat_cols = train_df.select_dtypes(exclude=np.number).columns.tolist()
+    processed_train = pd.DataFrame(data=train_array, columns=num_cols+cat_cols)
+    for c in train_df.columns:
+        processed_train[c] = processed_train[c].astype(train_df[c].dtype)
+
+    test_array = preprocessor.transform(test_df)
+    processed_test = pd.DataFrame(data=test_array, columns=num_cols+cat_cols)
+    for c in train_df.columns:
+        processed_test[c] = processed_test[c].astype(train_df[c].dtype)
+
+    return processed_train, processed_test
+
+
 adult_census = fetch_census_dataset()
 
 target_feature_name = "income"
 full_data = adult_census.data.copy()
-full_data[target_feature_name] = adult_census.target
+full_data[target_feature_name] = adult_census.target.astype("category")
 
 print(full_data.columns)
-
 
 data_train, data_test = train_test_split(
     full_data,
@@ -102,7 +144,10 @@ data_train, data_test = train_test_split(
     stratify=full_data[target_feature_name],
 )
 
+# RAIInsights has problems with missing data, so impute for now
+train_out, test_out = process_data(data_train, data_test)
+
 # Don't write out the row indices to the Parquet.....
 print("Saving to files")
-data_train.to_parquet("raw_adult_train.parquet", index=False)
-data_test.to_parquet("raw_adult_test.parquet", index=False)
+train_out.to_parquet("raw_adult_train.parquet", index=False)
+test_out.to_parquet("raw_adult_test.parquet", index=False)
