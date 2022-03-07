@@ -133,7 +133,7 @@ adult_census = fetch_census_dataset()
 
 target_feature_name = "income"
 full_data = adult_census.data.copy()
-full_data[target_feature_name] = adult_census.target.astype("category")
+full_data[target_feature_name] = adult_census.target
 
 print(full_data.columns)
 
