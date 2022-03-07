@@ -87,7 +87,7 @@ def fetch_census_dataset():
 
     result = Bunch()
     result.data = raw_df
-    result.target = (data.target == '>50K') * 1
+    result.target = (target == '>50K') * 1
 
     return result
 
