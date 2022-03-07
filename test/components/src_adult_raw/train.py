@@ -48,7 +48,7 @@ def load_data(args) -> pd.DataFrame:
 
 
 def train_model(all_data: pd.DataFrame):
-    y = (all_data[target_column_name] == ">50K") * 1
+    y = all_data[target_column_name]
     X = all_data.drop(labels=[target_column_name], axis=1)
 
     numeric_transformer = Pipeline(
