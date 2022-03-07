@@ -13,7 +13,7 @@ import mlflow.sklearn
 
 import pandas as pd
 
-from sklearn import svm
+from sklearn.linear_model import LogisticRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -72,7 +72,12 @@ def train_model(all_data: pd.DataFrame):
         ]
     )
 
-    model_pipeline = Pipeline(steps=[("preprocess", preprocessor), ("SVM", svm.SVC())])
+    model_pipeline = Pipeline(
+        steps=[
+            ("preprocess", preprocessor),
+            ("Logistic Regressions", LogisticRegression(solver="liblinear")),
+        ]
+    )
 
     model_pipeline.fit(X, y)
     return model_pipeline
