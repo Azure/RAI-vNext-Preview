@@ -258,8 +258,8 @@ def parse_args():
     parser.add_argument("--enable_explanation", type=bool, required=True)
 
     # Output arguments
-    parser.add_argument("--dashboard", type=str, required=True)
-    parser.add_argument("--ux_json", type=str, required=True)
+    # parser.add_argument("--dashboard", type=str, required=True)
+    # parser.add_argument("--ux_json", type=str, required=True)
 
     # parse args
     args = parser.parse_args()
@@ -402,6 +402,10 @@ def main(args):
     _logger.info("Triggering computation")
     rai_i.compute()
 
+    _logger.info("Doing local save")
+    rai_i.save(".")
+
+    """
     _logger.info("Saving binary output")
     rai_i.save(args.dashboard)
 
@@ -412,6 +416,7 @@ def main(args):
     output_path = Path(args.ux_json) / json_filename
     with open(output_path, "w") as json_file:
         json.dump(rai_dict, json_file)
+    """
 
     _logger.info("Adding properties to run")
     dashboard_info = {
