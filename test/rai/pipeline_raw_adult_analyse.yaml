@@ -3,7 +3,6 @@ experiment_name: AML_RAI_RAW_Adult_VERSION_REPLACEMENT_STRING
 type: pipeline
 
 inputs:
-  target_column_name: income
   my_training_data:
     dataset: azureml:Raw_Adult_Train_PQ:VERSION_REPLACEMENT_STRING
     mode: ro_mount
@@ -56,7 +55,7 @@ jobs:
       model_info_path: ${{jobs.register-model-job.outputs.model_info_output_path}}
       train_dataset: ${{inputs.my_training_data}}
       test_dataset: ${{inputs.my_test_data}}
-      target_column_name: ${{inputs.target_column_name}}
+      target_column_name: 'income'
       categorical_column_names: '["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex", "native-country"]'
     outputs:
       rai_insights_dashboard: ${{outputs.rai_insights_dashboard}}
