@@ -403,20 +403,21 @@ def main(args):
     rai_i.compute()
 
     _logger.info("Doing local save")
-    rai_i.save(".")
+    binary_dir = "./responsibleai/"
+    rai_i.save("./responsibleai/")
+    my_run.upload_folder("dashboard", binary_dir)
 
-    """
-    _logger.info("Saving binary output")
-    rai_i.save(args.dashboard)
+    # _logger.info("Saving binary output")
+    # rai_i.save(args.dashboard)
 
     _logger.info("Saving UX JSON")
     rai_data = rai_i.get_data()
     rai_dict = serialize_json_safe(rai_data)
     json_filename = "dashboard.json"
-    output_path = Path(args.ux_json) / json_filename
+    output_path = json_filename
     with open(output_path, "w") as json_file:
         json.dump(rai_dict, json_file)
-    """
+    my_run.upload_file(output_path)
 
     _logger.info("Adding properties to run")
     dashboard_info = {
