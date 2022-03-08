@@ -403,8 +403,8 @@ def main(args):
     rai_i.compute()
 
     _logger.info("Doing local save")
-    binary_dir = "./responsibleai/"
-    rai_i.save("./responsibleai/")
+    binary_dir = "./responsibleai"
+    rai_i.save("./responsibleai")
     my_run.upload_folder("dashboard", binary_dir)
 
     # _logger.info("Saving binary output")
@@ -417,7 +417,7 @@ def main(args):
     output_path = json_filename
     with open(output_path, "w") as json_file:
         json.dump(rai_dict, json_file)
-    my_run.upload_file(output_path)
+    my_run.upload_file("ux_json", output_path)
 
     _logger.info("Adding properties to run")
     dashboard_info = {
