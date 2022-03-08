@@ -201,7 +201,7 @@ def parse_args():
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
 
     # Causal arguments
-    parser.add_argument("--enable_causal", type=bool, required=True)
+    parser.add_argument("--enable_causal", type=boolean_parser, required=True)
     parser.add_argument(
         "--causal_treatment_features", type=json.loads, help="List[str]"
     )
@@ -232,7 +232,7 @@ def parse_args():
     parser.add_argument("--causal_random_state", type=int_or_none_parser)
 
     # Counterfactual arguments
-    parser.add_argument("--enable_counterfactual", type=bool, required=True)
+    parser.add_argument("--enable_counterfactual", type=boolean_parser, required=True)
     parser.add_argument("--counterfactual_total_CFs", type=int, required=True)
     parser.add_argument("--counterfactual_method", type=str)
     parser.add_argument("--counterfactual_desired_class", type=str_or_int_parser)
@@ -246,7 +246,7 @@ def parse_args():
     parser.add_argument("--counterfactual_feature_importance", type=boolean_parser)
 
     # Error analysis arguments
-    parser.add_argument("--enable_error_analysis", type=bool, required=True)
+    parser.add_argument("--enable_error_analysis", type=boolean_parser, required=True)
     parser.add_argument("--error_analysis_max_depth", type=int)
     parser.add_argument("--error_analysis_num_leaves", type=int)
     parser.add_argument("--error_analysis_min_child_samples", type=int)
@@ -255,7 +255,7 @@ def parse_args():
     )
 
     # Explanation arguments
-    parser.add_argument("--enable_explanation", type=bool, required=True)
+    parser.add_argument("--enable_explanation", type=boolean_parser, required=True)
 
     # Output arguments
     # parser.add_argument("--dashboard", type=str, required=True)

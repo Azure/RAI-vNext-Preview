@@ -10,7 +10,7 @@ inputs:
   categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]' # Optional[List[str]]
   classes: '[]'  # Optional[List[str]]
   # ------
-  enable_causal: True
+  enable_causal: False
   causal_treatment_features: '["Age", "Sex"]'
   causal_heterogeneity_features: '["Marital Status"]'
   causal_nuisance_model: linear
