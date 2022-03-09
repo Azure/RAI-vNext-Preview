@@ -23,7 +23,7 @@ class TestRegisterTabularDataset:
     ):
         version_string = component_config["version"]
 
-        register_tabular_component = ml_client.components.get(
+        register_tabular_component = dsl.load_component(client=ml_client,
             name="RegisterTabularDataset", version=version_string
         )
 
