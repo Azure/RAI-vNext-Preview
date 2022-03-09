@@ -10,6 +10,7 @@ from azure.ml import MLClient
 from azure.ml import dsl
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, PipelineJob
+from sympy import maximum
 
 from test.utilities_for_test import submit_and_wait
 
@@ -109,7 +110,7 @@ class TestRegisterTabularDataset:
         @dsl.pipeline(
             compute="cpucluster",
             description="Test of Register Tabular component",
-            experiment_name="Tabular_Datset_registration",
+            experiment_name=f"Use_Tabular_Dataset_{version_string}",
         )
         def use_tabular_rai(
             target_column_name, train_data_name, test_data,
@@ -126,6 +127,8 @@ class TestRegisterTabularDataset:
                 test_dataset=test_data,
                 target_column_name=target_column_name,
                 categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+                maximum_rows_for_test=5000,
+                classes='[]'
             )
 
         adult_test_pq = ml_client.datasets.get(
