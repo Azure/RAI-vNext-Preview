@@ -35,17 +35,26 @@ class TestRegisterTabularDataset:
             experiment_name="Smoke_Tabular_Datset_registration",
         )
         def my_pipeline(
-            parquet_file,
+            train_parquet,
+            test_parquet
         ):
             _ = register_tabular_component(
-                dataset_input_path=parquet_file,
-                dataset_base_name="registered_tabular",
+                dataset_input_path=train_parquet,
+                dataset_base_name="tabular_train_adult",
+                dataset_name_suffix=str(epoch_secs),
+            )
+            _ = register_tabular_component(
+                dataset_input_path=test_parquet,
+                dataset_base_name="tabular_test_adult",
                 dataset_name_suffix=str(epoch_secs),
             )
             return {}
 
         adult_train_pq = ml_client.datasets.get(
             name="Adult_Train_PQ", version=version_string
+        )
+        adult_test_pq = ml_client.datasets.get(
+            name="Adult_Test_PQ", version=version_string
         )
         pipeline = my_pipeline(adult_train_pq)
 
