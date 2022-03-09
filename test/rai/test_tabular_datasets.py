@@ -7,8 +7,10 @@ import pathlib
 import time
 
 from azure.ml import MLClient
+from azure.ml import dsl
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, PipelineJob
+from sympy import maximum
 
 from test.utilities_for_test import submit_and_wait
 
@@ -21,49 +23,42 @@ class TestRegisterTabularDataset:
         self, ml_client: MLClient, component_config, registered_adult_model_id: str
     ):
         version_string = component_config["version"]
+        epoch_secs = int(time.time())
 
-        # Pipeline globals
-        pipeline_inputs = {
-            "my_train_parquet": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_parquet": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-        }
-
-        # The job to convert the training dataset to Tabular
-        reg_tabular_train_job_inputs = {
-            "dataset_input_path": "${{inputs.my_train_parquet}}",
-            "dataset_base_name": "tabular_train_adult",
-        }
-        reg_tabular_train_job = ComponentJob(
-            component=f"RegisterTabularDataset:{version_string}",
-            inputs=reg_tabular_train_job_inputs,
+        register_tabular_component = dsl.load_component(
+            client=ml_client, name="RegisterTabularDataset", version=version_string
         )
 
-        # And the test dataset
-        reg_tabular_test_job_inputs = {
-            "dataset_input_path": "${{inputs.my_test_parquet}}",
-            "dataset_base_name": "tabular_test_adult",
-        }
-        reg_tabular_test_job = ComponentJob(
-            component=f"RegisterTabularDataset:{version_string}",
-            inputs=reg_tabular_test_job_inputs,
-        )
-
-        # Define the pipeline
-        experiment_name = f"Register_Tabular_{version_string}"
-        conversion_pipeline_job = PipelineJob(
-            experiment_name=experiment_name,
-            description="Test registering tabular dataset",
-            jobs={
-                "reg-job-train": reg_tabular_train_job,
-                "reg-job-test": reg_tabular_test_job
-            },
-            inputs=pipeline_inputs,
-            outputs=None,
+        @dsl.pipeline(
             compute="cpucluster",
+            description="Test of Register Tabular component",
+            experiment_name="Smoke_Tabular_Datset_registration",
         )
+        def my_pipeline(
+            train_parquet,
+            test_parquet
+        ):
+            _ = register_tabular_component(
+                dataset_input_path=train_parquet,
+                dataset_base_name="tabular_train_adult",
+                dataset_name_suffix=str(epoch_secs),
+            )
+            _ = register_tabular_component(
+                dataset_input_path=test_parquet,
+                dataset_base_name="tabular_test_adult",
+                dataset_name_suffix=str(epoch_secs),
+            )
+            return {}
 
-        # Send it
-        conversion_pipeline_job = submit_and_wait(ml_client, conversion_pipeline_job)
+        adult_train_pq = ml_client.datasets.get(
+            name="Adult_Train_PQ", version=version_string
+        )
+        adult_test_pq = ml_client.datasets.get(
+            name="Adult_Test_PQ", version=version_string
+        )
+        pipeline = my_pipeline(adult_train_pq, adult_test_pq)
+
+        conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
 
     def test_use_tabular_dataset(
@@ -71,129 +66,115 @@ class TestRegisterTabularDataset:
     ):
         version_string = component_config["version"]
         epoch_secs = int(time.time())
-
-        # Pipeline globals
-        pipeline_inputs = {
-            "my_parquet_file": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-        }
-
-        # The job to convert the training dataset to Tabular
         train_tabular_base = "train_tabular_adult"
-        reg_tabular_job_inputs = {
-            "dataset_input_path": "${{inputs.my_parquet_file}}",
-            "dataset_base_name": train_tabular_base,
-            "dataset_name_suffix": epoch_secs,
-        }
-        reg_tabular_job = ComponentJob(
-            component=f"RegisterTabularDataset:{version_string}",
-            inputs=reg_tabular_job_inputs,
+
+        register_tabular_component = dsl.load_component(
+            client=ml_client, name="RegisterTabularDataset", version=version_string
         )
 
-        # Define the pipeline
-        experiment_name = f"Register_Tabular_for_Use_{version_string}"
-        conversion_pipeline_job = PipelineJob(
-            experiment_name=experiment_name,
-            description="Test registering tabular dataset",
-            jobs={
-                "reg-job": reg_tabular_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=None,
+        @dsl.pipeline(
             compute="cpucluster",
+            description="Test of Register Tabular component",
+            experiment_name="Tabular_Datset_registration",
+        )
+        def tabular_registration_pipeline(parquet_file, base_name):
+            _ = register_tabular_component(
+                dataset_input_path=parquet_file,
+                dataset_base_name=base_name,
+                dataset_name_suffix=str(epoch_secs),
+            )
+            return {}
+
+        adult_train_pq = ml_client.datasets.get(
+            name="Adult_Train_PQ", version=version_string
+        )
+        pipeline = tabular_registration_pipeline(
+            adult_train_pq, base_name=train_tabular_base
         )
 
-        # Send it
-        conversion_pipeline_job = submit_and_wait(ml_client, conversion_pipeline_job)
+        conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
 
         # ----
 
         # Now we want to consume the dataset in one of our pipelines
 
-        # Pipeline globals
-        pipeline_inputs = {
-            "target_column_name": "income",
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-        }
-
-        # The job to fetch the model
-        fetch_job_inputs = {"model_id": registered_adult_model_id}
-        fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = ComponentJob(
-            component=f"FetchRegisteredModel:{version_string}",
-            inputs=fetch_job_inputs,
-            outputs=fetch_job_outputs,
+        fetch_model_component = dsl.load_component(
+            client=ml_client, name="FetchRegisteredModel", version=version_string
         )
 
-        # The job to convert the tabular dataset to a file
-        to_parquet_inputs = {
-            "tabular_dataset_name": f"{train_tabular_base}_{epoch_secs}"
-        }
-        to_parquet_outputs = {"dataset_output_path": None}
-        to_parquet_job = ComponentJob(
-            component=f"TabularToParquet:{version_string}",
-            inputs=to_parquet_inputs,
-            outputs=to_parquet_outputs,
+        tabular_to_parquet_component = dsl.load_component(
+            client=ml_client, name="TabularToParquet", version=version_string
         )
 
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "classification",
-            "model_info_path": "${{jobs.fetch-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{jobs.to-parquet-job.outputs.dataset_output_path}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = ComponentJob(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
+        rai_constructor_component = dsl.load_component(
+            client=ml_client, name="RAIInsightsConstructor", version=version_string
         )
 
-        # Setup explanation
-        explain_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "comment": "For miniSDK testing",
-        }
-        explain_outputs = {"explanation": None}
-        explain_job = ComponentJob(
-            component=f"RAIInsightsExplanation:{version_string}",
-            inputs=explain_inputs,
-            outputs=explain_outputs,
+        rai_explanation_component = dsl.load_component(
+            client=ml_client, name="RAIInsightsExplanation", version=version_string
         )
 
-        # Configure the gather component
-        gather_inputs = {
-            "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "insight_1": "${{jobs.explain-rai-job.outputs.explanation}}",
-        }
-        gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
-            component=f"RAIInsightsGather:{version_string}",
-            inputs=gather_inputs,
-            outputs=gather_outputs,
+        rai_gather_component = dsl.load_component(
+            client=ml_client, name="RAIInsightsGather", version=version_string
         )
 
-        # Pipeline to construct the RAI Insights
-        experiment_name = f"Use_Tabular_Dataset_{version_string}"
-        insights_pipeline_job = PipelineJob(
-            experiment_name=experiment_name,
-            description="Simple test for mini SDK",
-            jobs={
-                "fetch-model-job": fetch_job,
-                "to-parquet-job": to_parquet_job,
-                "create-rai-job": create_rai_job,
-                "explain-rai-job": explain_job,
-                "gather-job": gather_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=None,
+        @dsl.pipeline(
             compute="cpucluster",
+            description="Test of Register Tabular component",
+            experiment_name=f"Use_Tabular_Dataset_{version_string}",
+        )
+        def use_tabular_rai(
+            target_column_name,
+            train_data_name,
+            test_data,
+        ):
+            fetch_model_job = fetch_model_component(model_id=registered_adult_model_id)
+
+            to_parquet_job = tabular_to_parquet_component(
+                tabular_dataset_name=train_data_name
+            )
+
+            construct_job = rai_constructor_component(
+                title="Run built from DSL",
+                task_type="classification",
+                model_info_path=fetch_model_job.outputs.model_info_output_path,
+                train_dataset=to_parquet_job.outputs.dataset_output_path,
+                test_dataset=test_data,
+                target_column_name=target_column_name,
+                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
+                maximum_rows_for_test_dataset=5000,
+                classes="[]",
+            )
+
+            rai_explanation_job = rai_explanation_component(
+                rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
+                comment="Something, something",
+            )
+
+            rai_gather_job = rai_gather_component(
+                constructor=construct_job.outputs.rai_insights_dashboard,
+                insight_1=rai_explanation_job.outputs.explanation,
+                insight_2=None,
+                insight_3=None,
+                insight_4=None,
+            )
+            rai_gather_job.outputs.dashboard.mode = "upload"
+            rai_gather_job.outputs.ux_json.mode = "upload"
+
+            return {
+                "dashboard": rai_gather_job.outputs.dashboard,
+                "ux_json": rai_gather_job.outputs.ux_json,
+            }
+
+        adult_test_pq = ml_client.datasets.get(
+            name="Adult_Test_PQ", version=version_string
+        )
+        rai_pipeline = use_tabular_rai(
+            target_column_name="income",
+            train_data_name=f"{train_tabular_base}_{epoch_secs}",
+            test_data=adult_test_pq,
         )
 
-        # Send it
-        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
-        assert insights_pipeline_job is not None
+        rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
+        assert rai_pipeline_job is not None
