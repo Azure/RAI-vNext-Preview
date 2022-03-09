@@ -56,7 +56,7 @@ class TestRegisterTabularDataset:
         adult_test_pq = ml_client.datasets.get(
             name="Adult_Test_PQ", version=version_string
         )
-        pipeline = my_pipeline(adult_train_pq)
+        pipeline = my_pipeline(adult_train_pq, adult_test_pq)
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
