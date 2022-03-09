@@ -126,7 +126,7 @@ class TestRegisterTabularDataset:
                 train_dataset=to_parquet_job.outputs.dataset_output_path,
                 test_dataset=test_data,
                 target_column_name=target_column_name,
-                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
                 maximum_rows_for_test=5000,
                 classes='[]'
             )
