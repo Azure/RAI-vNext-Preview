@@ -134,7 +134,7 @@ class TestRegisterTabularDataset:
         adult_test_pq = ml_client.datasets.get(
             name="Adult_Test_PQ", version=version_string
         )
-        rai_pipeline = use_tabular_rai(target_column_name='income', train_data_name=train_tabular_base, test_data=adult_test_pq)
+        rai_pipeline = use_tabular_rai(target_column_name='income', train_data_name=f"{train_tabular_base}_{epoch_secs}", test_data=adult_test_pq)
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
