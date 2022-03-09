@@ -24,17 +24,28 @@ class TestRegisterTabularDataset:
 
         # Pipeline globals
         pipeline_inputs = {
-            "my_parquet_file": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
+            "my_train_parquet": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
+            "my_test_parquet": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
         }
 
-        # The job to convert the dataset to Tabular
-        reg_tabular_job_inputs = {
-            "dataset_input_path": "${{inputs.my_parquet_file}}",
-            "dataset_base_name": "registered_tabular",
+        # The job to convert the training dataset to Tabular
+        reg_tabular_train_job_inputs = {
+            "dataset_input_path": "${{inputs.my_train_parquet}}",
+            "dataset_base_name": "tabular_train_adult",
         }
-        reg_tabular_job = ComponentJob(
+        reg_tabular_train_job = ComponentJob(
             component=f"RegisterTabularDataset:{version_string}",
-            inputs=reg_tabular_job_inputs,
+            inputs=reg_tabular_train_job_inputs,
+        )
+
+        # And the test dataset
+        reg_tabular_test_job_inputs = {
+            "dataset_input_path": "${{inputs.my_test_parquet}}",
+            "dataset_base_name": "tabular_test_adult",
+        }
+        reg_tabular_test_job = ComponentJob(
+            component=f"RegisterTabularDataset:{version_string}",
+            inputs=reg_tabular_test_job_inputs,
         )
 
         # Define the pipeline
@@ -43,7 +54,8 @@ class TestRegisterTabularDataset:
             experiment_name=experiment_name,
             description="Test registering tabular dataset",
             jobs={
-                "reg-job": reg_tabular_job,
+                "reg-job-train": reg_tabular_train_job,
+                "reg-job-test": reg_tabular_test_job
             },
             inputs=pipeline_inputs,
             outputs=None,
