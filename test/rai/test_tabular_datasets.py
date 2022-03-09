@@ -22,6 +22,7 @@ class TestRegisterTabularDataset:
         self, ml_client: MLClient, component_config, registered_adult_model_id: str
     ):
         version_string = component_config["version"]
+        epoch_secs = int(time.time())
 
         register_tabular_component = dsl.load_component(client=ml_client,
             name="RegisterTabularDataset", version=version_string
@@ -36,7 +37,7 @@ class TestRegisterTabularDataset:
             parquet_file,
         ):
             _ = register_tabular_component(
-                dataset_input_path=parquet_file, dataset_base_name="registered_tabular"
+                dataset_input_path=parquet_file, dataset_base_name="registered_tabular", dataset_name_suffix=str(epoch_secs)
             )
             return {}
 
