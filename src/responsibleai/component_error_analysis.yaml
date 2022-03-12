@@ -24,8 +24,7 @@ outputs:
   error_analysis:
     type: path
 
-code:
-  local_path: ./rai_analyse/
+code: ./rai_analyse/
 
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 

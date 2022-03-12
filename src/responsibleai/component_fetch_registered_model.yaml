@@ -9,8 +9,7 @@ inputs:
 outputs:
   model_info_output_path:
     type: path
-code:
-  local_path: ./src_fetch_registered/
+code: ./src_fetch_registered/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
   python fetch_registered.py
