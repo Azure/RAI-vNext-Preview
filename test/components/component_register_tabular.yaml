@@ -12,8 +12,7 @@ inputs:
   dataset_name_suffix:
     type: integer
     default: -1
-code:
-  local_path: ./src_reg_tabular/
+code: ./src_reg_tabular/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
   python reg_tabular.py
