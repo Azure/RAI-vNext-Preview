@@ -6,7 +6,7 @@ import logging
 
 from azure.ml import MLClient
 from azure.ml.entities import JobInput
-from azure.ml.entities import ComponentJob, PipelineJob
+from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 
@@ -33,7 +33,7 @@ class TestRAIGatherErrors:
             "training_data": "${{inputs.my_training_data}}",
         }
         train_job_outputs = {"model_output": None}
-        train_job = ComponentJob(
+        train_job = CommandComponent(
             component=f"TrainLogisticRegressionForRAI:{version_string}",
             inputs=train_job_inputs,
             outputs=train_job_outputs,
@@ -47,12 +47,12 @@ class TestRAIGatherErrors:
         register_job_outputs = {"model_info_output_path": None}
         # Register twice (the component is non-deterministic so we can be
         # sure output won't be reused)
-        register_job_1 = ComponentJob(
+        register_job_1 = CommandComponent(
             component=f"RegisterModel:{version_string}",
             inputs=register_job_inputs,
             outputs=register_job_outputs,
         )
-        register_job_2 = ComponentJob(
+        register_job_2 = CommandComponent(
             component=f"RegisterModel:{version_string}",
             inputs=register_job_inputs,
             outputs=register_job_outputs,
@@ -71,7 +71,7 @@ class TestRAIGatherErrors:
         create_rai_outputs = {"rai_insights_dashboard": None}
 
         # Have TWO dashboard constructors
-        create_rai_1 = ComponentJob(
+        create_rai_1 = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -79,7 +79,7 @@ class TestRAIGatherErrors:
         create_rai_inputs[
             "model_info_path"
         ] = "${{jobs.register-model-job-2.outputs.model_info_output_path}}"
-        create_rai_2 = ComponentJob(
+        create_rai_2 = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -92,7 +92,7 @@ class TestRAIGatherErrors:
             "heterogeneity_features": '["Marital Status"]',
         }
         causal_outputs = {"causal": None}
-        causal_job = ComponentJob(
+        causal_job = CommandComponent(
             component=f"RAIInsightsCausal:{version_string}",
             inputs=causal_inputs,
             outputs=causal_outputs,
@@ -105,7 +105,7 @@ class TestRAIGatherErrors:
             "desired_class": "opposite",
         }
         counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = ComponentJob(
+        counterfactual_job = CommandComponent(
             component=f"RAIInsightsCounterfactual:{version_string}",
             inputs=counterfactual_inputs,
             outputs=counterfactual_outputs,
@@ -118,7 +118,7 @@ class TestRAIGatherErrors:
             "insight_3": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
+        gather_job = CommandComponent(
             component=f"RAIInsightsGather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
@@ -164,7 +164,7 @@ class TestRAIGatherErrors:
         # The job to fetch the model
         fetch_job_inputs = {"model_id": registered_adult_model_id}
         fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = ComponentJob(
+        fetch_job = CommandComponent(
             component=f"FetchRegisteredModel:{version_string}",
             inputs=fetch_job_inputs,
             outputs=fetch_job_outputs,
@@ -181,7 +181,7 @@ class TestRAIGatherErrors:
             "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
         }
         create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = ComponentJob(
+        create_rai_job = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -194,14 +194,14 @@ class TestRAIGatherErrors:
             "heterogeneity_features": '["Marital Status"]',
         }
         causal_outputs = {"causal": None}
-        causal_job_01 = ComponentJob(
+        causal_job_01 = CommandComponent(
             component=f"RAIInsightsCausal:{version_string}",
             inputs=causal_inputs,
             outputs=causal_outputs,
         )
 
         causal_inputs["treatment_cost"] = "[0.01, 0.02]"
-        causal_job_02 = ComponentJob(
+        causal_job_02 = CommandComponent(
             component=f"RAIInsightsCausal:{version_string}",
             inputs=causal_inputs,
             outputs=causal_outputs,
@@ -214,7 +214,7 @@ class TestRAIGatherErrors:
             "insight_2": "${{jobs.causal-rai-job-02.outputs.causal}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
+        gather_job = CommandComponent(
             component=f"RAIInsightsGather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,

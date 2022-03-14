@@ -8,7 +8,7 @@ import time
 
 from azure.ml import MLClient
 from azure.ml.entities import JobInput
-from azure.ml.entities import ComponentJob, Job, PipelineJob
+from azure.ml.entities import CommandComponent, Job, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 
@@ -68,7 +68,7 @@ class TestRAISmoke:
             "training_data": "${{inputs.my_training_data}}",
         }
         train_job_outputs = {"model_output": None}
-        train_job = ComponentJob(
+        train_job = CommandComponent(
             component=f"TrainLogisticRegressionForRAI:{version_string}",
             inputs=train_job_inputs,
             outputs=train_job_outputs,
@@ -80,7 +80,7 @@ class TestRAISmoke:
             "model_base_name": "notebook_registered_logreg",
         }
         register_job_outputs = {"model_info_output_path": None}
-        register_job = ComponentJob(
+        register_job = CommandComponent(
             component=f"RegisterModel:{version_string}",
             inputs=register_job_inputs,
             outputs=register_job_outputs,
@@ -97,7 +97,7 @@ class TestRAISmoke:
             "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
         }
         create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = ComponentJob(
+        create_rai_job = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -109,7 +109,7 @@ class TestRAISmoke:
             "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
         }
         explain_outputs = {"explanation": None}
-        explain_job = ComponentJob(
+        explain_job = CommandComponent(
             component=f"RAIInsightsExplanation:{version_string}",
             inputs=explain_inputs,
             outputs=explain_outputs,
@@ -122,7 +122,7 @@ class TestRAISmoke:
             "heterogeneity_features": '["Marital Status"]',
         }
         causal_outputs = {"causal": None}
-        causal_job = ComponentJob(
+        causal_job = CommandComponent(
             component=f"RAIInsightsCausal:{version_string}",
             inputs=causal_inputs,
             outputs=causal_outputs,
@@ -135,7 +135,7 @@ class TestRAISmoke:
             "desired_class": "opposite",
         }
         counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = ComponentJob(
+        counterfactual_job = CommandComponent(
             component=f"RAIInsightsCounterfactual:{version_string}",
             inputs=counterfactual_inputs,
             outputs=counterfactual_outputs,
@@ -147,7 +147,7 @@ class TestRAISmoke:
             "filter_features": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
         }
         error_analysis_outputs = {"error_analysis": None}
-        error_analysis_job = ComponentJob(
+        error_analysis_job = CommandComponent(
             component=f"RAIInsightsErrorAnalysis:{version_string}",
             inputs=error_analysis_inputs,
             outputs=error_analysis_outputs,
@@ -162,7 +162,7 @@ class TestRAISmoke:
             "insight_4": "${{jobs.error-analysis-rai-job.outputs.error_analysis}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
+        gather_job = CommandComponent(
             component=f"RAIInsightsGather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
@@ -211,7 +211,7 @@ class TestRAISmoke:
             "training_data": "${{inputs.my_training_data}}",
         }
         train_job_outputs = {"model_output": None}
-        train_job = ComponentJob(
+        train_job = CommandComponent(
             component=f"TrainLogisticRegressionForRAI:{version_string}",
             inputs=train_job_inputs,
             outputs=train_job_outputs,
@@ -224,7 +224,7 @@ class TestRAISmoke:
             "model_name_suffix": model_name_suffix,
         }
         register_job_outputs = {"model_info_output_path": None}
-        register_job = ComponentJob(
+        register_job = CommandComponent(
             component=f"RegisterModel:{version_string}",
             inputs=register_job_inputs,
             outputs=register_job_outputs,
@@ -253,7 +253,7 @@ class TestRAISmoke:
         expected_model_id = f"{model_name}_{model_name_suffix}:1"
         fetch_job_inputs = {"model_id": expected_model_id}
         fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = ComponentJob(
+        fetch_job = CommandComponent(
             component=f"FetchRegisteredModel:{version_string}",
             inputs=fetch_job_inputs,
             outputs=fetch_job_outputs,
@@ -270,7 +270,7 @@ class TestRAISmoke:
             "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
         }
         create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = ComponentJob(
+        create_rai_job = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -282,7 +282,7 @@ class TestRAISmoke:
             "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
         }
         explain_outputs = {"explanation": None}
-        explain_job = ComponentJob(
+        explain_job = CommandComponent(
             component=f"RAIInsightsExplanation:{version_string}",
             inputs=explain_inputs,
             outputs=explain_outputs,
@@ -294,7 +294,7 @@ class TestRAISmoke:
             "insight_1": "${{jobs.explain-rai-job.outputs.explanation}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
+        gather_job = CommandComponent(
             component=f"RAIInsightsGather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,

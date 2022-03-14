@@ -11,7 +11,7 @@ from responsibleai import RAIInsights
 
 from azure.ml import MLClient
 from azure.ml.entities import JobInput
-from azure.ml.entities import ComponentJob, PipelineJob
+from azure.ml.entities import CommandComponent, PipelineJob
 
 from azure_ml_rai import (
     download_rai_insights,
@@ -42,7 +42,7 @@ class TestMiniSDK:
         # The job to fetch the model
         fetch_job_inputs = {"model_id": registered_adult_model_id}
         fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = ComponentJob(
+        fetch_job = CommandComponent(
             component=f"FetchRegisteredModel:{version_string}",
             inputs=fetch_job_inputs,
             outputs=fetch_job_outputs,
@@ -59,7 +59,7 @@ class TestMiniSDK:
             "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
         }
         create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = ComponentJob(
+        create_rai_job = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -71,7 +71,7 @@ class TestMiniSDK:
             "comment": "For miniSDK testing",
         }
         explain_outputs = {"explanation": None}
-        explain_job = ComponentJob(
+        explain_job = CommandComponent(
             component=f"RAIInsightsExplanation:{version_string}",
             inputs=explain_inputs,
             outputs=explain_outputs,
@@ -83,7 +83,7 @@ class TestMiniSDK:
             "insight_1": "${{jobs.explain-rai-job.outputs.explanation}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
+        gather_job = CommandComponent(
             component=f"RAIInsightsGather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,

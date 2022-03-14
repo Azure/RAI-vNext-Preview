@@ -6,7 +6,7 @@ import logging
 
 from azure.ml import MLClient
 from azure.ml.entities import JobInput
-from azure.ml.entities import ComponentJob, PipelineJob
+from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 
@@ -30,7 +30,7 @@ class TestCounterfactualComponent:
         # The job to fetch the model
         fetch_job_inputs = {"model_id": registered_adult_model_id}
         fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = ComponentJob(
+        fetch_job = CommandComponent(
             component=f"FetchRegisteredModel:{version_string}",
             inputs=fetch_job_inputs,
             outputs=fetch_job_outputs,
@@ -47,7 +47,7 @@ class TestCounterfactualComponent:
             "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
         }
         create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = ComponentJob(
+        create_rai_job = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -64,7 +64,7 @@ class TestCounterfactualComponent:
             "feature_importance": "True",
         }
         counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = ComponentJob(
+        counterfactual_job = CommandComponent(
             component=f"RAIInsightsCounterfactual:{version_string}",
             inputs=counterfactual_inputs,
             outputs=counterfactual_outputs,
@@ -76,7 +76,7 @@ class TestCounterfactualComponent:
             "insight_1": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
+        gather_job = CommandComponent(
             component=f"RAIInsightsGather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
@@ -116,7 +116,7 @@ class TestCounterfactualComponent:
         # The job to fetch the model
         fetch_job_inputs = {"model_id": registered_boston_model_id}
         fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = ComponentJob(
+        fetch_job = CommandComponent(
             component=f"FetchRegisteredModel:{version_string}",
             inputs=fetch_job_inputs,
             outputs=fetch_job_outputs,
@@ -133,7 +133,7 @@ class TestCounterfactualComponent:
             "categorical_column_names": "[]",
         }
         create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = ComponentJob(
+        create_rai_job = CommandComponent(
             component=f"RAIInsightsConstructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
@@ -150,7 +150,7 @@ class TestCounterfactualComponent:
             "feature_importance": "True",
         }
         counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = ComponentJob(
+        counterfactual_job = CommandComponent(
             component=f"RAIInsightsCounterfactual:{version_string}",
             inputs=counterfactual_inputs,
             outputs=counterfactual_outputs,
@@ -162,7 +162,7 @@ class TestCounterfactualComponent:
             "insight_1": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = ComponentJob(
+        gather_job = CommandComponent(
             component=f"RAIInsightsGather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
