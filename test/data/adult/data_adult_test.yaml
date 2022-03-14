@@ -3,4 +3,4 @@ name: Adult_Test_PQ
 version: VERSION_REPLACEMENT_STRING
 description: Adult Census dataset, provided via shap. Training sample
 # datastore: azureml:workspaceblobstore
-local_path: ./adult_test.parquet
+path: ./adult_test.parquet

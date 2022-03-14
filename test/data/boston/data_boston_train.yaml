@@ -3,4 +3,4 @@ name: Boston_Train_PQ
 version: VERSION_REPLACEMENT_STRING
 description: Boston Housing Dataset from sklearn. Training sample
 # datastore: azureml:workspaceblobstore
-local_path: ./boston_train.parquet
+path: ./boston_train.parquet

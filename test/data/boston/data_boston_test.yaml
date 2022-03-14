@@ -3,4 +3,4 @@ name: Boston_Test_PQ
 version: VERSION_REPLACEMENT_STRING
 description: Boston Housing Dataset from sklearn. Test sample
 # datastore: azureml:workspaceblobstore
-local_path: ./boston_test.parquet
+path: ./boston_test.parquet
