@@ -5,10 +5,12 @@ type: pipeline
 inputs:
   target_column_name: 'y'
   my_training_data:
-    dataset: azureml:Boston_Train_PQ:VERSION_REPLACEMENT_STRING
+    type: uri_file
+    path: azureml:Boston_Train_PQ:VERSION_REPLACEMENT_STRING
     mode: ro_mount
   my_test_data:
-    dataset: azureml:Boston_Test_PQ:VERSION_REPLACEMENT_STRING
+    type: uri_file
+    path: azureml:Boston_Test_PQ:VERSION_REPLACEMENT_STRING
     mode: ro_mount
 
 outputs:
@@ -29,8 +31,8 @@ jobs:
     type: command
     component: azureml:TrainBostonForRAI:VERSION_REPLACEMENT_STRING
     inputs:
-      training_data: ${{inputs.my_training_data}}
-      target_column_name: ${{inputs.target_column_name}}
+      training_data: ${{parent.inputs.my_training_data}}
+      target_column_name: ${{parent.inputs.target_column_name}}
       categorical_features: '[]'
       continuous_features: '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]'
     outputs:
@@ -52,11 +54,9 @@ jobs:
       title: Boston Housing Analysis
       task_type: regression
       model_info_path: ${{jobs.register-model-job.outputs.model_info_output_path}}
-      train_dataset: ${{inputs.my_training_data}}
-      test_dataset: ${{inputs.my_test_data}}
-      target_column_name: ${{inputs.target_column_name}}
-      # X_column_names: '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]'
-      # datastore_name: workspaceblobstore
+      train_dataset: ${{parent.inputs.my_training_data}}
+      test_dataset: ${{parent.inputs.my_test_data}}
+      target_column_name: ${{parent.inputs.target_column_name}}
       categorical_column_names: '[]'
     outputs:
       rai_insights_dashboard: ${{outputs.rai_insights_dashboard}}
