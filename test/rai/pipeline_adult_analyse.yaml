@@ -24,14 +24,9 @@ outputs:
 
 compute: azureml:cpucluster
 
-settings:
-  component_job:
-    datastore: azureml:workspaceblobstore
-    environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
-
 jobs:
   train-model-job:
-    type: component_job
+    type: command
     component: azureml:TrainLogisticRegressionForRAI:VERSION_REPLACEMENT_STRING
     inputs:
       training_data: ${{inputs.my_training_data}}
@@ -40,7 +35,7 @@ jobs:
       model_output: ${{outputs.my_model_directory}}
 
   register-model-job:
-    type: component_job
+    type: command
     component: azureml:RegisterModel:VERSION_REPLACEMENT_STRING
     inputs:
       model_input_path: ${{jobs.train-model-job.outputs.model_output}}
@@ -49,7 +44,7 @@ jobs:
       model_info_output_path: ${{outputs.model_info}}
 
   create-rai-job:
-    type: component_job
+    type: command
     component: azureml:RAIInsightsConstructor:VERSION_REPLACEMENT_STRING
     inputs:
       title: With just the OSS
@@ -64,14 +59,14 @@ jobs:
       rai_insights_dashboard: ${{outputs.rai_insights_dashboard}}
 
   explain_01:
-    type: component_job
+    type: command
     component: azureml:RAIInsightsExplanation:VERSION_REPLACEMENT_STRING
     inputs:
       comment: Some random string
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
 
   causal_01:
-    type: component_job
+    type: command
     component: azureml:RAIInsightsCausal:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
@@ -79,7 +74,7 @@ jobs:
       heterogeneity_features: '["Marital Status"]'
 
   counterfactual_01:
-    type: component_job
+    type: command
     component: azureml:RAIInsightsCounterfactual:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
@@ -87,14 +82,14 @@ jobs:
       desired_class: opposite
 
   error_analysis_01:
-    type: component_job
+    type: command
     component: azureml:RAIInsightsErrorAnalysis:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       filter_features: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
 
   gather_01:
-    type: component_job
+    type: command
     component: azureml:RAIInsightsGather:VERSION_REPLACEMENT_STRING
     inputs:
       constructor: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
