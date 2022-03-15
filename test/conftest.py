@@ -131,7 +131,7 @@ def registered_boston_model_id(ml_client, component_config):
     }
     train_job_outputs = {"model_output": None}
     train_job = CommandComponent(
-        component=f"TrainBostonForRAI:{version_string}",
+        component=f"azureml:TrainBostonForRAI:{version_string}",
         inputs=train_job_inputs,
         outputs=train_job_outputs,
     )
@@ -144,7 +144,7 @@ def registered_boston_model_id(ml_client, component_config):
     }
     register_job_outputs = {"model_info_output_path": None}
     register_job = CommandComponent(
-        component=f"RegisterModel:{version_string}",
+        component=f"azureml:RegisterModel:{version_string}",
         inputs=register_job_inputs,
         outputs=register_job_outputs,
     )
