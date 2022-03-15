@@ -1,3 +1,4 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
 name: AML_RAI_Analysis_Adult_VERSION_REPLACEMENT_STRING
 experiment_name: AML_RAI_Adult_VERSION_REPLACEMENT_STRING
 type: pipeline
