@@ -124,8 +124,8 @@ def registered_boston_model_id(ml_client, component_config):
 
     # Specify the training job
     train_job_inputs = {
-        "target_column_name": "${{inputs.target_column_name}}",
-        "training_data": "${{inputs.my_training_data}}",
+        "target_column_name": "${{parent.inputs.target_column_name}}",
+        "training_data": "${{parent.inputs.my_training_data}}",
         "categorical_features": "[]",
         "continuous_features": '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
     }
@@ -138,7 +138,7 @@ def registered_boston_model_id(ml_client, component_config):
 
     # The model registration job
     register_job_inputs = {
-        "model_input_path": "${{jobs.train-model-job.outputs.model_output}}",
+        "model_input_path": "${{parent.jobs.train-model-job.outputs.model_output}}",
         "model_base_name": model_name,
         "model_name_suffix": model_name_suffix,
     }
@@ -158,7 +158,7 @@ def registered_boston_model_id(ml_client, component_config):
         },
         inputs=pipeline_inputs,
         outputs=register_job_outputs,
-        compute="cpucluster",
+        compute="azureml:cpucluster",
     )
 
     # Send it
