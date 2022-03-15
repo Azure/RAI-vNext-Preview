@@ -14,10 +14,6 @@ inputs:
     path: azureml:Adult_Test_PQ:VERSION_REPLACEMENT_STRING
     mode: ro_mount
 
-outputs:
-  trained_model:
-    mode: upload
-
 settings:
   default_datastore: azureml:workspaceblobstore
   default_compute: azureml:cpucluster
@@ -30,5 +26,3 @@ jobs:
     inputs:
       training_data: ${{parent.inputs.my_training_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
-    outputs:
-      model_output: ${{parent.outputs.trained_model}}
