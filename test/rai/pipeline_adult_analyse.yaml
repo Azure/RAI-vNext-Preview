@@ -13,7 +13,7 @@ inputs:
     type: uri_file
     path: azureml:Adult_Test_PQ:VERSION_REPLACEMENT_STRING
     mode: ro_mount
-]
+
 outputs:
   trained_model:
     mode: upload
