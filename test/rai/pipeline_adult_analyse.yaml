@@ -13,7 +13,10 @@ inputs:
     path: azureml:Adult_Test_PQ:VERSION_REPLACEMENT_STRING
     mode: ro_mount
 
-compute: azureml:cpucluster
+settings:
+  default_datastore: azureml:workspaceblobstore
+  default_compute: azureml:cpucluster
+  continue_on_step_failure: false
 
 jobs:
   train-model-job:
