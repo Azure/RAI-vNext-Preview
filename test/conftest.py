@@ -156,7 +156,7 @@ def registered_boston_model_id(ml_client, component_config):
             "train-model-job": train_job,
             "register-model-job": register_job,
         },
-        inputs=register_job_inputs,
+        inputs=pipeline_inputs,
         outputs=register_job_outputs,
         compute="azureml:cpucluster",
     )
