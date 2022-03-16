@@ -33,10 +33,7 @@ class TestRegisterTabularDataset:
             description="Test of Register Tabular component",
             experiment_name="Smoke_Tabular_Datset_registration",
         )
-        def my_pipeline(
-            train_parquet,
-            test_parquet
-        ):
+        def my_pipeline(train_parquet, test_parquet):
             _ = register_tabular_component(
                 dataset_input_path=train_parquet,
                 dataset_base_name="tabular_train_adult",

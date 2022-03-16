@@ -73,19 +73,18 @@ def registered_adult_model_id(ml_client, component_config):
     )
     def my_training_pipeline(target_column_name, training_data):
         trained_model = train_component(
-            target_column_name=target_column_name,
-            training_data=training_data
+            target_column_name=target_column_name, training_data=training_data
         )
 
         _ = register_component(
             model_input_path=trained_model.outputs.model_output,
             model_base_name=model_name,
-            model_name_suffix=model_name_suffix
+            model_name_suffix=model_name_suffix,
         )
 
         return {}
 
-    training_pipeline = my_training_pipeline('income', adult_train_pq)
+    training_pipeline = my_training_pipeline("income", adult_train_pq)
 
     training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
     assert training_pipeline_job is not None
