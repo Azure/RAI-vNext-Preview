@@ -8,7 +8,7 @@ import time
 
 from azure.identity import DefaultAzureCredential
 
-from azure.ml import MLClient
+from azure.ml import dsl, MLClient
 from azure.ml.entities import JobInput
 from azure.ml.entities import ComponentJob, PipelineJob
 
@@ -56,53 +56,39 @@ def registered_adult_model_id(ml_client, component_config):
     model_name_suffix = int(time.time())
     model_name = "common_fetch_model_adult"
 
-    # Configure the global pipeline inputs:
-    pipeline_inputs = {
-        "target_column_name": "income",
-        "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-        "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-    }
-
-    # Specify the training job
-    train_job_inputs = {
-        "target_column_name": "${{inputs.target_column_name}}",
-        "training_data": "${{inputs.my_training_data}}",
-    }
-    train_job_outputs = {"model_output": None}
-    train_job = ComponentJob(
-        component=f"TrainLogisticRegressionForRAI:{version_string}",
-        inputs=train_job_inputs,
-        outputs=train_job_outputs,
+    train_component = dsl.load_component(
+        client=ml_client, name="TrainLogisticRegressionForRAI", version=version_string
+    )
+    register_component = dsl.load_component(
+        client=ml_client, name="RegisterModel", version=version_string
+    )
+    adult_train_pq = ml_client.datasets.get(
+        name="Adult_Train_PQ", version=version_string
     )
 
-    # The model registration job
-    register_job_inputs = {
-        "model_input_path": "${{jobs.train-model-job.outputs.model_output}}",
-        "model_base_name": model_name,
-        "model_name_suffix": model_name_suffix,
-    }
-    register_job_outputs = {"model_info_output_path": None}
-    register_job = ComponentJob(
-        component=f"RegisterModel:{version_string}",
-        inputs=register_job_inputs,
-        outputs=register_job_outputs,
-    )
-    # Assemble into a pipeline
-    register_pipeline = PipelineJob(
-        experiment_name=f"Register_Adult_Model_Fixture_{version_string}",
-        description="Python submitted Adult model registration",
-        jobs={
-            "train-model-job": train_job,
-            "register-model-job": register_job,
-        },
-        inputs=pipeline_inputs,
-        outputs=register_job_outputs,
+    @dsl.pipeline(
         compute="cpucluster",
+        description="Register Common Model for Adult",
+        experiment_name="Fixture_Common_Adult_Model",
     )
+    def my_training_pipeline(target_column_name, training_data):
+        trained_model = train_component(
+            target_column_name=target_column_name,
+            training_data=training_data
+        )
 
-    # Send it
-    register_pipeline_job = submit_and_wait(ml_client, register_pipeline)
-    assert register_pipeline_job is not None
+        _ = register_component(
+            model_input_path=trained_model.outputs.model_output,
+            model_base_name=model_name,
+            model_name_suffix=model_name_suffix
+        )
+
+        return {}
+
+    training_pipeline = my_training_pipeline('income', adult_train_pq)
+
+    training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
+    assert training_pipeline_job is not None
 
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
     return expected_model_id
