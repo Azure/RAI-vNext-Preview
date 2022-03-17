@@ -8,7 +8,7 @@ import time
 
 from azure.ml import MLClient
 from azure.ml import dsl
-from azure.ml.entities import JobInput
+from azure.ml.entities import JobInput, load_component
 from azure.ml.entities import CommandComponent, PipelineJob
 from sympy import maximum
 
@@ -25,7 +25,7 @@ class TestRegisterTabularDataset:
         version_string = component_config["version"]
         epoch_secs = int(time.time())
 
-        register_tabular_component = dsl.load_component(
+        register_tabular_component = load_component(
             client=ml_client, name="RegisterTabularDataset", version=version_string
         )
 
@@ -68,7 +68,7 @@ class TestRegisterTabularDataset:
         epoch_secs = int(time.time())
         train_tabular_base = "train_tabular_adult"
 
-        register_tabular_component = dsl.load_component(
+        register_tabular_component = load_component(
             client=ml_client, name="RegisterTabularDataset", version=version_string
         )
 
@@ -99,23 +99,23 @@ class TestRegisterTabularDataset:
 
         # Now we want to consume the dataset in one of our pipelines
 
-        fetch_model_component = dsl.load_component(
+        fetch_model_component = load_component(
             client=ml_client, name="FetchRegisteredModel", version=version_string
         )
 
-        tabular_to_parquet_component = dsl.load_component(
+        tabular_to_parquet_component = load_component(
             client=ml_client, name="TabularToParquet", version=version_string
         )
 
-        rai_constructor_component = dsl.load_component(
+        rai_constructor_component = load_component(
             client=ml_client, name="RAIInsightsConstructor", version=version_string
         )
 
-        rai_explanation_component = dsl.load_component(
+        rai_explanation_component = load_component(
             client=ml_client, name="RAIInsightsExplanation", version=version_string
         )
 
-        rai_gather_component = dsl.load_component(
+        rai_gather_component = load_component(
             client=ml_client, name="RAIInsightsGather", version=version_string
         )
 

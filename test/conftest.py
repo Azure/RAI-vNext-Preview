@@ -10,7 +10,7 @@ from azure.identity import DefaultAzureCredential
 
 from azure.ml import MLClient
 from azure.ml import dsl
-from azure.ml.entities import JobInput
+from azure.ml.entities import JobInput, load_component
 from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
@@ -57,10 +57,10 @@ def registered_adult_model_id(ml_client, component_config):
     model_name_suffix = int(time.time())
     model_name = "common_fetch_model_adult"
 
-    train_component = dsl.load_component(
+    train_component = load_component(
         client=ml_client, name="TrainLogisticRegressionForRAI", version=version_string
     )
-    register_component = dsl.load_component(
+    register_component = load_component(
         client=ml_client, name="RegisterModel", version=version_string
     )
     adult_train_pq = ml_client.datasets.get(
