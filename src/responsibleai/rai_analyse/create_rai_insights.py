@@ -80,6 +80,17 @@ def create_constructor_arg_dict(args):
     return result
 
 
+def copy_input_data(component_input_path: str, output_path:str):
+    if os.path.isdir(component_input_path):
+        src_path = component_input_path
+    else:
+        src_path = os.path.pardir(component_input_path)
+    _logger.info(f"Copying from {src_path} to {output_path}")
+    shutil.copytree(
+        src=src_path,
+        dst=output_path
+    )
+
 def main(args):
 
     my_run = Run.get_context()
@@ -115,15 +126,9 @@ def main(args):
         json.dump(output_dict, of)
 
     _logger.info("Copying train data files")
-    shutil.copytree(
-        src=args.train_dataset,
-        dst=os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR),
-    )
+    copy_input_data(args.train_dataset, os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR))
     _logger.info("Copying test data files")
-    shutil.copytree(
-        src=args.test_dataset,
-        dst=os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR),
-    )
+    copy_input_data(args.test_dataset, os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR))
 
 
 # run script
