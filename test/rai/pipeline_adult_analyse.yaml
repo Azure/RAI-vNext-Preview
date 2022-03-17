@@ -46,3 +46,10 @@ jobs:
       test_dataset: ${{parent.inputs.my_test_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
       categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+
+  explain_01:
+    type: command
+    component: azureml:RAIInsightsExplanation:VERSION_REPLACEMENT_STRING
+    inputs:
+      comment: Some random string
+      rai_insights_dashboard: ${{parent.jobs.create-rai-job.outputs.rai_insights_dashboard}}
