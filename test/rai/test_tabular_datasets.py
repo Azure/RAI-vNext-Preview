@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 
 class TestRegisterTabularDataset:
     def test_smoke_registration(
-        self, ml_client: MLClient, component_config, registered_adult_model_id: str
+        self, ml_client: MLClient, component_config
     ):
         version_string = component_config["version"]
         epoch_secs = int(time.time())
