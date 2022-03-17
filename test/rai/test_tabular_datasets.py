@@ -7,7 +7,7 @@ import pathlib
 import time
 
 from azure.ml import MLClient
-from azure.ml import dsl
+from azure.ml.entities import dsl
 from azure.ml.entities import JobInput
 from azure.ml.entities import CommandComponent, PipelineJob
 from sympy import maximum
