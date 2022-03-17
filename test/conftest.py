@@ -9,7 +9,7 @@ import time
 from azure.identity import DefaultAzureCredential
 
 from azure.ml import MLClient
-from azure.ml.entities import dsl
+from azure.ml import dsl
 from azure.ml.entities import JobInput
 from azure.ml.entities import CommandComponent, PipelineJob
 
