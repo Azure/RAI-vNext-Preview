@@ -19,9 +19,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 class TestRegisterTabularDataset:
-    def test_smoke_registration(
-        self, ml_client: MLClient, component_config
-    ):
+    def test_smoke_registration(self, ml_client: MLClient, component_config):
         version_string = component_config["version"]
         epoch_secs = int(time.time())
 
@@ -34,10 +32,7 @@ class TestRegisterTabularDataset:
             description="Test of Register Tabular component",
             experiment_name="Smoke_Tabular_Datset_registration",
         )
-        def my_pipeline(
-            train_parquet,
-            test_parquet
-        ):
+        def my_pipeline(train_parquet, test_parquet):
             _ = register_tabular_component(
                 dataset_input_path=train_parquet,
                 dataset_base_name="tabular_train_adult",
@@ -56,7 +51,12 @@ class TestRegisterTabularDataset:
         adult_test_pq = ml_client.datasets.get(
             name="Adult_Test_PQ", version=version_string
         )
-        pipeline = my_pipeline(adult_train_pq, adult_test_pq)
+        _logger.info(f"adult_train_pq: {adult_train_pq}")
+        _logger.info(f"adult_train_pq: {dir(adult_train_pq)}")
+        pipeline = my_pipeline(
+            JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
+            JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
+        )
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
