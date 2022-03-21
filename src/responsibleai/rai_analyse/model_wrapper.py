@@ -5,7 +5,7 @@
 import logging
 import shutil
 import os
-import pathlib
+from pathlib import Path
 import tempfile
 
 import cloudpickle
@@ -18,22 +18,26 @@ logging.basicConfig(level=logging.INFO)
 
 
 class ModelWrapper:
-    def __init__(self, target_mlflow_path: str):
-        self._target_mlflow_path = target_mlflow_path
+    def __init__(self, target_mlflow_path: Path):
+        assert target_mlflow_path.is_absolute()
+        self._target_mlflow_path = target_mlflow_path / 'my_wrapped_model'
+        self._model = None # Lazy load
         _logger.info("Created ModelWrapper for path: {0}".format(target_mlflow_path))
 
     def _load_model(self):
         if self._model is None:
-            _logger.info("Loading wrapped model with mlflow")
-            self._model = mlflow.sklearn.load_model(self._target_mlflow_path)
+            mlflow_path = str(self._target_mlflow_path)
+            _logger.info(f"Loading wrapped model with mlflow: {mlflow_path}")
+            self._model = mlflow.sklearn.load_model(mlflow_path)
 
     def predict(self, X):
+        self._load_model()
         _logger.info("Calling predict and predict_proba")
         preds = self._model.predict(X)
         pred_probas = self._model.predict_proba(X)
         result = {
-            "pred": preds.to_json(orient="split"),
-            "pred_proba": pred_probas.to_json(orient="split"),
+            "pred": preds.tolist(),
+            "pred_proba": pred_probas.tolist(),
         }
         return result
 
@@ -44,8 +48,10 @@ class ModelWrapper:
         _logger.info("Target directory: {0}".format(my_dir))
         shutil.copytree(target_mlflow_dir, my_dir, dirs_exist_ok=True)
 
-        mlflow_dirname = os.listdir(target_mlflow_dir)[0]
-        wrapped_dirname = os.path.join(my_dir, mlflow_dirname)
+        #mlflow_dirname = os.listdir(target_mlflow_dir)[0]
+        #wrapped_dirname = os.path.join(my_dir, mlflow_dirname)
+        mlflow_dirname = Path(target_mlflow_dir).resolve()
+        wrapped_dirname = Path(my_dir).resolve()
 
         # Want to cuckoo the pickle file
         target_pickle_file = os.path.join(wrapped_dirname, "model.pkl")
@@ -54,11 +60,11 @@ class ModelWrapper:
         # Nest the actual MLFlow model inside this directory
         _logger.info("Nesting actual model")
         shutil.copytree(
-            src=os.path.join(target_mlflow_dir, mlflow_dirname),
-            dst=os.path.join(wrapped_dirname, mlflow_dirname),
+            src=target_mlflow_dir,
+            dst=os.path.join(wrapped_dirname, 'my_wrapped_model'),
         )
 
-        wrapped_model = ModelWrapper(mlflow_dirname)
+        wrapped_model = ModelWrapper(wrapped_dirname)
 
         _logger.info("Pickling wrapped model")
         with open(target_pickle_file, mode="wb") as pkl_file:
