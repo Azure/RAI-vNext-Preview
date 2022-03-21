@@ -9,8 +9,6 @@ import uuid
 
 import mlflow
 
-from rai_component_utilities import print_dir_tree
-
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
