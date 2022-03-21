@@ -54,7 +54,7 @@ class DeployedModel:
         self._server.kill()
         _logger.info("Process killed")
 
-    def predict(self, input_df: pd.DataFrame):
+    def _call_model_and_extract(self, input_df: pd.DataFrame, target: str):
         payload = input_df.to_json(orient="split")
         # _logger.info("Payload: {0}".format(payload))
         headers = {"Content-Type": "application/json"}
@@ -65,4 +65,10 @@ class DeployedModel:
             timeout=100,
         )
         # _logger.info("Call to model completed: {0}".format(r.text))
-        return json.loads(r.text)
+        return json.loads(r.text)[target]
+
+    def predict(self, input_df: pd.DataFrame):
+        self._call_model_and_extract(input_df, 'predict')
+
+    def predict_proba(self, input_df: pd.DataFrame):
+        self._call_model_and_extract(input_df, 'predict_proba')

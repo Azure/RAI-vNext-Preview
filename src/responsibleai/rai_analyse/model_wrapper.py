@@ -20,15 +20,14 @@ logging.basicConfig(level=logging.INFO)
 class ModelWrapper:
     def __init__(self, target_mlflow_path: Path):
         assert target_mlflow_path.is_absolute()
-        self._target_mlflow_path = target_mlflow_path / 'my_wrapped_model'
+        self._target_mlflow_path = str(target_mlflow_path / 'my_wrapped_model')
         self._model = None # Lazy load
         _logger.info("Created ModelWrapper for path: {0}".format(target_mlflow_path))
 
     def _load_model(self):
         if self._model is None:
-            mlflow_path = str(self._target_mlflow_path)
-            _logger.info(f"Loading wrapped model with mlflow: {mlflow_path}")
-            self._model = mlflow.sklearn.load_model(mlflow_path)
+            _logger.info(f"Loading wrapped model with mlflow: {self._target_mlflow_path}")
+            self._model = mlflow.sklearn.load_model(self._target_mlflow_path)
 
     def predict(self, X):
         self._load_model()
