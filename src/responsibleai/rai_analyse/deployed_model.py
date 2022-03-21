@@ -56,7 +56,7 @@ class DeployedModel:
 
     def _call_model_and_extract(self, input_df: pd.DataFrame, target: str):
         payload = input_df.to_json(orient="split")
-        # _logger.info("Payload: {0}".format(payload))
+        #_logger.info("Payload: {0}".format(payload))
         headers = {"Content-Type": "application/json"}
         r = requests.post(
             "http://127.0.0.1:5000/invocations",
@@ -64,11 +64,13 @@ class DeployedModel:
             data=payload,
             timeout=100,
         )
-        # _logger.info("Call to model completed: {0}".format(r.text))
-        return json.loads(r.text)[target]
+        #_logger.info("Call to model completed: {0}".format(r.text))
+        decoded = json.loads(r.text)
+        #_logger.info(f"Decoded response: {decoded}")
+        return decoded[target]
 
     def predict(self, input_df: pd.DataFrame):
-        self._call_model_and_extract(input_df, 'predict')
+        return self._call_model_and_extract(input_df, 'pred')
 
     def predict_proba(self, input_df: pd.DataFrame):
-        self._call_model_and_extract(input_df, 'predict_proba')
+        return self._call_model_and_extract(input_df, 'pred_proba')
