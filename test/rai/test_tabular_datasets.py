@@ -51,6 +51,7 @@ class TestRegisterTabularDataset:
         adult_test_pq = ml_client.datasets.get(
             name="Adult_Test_PQ", version=version_string
         )
+        _logger.info("job input: {0}".format(JobInput(dataset=f"Adult_Train_PQ:{version_string}")))
         _logger.info(f"adult_train_pq: {adult_train_pq}")
         _logger.info(f"adult_train_pq: {dir(adult_train_pq)}")
         pipeline = my_pipeline(
