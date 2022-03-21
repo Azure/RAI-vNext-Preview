@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-
+import json
 import logging
 import subprocess
 import time
@@ -36,7 +36,7 @@ class DeployedModel:
 
         for line in self._server.stdout:
             _logger.info(line.strip())
-            target_string = "Booting worker with pid" # "Listening at: http://127.0.0.1:5000"
+            target_string = "Serving on http://127" # "Booting worker with pid" # "Listening at: http://127.0.0.1:5000"
             if target_string in line:
                 break
             if self._server.returncode is not None:
@@ -56,7 +56,7 @@ class DeployedModel:
 
     def predict(self, input_df: pd.DataFrame):
         payload = input_df.to_json(orient="split")
-        _logger.info("Payload: {0}".format(payload))
+        # _logger.info("Payload: {0}".format(payload))
         headers = {"Content-Type": "application/json"}
         r = requests.post(
             "http://127.0.0.1:5000/invocations",
@@ -64,5 +64,5 @@ class DeployedModel:
             data=payload,
             timeout=100,
         )
-        _logger.info("Call to model completed: {0}".format(r.text))
-        return r.text
+        # _logger.info("Call to model completed: {0}".format(r.text))
+        return json.loads(r.text)
