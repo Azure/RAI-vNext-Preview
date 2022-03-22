@@ -95,7 +95,7 @@ class TestRAISmoke:
             register_job = register_model_component(
                 model_input_path=train_job.outputs.model_output,
                 model_base_name="test_classification_pipeline_from_python",
-                model_name_suffix=-1,
+                model_name_suffix=-1,  # Should be default
             )
 
             create_rai_job = rai_constructor_component(
@@ -106,6 +106,13 @@ class TestRAISmoke:
                 test_dataset=test_data,
                 target_column_name=target_column_name,
                 categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
+                maximum_rows_for_test=5000,  # Should be default
+                classes="[]",  # Should be default
+            )
+
+            explain_job = rai_explanation_component(
+                comment="Insert text here",
+                rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
             )
 
             return {}
