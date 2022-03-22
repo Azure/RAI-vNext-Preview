@@ -145,10 +145,10 @@ class TestRegisterTabularDataset:
 
             rai_gather_job = rai_gather_component(
                 constructor=construct_job.outputs.rai_insights_dashboard,
-                #insight_1=rai_explanation_job.outputs.explanation,
-                #insight_2=None,
-                #insight_3=None,
-                #insight_4=None,
+                insight_1=rai_explanation_job.outputs.explanation,
+                insight_2=rai_explanation_job.outputs.explanation,
+                insight_3=rai_explanation_job.outputs.explanation,
+                insight_4=rai_explanation_job.outputs.explanation,
             )
             """
             rai_gather_job.outputs.dashboard.mode = "upload"
