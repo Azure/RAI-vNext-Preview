@@ -74,6 +74,10 @@ class TestRAISmoke:
             client=ml_client, name="RAIInsightsExplanation", version=version_string
         )
 
+        rai_causal_component = load_component(
+            client=ml_client, name="RAIInsightsCausal", version=version_string
+        )
+
         rai_gather_component = load_component(
             client=ml_client, name="RAIInsightsGather", version=version_string
         )
@@ -115,6 +119,24 @@ class TestRAISmoke:
                 rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
             )
 
+            causal_job = rai_causal_component(
+                rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
+                treatment_features='["Age", "Sex"]',
+                heterogeneity_features='["Marital Status"]',
+                nuisance_model="linear",  # Should be default
+                heterogeneity_model="linear",  # Should be default
+                alpha=0.05,  # Should be default
+                upper_bound_on_cat_expansion=50,  # Should be default
+                treatment_cost="0",  # Should be default
+                min_tree_leaf_samples=2,  # Should be default
+                max_tree_depth=2,  # Should be default
+                skip_cat_limit_checks=False,  # Should be default
+                categories="auto",  # Should be default
+                n_jobs=1,  # Should be default
+                verbose=1,  # Should be default
+                random_state="None",  # Should be default
+            )
+
             return {}
 
         pipeline_job = rai_classification_pipeline(
@@ -124,54 +146,6 @@ class TestRAISmoke:
         )
 
         """
-        # Configure the global pipeline inputs:
-        pipeline_inputs = {
-            "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-        }
-
-        # The model registration job
-        register_job_inputs = {
-            "model_input_path": "${{jobs.train-model-job.outputs.model_output}}",
-            "model_base_name": "notebook_registered_logreg",
-        }
-        register_job_outputs = {"model_info_output_path": None}
-        register_job = CommandComponent(
-            component=f"RegisterModel:{version_string}",
-            inputs=register_job_inputs,
-            outputs=register_job_outputs,
-        )
-
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "classification",
-            "model_info_path": "${{jobs.register-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{inputs.my_training_data}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
-
-        # Setup the explanation
-        explain_inputs = {
-            "comment": "Insert text here",
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-        }
-        explain_outputs = {"explanation": None}
-        explain_job = CommandComponent(
-            component=f"RAIInsightsExplanation:{version_string}",
-            inputs=explain_inputs,
-            outputs=explain_outputs,
-        )
-
         # Setup causal
         causal_inputs = {
             "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
