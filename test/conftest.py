@@ -63,9 +63,7 @@ def registered_adult_model_id(ml_client, component_config):
     register_component = load_component(
         client=ml_client, name="RegisterModel", version=version_string
     )
-    adult_train_pq = ml_client.datasets.get(
-        name="Adult_Train_PQ", version=version_string
-    )
+    adult_train_pq = JobInput(path=f"Adult_Train_PQ:{version_string}")
 
     @dsl.pipeline(
         compute="cpucluster",
