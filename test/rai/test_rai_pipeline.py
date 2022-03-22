@@ -119,8 +119,8 @@ class TestRAISmoke:
 
         pipeline_job = use_tabular_rai(
             target_column_name="income",
-            train_data=JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            test_data=JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
+            train_data=JobInput(path=f"Adult_Train_PQ:{version_string}"),
+            test_data=JobInput(path=f"Adult_Test_PQ:{version_string}"),
         )
 
         """
