@@ -52,8 +52,8 @@ class TestRegisterTabularDataset:
             name="Adult_Test_PQ", version=version_string
         )
         pipeline = my_pipeline(
-            adult_train_pq,
-            adult_test_pq,
+            JobInput(path=f"Adult_Train_PQ:{version_string}"),
+            JobInput(path=f"Adult_Test_PQ:{version_string}"),
         )
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
