@@ -98,7 +98,7 @@ class TestRAISmoke:
                 model_name_suffix=-1,
             )
 
-            create_rai_job = create_rai_job(
+            create_rai_job = rai_constructor_component(
                 title="Run built from Python",
                 task_type="classification",
                 model_info_path=register_job.outputs.model_info_output_path,
