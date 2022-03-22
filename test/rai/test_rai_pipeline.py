@@ -78,6 +78,10 @@ class TestRAISmoke:
             client=ml_client, name="RAIInsightsCausal", version=version_string
         )
 
+        rai_counterfactual_component = load_component(
+            client=ml_client, name="RAIInsightsCounterfactual", version=version_string
+        )
+
         rai_gather_component = load_component(
             client=ml_client, name="RAIInsightsGather", version=version_string
         )
@@ -137,6 +141,17 @@ class TestRAISmoke:
                 random_state="None",  # Should be default
             )
 
+            counterfactual_job = rai_counterfactual_component(
+                rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
+                total_CFs=10,
+                desired_class="opposite",
+                method="random",  # Should be default
+                desired_range="[]",  # Should be default
+                permitted_range="{}",  # Should be default
+                features_to_vary="all",  # Should be default
+                feature_importance=True,  # Should be default
+            )
+
             return {}
 
         pipeline_job = rai_classification_pipeline(
@@ -146,18 +161,6 @@ class TestRAISmoke:
         )
 
         """
-        # Setup causal
-        causal_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "treatment_features": '["Age", "Sex"]',
-            "heterogeneity_features": '["Marital Status"]',
-        }
-        causal_outputs = {"causal": None}
-        causal_job = CommandComponent(
-            component=f"RAIInsightsCausal:{version_string}",
-            inputs=causal_inputs,
-            outputs=causal_outputs,
-        )
 
         # Setup counterfactual
         counterfactual_inputs = {
