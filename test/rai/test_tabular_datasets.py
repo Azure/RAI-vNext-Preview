@@ -108,6 +108,7 @@ class TestRegisterTabularDataset:
         rai_gather_component = load_component(
             client=ml_client, name="RAIInsightsGather", version=version_string
         )
+        _logger.info("Loaded all components: {0}".format(type(rai_gather_component)))
 
         @dsl.pipeline(
             compute="cpucluster",
@@ -145,9 +146,9 @@ class TestRegisterTabularDataset:
             rai_gather_job = rai_gather_component(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=rai_explanation_job.outputs.explanation,
-                insight_2=None,
-                insight_3=None,
-                insight_4=None,
+                #insight_2=None,
+                #insight_3=None,
+                #insight_4=None,
             )
             """
             rai_gather_job.outputs.dashboard.mode = "upload"
