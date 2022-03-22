@@ -95,6 +95,17 @@ class TestRAISmoke:
             register_job = register_model_component(
                 model_input_path=train_job.outputs.model_output,
                 model_base_name="test_classification_pipeline_from_python",
+                model_name_suffix=-1,
+            )
+
+            create_rai_job = create_rai_job(
+                title="Run built from Python",
+                task_type="classification",
+                model_info_path=register_job.outputs.model_info_output_path,
+                train_dataset=train_data,
+                test_dataset=test_data,
+                target_column_name=target_column_name,
+                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
             )
 
             return {}
