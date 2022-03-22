@@ -45,12 +45,6 @@ class TestRegisterTabularDataset:
             )
             return {}
 
-        adult_train_pq = ml_client.datasets.get(
-            name="Adult_Train_PQ", version=version_string
-        )
-        adult_test_pq = ml_client.datasets.get(
-            name="Adult_Test_PQ", version=version_string
-        )
         pipeline = my_pipeline(
             JobInput(path=f"Adult_Train_PQ:{version_string}"),
             JobInput(path=f"Adult_Test_PQ:{version_string}"),
@@ -83,9 +77,7 @@ class TestRegisterTabularDataset:
             )
             return {}
 
-        adult_train_pq = ml_client.datasets.get(
-            name="Adult_Train_PQ", version=version_string
-        )
+        adult_train_pq = JobInput(path=f"Adult_Train_PQ:{version_string}")
         pipeline = tabular_registration_pipeline(
             adult_train_pq, base_name=train_tabular_base
         )
@@ -165,9 +157,7 @@ class TestRegisterTabularDataset:
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
 
-        adult_test_pq = ml_client.datasets.get(
-            name="Adult_Test_PQ", version=version_string
-        )
+        adult_test_pq = JobInput(path=f"Adult_Test_PQ:{version_string}")
         rai_pipeline = use_tabular_rai(
             target_column_name="income",
             train_data_name=f"{train_tabular_base}_{epoch_secs}",
