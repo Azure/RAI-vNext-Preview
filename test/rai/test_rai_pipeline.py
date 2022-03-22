@@ -6,8 +6,9 @@ import logging
 import pathlib
 import time
 
+from azure.ml import dsl
 from azure.ml import MLClient
-from azure.ml.entities import JobInput
+from azure.ml.entities import JobInput, load_component
 from azure.ml.entities import CommandComponent, Job, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
@@ -55,24 +56,62 @@ class TestRAISmoke:
         # This is for the Adult dataset
         version_string = component_config["version"]
 
+        train_log_reg_component = load_component(
+            client=ml_client,
+            name="TrainLogisticRegressionForRAI",
+            version=version_string,
+        )
+
+        register_model_component = load_component(
+            client=ml_client, name="RegisterModel", version=version_string
+        )
+
+        rai_constructor_component = load_component(
+            client=ml_client, name="RAIInsightsConstructor", version=version_string
+        )
+
+        rai_explanation_component = load_component(
+            client=ml_client, name="RAIInsightsExplanation", version=version_string
+        )
+
+        rai_gather_component = load_component(
+            client=ml_client, name="RAIInsightsGather", version=version_string
+        )
+
+        @dsl.pipeline(
+            compute="cpucluster",
+            description="Submission of classification pipeline from Python",
+            experiment_name=f"test_classification_pipeline_from_python_{version_string}",
+        )
+        def use_tabular_rai(
+            target_column_name,
+            train_data,
+            test_data,
+        ):
+            train_job = train_log_reg_component(
+                target_column_name=target_column_name, training_data=train_data
+            )
+
+            register_job = register_model_component(
+                model_input_path=train_job.outputs.model_output,
+                model_base_name="test_classification_pipeline_from_python",
+            )
+
+            return {}
+
+        pipeline_job = use_tabular_rai(
+            target_column_name="income",
+            train_data=JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
+            test_data=JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
+        )
+
+        """
         # Configure the global pipeline inputs:
         pipeline_inputs = {
             "target_column_name": "income",
             "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
             "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
         }
-
-        # Specify the training job
-        train_job_inputs = {
-            "target_column_name": "${{inputs.target_column_name}}",
-            "training_data": "${{inputs.my_training_data}}",
-        }
-        train_job_outputs = {"model_output": None}
-        train_job = CommandComponent(
-            component=f"TrainLogisticRegressionForRAI:{version_string}",
-            inputs=train_job_inputs,
-            outputs=train_job_outputs,
-        )
 
         # The model registration job
         register_job_inputs = {
@@ -186,6 +225,7 @@ class TestRAISmoke:
             outputs=train_job_outputs,
             compute="cpucluster",
         )
+        """
 
         # Send it
         pipeline_job = submit_and_wait(ml_client, pipeline_job)
