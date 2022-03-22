@@ -125,6 +125,7 @@ class TestRegisterTabularDataset:
                 tabular_dataset_name=train_data_name
             )
 
+            """
             construct_job = rai_constructor_component(
                 title="Run built from DSL",
                 task_type="classification",
@@ -141,7 +142,6 @@ class TestRegisterTabularDataset:
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
                 comment="Something, something",
             )
-
             rai_gather_job = rai_gather_component(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=rai_explanation_job.outputs.explanation,
@@ -156,6 +156,8 @@ class TestRegisterTabularDataset:
                 "dashboard": rai_gather_job.outputs.dashboard,
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
+            """
+            return {}
 
         adult_test_pq = JobInput(path=f"Adult_Test_PQ:{version_string}")
         rai_pipeline = use_tabular_rai(
@@ -164,5 +166,5 @@ class TestRegisterTabularDataset:
             test_data=adult_test_pq,
         )
 
-        #rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
-        #assert rai_pipeline_job is not None
+        rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
+        assert rai_pipeline_job is not None
