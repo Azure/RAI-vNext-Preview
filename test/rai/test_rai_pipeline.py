@@ -83,7 +83,7 @@ class TestRAISmoke:
             description="Submission of classification pipeline from Python",
             experiment_name=f"test_classification_pipeline_from_python_{version_string}",
         )
-        def use_tabular_rai(
+        def rai_classification_pipeline(
             target_column_name,
             train_data,
             test_data,
@@ -117,7 +117,7 @@ class TestRAISmoke:
 
             return {}
 
-        pipeline_job = use_tabular_rai(
+        pipeline_job = rai_classification_pipeline(
             target_column_name="income",
             train_data=JobInput(path=f"Adult_Train_PQ:{version_string}"),
             test_data=JobInput(path=f"Adult_Test_PQ:{version_string}"),
