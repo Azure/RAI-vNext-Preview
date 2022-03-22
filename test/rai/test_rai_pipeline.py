@@ -143,7 +143,7 @@ class TestRAISmoke:
 
             counterfactual_job = rai_counterfactual_component(
                 rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
-                total_CFs=10,
+                total_cfs=10,  # Bug filed - should be total_CFs
                 desired_class="opposite",
                 method="random",  # Should be default
                 desired_range="[]",  # Should be default
