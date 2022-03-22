@@ -125,7 +125,7 @@ class TestRegisterTabularDataset:
                 tabular_dataset_name=train_data_name
             )
 
-            """
+            
             construct_job = rai_constructor_component(
                 title="Run built from DSL",
                 task_type="classification",
@@ -137,6 +137,7 @@ class TestRegisterTabularDataset:
                 maximum_rows_for_test_dataset=5000,
                 classes="[]",
             )
+            """
 
             rai_explanation_job = rai_explanation_component(
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
