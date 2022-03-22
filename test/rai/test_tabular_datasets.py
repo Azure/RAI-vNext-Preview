@@ -125,7 +125,6 @@ class TestRegisterTabularDataset:
                 tabular_dataset_name=train_data_name
             )
 
-            
             construct_job = rai_constructor_component(
                 title="Run built from DSL",
                 task_type="classification",
