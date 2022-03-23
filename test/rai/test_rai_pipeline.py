@@ -163,62 +163,28 @@ class TestRAISmoke:
                 num_leaves=31,  # Should be default
                 min_child_samples=20,  # Should be default
             )
+            
+            rai_gather_job = rai_gather_component(
+                constructor=create_rai_job.outputs.rai_insights_dashboard,
+                insight_1=explain_job.outputs.explanation,
+                insight_2=causal_job.outputs.causal,
+                insight_3=counterfactual_job.outputs.counterfactual,
+                insight_4=erroranalysis_job.outputs.error_analysis,
+            )
+            
+            rai_gather_job.outputs.dashboard.mode = "upload"
+            rai_gather_job.outputs.ux_json.mode = "upload"
 
-            return {}
+            return {
+                "dashboard": rai_gather_job.outputs.dashboard,
+                "ux_json": rai_gather_job.outputs.ux_json,
+            }
 
         pipeline_job = rai_classification_pipeline(
             target_column_name="income",
             train_data=JobInput(path=f"Adult_Train_PQ:{version_string}"),
             test_data=JobInput(path=f"Adult_Test_PQ:{version_string}"),
         )
-
-        """
-        # Setup error analysis
-        error_analysis_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "filter_features": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        error_analysis_outputs = {"error_analysis": None}
-        error_analysis_job = CommandComponent(
-            component=f"RAIInsightsErrorAnalysis:{version_string}",
-            inputs=error_analysis_inputs,
-            outputs=error_analysis_outputs,
-        )
-
-        # Configure the gather component
-        gather_inputs = {
-            "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "insight_1": "${{jobs.explain-rai-job.outputs.explanation}}",
-            "insight_2": "${{jobs.causal-rai-job.outputs.causal}}",
-            "insight_3": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
-            "insight_4": "${{jobs.error-analysis-rai-job.outputs.error_analysis}}",
-        }
-        gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
-            inputs=gather_inputs,
-            outputs=gather_outputs,
-        )
-
-        # Assemble into a pipeline
-        pipeline_job = PipelineJob(
-            experiment_name=f"classification_pipeline_from_python_{version_string}",
-            description="Python submitted Adult",
-            jobs={
-                "train-model-job": train_job,
-                "register-model-job": register_job,
-                "create-rai-job": create_rai_job,
-                "explain-rai-job": explain_job,
-                "causal-rai-job": causal_job,
-                "counterfactual-rai-job": counterfactual_job,
-                "error-analysis-rai-job": error_analysis_job,
-                "gather-job": gather_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=train_job_outputs,
-            compute="cpucluster",
-        )
-        """
 
         # Send it
         pipeline_job = submit_and_wait(ml_client, pipeline_job)
