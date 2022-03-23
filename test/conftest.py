@@ -85,7 +85,7 @@ def ml_client(workspace_config):
     return client
 
 
-@pytest.fixture(score="session")
+@pytest.fixture(scope="session")
 def rai_components(ml_client, component_config):
     version_string = component_config["version"]
 
