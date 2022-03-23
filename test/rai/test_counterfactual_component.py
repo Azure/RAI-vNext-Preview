@@ -5,6 +5,7 @@
 import logging
 
 from azure.ml import MLClient
+from azure.ml import dsl
 from azure.ml.entities import JobInput
 from azure.ml.entities import CommandComponent, PipelineJob
 
@@ -22,8 +23,8 @@ class TestCounterfactualComponent:
 
         @dsl.pipeline(
             compute="cpucluster",
-            description="Test Causal component with all arguments",
-            experiment_name=f"TestCausalComponent_test_classification_all_args_{version_string}",
+            description="Test Counterfactual component with all arguments",
+            experiment_name=f"TestCounterfactualComponent_test_classification_all_args_{version_string}",
         )
         def test_causal_classification(
             target_column_name,
