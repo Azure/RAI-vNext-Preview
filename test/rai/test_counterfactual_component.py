@@ -108,7 +108,11 @@ class TestCounterfactualComponent:
         """
 
     def test_regression_all_args(
-        self, ml_client: MLClient, component_config, registered_boston_model_id: str, rai_components
+        self,
+        ml_client: MLClient,
+        component_config,
+        registered_boston_model_id: str,
+        rai_components,
     ):
         version_string = component_config["version"]
 
