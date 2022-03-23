@@ -17,7 +17,11 @@ logging.basicConfig(level=logging.INFO)
 
 class TestErrorAnalysisComponent:
     def test_classification_all_args(
-        self, ml_client: MLClient, component_config, registered_adult_model_id: str, rai_components
+        self,
+        ml_client: MLClient,
+        component_config,
+        registered_adult_model_id: str,
+        rai_components,
     ):
         version_string = component_config["version"]
 
@@ -32,7 +36,8 @@ class TestErrorAnalysisComponent:
             test_data,
         ):
             fetch_model_job = rai_components.fetch_model(
-                model_id=registered_adult_model_id)
+                model_id=registered_adult_model_id
+            )
 
             construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
@@ -101,7 +106,11 @@ class TestErrorAnalysisComponent:
         """
 
     def test_regression_all_args(
-        self, ml_client: MLClient, component_config, registered_boston_model_id: str, rai_components
+        self,
+        ml_client: MLClient,
+        component_config,
+        registered_boston_model_id: str,
+        rai_components,
     ):
         version_string = component_config["version"]
 
@@ -116,7 +125,8 @@ class TestErrorAnalysisComponent:
             test_data,
         ):
             fetch_model_job = rai_components.fetch_model(
-                model_id=registered_boston_model_id)
+                model_id=registered_boston_model_id
+            )
 
             construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
@@ -135,7 +145,7 @@ class TestErrorAnalysisComponent:
                 max_depth=4,
                 num_leaves=25,
                 min_child_samples=10,
-                filter_features='[]',
+                filter_features="[]",
             )
 
             return {}

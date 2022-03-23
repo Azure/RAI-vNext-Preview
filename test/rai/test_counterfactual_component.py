@@ -17,7 +17,11 @@ logging.basicConfig(level=logging.INFO)
 
 class TestCounterfactualComponent:
     def test_classification_all_args(
-        self, ml_client: MLClient, component_config, registered_adult_model_id: str, rai_components
+        self,
+        ml_client: MLClient,
+        component_config,
+        registered_adult_model_id: str,
+        rai_components,
     ):
         version_string = component_config["version"]
 
@@ -32,7 +36,8 @@ class TestCounterfactualComponent:
             test_data,
         ):
             fetch_model_job = rai_components.fetch_model(
-                model_id=registered_adult_model_id)
+                model_id=registered_adult_model_id
+            )
 
             construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
@@ -185,6 +190,5 @@ class TestCounterfactualComponent:
         )
 
         # Send it
-        insights_pipeline_job = submit_and_wait(
-            ml_client, insights_pipeline_job)
+        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
         assert insights_pipeline_job is not None
