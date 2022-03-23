@@ -146,6 +146,7 @@ class TestCounterfactualComponent:
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
                 total_cfs=10,  # Case sensitivity bug
                 method="kdtree",
+                desired_class="opposite",  # Required argument bug...
                 desired_range="[20, 100]",
                 permitted_range='{"ZN": [0, 10], "AGE": [0, 50], "CRIM": [25, 50], "INDUS": [0, 10]}',
                 features_to_vary='["ZN", "AGE", "CRIM", "INDUS"]',
