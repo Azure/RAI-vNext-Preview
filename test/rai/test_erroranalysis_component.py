@@ -67,54 +67,6 @@ class TestErrorAnalysisComponent:
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
         """
-        # Pipeline globals
-        pipeline_inputs = {
-            "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-        }
-
-        # The job to fetch the model
-        fetch_job_inputs = {"model_id": registered_adult_model_id}
-        fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = CommandComponent(
-            component=f"FetchRegisteredModel:{version_string}",
-            inputs=fetch_job_inputs,
-            outputs=fetch_job_outputs,
-        )
-
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "classification",
-            "model_info_path": "${{jobs.fetch-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{inputs.my_training_data}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
-
-        # Setup error analysis
-        erroranalysis_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "max_depth": "4",
-            "num_leaves": "25",
-            "min_child_samples": "10",
-            "filter_features": '["Marital Status", "Workclass"]',
-        }
-        erroranalysis_outputs = {"error_analysis": None}
-        erroranalysis_job = CommandComponent(
-            component=f"RAIInsightsErrorAnalysis:{version_string}",
-            inputs=erroranalysis_inputs,
-            outputs=erroranalysis_outputs,
-        )
-
         # Configure the gather component
         gather_inputs = {
             "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",

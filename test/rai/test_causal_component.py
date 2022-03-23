@@ -78,63 +78,6 @@ class TestCausalComponent:
         assert rai_pipeline_job is not None
 
         """
-        # Pipeline globals
-        pipeline_inputs = {
-            "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-        }
-
-        # The job to fetch the model
-        fetch_job_inputs = {"model_id": registered_adult_model_id}
-        fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = CommandComponent(
-            component=f"FetchRegisteredModel:{version_string}",
-            inputs=fetch_job_inputs,
-            outputs=fetch_job_outputs,
-        )
-
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "classification",
-            "model_info_path": "${{jobs.fetch-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{inputs.my_training_data}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
-
-        causal_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "treatment_features": '["Age", "Sex"]',
-            "heterogeneity_features": '["Marital Status"]',
-            "nuisance_model": "automl",
-            "heterogeneity_model": "forest",
-            "alpha": "0.06",
-            "upper_bound_on_cat_expansion": "51",
-            "treatment_cost": "[0.1, 0.2]",
-            "min_tree_leaf_samples": "3",
-            "max_tree_depth": "3",
-            "skip_cat_limit_checks": "True",
-            "categories": "auto",
-            "n_jobs": "2",
-            "verbose": "0",
-            "random_state": "10",
-        }
-        causal_outputs = {"causal": None}
-        causal_job = CommandComponent(
-            component=f"RAIInsightsCausal:{version_string}",
-            inputs=causal_inputs,
-            outputs=causal_outputs,
-        )
-
         # Configure the gather component
         gather_inputs = {
             "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",

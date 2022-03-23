@@ -69,40 +69,6 @@ class TestCounterfactualComponent:
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
         """
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "classification",
-            "model_info_path": "${{jobs.fetch-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{inputs.my_training_data}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
-
-        # Setup counterfactual
-        counterfactual_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "total_CFs": "10",
-            "method": "random",
-            "desired_class": "opposite",
-            "permitted_range": '{"Capital Gain": [0, 20000], "Hours per week": [0, 20]}',
-            "features_to_vary": '["Capital Gain", "Hours per week", "Age", "Country", "Sex"]',
-            "feature_importance": "True",
-        }
-        counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = CommandComponent(
-            component=f"RAIInsightsCounterfactual:{version_string}",
-            inputs=counterfactual_inputs,
-            outputs=counterfactual_outputs,
-        )
-
         # Configure the gather component
         gather_inputs = {
             "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
