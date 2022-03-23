@@ -21,7 +21,6 @@ class TestCausalComponent:
     ):
         version_string = component_config["version"]
 
-        
         @dsl.pipeline(
             compute="cpucluster",
             description="Test Causal component with all arguments",
@@ -32,9 +31,9 @@ class TestCausalComponent:
             train_data,
             test_data,
         ):
-            fetch_model_job = rai_components.fetch_model(model_id=registered_adult_model_id)
+            fetch_model_job = rai_components.fetch_model(
+                model_id=registered_adult_model_id)
 
-            
             construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
                 task_type="classification",
@@ -43,8 +42,26 @@ class TestCausalComponent:
                 test_dataset=test_data,
                 target_column_name=target_column_name,
                 categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-                maximum_rows_for_test_dataset=5000, # Should be default
-                classes="[]", # Should be default
+                maximum_rows_for_test_dataset=5000,  # Should be default
+                classes="[]",  # Should be default
+            )
+
+            causal_job = rai_components.rai_gather(
+                rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
+                treatment_features='["Age", "Sex"]',
+                heterogeneity_features='["Marital Status"]',
+                nuisance_model="automl",
+                heterogeneity_model="forest",
+                alpha=0.06,
+                upper_bound_on_cat_expansion=51,
+                treatment_cost="[0.1, 0.2]",
+                min_tree_leaf_samples=3,
+                max_tree_depth=3,
+                skip_cat_limit_checks=True,
+                categories="auto",
+                n_jobs=2,
+                verbose=0,
+                random_state=10,
             )
 
             return {}
@@ -240,5 +257,6 @@ class TestCausalComponent:
         )
 
         # Send it
-        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
+        insights_pipeline_job = submit_and_wait(
+            ml_client, insights_pipeline_job)
         assert insights_pipeline_job is not None
