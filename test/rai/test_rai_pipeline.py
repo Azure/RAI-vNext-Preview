@@ -192,7 +192,6 @@ class TestRAISmoke:
         assert pipeline_job is not None
 
     def test_fetch_registered_model_component(self, ml_client, component_config, registered_adult_model_id):
-        # Actually does two pipelines. One to register, then one to use
         version_string = component_config["version"]
 
         fetch_model_component = load_component(
@@ -203,6 +202,7 @@ class TestRAISmoke:
             client=ml_client, name="RAIInsightsConstructor", version=version_string
         )
 
+        # Pipeline skips on analysis; relies on the constructor component verifying the model works
         @dsl.pipeline(
             compute="cpucluster",
             description="Test of Fetch Model component",
