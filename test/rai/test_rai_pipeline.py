@@ -82,6 +82,10 @@ class TestRAISmoke:
             client=ml_client, name="RAIInsightsCounterfactual", version=version_string
         )
 
+        rai_erroranalysis_component = load_component(
+            client=ml_client, name="RAIInsightsErrorAnalysis", version=version_string
+        )
+
         rai_gather_component = load_component(
             client=ml_client, name="RAIInsightsGather", version=version_string
         )
@@ -152,6 +156,14 @@ class TestRAISmoke:
                 feature_importance=True,  # Should be default
             )
 
+            erroranalysis_job = rai_erroranalysis_component(
+                rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
+                filter_features='["Race", "Sex"]',
+                max_depth=3,  # Should be default
+                num_leaves=31,  # Should be default
+                min_child_samples=20,  # Should be default
+            )
+
             return {}
 
         pipeline_job = rai_classification_pipeline(
@@ -161,20 +173,6 @@ class TestRAISmoke:
         )
 
         """
-
-        # Setup counterfactual
-        counterfactual_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "total_CFs": "10",
-            "desired_class": "opposite",
-        }
-        counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = CommandComponent(
-            component=f"RAIInsightsCounterfactual:{version_string}",
-            inputs=counterfactual_inputs,
-            outputs=counterfactual_outputs,
-        )
-
         # Setup error analysis
         error_analysis_inputs = {
             "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
