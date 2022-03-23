@@ -102,8 +102,12 @@ def registered_boston_model_id(ml_client, component_config):
     # Configure the global pipeline inputs:
     pipeline_inputs = {
         "target_column_name": "y",
-        "my_training_data": JobInput(type='uri_file', path=f"azureml:Boston_Train_PQ:{version_string}"),
-        "my_test_data": JobInput(type='uri_file', path=f"azureml:Boston_Test_PQ:{version_string}"),
+        "my_training_data": JobInput(
+            type="uri_file", path=f"azureml:Boston_Train_PQ:{version_string}"
+        ),
+        "my_test_data": JobInput(
+            type="uri_file", path=f"azureml:Boston_Test_PQ:{version_string}"
+        ),
     }
 
     # Specify the training job

@@ -164,7 +164,7 @@ class TestRAISmoke:
                 num_leaves=31,  # Should be default
                 min_child_samples=20,  # Should be default
             )
-            
+
             rai_gather_job = rai_gather_component(
                 constructor=create_rai_job.outputs.rai_insights_dashboard,
                 insight_1=explain_job.outputs.explanation,
@@ -172,7 +172,7 @@ class TestRAISmoke:
                 insight_3=counterfactual_job.outputs.counterfactual,
                 insight_4=erroranalysis_job.outputs.error_analysis,
             )
-            
+
             rai_gather_job.outputs.dashboard.mode = "upload"
             rai_gather_job.outputs.ux_json.mode = "upload"
 
@@ -191,13 +191,15 @@ class TestRAISmoke:
         pipeline_job = submit_and_wait(ml_client, pipeline_job)
         assert pipeline_job is not None
 
-    def test_fetch_registered_model_component(self, ml_client, component_config, registered_adult_model_id):
+    def test_fetch_registered_model_component(
+        self, ml_client, component_config, registered_adult_model_id
+    ):
         version_string = component_config["version"]
 
         fetch_model_component = load_component(
             client=ml_client, name="FetchRegisteredModel", version=version_string
         )
-                
+
         rai_constructor_component = load_component(
             client=ml_client, name="RAIInsightsConstructor", version=version_string
         )
@@ -217,13 +219,14 @@ class TestRAISmoke:
                 model_info_path=fetch_model_job.outputs.model_info_output_path,
                 train_dataset=train_data,
                 test_dataset=test_data,
-                target_column_name='income',
+                target_column_name="income",
                 categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
                 maximum_rows_for_test_dataset=5000,
-                classes="[]", # Should be default value
+                classes="[]",  # Should be default value
             )
 
-        insights_pipeline_job = fetch_analyse_registered_model(model_id=registered_adult_model_id,
+        insights_pipeline_job = fetch_analyse_registered_model(
+            model_id=registered_adult_model_id,
             train_data=JobInput(path=f"Adult_Train_PQ:{version_string}"),
             test_data=JobInput(path=f"Adult_Test_PQ:{version_string}"),
         )
