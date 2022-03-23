@@ -26,7 +26,7 @@ class TestCounterfactualComponent:
             description="Test Counterfactual component with all arguments",
             experiment_name=f"TestCounterfactualComponent_test_classification_all_args_{version_string}",
         )
-        def test_causal_classification(
+        def test_counterfactual_classification(
             target_column_name,
             train_data,
             test_data,
@@ -60,7 +60,7 @@ class TestCounterfactualComponent:
 
         adult_train_pq = JobInput(path=f"Adult_Train_PQ:{version_string}")
         adult_test_pq = JobInput(path=f"Adult_Test_PQ:{version_string}")
-        rai_pipeline = test_causal_classification(
+        rai_pipeline = test_counterfactual_classification(
             target_column_name="income",
             train_data=adult_train_pq,
             test_data=adult_test_pq,
