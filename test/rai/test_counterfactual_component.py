@@ -56,6 +56,7 @@ class TestCounterfactualComponent:
                 total_cfs=10,  # Case sensitivity bug!
                 method="random",
                 desired_class="opposite",
+                desired_range="[]",
                 permitted_range='{"Capital Gain": [0, 20000], "Hours per week": [0, 20]}',
                 features_to_vary='["Capital Gain", "Hours per week", "Age", "Country", "Sex"]',
                 feature_importance=True,
