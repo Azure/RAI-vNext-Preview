@@ -32,10 +32,10 @@ class TestCausalComponent:
             train_data,
             test_data,
         ):
-            fetch_model_job = rai_components.fetch_model_component(model_id=registered_adult_model_id)
+            fetch_model_job = rai_components.fetch_model(model_id=registered_adult_model_id)
 
             
-            construct_job = rai_components.rai_constructor_component(
+            construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
                 task_type="classification",
                 model_info_path=fetch_model_job.outputs.model_info_output_path,
