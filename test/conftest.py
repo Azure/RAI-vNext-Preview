@@ -128,7 +128,7 @@ def registered_boston_model_id(ml_client, component_config):
 
         return {}
 
-    training_pipeline = my_training_pipeline("income", boston_train_pq)
+    training_pipeline = my_training_pipeline("y", boston_train_pq)
 
     training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
     assert training_pipeline_job is not None
