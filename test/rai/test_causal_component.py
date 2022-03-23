@@ -116,67 +116,67 @@ class TestCausalComponent:
         """
 
     def test_regression_all_args(
-        self, ml_client: MLClient, component_config, registered_boston_model_id: str
+        self, ml_client: MLClient, component_config, registered_boston_model_id: str, rai_components
     ):
         version_string = component_config["version"]
 
-        # Pipeline globals
-        pipeline_inputs = {
-            "target_column_name": "y",
-            "my_training_data": JobInput(dataset=f"Boston_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Boston_Test_PQ:{version_string}"),
-        }
+        @dsl.pipeline(
+            compute="cpucluster",
+            description="Test Causal component with all arguments",
+            experiment_name=f"TestCausalComponent_test_regression_all_args_{version_string}",
+        )
+        def test_causal_regression(
+            target_column_name,
+            train_data,
+            test_data,
+        ):
+            fetch_model_job = rai_components.fetch_model(
+                model_id=registered_boston_model_id
+            )
 
-        # The job to fetch the model
-        fetch_job_inputs = {"model_id": registered_boston_model_id}
-        fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = CommandComponent(
-            component=f"FetchRegisteredModel:{version_string}",
-            inputs=fetch_job_inputs,
-            outputs=fetch_job_outputs,
+            construct_job = rai_components.rai_constructor(
+                title="Run built from DSL",
+                task_type="regression",
+                model_info_path=fetch_model_job.outputs.model_info_output_path,
+                train_dataset=train_data,
+                test_dataset=test_data,
+                target_column_name=target_column_name,
+                categorical_column_names="[]",
+                maximum_rows_for_test_dataset=5000,  # Should be default
+                classes="[]",  # Should be default
+            )
+
+            causal_job = rai_components.rai_causal(
+                rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
+                treatment_features='["NOX", "ZN"]',
+                heterogeneity_features='["RM", "AGE"]',
+                nuisance_model="automl",
+                heterogeneity_model="forest",
+                alpha=0.06,
+                upper_bound_on_cat_expansion=51,
+                treatment_cost="[0.1, 0.2]",
+                min_tree_leaf_samples=3,
+                max_tree_depth=3,
+                skip_cat_limit_checks=True,
+                categories="auto",
+                n_jobs=2,
+                verbose=0,
+                random_state=10,
+            )
+
+            return {}
+
+        adult_train_pq = JobInput(path=f"Boston_Train_PQ:{version_string}")
+        adult_test_pq = JobInput(path=f"Boston_Test_PQ:{version_string}")
+        rai_pipeline = test_causal_regression(
+            target_column_name="y",
+            train_data=adult_train_pq,
+            test_data=adult_test_pq,
         )
 
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "regression",
-            "model_info_path": "${{jobs.fetch-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{inputs.my_training_data}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": "[]",
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
-
-        causal_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "treatment_features": '["NOX", "ZN"]',
-            "heterogeneity_features": '["RM", "AGE"]',
-            "nuisance_model": "automl",
-            "heterogeneity_model": "forest",
-            "alpha": "0.06",
-            "upper_bound_on_cat_expansion": "51",
-            "treatment_cost": "[0.1, 0.2]",
-            "min_tree_leaf_samples": "3",
-            "max_tree_depth": "3",
-            "skip_cat_limit_checks": "True",
-            "categories": "auto",
-            "n_jobs": "2",
-            "verbose": "0",
-            "random_state": "10",
-        }
-        causal_outputs = {"causal": None}
-        causal_job = CommandComponent(
-            component=f"RAIInsightsCausal:{version_string}",
-            inputs=causal_inputs,
-            outputs=causal_outputs,
-        )
-
+        rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
+        assert rai_pipeline_job is not None
+        """
         # Configure the gather component
         gather_inputs = {
             "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
@@ -207,3 +207,4 @@ class TestCausalComponent:
         # Send it
         insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
         assert insights_pipeline_job is not None
+        """
