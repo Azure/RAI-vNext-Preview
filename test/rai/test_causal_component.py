@@ -46,7 +46,7 @@ class TestCausalComponent:
                 classes="[]",  # Should be default
             )
 
-            causal_job = rai_components.rai_gather(
+            causal_job = rai_components.rai_causal(
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
                 treatment_features='["Age", "Sex"]',
                 heterogeneity_features='["Marital Status"]',
