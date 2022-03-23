@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
+from atexit import register
 import logging
 import pathlib
 import time
@@ -190,128 +191,41 @@ class TestRAISmoke:
         pipeline_job = submit_and_wait(ml_client, pipeline_job)
         assert pipeline_job is not None
 
-    def test_fetch_registered_model_component(self, ml_client, component_config):
+    def test_fetch_registered_model_component(self, ml_client, component_config, registered_adult_model_id):
         # Actually does two pipelines. One to register, then one to use
         version_string = component_config["version"]
 
-        model_name_suffix = int(time.time())
-        model_name = "fetch_model"
-
-        # Configure the global pipeline inputs:
-        pipeline_inputs = {
-            "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-        }
-
-        # Specify the training job
-        train_job_inputs = {
-            "target_column_name": "${{inputs.target_column_name}}",
-            "training_data": "${{inputs.my_training_data}}",
-        }
-        train_job_outputs = {"model_output": None}
-        train_job = CommandComponent(
-            component=f"TrainLogisticRegressionForRAI:{version_string}",
-            inputs=train_job_inputs,
-            outputs=train_job_outputs,
+        fetch_model_component = load_component(
+            client=ml_client, name="FetchRegisteredModel", version=version_string
+        )
+                
+        rai_constructor_component = load_component(
+            client=ml_client, name="RAIInsightsConstructor", version=version_string
         )
 
-        # The model registration job
-        register_job_inputs = {
-            "model_input_path": "${{jobs.train-model-job.outputs.model_output}}",
-            "model_base_name": model_name,
-            "model_name_suffix": model_name_suffix,
-        }
-        register_job_outputs = {"model_info_output_path": None}
-        register_job = CommandComponent(
-            component=f"RegisterModel:{version_string}",
-            inputs=register_job_inputs,
-            outputs=register_job_outputs,
-        )
-
-        # Assemble into a pipeline
-        register_pipeline = PipelineJob(
-            experiment_name=f"Register_Model_{version_string}",
-            description="Python submitted Adult model registration",
-            jobs={
-                "train-model-job": train_job,
-                "register-model-job": register_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=register_job_outputs,
+        @dsl.pipeline(
             compute="cpucluster",
+            description="Test of Fetch Model component",
+            experiment_name=f"test_fetch_registered_model_component_{version_string}",
         )
+        def fetch_analyse_registered_model(model_id, train_data, test_data):
+            fetch_model_job = fetch_model_component(model_id=model_id)
 
-        # Send it
-        register_pipeline_job = submit_and_wait(ml_client, register_pipeline)
-        assert register_pipeline_job is not None
+            _ = rai_constructor_component(
+                title="Run built from DSL",
+                task_type="classification",
+                model_info_path=fetch_model_job.outputs.model_info_output_path,
+                train_dataset=train_data,
+                test_dataset=test_data,
+                target_column_name='income',
+                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
+                maximum_rows_for_test_dataset=5000,
+                classes="[]", # Should be default value
+            )
 
-        # Now the pipeline to consume the model
-
-        # The job to fetch the model (this is the one under test)
-        expected_model_id = f"{model_name}_{model_name_suffix}:1"
-        fetch_job_inputs = {"model_id": expected_model_id}
-        fetch_job_outputs = {"model_info_output_path": None}
-        fetch_job = CommandComponent(
-            component=f"FetchRegisteredModel:{version_string}",
-            inputs=fetch_job_inputs,
-            outputs=fetch_job_outputs,
-        )
-
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "classification",
-            "model_info_path": "${{jobs.fetch-model-job.outputs.model_info_output_path}}",
-            "train_dataset": "${{inputs.my_training_data}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
-        create_rai_job = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
-
-        # Setup the explanation
-        explain_inputs = {
-            "comment": "Insert text here",
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-        }
-        explain_outputs = {"explanation": None}
-        explain_job = CommandComponent(
-            component=f"RAIInsightsExplanation:{version_string}",
-            inputs=explain_inputs,
-            outputs=explain_outputs,
-        )
-
-        # Configure the gather component
-        gather_inputs = {
-            "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "insight_1": "${{jobs.explain-rai-job.outputs.explanation}}",
-        }
-        gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
-            inputs=gather_inputs,
-            outputs=gather_outputs,
-        )
-
-        # Pipeline to construct the RAI Insights
-        insights_pipeline_job = PipelineJob(
-            experiment_name=f"fetch_registered_model_component_{version_string}",
-            description="Python submitted Adult insights using fetched model",
-            jobs={
-                "fetch-model-job": fetch_job,
-                "create-rai-job": create_rai_job,
-                "explain-rai-job": explain_job,
-                "gather-job": gather_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=None,
-            compute="cpucluster",
+        insights_pipeline_job = fetch_analyse_registered_model(model_id=registered_adult_model_id,
+            train_data=JobInput(path=f"Adult_Train_PQ:{version_string}"),
+            test_data=JobInput(path=f"Adult_Test_PQ:{version_string}"),
         )
 
         # Send it
