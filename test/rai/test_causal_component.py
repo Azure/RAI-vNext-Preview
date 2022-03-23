@@ -53,7 +53,7 @@ class TestCausalComponent:
         adult_test_pq = JobInput(path=f"Adult_Test_PQ:{version_string}")
         rai_pipeline = test_causal_classification(
             target_column_name="income",
-            train_data_name=adult_train_pq,
+            train_data=adult_train_pq,
             test_data=adult_test_pq,
         )
 
