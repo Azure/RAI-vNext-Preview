@@ -10,7 +10,7 @@ import time
 from azure.ml import dsl
 from azure.ml import MLClient
 from azure.ml.entities import JobInput, load_component
-from azure.ml.entities import CommandComponent, Job, PipelineJob
+from azure.ml.entities import Job
 
 from test.utilities_for_test import submit_and_wait
 
