@@ -16,6 +16,41 @@ from azure.ml.entities import CommandComponent, PipelineJob
 from test.utilities_for_test import submit_and_wait
 
 
+class Components:
+    def __init__(self, ml_client: MLClient, version_string: str):
+        self.fetch_model = load_component(
+            client=ml_client, name="FetchRegisteredModel", version=version_string
+        )
+
+        self.tabular_to_parquet = load_component(
+            client=ml_client, name="TabularToParquet", version=version_string
+        )
+
+        self.rai_constructor = load_component(
+            client=ml_client, name="RAIInsightsConstructor", version=version_string
+        )
+
+        self.rai_explanation = load_component(
+            client=ml_client, name="RAIInsightsExplanation", version=version_string
+        )
+
+        self.rai_gather = load_component(
+            client=ml_client, name="RAIInsightsGather", version=version_string
+        )
+
+        self.rai_causal = load_component(
+            client=ml_client, name="RAIInsightsCausal", version=version_string
+        )
+
+        self.rai_counterfactual = load_component(
+            client=ml_client, name="RAIInsightsCounterfactual", version=version_string
+        )
+
+        self.rai_erroranalysis = load_component(
+            client=ml_client, name="RAIInsightsErrorAnalysis", version=version_string
+        )
+
+
 @pytest.fixture(scope="session")
 def component_config():
     config_file = "component_config.json"
@@ -48,6 +83,13 @@ def ml_client(workspace_config):
     )
 
     return client
+
+
+@pytest.fixture(score="session")
+def rai_components(ml_client, component_config):
+    version_string = component_config["version"]
+
+    return Components(ml_client, version_string)
 
 
 @pytest.fixture(scope="session")

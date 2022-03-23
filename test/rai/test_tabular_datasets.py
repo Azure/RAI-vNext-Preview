@@ -149,7 +149,6 @@ class TestRegisterTabularDataset:
                 insight_3=rai_explanation_job.outputs.explanation,
                 insight_4=rai_explanation_job.outputs.explanation,
             )
-            """
             rai_gather_job.outputs.dashboard.mode = "upload"
             rai_gather_job.outputs.ux_json.mode = "upload"
 
@@ -157,8 +156,6 @@ class TestRegisterTabularDataset:
                 "dashboard": rai_gather_job.outputs.dashboard,
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
-            """
-            return {}
 
         adult_test_pq = JobInput(path=f"Adult_Test_PQ:{version_string}")
         rai_pipeline = use_tabular_rai(
