@@ -5,6 +5,7 @@
 import logging
 
 from azure.ml import MLClient
+from azure.ml import dsl
 from azure.ml.entities import JobInput
 from azure.ml.entities import CommandComponent, PipelineJob
 
