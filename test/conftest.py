@@ -50,6 +50,16 @@ class Components:
             client=ml_client, name="RAIInsightsErrorAnalysis", version=version_string
         )
 
+        self.train_adult = load_component(
+            client=ml_client,
+            name="TrainLogisticRegressionForRAI",
+            version=version_string,
+        )
+
+        self.register_model = load_component(
+            client=ml_client, name="RegisterModel", version=version_string
+        )
+
 
 @pytest.fixture(scope="session")
 def component_config():

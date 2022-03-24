@@ -15,132 +15,114 @@ logging.basicConfig(level=logging.INFO)
 
 
 class TestRAIGatherErrors:
-    def test_tool_component_mismatch(self, ml_client: MLClient, component_config):
+    def test_tool_component_mismatch(
+        self, ml_client: MLClient, component_config, rai_components
+    ):
         # Checks that components from different constructors can't be mixed
         # This is for the Adult dataset
         version_string = component_config["version"]
 
-        # Configure the global pipeline inputs:
-        pipeline_inputs = {
-            "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
-        }
+        @dsl.pipeline(
+            compute="cpucluster",
+            description="Checks components from different constructors can't be used",
+            experiment_name=f"TestRAIGatherErrors_test_tool_component_mismatch_{version_string}",
+        )
+        def test_constructor_mismatch(
+            target_column_name,
+            train_data,
+            test_data,
+        ):
+            train_job = rai_components.train_adult(
+                target_column_name=target_column_name, training_data=train_data
+            )
 
-        # Specify the training job
-        train_job_inputs = {
-            "target_column_name": "${{inputs.target_column_name}}",
-            "training_data": "${{inputs.my_training_data}}",
-        }
-        train_job_outputs = {"model_output": None}
-        train_job = CommandComponent(
-            component=f"TrainLogisticRegressionForRAI:{version_string}",
-            inputs=train_job_inputs,
-            outputs=train_job_outputs,
-        )
+            # Register twice (nondeterministically)
+            model_base_name = "TestRAIGatherErrors_test_tool_component_mismatch"
+            reg1_job = rai_components.register_model(
+                model_input_path=train_job.outputs.model_output,
+                model_base_name=model_base_name,
+            )
+            reg2_job = rai_components.register_model(
+                model_input_path=train_job.outputs.model_output,
+                model_base_name=model_base_name,
+            )
 
-        # The model registration job
-        register_job_inputs = {
-            "model_input_path": "${{jobs.train-model-job.outputs.model_output}}",
-            "model_base_name": "notebook_registered_logreg",
-        }
-        register_job_outputs = {"model_info_output_path": None}
-        # Register twice (the component is non-deterministic so we can be
-        # sure output won't be reused)
-        register_job_1 = CommandComponent(
-            component=f"RegisterModel:{version_string}",
-            inputs=register_job_inputs,
-            outputs=register_job_outputs,
-        )
-        register_job_2 = CommandComponent(
-            component=f"RegisterModel:{version_string}",
-            inputs=register_job_inputs,
-            outputs=register_job_outputs,
-        )
+            # Two RAI constructors
+            construct1_job = rai_components.rai_constructor(
+                title="Run built from DSL",
+                task_type="classification",
+                model_info_path=reg1_job.outputs.model_info_output_path,
+                train_dataset=train_data,
+                test_dataset=test_data,
+                target_column_name=target_column_name,
+                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
+                maximum_rows_for_test_dataset=5000,  # Should be default
+                classes="[]",  # Should be default
+            )
 
-        # Top level RAI Insights component
-        create_rai_inputs = {
-            "title": "Run built from Python",
-            "task_type": "classification",
-            "model_info_path": "${{jobs.register-model-job-1.outputs.model_info_output_path}}",
-            "train_dataset": "${{inputs.my_training_data}}",
-            "test_dataset": "${{inputs.my_test_data}}",
-            "target_column_name": "${{inputs.target_column_name}}",
-            "categorical_column_names": '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
-        }
-        create_rai_outputs = {"rai_insights_dashboard": None}
+            construct2_job = rai_components.rai_constructor(
+                title="Run built from DSL",
+                task_type="classification",
+                model_info_path=reg2_job.outputs.model_info_output_path,
+                train_dataset=train_data,
+                test_dataset=test_data,
+                target_column_name=target_column_name,
+                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
+                maximum_rows_for_test_dataset=5000,  # Should be default
+                classes="[]",  # Should be default
+            )
 
-        # Have TWO dashboard constructors
-        create_rai_1 = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
-        create_rai_inputs[
-            "model_info_path"
-        ] = "${{jobs.register-model-job-2.outputs.model_info_output_path}}"
-        create_rai_2 = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
-            inputs=create_rai_inputs,
-            outputs=create_rai_outputs,
-        )
+            # Setup causal for constructor 1
+            causal1_job = rai_components.rai_causal(
+                rai_insights_dashboard=construct1_job.outputs.rai_insights_dashboard,
+                treatment_features='["Age", "Sex"]',
+                heterogeneity_features='["Marital Status"]',
+                nuisance_model="linear",  # Should be default
+                heterogeneity_model="linear",  # Should be default
+                alpha=0.05,  # Should be default
+                upper_bound_on_cat_expansion=50,  # Should be default
+                treatment_cost="0",  # Should be default
+                min_tree_leaf_samples=2,  # Should be default
+                max_tree_depth=2,  # Should be default
+                skip_cat_limit_checks=False,  # Should be default
+                categories="auto",  # Should be default
+                n_jobs=1,  # Should be default
+                verbose=1,  # Should be default
+                random_state="None",  # Should be default
+            )
 
-        # Setup causal on constructor 1
-        causal_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job-1.outputs.rai_insights_dashboard}}",
-            "treatment_features": '["Age", "Sex"]',
-            "heterogeneity_features": '["Marital Status"]',
-        }
-        causal_outputs = {"causal": None}
-        causal_job = CommandComponent(
-            component=f"RAIInsightsCausal:{version_string}",
-            inputs=causal_inputs,
-            outputs=causal_outputs,
-        )
+            # Setup counterfactual for constructor 2
+            counterfactual2_job = rai_components.counterfactual(
+                rai_insights_dashboard=construct2_job.outputs.rai_insights_dashboard,
+                total_cfs=10,  # Bug filed - should be total_CFs
+                desired_class="opposite",
+                method="random",  # Should be default
+                desired_range="[]",  # Should be default
+                permitted_range="{}",  # Should be default
+                features_to_vary="all",  # Should be default
+                feature_importance=True,  # Should be default
+            )
 
-        # Setup counterfactual on constructor 2
-        counterfactual_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job-2.outputs.rai_insights_dashboard}}",
-            "total_CFs": "10",
-            "desired_class": "opposite",
-        }
-        counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = CommandComponent(
-            component=f"RAIInsightsCounterfactual:{version_string}",
-            inputs=counterfactual_inputs,
-            outputs=counterfactual_outputs,
-        )
+            # Now a single gather components
+            gather_job = rai_components.gather(
+                constructor=construct1_job.outputs.rai_insights_dashboard,
+                insight_1=causal1_job.outputs.causal,
+                insight_2=counterfactual2_job.outputs.counterfactual,
+            )
 
-        # Configure the gather component
-        gather_inputs = {
-            "constructor": "${{jobs.create-rai-job-1.outputs.rai_insights_dashboard}}",
-            "insight_2": "${{jobs.causal-rai-job.outputs.causal}}",
-            "insight_3": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
-        }
-        gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
-            inputs=gather_inputs,
-            outputs=gather_outputs,
-        )
+            gather_job.outputs.dashboard.mode = "upload"
+            gather_job.outputs.ux_json.mode = "upload"
+
+            return {
+                "dashboard": gather_job.outputs.dashboard,
+                "ux_json": gather_job.outputs.ux_json,
+            }
 
         # Assemble into a pipeline
-        pipeline_job = PipelineJob(
-            experiment_name=f"XFAIL_tool_component_mismatch_{version_string}",
-            description="Python submitted Adult",
-            jobs={
-                "train-model-job": train_job,
-                "register-model-job-1": register_job_1,
-                "register-model-job-2": register_job_2,
-                "create-rai-job-1": create_rai_1,
-                "create-rai-job-2": create_rai_2,
-                "causal-rai-job": causal_job,
-                "counterfactual-rai-job": counterfactual_job,
-                "gather-job": gather_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=train_job_outputs,
-            compute="cpucluster",
+        pipeline_job = test_constructor_mismatch(
+            target_column_name="income",
+            train_data=JobInput(path=f"Adult_Train_PQ:{version_string}"),
+            test_data=JobInput(path=f"Adult_Test_PQ:{version_string}"),
         )
 
         # Send it
