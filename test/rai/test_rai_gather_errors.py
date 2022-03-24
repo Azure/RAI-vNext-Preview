@@ -42,10 +42,12 @@ class TestRAIGatherErrors:
             reg1_job = rai_components.register_model(
                 model_input_path=train_job.outputs.model_output,
                 model_base_name=model_base_name,
+                model_name_suffix=-1,
             )
             reg2_job = rai_components.register_model(
                 model_input_path=train_job.outputs.model_output,
                 model_base_name=model_base_name,
+                model_name_suffix=-1,
             )
 
             # Two RAI constructors
@@ -169,12 +171,12 @@ class TestRAIGatherErrors:
 
             explain1_job = rai_components.rai_explanation(
                 comment="explain1_job",
-                rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
+                rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
             )
 
             explain2_job = rai_components.rai_explanation(
                 comment="explain2_job",
-                rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
+                rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
             )
 
             gather_job = rai_components.rai_gather(
