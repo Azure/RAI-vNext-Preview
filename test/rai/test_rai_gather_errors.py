@@ -93,7 +93,7 @@ class TestRAIGatherErrors:
             )
 
             # Setup counterfactual for constructor 2
-            counterfactual2_job = rai_components.counterfactual(
+            counterfactual2_job = rai_components.rai_counterfactual(
                 rai_insights_dashboard=construct2_job.outputs.rai_insights_dashboard,
                 total_cfs=10,  # Bug filed - should be total_CFs
                 desired_class="opposite",
