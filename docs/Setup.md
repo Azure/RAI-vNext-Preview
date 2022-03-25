@@ -1,7 +1,7 @@
 # Setup for Responsible AI
 The goal of this document is to get your Responsible AI components registered and ready for use in your Azure Machine Learning Workspace
 
-**Note:** The following instructions are for v2.1.2 of the SDK.
+**Note:** The following instructions are for v2.1.2 of the SDK. There may be problems using later SDK releases.
 
 ## Setup on local machine (Recommended)
 
@@ -35,8 +35,15 @@ The goal of this document is to get your Responsible AI components registered an
     a. Install the prerequisites
 
     ```powershell
-    pip install -r requirements-dev.txt
+    pip install -r requirements-dev-releasepackage.txt
     ```
+
+    Verify that you have SDK version 2.1.2 by running:
+
+    ```powershell
+    pip show azure-ml
+    ```
+    If not, add `--upgrade` to the `pip install` command above.
 
     b. Generate the both configuration files by answering prompts from:
 
@@ -52,8 +59,14 @@ The goal of this document is to get your Responsible AI components registered an
     ```
 
 
-1. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab on the left hand workspace navigation list, and looking for entries like "Gather RAI Insights Dashboard"
+1. Validate that your components have been registered in your workspace at https://ml.azure.com by going to the Components tab on the left hand workspace navigation list, and looking for entries like "Gather RAI Insights Dashboard". If your workspace does not have a Components tab, go to the Pipelines tab, and create a new pipeline. In the pipeline designer, you should be able to find the RAI components.
 
+1. (Optional) Install the OSS version of the Responsible AI dashboard:
+
+```powershell
+pip install jupyter markupsafe<=2.0.1 itsdangerous==2.0.1
+pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
+```
 
 1. (Optional) Install the miniature SDK for the RAI components. This allows dashboards created in AzureML to be downloaded to your local machine.
     ``` powershell
@@ -79,14 +92,13 @@ cd RAI-vNext-Preview
 ```
 8. Run the following pip installs
 ``` powershell
-pip install jupyter responsibleai pyarrow pandas shap
+pip install jupyter markupsafe<=2.0.1 itsdangerous==2.0.1
+pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
 ```
 ``` powershell
-pip install --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2 azure-ml
+pip install -r requirements-dev-releasepackage.txt
 ```
-``` powershell
-pip install azureml-core azureml-mlflow
-```
+Optionally, install our minature SDK
 ``` powershell
 pip install -e src/azure-ml-rai
 ```
@@ -116,14 +128,16 @@ nano component_config.json
 ```powershell
 Move-Item -Path ..\config.json -Destination ..\AutoML-vNext-Preview
 ```
-17. Run
+17. Run the following to register all of the RAI components
 
-```powershell
-scripts/Register-AzureML.ps1 src/responsibleai/registration_config.json
+    ```powershell
+    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
+    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test
+    ```
 
-```
 18. Validate that the setup worked by checking that the components are showing up under your "custom components" folder in ml.azure.com
 ![image](https://user-images.githubusercontent.com/53354089/145264202-12105d3b-9fd9-4234-96ee-ea9c22a4aaa3.png)
+If your workspace does not have a Components tab, go to the Pipelines tab, and create a new pipeline. In the pipeline designer, you should be able to find the RAI components.
 
 
 
