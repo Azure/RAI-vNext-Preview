@@ -1,7 +1,7 @@
 # Setup for Responsible AI
 The goal of this document is to get your Responsible AI components registered and ready for use in your Azure Machine Learning Workspace
 
-**Note:** The following instructions are for v2.1.2 of the SDK. There may be problems using later SDK releases.
+**Note:** The following instructions are for v2.1.2 of the SDK. There may be problems using later SDK releases due to changing APIs.
 
 ## Setup on local machine (Recommended)
 
