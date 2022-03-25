@@ -77,20 +77,20 @@ pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
 
 ## Setup through Cloud shell 
 1. Go to https://shell.azure.com
-2. (first time) Select a subscription to create a storage account and Microsoft Azure Files share.
-3. (first time) Select "Create storage"
-4. The cloud shell should have AML CLI pre-installed. To ensure you have the latest cmdlets installed run ```az extension add -n ml -y``` 
-5. Make sure your setup is working with any of the list commands: ``` az -h ```
-6. Run the following command to enable the private preview features in your environment
+1. (first time) Select a subscription to create a storage account and Microsoft Azure Files share.
+1. (first time) Select "Create storage"
+1. The cloud shell should have AML CLI pre-installed. To ensure you have the latest cmdlets installed run ```az extension add -n ml -y``` 
+1. Make sure your setup is working with any of the list commands: ``` az -h ```
+1. Run the following command to enable the private preview features in your environment
 ```powershell 
 $Env:AZURE_ML_CLI_PRIVATE_FEATURES_ENABLED=$true
 ```
-7. Setup the git repo 
+1. Setup the git repo 
 ```powershell
 git clone https://github.com/Azure/RAI-vNext-Preview
 cd RAI-vNext-Preview
 ```
-8. Run the following pip installs
+1. Run the following pip installs
 ``` powershell
 pip install jupyter markupsafe<=2.0.1 itsdangerous==2.0.1
 pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
@@ -102,40 +102,20 @@ Optionally, install our minature SDK
 ``` powershell
 pip install -e src/azure-ml-rai
 ```
-9. Create a JSON file called component_config.json containing: '{version:1}' as follows...
-```powershell
-New-item -Path . -Name "component_config.json" -ItemType "file"
-nano component_config.json
-```
-10. Add the text ```{version:1}``` to the file, save and hit enter
-11. Go to portal.azure.com
-12. Click on "Machine Learning"
-![image](https://user-images.githubusercontent.com/53354089/145263293-46ad90f4-a624-4bce-ac6d-10e82fe30061.png)
+1. Generate the both configuration files by answering prompts from:
 
-13. Find the workspace you would like to use and click into the workspace
-
-![image](https://user-images.githubusercontent.com/53354089/145263425-fd248292-217d-47a2-a89c-adeada367a08.png)
-
-14. Click download config.json
-
-
-15. Load this file into your Cloud shell by clicking "upload" and finding the config file in your downloads
-
-![image](https://user-images.githubusercontent.com/53354089/145263695-12553cc9-f0ac-477b-89a3-3eba18f07cc6.png)
-
-16. Move the file from the base directory into the root github directory (this code assumes your are still in the AutoML-vNext-Preview directory)
-
-```powershell
-Move-Item -Path ..\config.json -Destination ..\AutoML-vNext-Preview
-```
-17. Run the following to register all of the RAI components
+    ```powershell
+    python ./scripts/generate_registration_files.py
+    ```
+    
+1. Run the following to register all of the RAI components
 
     ```powershell
     python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
     python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test
     ```
 
-18. Validate that the setup worked by checking that the components are showing up under your "custom components" folder in ml.azure.com
+1. Validate that the setup worked by checking that the components are showing up under your "custom components" folder in ml.azure.com
 ![image](https://user-images.githubusercontent.com/53354089/145264202-12105d3b-9fd9-4234-96ee-ea9c22a4aaa3.png)
 If your workspace does not have a Components tab, go to the Pipelines tab, and create a new pipeline. In the pipeline designer, you should be able to find the RAI components.
 
