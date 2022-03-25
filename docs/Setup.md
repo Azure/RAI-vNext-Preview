@@ -77,20 +77,20 @@ pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
 
 ## Setup through Cloud shell 
 1. Go to https://shell.azure.com
-1. (first time) Select a subscription to create a storage account and Microsoft Azure Files share.
-1. (first time) Select "Create storage"
-1. The cloud shell should have AML CLI pre-installed. To ensure you have the latest cmdlets installed run ```az extension add -n ml -y``` 
-1. Make sure your setup is working with any of the list commands: ``` az -h ```
-1. Run the following command to enable the private preview features in your environment
+2. (first time) Select a subscription to create a storage account and Microsoft Azure Files share.
+3. (first time) Select "Create storage"
+4. The cloud shell should have AML CLI pre-installed. To ensure you have the latest cmdlets installed run ```az extension add -n ml -y``` 
+5. Make sure your setup is working with any of the list commands: ``` az -h ```
+6. Run the following command to enable the private preview features in your environment
 ```powershell 
 $Env:AZURE_ML_CLI_PRIVATE_FEATURES_ENABLED=$true
 ```
-1. Setup the git repo 
+7. Setup the git repo 
 ```powershell
 git clone https://github.com/Azure/RAI-vNext-Preview
 cd RAI-vNext-Preview
 ```
-1. Run the following pip installs
+8. Run the following pip installs
 ``` powershell
 pip install jupyter markupsafe<=2.0.1 itsdangerous==2.0.1
 pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
@@ -102,20 +102,20 @@ Optionally, install our minature SDK
 ``` powershell
 pip install -e src/azure-ml-rai
 ```
-1. Generate the both configuration files by answering prompts from:
+9. Generate the both configuration files by answering prompts from:
 
     ```powershell
     python ./scripts/generate_registration_files.py
     ```
     
-1. Run the following to register all of the RAI components
+10. Run the following to register all of the RAI components
 
     ```powershell
     python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
     python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test
     ```
 
-1. Validate that the setup worked by checking that the components are showing up under your "custom components" folder in ml.azure.com
+11. Validate that the setup worked by checking that the components are showing up under your "custom components" folder in ml.azure.com
 ![image](https://user-images.githubusercontent.com/53354089/145264202-12105d3b-9fd9-4234-96ee-ea9c22a4aaa3.png)
 If your workspace does not have a Components tab, go to the Pipelines tab, and create a new pipeline. In the pipeline designer, you should be able to find the RAI components.
 
