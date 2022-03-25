@@ -1,12 +1,14 @@
 # Setup for Responsible AI
 The goal of this document is to get your Responsible AI components registered and ready for use in your Azure Machine Learning Workspace
 
+**Note:** The following instructions are for v2.1.2 of the SDK.
+
 ## Setup on local machine (Recommended)
 
 ### Pre-requisites
 
 1. AzureML Workspace with a compute cluster. We strongly recommend using an existing test or sandbox Workspace or creating a new Workspace because the private preview bits can have bugs. DO NOT TRY THE PREVIEW ON A WORKSPACE WITH PRODUCTION ASSETS.
-1. If you do not have the Azure CLI installed, [follow the installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli). 2.15 is the minimum version you'll need. Check the version with `az version`. You can use [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart) which has Azure CLI pre-installed.
+1. If you do not have the Azure CLI installed, [follow the installation instructions](https://docs.microsoft.com/cli/azure/install-azure-cli). The minimum version you'll need is 2.30. Check the version with `az version`. You can use [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart) which has Azure CLI pre-installed.
 1. Once the CLI is installed, [add the CLI v2 bits here](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli)
 1. Set your environment variables such as workspace, region, and subscription ID that you would like to work in.
     ```powershell
