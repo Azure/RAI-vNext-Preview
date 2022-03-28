@@ -38,6 +38,7 @@ parameters:
     - CentralUSEUAP
     - EastUS
     - EastUS2EUAP
+    - WestCentralUS
     - WestUS
     - UKSouth
 - name: cliSource
