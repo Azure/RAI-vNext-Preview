@@ -123,6 +123,8 @@ def main(args):
             _logger.info("Got response")
             _logger.info(response)
             _logger.info("End of context")
+            response = dm.predict_proba(data)
+            _logger.info("proba response: {0}".format(response))
 
     constructor_args = create_constructor_arg_dict(args)
 
