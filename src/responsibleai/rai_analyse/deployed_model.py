@@ -79,7 +79,7 @@ class DeployedModel:
         )
         # _logger.info("Call to model completed: {0}".format(r.text))
         decoded = json.loads(r.text)
-        # _logger.info(f"Decoded response: {decoded}")
+        _logger.info(f"Decoded response: {decoded}")
         return decoded[target]
 
     def predict(self, input_df: pd.DataFrame):
