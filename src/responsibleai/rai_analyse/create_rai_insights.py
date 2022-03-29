@@ -105,7 +105,7 @@ def main(args):
 
     constructor_args = create_constructor_arg_dict(args)
 
-    # Make sure that it actuall loads
+    # Make sure that it actually loads
     _logger.info("Creating RAIInsights object")
     _ = RAIInsights(
         model=model_estimator, train=train_df, test=test_df, **constructor_args
