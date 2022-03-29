@@ -3,6 +3,7 @@ azure-common
 #azure-ml
 --extra-index-url https://azuremlsdktestpypi.azureedge.net/test-sdk-cli-v2 # NOT FOR CHECKIN
 azure-ml==0.0.59355733 # NOT FOR CHECKIN
+colorama # Pending update
 pandas
 pyarrow
 pytest

@@ -80,21 +80,12 @@ steps:
   failOnStderr: true
   displayName: Install pip etc.
 
-- script: |
-    pip install colorama
-  displayName: Workaround colorama issue
-
 - task: PowerShell@2
   inputs:
     targetType: filePath
     filepath: scripts/Run-Pip.ps1
     arguments: -sdkVersionSelect ${{parameters.sdkSource}}
-    displayName: Install pip requirements
-
-- powershell: |
-    Set-PSDebug -Trace 0
-    Install-Module powershell-yaml -Scope CurrentUser -Force
-  displayName: Install YAML extension for Powershell
+  displayName: Install pip requirements
 
 - task: AzureCLI@2
   displayName: Install AzureML CLI v2
