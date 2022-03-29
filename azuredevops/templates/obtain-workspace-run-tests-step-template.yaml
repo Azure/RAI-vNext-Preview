@@ -79,9 +79,9 @@ steps:
   failOnStderr: true
   displayName: Install pip etc.
 
-- script: |
-    pip install colorama
-  displayName: Workaround colorama issue
+#- script: |
+#    pip install colorama
+#  displayName: Workaround colorama issue
 
 - task: PowerShell@2
   inputs:
