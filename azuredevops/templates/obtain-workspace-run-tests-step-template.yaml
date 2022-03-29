@@ -88,7 +88,7 @@ steps:
     targetType: filePath
     filepath: scripts/Run-Pip.ps1
     arguments: -sdkVersionSelect ${{parameters.sdkSource}}
-    displayName: Install pip requirements
+  displayName: Install pip requirements
 
 - powershell: |
     Set-PSDebug -Trace 0
