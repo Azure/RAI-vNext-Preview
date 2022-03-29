@@ -8,11 +8,11 @@ inputs:
   my_training_data:
     type: uri_file
     path: azureml:Adult_Train_PQ:VERSION_REPLACEMENT_STRING
-    mode: ro_mount
+    mode: download
   my_test_data:
     type: uri_file
     path: azureml:Adult_Test_PQ:VERSION_REPLACEMENT_STRING
-    mode: ro_mount
+    mode: download
 
 settings:
   default_datastore: azureml:workspaceblobstore
