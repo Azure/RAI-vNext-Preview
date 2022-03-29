@@ -54,8 +54,7 @@ The goal of this document is to get your Responsible AI components registered an
     c. Register all the RAI components:
 
     ```powershell
-    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
-    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test
+    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
     ```
 
 
@@ -111,8 +110,7 @@ pip install -e src/azure-ml-rai
 10. Run the following to register all of the RAI components
 
     ```powershell
-    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
-    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test
+    python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
     ```
 
 11. Validate that the setup worked by checking that the components are showing up under your "custom components" folder in ml.azure.com
