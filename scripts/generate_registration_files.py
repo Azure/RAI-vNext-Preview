@@ -45,9 +45,9 @@ def default_component_config():
 
 
 def main():
+    default_component_config()
     if prompt_yes_no("Create workspace config.json? "):
         create_workspace_config()
-    default_component_config()
     print("Completed")
 
 
