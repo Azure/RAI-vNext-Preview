@@ -73,6 +73,11 @@ steps:
   displayName: "Use Python ${{parameters.pythonVersion}}"
   inputs:
     versionSpec: ${{parameters.pythonVersion}}
+    
+- powershell: |
+    Set-PSDebug -Trace 0
+    Install-Module powershell-yaml -Scope CurrentUser -Force
+  displayName: Install YAML extension for Powershell
 
 - script: |
     echo "##[section]Upgrading pip and setuptools..."
