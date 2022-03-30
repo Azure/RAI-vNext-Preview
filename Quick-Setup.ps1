@@ -52,3 +52,12 @@ Create-ConfigJson $SubId $ResourceGroup $Workspace
 
 Write-Host "=-= Creating component config JSON"
 Create-ComponentConfigJson -version 1
+
+Write-Host "=-= Registering RAI components"
+python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
+
+Write-Host "=-= Setting default subscription"
+az account set -s $SubId
+
+Write-Host "=-= Setting default resource group and workspace"
+az configure --defaults group=$ResourceGroup workspace=$Workspace
