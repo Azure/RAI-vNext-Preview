@@ -25,21 +25,29 @@ def create_workspace_config():
     print("Written {0}".format(JSON_FILE))
 
 
-def create_component_config():
+def create_component_config(desired_version: int):
     JSON_FILE = "component_config.json"
     config_dict = dict()
-    config_dict["version"] = int(input("Enter version: "))
+    config_dict["version"] = desired_version
 
     with open(JSON_FILE, "w") as jf:
         json.dump(config_dict, jf)
     print("Written {0}".format(JSON_FILE))
 
 
+def user_specified_component_config():
+    user_version = int(input("Enter version: "))
+    create_component_config(desired_version=user_version)
+
+
+def default_component_config():
+    create_component_config(desired_version=1)
+
+
 def main():
+    default_component_config()
     if prompt_yes_no("Create workspace config.json? "):
         create_workspace_config()
-    if prompt_yes_no("Create component_config.json? "):
-        create_component_config()
     print("Completed")
 
 
