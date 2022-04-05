@@ -163,7 +163,9 @@ class TestRegisterTabularDataset:
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
 
-        adult_test_pq = JobInput(path=f"Adult_Test_PQ:{version_string}", mode="download")
+        adult_test_pq = JobInput(
+            path=f"Adult_Test_PQ:{version_string}", mode="download"
+        )
         rai_pipeline = use_tabular_rai(
             target_column_name="income",
             train_data_name=f"{train_tabular_base}_{epoch_secs}",
