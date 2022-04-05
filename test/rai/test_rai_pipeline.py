@@ -58,8 +58,12 @@ class TestRAISmoke:
         # Configure the global pipeline inputs:
         pipeline_inputs = {
             "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
+            "my_training_data": JobInput(
+                dataset=f"Adult_Train_PQ:{version_string}", mode="download"
+            ),
+            "my_test_data": JobInput(
+                dataset=f"Adult_Test_PQ:{version_string}", mode="download"
+            ),
         }
 
         # Specify the training job
@@ -201,8 +205,12 @@ class TestRAISmoke:
         # Configure the global pipeline inputs:
         pipeline_inputs = {
             "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
+            "my_training_data": JobInput(
+                dataset=f"Adult_Train_PQ:{version_string}", mode="download"
+            ),
+            "my_test_data": JobInput(
+                dataset=f"Adult_Test_PQ:{version_string}", mode="download"
+            ),
         }
 
         # Specify the training job
