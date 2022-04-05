@@ -37,16 +37,35 @@ In this section, we will go over the basic setup steps that you need in order to
 ### Create an AzureML workspace
 Create an AzureML workspace by using the [configuration notebook](https://github.com/Azure/MachineLearningNotebooks/blob/master/configuration.ipynb)
 
-### Install the required packages
-In order to install `azureml-responsibleai` package you will need a python virtual environment. You can create a python virtual environment using `conda`.
-```c
-conda create -n azureml_env python=3.8
-activate azureml_env
+### Clone this workspace
+
+If you have not already done so, clone this repository, and move into the root directory:
+```bash
+git clone https://github.com/Azure/RAI-vNext-Preview.git
+cd RAI-vNext-Preview
 ```
 
-After activating your environment, if this is your first time running the RAI Dashboard in private preview then continue to the [setup instructions](https://github.com/Azure/RAI-vNext-Preview/blob/main/docs/Setup.md) to do a one-time setup for your workspace.
+### Log in to Azure
 
+Run the following to make sure you are logged in to Azure:
+```bash
+az login
+```
 
+### Run the setup script
+
+We provide a setup script which:
+
+- Creates a new `conda` environment
+- Installs all the required Python packages
+- Registers all the RAI components in your AzureML workspace
+- Sets the defaults for the `az` CLI to point to your workspace
+
+To run the script in powershell, from the repository root, run:
+```powershell
+ .\Quick-Setup.ps1
+ ```
+ 
 
 ### Generating Responsibleai AI Dashboard insights
 Once you have created an Azure workspace and registered your components in the one-time setup above, you can create a Responsible AI dashboard via the CLI or SDK. Start here for `examples` [folder](examples) to get started.

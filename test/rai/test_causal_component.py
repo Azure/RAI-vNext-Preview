@@ -23,8 +23,12 @@ class TestCausalComponent:
         # Pipeline globals
         pipeline_inputs = {
             "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"Adult_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Adult_Test_PQ:{version_string}"),
+            "my_training_data": JobInput(
+                dataset=f"Adult_Train_PQ:{version_string}", mode="download"
+            ),
+            "my_test_data": JobInput(
+                dataset=f"Adult_Test_PQ:{version_string}", mode="download"
+            ),
         }
 
         # The job to fetch the model
@@ -116,8 +120,12 @@ class TestCausalComponent:
         # Pipeline globals
         pipeline_inputs = {
             "target_column_name": "y",
-            "my_training_data": JobInput(dataset=f"Boston_Train_PQ:{version_string}"),
-            "my_test_data": JobInput(dataset=f"Boston_Test_PQ:{version_string}"),
+            "my_training_data": JobInput(
+                dataset=f"Boston_Train_PQ:{version_string}", mode="download"
+            ),
+            "my_test_data": JobInput(
+                dataset=f"Boston_Test_PQ:{version_string}", mode="download"
+            ),
         }
 
         # The job to fetch the model

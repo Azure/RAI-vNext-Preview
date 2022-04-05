@@ -6,10 +6,10 @@ inputs:
   target_column_name: 'y'
   my_training_data:
     dataset: azureml:Boston_Train_PQ:VERSION_REPLACEMENT_STRING
-    mode: ro_mount
+    mode: download
   my_test_data:
     dataset: azureml:Boston_Test_PQ:VERSION_REPLACEMENT_STRING
-    mode: ro_mount
+    mode: download
 
 outputs:
   my_model_directory:

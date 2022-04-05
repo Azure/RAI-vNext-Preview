@@ -72,6 +72,11 @@ steps:
   displayName: "Use Python ${{parameters.pythonVersion}}"
   inputs:
     versionSpec: ${{parameters.pythonVersion}}
+    
+- powershell: |
+    Set-PSDebug -Trace 0
+    Install-Module powershell-yaml -Scope CurrentUser -Force
+  displayName: Install YAML extension for Powershell
 
 - script: |
     echo "##[section]Upgrading pip and setuptools..."
@@ -79,21 +84,12 @@ steps:
   failOnStderr: true
   displayName: Install pip etc.
 
-- script: |
-    pip install colorama
-  displayName: Workaround colorama issue
-
 - task: PowerShell@2
   inputs:
     targetType: filePath
     filepath: scripts/Run-Pip.ps1
     arguments: -sdkVersionSelect ${{parameters.sdkSource}}
-    displayName: Install pip requirements
-
-- powershell: |
-    Set-PSDebug -Trace 0
-    Install-Module powershell-yaml -Scope CurrentUser -Force
-  displayName: Install YAML extension for Powershell
+  displayName: Install pip requirements
 
 - task: AzureCLI@2
   displayName: Install AzureML CLI v2
@@ -140,24 +136,14 @@ steps:
     failOnStandardError: false # Since the new CLI writes stuff there
 
 - task: AzureCLI@2
-  displayName: Register Responsible AI Components (Python)
+  displayName: Run registration script
   inputs:
     azureSubscription: "${{parameters.subscriptionName}}"
     scriptType: pscore
     scriptLocation: inlineScript
     failOnStandardError: false # Since the new CLI writes stuff there
     inlineScript: |
-      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
-
-- task: AzureCLI@2
-  displayName: Register AzureML items for Test (Python)
-  inputs:
-    azureSubscription: "${{parameters.subscriptionName}}"
-    scriptType: pscore
-    scriptLocation: inlineScript
-    failOnStandardError: false # Since the new CLI writes stuff there
-    inlineScript: |
-      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test/
+      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
 
 - powershell: |
     cd src/azure-ml-rai
