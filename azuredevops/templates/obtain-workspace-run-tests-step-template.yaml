@@ -137,24 +137,14 @@ steps:
     failOnStandardError: false # Since the new CLI writes stuff there
 
 - task: AzureCLI@2
-  displayName: Register Responsible AI Components (Python)
+  displayName: Run registration script
   inputs:
     azureSubscription: "${{parameters.subscriptionName}}"
     scriptType: pscore
     scriptLocation: inlineScript
     failOnStandardError: false # Since the new CLI writes stuff there
     inlineScript: |
-      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory src/responsibleai
-
-- task: AzureCLI@2
-  displayName: Register AzureML items for Test (Python)
-  inputs:
-    azureSubscription: "${{parameters.subscriptionName}}"
-    scriptType: pscore
-    scriptLocation: inlineScript
-    failOnStandardError: false # Since the new CLI writes stuff there
-    inlineScript: |
-      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory test/
+      python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
 
 - powershell: |
     cd src/azure-ml-rai
