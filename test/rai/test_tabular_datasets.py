@@ -63,6 +63,7 @@ class TestRegisterTabularDataset:
         version_string = component_config["version"]
         epoch_secs = int(time.time())
         train_tabular_base = "train_tabular_adult"
+        test_tabular_base = "test_tabular_adult"
 
         register_tabular_component = dsl.load_component(
             client=ml_client, name="RegisterTabularDataset", version=version_string
@@ -90,6 +91,15 @@ class TestRegisterTabularDataset:
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
+
+        adult_test_pq = ml_client.datasets.get(
+            name="Adult_Test_PQ", version=version_string
+        )
+        pipeline_2 = tabular_registration_pipeline(
+            adult_test_pq, base_name=test_tabular_base
+        )
+        conversion_pipeline_job_2 = submit_and_wait(ml_client, pipeline_2)
+        assert conversion_pipeline_job_2 is not None
 
         # ----
 
@@ -123,20 +133,24 @@ class TestRegisterTabularDataset:
         def use_tabular_rai(
             target_column_name,
             train_data_name,
-            test_data,
+            test_data_name,
         ):
             fetch_model_job = fetch_model_component(model_id=registered_adult_model_id)
 
-            to_parquet_job = tabular_to_parquet_component(
+            to_parquet_job_train = tabular_to_parquet_component(
                 tabular_dataset_name=train_data_name
+            )
+
+            to_parquet_job_test = tabular_to_parquet_component(
+                tabular_dataset_name=test_data_name
             )
 
             construct_job = rai_constructor_component(
                 title="Run built from DSL",
                 task_type="classification",
                 model_info_path=fetch_model_job.outputs.model_info_output_path,
-                train_dataset=to_parquet_job.outputs.dataset_output_path,
-                test_dataset=test_data,
+                train_dataset=to_parquet_job_train.outputs.dataset_output_path,
+                test_dataset=to_parquet_job_test.outputs.dataset_output_path,
                 target_column_name=target_column_name,
                 categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
                 maximum_rows_for_test_dataset=5000,
@@ -163,13 +177,11 @@ class TestRegisterTabularDataset:
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
 
-        adult_test_pq = JobInput(
-            path=f"Adult_Test_PQ:{version_string}", mode="download"
-        )
+
         rai_pipeline = use_tabular_rai(
             target_column_name="income",
             train_data_name=f"{train_tabular_base}_{epoch_secs}",
-            test_data=adult_test_pq,
+            test_data_name=f"{test_tabular_base}_{epoch_secs}",
         )
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
