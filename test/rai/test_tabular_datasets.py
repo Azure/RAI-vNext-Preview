@@ -45,8 +45,8 @@ class Testregister_tabular_dataset:
             return {}
 
         pipeline = my_pipeline(
-            JobInput(path=f"Adult_Train_PQ:{version_string}"),
-            JobInput(path=f"Adult_Test_PQ:{version_string}"),
+            JobInput(path=f"adult_train_pq:{version_string}"),
+            JobInput(path=f"adult_test_pq:{version_string}"),
         )
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
@@ -77,7 +77,7 @@ class Testregister_tabular_dataset:
             )
             return {}
 
-        adult_train_pq = JobInput(path=f"Adult_Train_PQ:{version_string}")
+        adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}")
         pipeline = tabular_registration_pipeline(
             adult_train_pq, base_name=train_tabular_base
         )
@@ -86,7 +86,7 @@ class Testregister_tabular_dataset:
         assert conversion_pipeline_job is not None
 
         adult_test_pq = ml_client.datasets.get(
-            name="Adult_Test_PQ", version=version_string
+            name="adult_test_pq", version=version_string
         )
         pipeline_2 = tabular_registration_pipeline(
             adult_test_pq, base_name=test_tabular_base
@@ -168,7 +168,7 @@ class Testregister_tabular_dataset:
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
 
-        adult_test_pq = JobInput(path=f"Adult_Test_PQ:{version_string}", mode="download")
+        adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}", mode="download")
         rai_pipeline = use_tabular_rai(
             target_column_name="income",
             train_data_name=f"{train_tabular_base}_{epoch_secs}",

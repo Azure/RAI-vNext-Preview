@@ -19,10 +19,10 @@ type: pipeline
 inputs:
   target_column_name: income
   my_training_data:
-    dataset: azureml:Adult_Train_PQ:VERSION_REPLACEMENT_STRING
+    dataset: azureml:adult_train_pq:VERSION_REPLACEMENT_STRING
     mode: ro_mount
   my_test_data:
-    dataset: azureml:Adult_Test_PQ:VERSION_REPLACEMENT_STRING
+    dataset: azureml:adult_test_pq:VERSION_REPLACEMENT_STRING
     mode: ro_mount
 
 outputs:

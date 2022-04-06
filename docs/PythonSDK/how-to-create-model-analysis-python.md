@@ -39,8 +39,8 @@ Now we will start to construct our pipeline using jobs. To start, we first want 
 ```python
 pipeline_inputs = { 
     'target_column_name': 'income',
-    'my_training_data': InputDatasetEntry(dataset=f"Adult_Train_PQ:1"),
-    'my_test_data': InputDatasetEntry(dataset=f"Adult_Test_PQ:1")
+    'my_training_data': InputDatasetEntry(dataset=f"adult_train_pq:1"),
+    'my_test_data': InputDatasetEntry(dataset=f"adult_test_pq:1")
 }
 ```
 ### Create a training job and register your model
