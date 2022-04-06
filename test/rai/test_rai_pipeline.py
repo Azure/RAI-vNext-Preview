@@ -59,36 +59,36 @@ class TestRAISmoke:
 
         train_log_reg_component = load_component(
             client=ml_client,
-            name="TrainLogisticRegressionForRAI",
+            name="train_logistic_regression_for_rai",
             version=version_string,
         )
 
         register_model_component = load_component(
-            client=ml_client, name="RegisterModel", version=version_string
+            client=ml_client, name="register_model", version=version_string
         )
 
         rai_constructor_component = load_component(
-            client=ml_client, name="RAIInsightsConstructor", version=version_string
+            client=ml_client, name="rai_insights_constructor", version=version_string
         )
 
         rai_explanation_component = load_component(
-            client=ml_client, name="RAIInsightsExplanation", version=version_string
+            client=ml_client, name="rai_insights_explanation", version=version_string
         )
 
         rai_causal_component = load_component(
-            client=ml_client, name="RAIInsightsCausal", version=version_string
+            client=ml_client, name="rai_insights_causal", version=version_string
         )
 
         rai_counterfactual_component = load_component(
-            client=ml_client, name="RAIInsightsCounterfactual", version=version_string
+            client=ml_client, name="rai_insights_counterfactual", version=version_string
         )
 
         rai_erroranalysis_component = load_component(
-            client=ml_client, name="RAIInsightsErrorAnalysis", version=version_string
+            client=ml_client, name="rai_insights_erroranalysis", version=version_string
         )
 
         rai_gather_component = load_component(
-            client=ml_client, name="RAIInsightsGather", version=version_string
+            client=ml_client, name="rai_insights_gather", version=version_string
         )
 
         @dsl.pipeline(
@@ -197,11 +197,11 @@ class TestRAISmoke:
         version_string = component_config["version"]
 
         fetch_model_component = load_component(
-            client=ml_client, name="FetchRegisteredModel", version=version_string
+            client=ml_client, name="fetch_registered_model", version=version_string
         )
 
         rai_constructor_component = load_component(
-            client=ml_client, name="RAIInsightsConstructor", version=version_string
+            client=ml_client, name="rai_insights_constructor", version=version_string
         )
 
         # Pipeline skips on analysis; relies on the constructor component verifying the model works

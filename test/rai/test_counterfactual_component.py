@@ -82,7 +82,7 @@ class TestCounterfactualComponent:
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
         gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
+            component=f"rai_insights_gather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
         )
@@ -179,7 +179,7 @@ class TestCounterfactualComponent:
         }
         counterfactual_outputs = {"counterfactual": None}
         counterfactual_job = CommandComponent(
-            component=f"RAIInsightsCounterfactual:{version_string}",
+            component=f"rai_insights_counterfactual:{version_string}",
             inputs=counterfactual_inputs,
             outputs=counterfactual_outputs,
         )
@@ -191,7 +191,7 @@ class TestCounterfactualComponent:
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
         gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
+            component=f"rai_insights_gather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
         )

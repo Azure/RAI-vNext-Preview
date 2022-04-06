@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: TabularToParquet
+name: convert_tabular_to_parquet
 display_name: TabularDataset to Parquet file
 version: VERSION_REPLACEMENT_STRING
 type: command

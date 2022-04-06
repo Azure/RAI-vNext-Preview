@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: TrainBostonForRAI
+name: train_boston_for_rai
 display_name: Train on Boston Dataset for RAI
 version: VERSION_REPLACEMENT_STRING
 type: command

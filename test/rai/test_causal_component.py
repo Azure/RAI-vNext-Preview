@@ -90,7 +90,7 @@ class TestCausalComponent:
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
         gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
+            component=f"rai_insights_gather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
         )
@@ -188,7 +188,7 @@ class TestCausalComponent:
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
         gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
+            component=f"rai_insights_gather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
         )

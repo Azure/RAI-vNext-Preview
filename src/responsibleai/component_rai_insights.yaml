@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: RAIInsightsConstructor
+name: rai_insights_constructor
 display_name: RAI Insights Dashboard Constructor
 version: VERSION_REPLACEMENT_STRING
 type: command

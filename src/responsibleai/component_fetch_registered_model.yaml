@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: FetchRegisteredModel
+name: fetch_registered_model
 display_name: Fetch Registered Model
 version: VERSION_REPLACEMENT_STRING
 type: command

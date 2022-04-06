@@ -56,7 +56,7 @@ train_job_outputs = {
 }
 
 train_job = ComponentJob(
-    component=f"TrainLogisticRegressionForRAI:{component_dataset_version_suffix}",
+    component=f"train_logistic_regression_for_rai:{component_dataset_version_suffix}",
     inputs = train_job_inputs,
     outputs=train_job_outputs
 )
@@ -70,7 +70,7 @@ register_job_outputs = {
     'model_info_output_path': None
 }
 register_job = ComponentJob(
-    component=f"RegisterModel:{version_string}",
+    component=f"register_model:{version_string}",
     inputs=register_job_inputs,
     outputs=register_job_outputs
 )
@@ -95,7 +95,7 @@ create_rai_inputs = {
 }
 create_rai_outputs = {"rai_insights_dashboard": None}
 create_rai_job = ComponentJob(
-    component=f"RAIInsightsConstructor:{version_string}",
+    component=f"rai_insights_constructor:{version_string}",
     inputs=create_rai_inputs,
     outputs=create_rai_outputs,
 )
@@ -117,7 +117,7 @@ explain_inputs = {
 }
 explain_outputs = {"explanation": None}
 explain_job = ComponentJob(
-    component=f"RAIInsightsExplanation:{version_string}",
+    component=f"rai_insights_explanation:{version_string}",
     inputs=explain_inputs,
     outputs=explain_outputs,
 )
@@ -136,7 +136,7 @@ gather_inputs = {
 }
 gather_outputs = {"dashboard": None, "ux_json": None}
 gather_job = ComponentJob(
-    component=f"RAIInsightsGather:{version_string}",
+    component=f"rai_insights_gather:{version_string}",
     inputs=gather_inputs,
     outputs=gather_outputs,
 )

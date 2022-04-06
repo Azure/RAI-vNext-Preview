@@ -17,13 +17,13 @@ _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
 
-class TestRegisterTabularDataset:
+class Testregister_tabular_dataset:
     def test_smoke_registration(self, ml_client: MLClient, component_config):
         version_string = component_config["version"]
         epoch_secs = int(time.time())
 
         register_tabular_component = load_component(
-            client=ml_client, name="RegisterTabularDataset", version=version_string
+            client=ml_client, name="register_tabular_dataset", version=version_string
         )
 
         @dsl.pipeline(
@@ -61,7 +61,7 @@ class TestRegisterTabularDataset:
         test_tabular_base = "test_tabular_adult"
 
         register_tabular_component = load_component(
-            client=ml_client, name="RegisterTabularDataset", version=version_string
+            client=ml_client, name="register_tabular_dataset", version=version_string
         )
 
         @dsl.pipeline(
@@ -99,23 +99,23 @@ class TestRegisterTabularDataset:
         # Now we want to consume the dataset in one of our pipelines
 
         fetch_model_component = load_component(
-            client=ml_client, name="FetchRegisteredModel", version=version_string
+            client=ml_client, name="fetch_registered_model", version=version_string
         )
 
         tabular_to_parquet_component = load_component(
-            client=ml_client, name="TabularToParquet", version=version_string
+            client=ml_client, name="convert_tabular_to_parquet", version=version_string
         )
 
         rai_constructor_component = load_component(
-            client=ml_client, name="RAIInsightsConstructor", version=version_string
+            client=ml_client, name="rai_insights_constructor", version=version_string
         )
 
         rai_explanation_component = load_component(
-            client=ml_client, name="RAIInsightsExplanation", version=version_string
+            client=ml_client, name="rai_insights_explanation", version=version_string
         )
 
         rai_gather_component = load_component(
-            client=ml_client, name="RAIInsightsGather", version=version_string
+            client=ml_client, name="rai_insights_gather", version=version_string
         )
         _logger.info("Loaded all components: {0}".format(type(rai_gather_component)))
 

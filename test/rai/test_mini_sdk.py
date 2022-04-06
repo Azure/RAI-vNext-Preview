@@ -43,7 +43,7 @@ class TestMiniSDK:
         fetch_job_inputs = {"model_id": registered_adult_model_id}
         fetch_job_outputs = {"model_info_output_path": None}
         fetch_job = CommandComponent(
-            component=f"FetchRegisteredModel:{version_string}",
+            component=f"fetch_registered_model:{version_string}",
             inputs=fetch_job_inputs,
             outputs=fetch_job_outputs,
         )
@@ -60,7 +60,7 @@ class TestMiniSDK:
         }
         create_rai_outputs = {"rai_insights_dashboard": None}
         create_rai_job = CommandComponent(
-            component=f"RAIInsightsConstructor:{version_string}",
+            component=f"rai_insights_constructor:{version_string}",
             inputs=create_rai_inputs,
             outputs=create_rai_outputs,
         )
@@ -72,7 +72,7 @@ class TestMiniSDK:
         }
         explain_outputs = {"explanation": None}
         explain_job = CommandComponent(
-            component=f"RAIInsightsExplanation:{version_string}",
+            component=f"rai_insights_explanation:{version_string}",
             inputs=explain_inputs,
             outputs=explain_outputs,
         )
@@ -84,7 +84,7 @@ class TestMiniSDK:
         }
         gather_outputs = {"dashboard": None, "ux_json": None}
         gather_job = CommandComponent(
-            component=f"RAIInsightsGather:{version_string}",
+            component=f"rai_insights_gather:{version_string}",
             inputs=gather_inputs,
             outputs=gather_outputs,
         )

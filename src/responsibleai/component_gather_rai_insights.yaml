@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: RAIInsightsGather
+name: rai_insights_gather
 display_name: Gather RAI Insights Dashboard
 version: VERSION_REPLACEMENT_STRING
 type: command

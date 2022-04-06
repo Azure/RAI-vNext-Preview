@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: RegisterTabularDataset
+name: register_tabular_dataset
 display_name: Register a FileDataset as a Tabular Dataset
 version: VERSION_REPLACEMENT_STRING
 type: command

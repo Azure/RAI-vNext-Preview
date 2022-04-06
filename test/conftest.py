@@ -19,45 +19,45 @@ from test.utilities_for_test import submit_and_wait
 class Components:
     def __init__(self, ml_client: MLClient, version_string: str):
         self.fetch_model = load_component(
-            client=ml_client, name="FetchRegisteredModel", version=version_string
+            client=ml_client, name="fetch_registered_model", version=version_string
         )
 
         self.tabular_to_parquet = load_component(
-            client=ml_client, name="TabularToParquet", version=version_string
+            client=ml_client, name="convert_tabular_to_parquet", version=version_string
         )
 
         self.rai_constructor = load_component(
-            client=ml_client, name="RAIInsightsConstructor", version=version_string
+            client=ml_client, name="rai_insights_constructor", version=version_string
         )
 
         self.rai_explanation = load_component(
-            client=ml_client, name="RAIInsightsExplanation", version=version_string
+            client=ml_client, name="rai_insights_explanation", version=version_string
         )
 
         self.rai_gather = load_component(
-            client=ml_client, name="RAIInsightsGather", version=version_string
+            client=ml_client, name="rai_insights_gather", version=version_string
         )
 
         self.rai_causal = load_component(
-            client=ml_client, name="RAIInsightsCausal", version=version_string
+            client=ml_client, name="rai_insights_causal", version=version_string
         )
 
         self.rai_counterfactual = load_component(
-            client=ml_client, name="RAIInsightsCounterfactual", version=version_string
+            client=ml_client, name="rai_insights_counterfactual", version=version_string
         )
 
         self.rai_erroranalysis = load_component(
-            client=ml_client, name="RAIInsightsErrorAnalysis", version=version_string
+            client=ml_client, name="rai_insights_erroranalysis", version=version_string
         )
 
         self.train_adult = load_component(
             client=ml_client,
-            name="TrainLogisticRegressionForRAI",
+            name="train_logistic_regression_for_rai",
             version=version_string,
         )
 
         self.register_model = load_component(
-            client=ml_client, name="RegisterModel", version=version_string
+            client=ml_client, name="register_model", version=version_string
         )
 
 
@@ -110,10 +110,10 @@ def registered_adult_model_id(ml_client, component_config):
     model_name = "common_fetch_model_adult"
 
     train_component = load_component(
-        client=ml_client, name="TrainLogisticRegressionForRAI", version=version_string
+        client=ml_client, name="train_logistic_regression_for_rai", version=version_string
     )
     register_component = load_component(
-        client=ml_client, name="RegisterModel", version=version_string
+        client=ml_client, name="register_model", version=version_string
     )
     adult_train_pq = JobInput(path=f"Adult_Train_PQ:{version_string}")
 
@@ -152,10 +152,10 @@ def registered_boston_model_id(ml_client, component_config):
     model_name = "common_fetch_model_boston"
 
     train_component = load_component(
-        client=ml_client, name="TrainBostonForRAI", version=version_string
+        client=ml_client, name="train_boston_for_rai", version=version_string
     )
     register_component = load_component(
-        client=ml_client, name="RegisterModel", version=version_string
+        client=ml_client, name="register_model", version=version_string
     )
     boston_train_pq = JobInput(path=f"Boston_Train_PQ:{version_string}")
 
