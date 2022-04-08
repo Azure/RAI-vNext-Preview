@@ -76,11 +76,11 @@ jobs:
       vmImage: ${{parameters.poolImage}}
 
     steps:
-    - template: python-preparation-step-template.yaml
-      parameters:
-        pythonVersion: ${{parameters.pythonVersion}}
-        cliSource: ${{parameters.cliSource}}
-        sdkSource: ${{parameters.sdkSource}}
+      - template: python-preparation-step-template.yaml
+        parameters:
+          pythonVersion: ${{parameters.pythonVersion}}
+          cliSource: ${{parameters.cliSource}}
+          sdkSource: ${{parameters.sdkSource}}
 
       - task: AzureCLI@2
         displayName: Obtain Workspace
