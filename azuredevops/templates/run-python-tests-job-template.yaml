@@ -1,0 +1,79 @@
+# ---------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# ---------------------------------------------------------
+
+
+parameters:
+- name: pythonVersion
+  displayName: Python Version
+  type: string
+  default: 3.7
+  values:
+    - 3.7
+    - 3.8
+    - 3.9
+- name: cliSource
+  displayName: Installation source for CLI
+  type: string
+  default: LatestRelease
+  values:
+    - LatestRelease
+    - LatestDev
+- name: sdkSource
+  displayName: Installation source for Python SDK
+  type: string
+  default: LatestRelease
+  values:
+    - LatestRelease
+    - LatestDev
+- name: subscriptionName
+  type: string
+- name: configFileArtifact
+  type: string
+  default: WorkspaceConfiguration
+- name: poolImage
+  type: string
+  default: ubuntu-latest
+
+
+jobs:
+  - job:
+    displayName: "Run Python tests"
+    
+    pool:
+      vmImage: ${{parameters.poolImage}}
+
+    steps:
+      - template: python-preparation-step-template.yaml
+        parameters:
+          pythonVersion: ${{parameters.pythonVersion}}
+          cliSource: ${{parameters.cliSource}}
+          sdkSource: ${{parameters.sdkSource}}
+          subscriptionName: ${{parameters.subscriptionName}}
+
+      - task: DownloadPipelineArtifact@2
+        displayName: "Download configuration Artifact ${{parameters.configFileArtifact}}"
+        inputs:
+          artifact: ${{parameters.configFileArtifact}}
+          path: $(Build.SourcesDirectory)
+
+      - script: ls -p $(Build.SourcesDirectory)
+        displayName: "Show sources directory"
+
+      - task: AzureCLI@2
+        displayName: Run tests
+        inputs:
+          azureSubscription: "${{parameters.subscriptionName}}"
+          addSpnToEnvironment: true
+          scriptType: pscore
+          scriptLocation: scriptPath
+          scriptPath: scripts/Run-Tests.ps1
+          failOnStandardError: false # Since the new CLI writes stuff there
+
+      - task: PublishTestResults@2
+        displayName: Publish Test Results
+        inputs:
+          testResultsFormat: JUnit
+          testResultsFiles: "**/junit.xml"
+          searchFolder: "$(System.DefaultWorkingDirectory)"
+        condition: always()
