@@ -59,3 +59,21 @@ jobs:
 
       - script: ls -p $(Build.SourcesDirectory)
         displayName: "Show sources directory"
+
+      - task: AzureCLI@2
+        displayName: Run tests
+        inputs:
+          azureSubscription: "${{parameters.subscriptionName}}"
+          addSpnToEnvironment: true
+          scriptType: pscore
+          scriptLocation: scriptPath
+          scriptPath: scripts/Run-Tests.ps1
+          failOnStandardError: false # Since the new CLI writes stuff there
+
+      - task: PublishTestResults@2
+        displayName: Publish Test Results
+        inputs:
+          testResultsFormat: JUnit
+          testResultsFiles: "**/junit.xml"
+          searchFolder: "$(System.DefaultWorkingDirectory)"
+        condition: always()
