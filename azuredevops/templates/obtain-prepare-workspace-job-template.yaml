@@ -81,6 +81,7 @@ jobs:
           pythonVersion: ${{parameters.pythonVersion}}
           cliSource: ${{parameters.cliSource}}
           sdkSource: ${{parameters.sdkSource}}
+          subscriptionName: ${{parameters.subscriptionName}}
 
       - task: AzureCLI@2
         displayName: Obtain Workspace

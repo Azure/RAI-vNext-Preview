@@ -11,6 +11,8 @@ parameters:
     - 3.7
     - 3.8
     - 3.9
+- name: subscriptionName
+  type: string
 - name: cliSource
   displayName: Installation source for CLI
   type: string
