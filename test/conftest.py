@@ -110,7 +110,9 @@ def registered_adult_model_id(ml_client, component_config):
     model_name = "common_fetch_model_adult"
 
     train_component = load_component(
-        client=ml_client, name="train_logistic_regression_for_rai", version=version_string
+        client=ml_client,
+        name="train_logistic_regression_for_rai",
+        version=version_string,
     )
     register_component = load_component(
         client=ml_client, name="register_model", version=version_string
