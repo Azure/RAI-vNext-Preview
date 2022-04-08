@@ -1,0 +1,129 @@
+# ---------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# ---------------------------------------------------------
+
+parameters:
+- name: pythonVersion
+  displayName: Python Version
+  type: string
+  default: 3.7
+  values:
+    - 3.7
+    - 3.8
+    - 3.9
+# Defines workspace lifetime
+# Workspaces are used for workspaceWindowSeconds
+# and optionally deleted after another
+# workspaceWindowSeconds have elapsed
+- name: workspaceWindowSeconds
+  displayName: Workspace Active Window (seconds)
+  type: number
+  default: 86000 # Just less than one day
+  # Specifies whether to remove workspaces
+  # older than 2*worksapceWindowSeconds
+- name: oldWorkspaceHandling
+  displayName: How to handle old workspaces
+  type: string
+  default: Cull
+  values:
+    - Cull
+    - Keep
+  # Specifies the region in which to create
+  # any new workspace
+- name: workspaceLocation
+  displayName: Workspace Location
+  type: string
+  default: EastUS
+  values:
+    - CentralUSEUAP
+    - EastUS
+    - EastUS2EUAP
+    - WestCentralUS
+    - WestUS
+    - UKSouth
+- name: cliSource
+  displayName: Installation source for CLI
+  type: string
+  default: LatestRelease
+  values:
+    - LatestRelease
+    - LatestDev
+- name: sdkSource
+  displayName: Installation source for Python SDK
+  type: string
+  default: LatestRelease
+  values:
+    - LatestRelease
+    - LatestDev
+- name: subscriptionName
+  type: string
+- name: configFileDirectory
+  type: string
+  default: configFiles
+- name: configFileArtifact
+  type: string
+  default: WorkspaceConfiguration
+- name: poolImage
+  type: string
+  default: ubuntu-latest
+
+
+jobs:
+  - job:
+    displayName: "Obtain & Prepare Workspace"
+    
+    pool:
+      vmImage: ${{parameters.poolImage}}
+
+    steps:
+      - template: python-preparation-step-template.yaml
+        parameters:
+          pythonVersion: ${{parameters.pythonVersion}}
+          cliSource: ${{parameters.cliSource}}
+          sdkSource: ${{parameters.sdkSource}}
+          subscriptionName: ${{parameters.subscriptionName}}
+
+      - task: AzureCLI@2
+        displayName: Obtain Workspace
+        inputs:
+          azureSubscription: "${{parameters.subscriptionName}}"
+          scriptType: pscore
+          scriptLocation: scriptPath
+          scriptPath: scripts/Obtain-Workspace.ps1
+          failOnStandardError: false # Since the new CLI writes stuff there
+        env:
+          OLD_WORKSPACES_HANDLING: ${{parameters.oldWorkspaceHandling}}
+          WORKSPACE_LOCATION: ${{parameters.workspaceLocation}}
+          WORKSPACE_WINDOW_SECONDS: ${{parameters.workspaceWindowSeconds}}
+
+      - powershell: |
+          mkdir ${{parameters.configFileDirectory}}
+          cp workspace.yaml ${{parameters.configFileDirectory}}
+          cp config.json ${{parameters.configFileDirectory}}
+          cp component_config.json ${{parameters.configFileDirectory}}
+        displayName: Copy config files to separate directory
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: ${{parameters.configFileDirectory}}
+          artifactName: ${{parameters.configFileArtifact}}
+
+      - task: AzureCLI@2
+        displayName: Create Compute
+        inputs:
+          azureSubscription: "${{parameters.subscriptionName}}"
+          scriptType: pscore
+          scriptLocation: scriptPath
+          scriptPath: scripts/Create-Compute.ps1
+          failOnStandardError: false # Since the new CLI writes stuff there
+
+      - task: AzureCLI@2
+        displayName: Run registration script
+        inputs:
+          azureSubscription: "${{parameters.subscriptionName}}"
+          scriptType: pscore
+          scriptLocation: inlineScript
+          failOnStandardError: false # Since the new CLI writes stuff there
+          inlineScript: |
+            python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
+              

@@ -59,6 +59,8 @@ parameters:
 variables:
 - name: SubscriptionName
   value: "Project Vienna INT (589c7ae9-223e-45e3-a191-98433e0821a9) - RAI"
+- name: ConfigFileArtifact
+  value: WorkspaceConfiguration
 
 pr:
   - main
@@ -76,19 +78,40 @@ schedules:
 pool:
   vmImage: "ubuntu-latest"
 
-jobs:
-  - job: ObtainWorkspaceAndRunTests
-    displayName: Obtain Workspace and run all tests
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - template: templates/obtain-workspace-run-tests-step-template.yaml
-      parameters:
-        pythonVersion: ${{parameters.pythonVersion}}
-        workspaceWindowSeconds: ${{parameters.workspaceWindowSeconds}}
-        oldWorkspaceHandling: ${{parameters.oldWorkspaceHandling}}
-        workspaceLocation: ${{parameters.workspaceLocation}}
-        cliSource: ${{parameters.cliSource}}
-        sdkSource: ${{parameters.sdkSource}}
-        subscriptionName: $(SubscriptionName)
+# =========================================================================
+
+stages:
+- stage: ObtainPrepareWorkspace
+  displayName: Obtain and prepare workspace
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+  - template: templates/obtain-prepare-workspace-job-template.yaml
+    parameters:
+      pythonVersion: ${{parameters.pythonVersion}}
+      workspaceWindowSeconds: ${{parameters.workspaceWindowSeconds}}
+      oldWorkspaceHandling: ${{parameters.oldWorkspaceHandling}}
+      workspaceLocation: ${{parameters.workspaceLocation}}
+      cliSource: ${{parameters.cliSource}}
+      sdkSource: ${{parameters.sdkSource}}
+      subscriptionName: $(SubscriptionName)
+      configFileDirectory: configFiles
+      configFileArtifact: $(ConfigFileArtifact)
         
+# =========================================================================
+
+- stage: RunPythonTests
+  displayName: Run Python tests
+  dependsOn: ObtainPrepareWorkspace
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+  - template: templates/run-python-tests-job-template.yaml
+    parameters:
+      pythonVersion: ${{parameters.pythonVersion}}
+      cliSource: ${{parameters.cliSource}}
+      sdkSource: ${{parameters.sdkSource}}
+      subscriptionName: $(SubscriptionName)
+      configFileArtifact: $(ConfigFileArtifact)
