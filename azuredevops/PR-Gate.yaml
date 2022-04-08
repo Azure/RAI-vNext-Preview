@@ -104,7 +104,7 @@ stages:
     vmImage: ubuntu-latest
 
   jobs:
-  - template: template/run-python-tests-job-template.yaml
+  - template: templates/run-python-tests-job-template.yaml
     parameters:
       pythonVersion: ${{parameters.pythonVersion}}
       cliSource: ${{parameters.cliSource}}
