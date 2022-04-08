@@ -59,6 +59,8 @@ parameters:
 variables:
 - name: SubscriptionName
   value: "Project Vienna INT (589c7ae9-223e-45e3-a191-98433e0821a9) - RAI"
+- name: ConfigFileArtifact
+  value: WorkspaceConfiguration
 
 pr:
   - main
@@ -94,6 +96,8 @@ stages:
       cliSource: ${{parameters.cliSource}}
       sdkSource: ${{parameters.sdkSource}}
       subscriptionName: $(SubscriptionName)
+      configFileDirectory: configFiles
+      configFileArtifact: $(ConfigFileArtifact)
         
 # =========================================================================
 
@@ -110,3 +114,4 @@ stages:
       cliSource: ${{parameters.cliSource}}
       sdkSource: ${{parameters.sdkSource}}
       subscriptionName: $(SubscriptionName)
+      configFileArtifact: $(ConfigFileArtifact)

@@ -28,9 +28,6 @@ parameters:
     - LatestDev
 - name: subscriptionName
   type: string
-- name: configFileDirectory
-  type: string
-  default: configFiles
 - name: configFileArtifact
   type: string
   default: WorkspaceConfiguration
@@ -53,3 +50,12 @@ jobs:
           cliSource: ${{parameters.cliSource}}
           sdkSource: ${{parameters.sdkSource}}
           subscriptionName: ${{parameters.subscriptionName}}
+
+      - task: DownloadPipelineArtifact@2
+        displayName: "Download configuration Artifact ${{parameters.configFileArtifact}}"
+        inputs:
+          artifact: ${{parameters.configFileArtifact}}
+          path: $(Build.SourcesDirectory)
+
+      - script: ls -p $(Build.SourcesDirectory)
+        displayName: "Show sources directory"
