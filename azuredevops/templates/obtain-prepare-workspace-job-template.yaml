@@ -70,48 +70,17 @@ parameters:
 
 jobs:
   - job:
-    displayName: "Obtain Workspace"
+    displayName: "Obtain & Prepare Workspace"
     
     pool:
       vmImage: ${{parameters.poolImage}}
 
     steps:
-      - checkout: self
-        fetchDepth: 1
-        clean: true
-
-      - task: UsePythonVersion@0
-        displayName: "Use Python ${{parameters.pythonVersion}}"
-        inputs:
-          versionSpec: ${{parameters.pythonVersion}}
-          
-      - powershell: |
-          Set-PSDebug -Trace 0
-          Install-Module powershell-yaml -Scope CurrentUser -Force
-        displayName: Install YAML extension for Powershell
-
-      - script: |
-          echo "##[section]Upgrading pip and setuptools..."
-          pip install --upgrade pip setuptools wheel
-        failOnStderr: true
-        displayName: Install pip etc.
-
-      - task: PowerShell@2
-        inputs:
-          targetType: filePath
-          filepath: scripts/Run-Pip.ps1
-          arguments: -sdkVersionSelect ${{parameters.sdkSource}}
-        displayName: Install pip requirements
-
-      - task: AzureCLI@2
-        displayName: Install AzureML CLI v2
-        inputs:
-          azureSubscription: "${{parameters.subscriptionName}}"
-          scriptType: pscore
-          scriptLocation: scriptPath
-          scriptPath: scripts/Install-CLIv2.ps1
-          failOnStandardError: false
-          arguments: -sdkVersionSelect ${{parameters.cliSource}}
+    - template: python-preparation-step-template.yaml
+      parameters:
+        pythonVersion: ${{parameters.pythonVersion}}
+        cliSource: ${{parameters.cliSource}}
+        sdkSource: ${{parameters.sdkSource}}
 
       - task: AzureCLI@2
         displayName: Obtain Workspace
