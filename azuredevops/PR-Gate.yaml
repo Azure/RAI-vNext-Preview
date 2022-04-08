@@ -38,6 +38,7 @@ parameters:
     - CentralUSEUAP
     - EastUS
     - EastUS2EUAP
+    - WestCentralUS
     - WestUS
     - UKSouth
 - name: cliSource
@@ -75,19 +76,20 @@ schedules:
 pool:
   vmImage: "ubuntu-latest"
 
-jobs:
-  - job: ObtainWorkspaceAndRunTests
-    displayName: Obtain Workspace and run all tests
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - template: templates/obtain-workspace-run-tests-step-template.yaml
-      parameters:
-        pythonVersion: ${{parameters.pythonVersion}}
-        workspaceWindowSeconds: ${{parameters.workspaceWindowSeconds}}
-        oldWorkspaceHandling: ${{parameters.oldWorkspaceHandling}}
-        workspaceLocation: ${{parameters.workspaceLocation}}
-        cliSource: ${{parameters.cliSource}}
-        sdkSource: ${{parameters.sdkSource}}
-        subscriptionName: $(SubscriptionName)
+stages:
+- stage: ObtainPrepareWorkspace
+  displayName: Obtain and prepare workspace
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+  - template: templates/obtain-prepare-workspace-job-template.yaml
+    parameters:
+      pythonVersion: ${{parameters.pythonVersion}}
+      workspaceWindowSeconds: ${{parameters.workspaceWindowSeconds}}
+      oldWorkspaceHandling: ${{parameters.oldWorkspaceHandling}}
+      workspaceLocation: ${{parameters.workspaceLocation}}
+      cliSource: ${{parameters.cliSource}}
+      sdkSource: ${{parameters.sdkSource}}
+      subscriptionName: $(SubscriptionName)
         
