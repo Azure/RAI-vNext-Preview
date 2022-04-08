@@ -76,6 +76,8 @@ schedules:
 pool:
   vmImage: "ubuntu-latest"
 
+# =========================================================================
+
 stages:
 - stage: ObtainPrepareWorkspace
   displayName: Obtain and prepare workspace
@@ -93,3 +95,18 @@ stages:
       sdkSource: ${{parameters.sdkSource}}
       subscriptionName: $(SubscriptionName)
         
+# =========================================================================
+
+- stage: RunPythonTests
+  displayName: Run Python tests
+  dependsOn: ObtainPrepareWorkspace
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+  - template: template/run-python-tests-job-template.yaml
+    parameters:
+      pythonVersion: ${{parameters.pythonVersion}}
+      cliSource: ${{parameters.cliSource}}
+      sdkSource: ${{parameters.sdkSource}}
+      subscriptionName: $(SubscriptionName)
