@@ -65,7 +65,7 @@ variables:
   value: WorkspaceConfiguration
 
 pr:
-  - main
+  - riedgar-ms/sdkv2-upgrade-fix
 
 trigger: none # No CI build
 
@@ -74,7 +74,7 @@ schedules:
     displayName: Nightly Build
     branches:
       include:
-        - main
+        - riedgar-ms/sdkv2-upgrade-fix
     always: true
 
 pool:
