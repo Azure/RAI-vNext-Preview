@@ -61,9 +61,7 @@ class TestErrorAnalysisComponent:
 
             return {}
 
-        adult_train_pq = JobInput(
-            path=f"adult_train_pq:{version_string}"
-        )
+        adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}")
         adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}")
         rai_pipeline = test_erroranalysis_classification(
             target_column_name="income",
@@ -152,12 +150,8 @@ class TestErrorAnalysisComponent:
 
             return {}
 
-        adult_train_pq = JobInput(
-            path=f"boston_train_pq:{version_string}"
-        )
-        adult_test_pq = JobInput(
-            path=f"boston_test_pq:{version_string}"
-        )
+        adult_train_pq = JobInput(path=f"boston_train_pq:{version_string}")
+        adult_test_pq = JobInput(path=f"boston_test_pq:{version_string}")
         rai_pipeline = test_erroranalysis_regression(
             target_column_name="y",
             train_data=adult_train_pq,

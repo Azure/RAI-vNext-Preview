@@ -124,9 +124,7 @@ class TestRAIGatherErrors:
         # Assemble into a pipeline
         pipeline_job = test_constructor_mismatch(
             target_column_name="income",
-            train_data=JobInput(
-                path=f"adult_train_pq:{version_string}"
-            ),
+            train_data=JobInput(path=f"adult_train_pq:{version_string}"),
             test_data=JobInput(path=f"adult_test_pq:{version_string}"),
         )
 
@@ -198,9 +196,7 @@ class TestRAIGatherErrors:
         # Assemble into a pipeline
         pipeline_job = test_multiple_tool_instances(
             target_column_name="income",
-            train_data=JobInput(
-                path=f"adult_train_pq:{version_string}"
-            ),
+            train_data=JobInput(path=f"adult_train_pq:{version_string}"),
             test_data=JobInput(path=f"adult_test_pq:{version_string}"),
         )
 

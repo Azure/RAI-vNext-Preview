@@ -77,9 +77,7 @@ class Testregister_tabular_dataset:
             )
             return {}
 
-        adult_train_pq = JobInput(
-            path=f"adult_train_pq:{version_string}"
-        )
+        adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}")
         pipeline = tabular_registration_pipeline(
             adult_train_pq, base_name=train_tabular_base
         )
