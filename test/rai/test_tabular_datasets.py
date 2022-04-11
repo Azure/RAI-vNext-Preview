@@ -45,8 +45,8 @@ class Testregister_tabular_dataset:
             return {}
 
         pipeline = my_pipeline(
-            JobInput(type="mltable", path=f"adult_train_pq:{version_string}"),
-            JobInput(type="mltable", path=f"adult_test_pq:{version_string}"),
+            JobInput(path=f"adult_train_pq:{version_string}"),
+            JobInput(path=f"adult_test_pq:{version_string}"),
         )
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
@@ -78,7 +78,7 @@ class Testregister_tabular_dataset:
             return {}
 
         adult_train_pq = JobInput(
-            type="mltable", path=f"adult_train_pq:{version_string}"
+            path=f"adult_train_pq:{version_string}"
         )
         pipeline = tabular_registration_pipeline(
             adult_train_pq, base_name=train_tabular_base
@@ -171,7 +171,7 @@ class Testregister_tabular_dataset:
             }
 
         adult_test_pq = JobInput(
-            type="mltable", path=f"adult_test_pq:{version_string}", mode="download"
+            path=f"adult_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = use_tabular_rai(
             target_column_name="income",

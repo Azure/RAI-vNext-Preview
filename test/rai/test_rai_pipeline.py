@@ -184,9 +184,9 @@ class TestRAISmoke:
         pipeline_job = rai_classification_pipeline(
             target_column_name="income",
             train_data=JobInput(
-                type="mltable", path=f"adult_train_pq:{version_string}"
+                path=f"adult_train_pq:{version_string}"
             ),
-            test_data=JobInput(type="mltable", path=f"adult_test_pq:{version_string}"),
+            test_data=JobInput(path=f"adult_test_pq:{version_string}"),
         )
 
         # Send it
@@ -230,9 +230,9 @@ class TestRAISmoke:
         insights_pipeline_job = fetch_analyse_registered_model(
             model_id=registered_adult_model_id,
             train_data=JobInput(
-                type="mltable", path=f"adult_train_pq:{version_string}"
+                path=f"adult_train_pq:{version_string}"
             ),
-            test_data=JobInput(type="mltable", path=f"adult_test_pq:{version_string}"),
+            test_data=JobInput(path=f"adult_test_pq:{version_string}"),
         )
 
         # Send it

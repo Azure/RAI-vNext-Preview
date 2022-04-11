@@ -125,9 +125,9 @@ class TestRAIGatherErrors:
         pipeline_job = test_constructor_mismatch(
             target_column_name="income",
             train_data=JobInput(
-                type="mltable", path=f"adult_train_pq:{version_string}"
+                path=f"adult_train_pq:{version_string}"
             ),
-            test_data=JobInput(type="mltable", path=f"adult_test_pq:{version_string}"),
+            test_data=JobInput(path=f"adult_test_pq:{version_string}"),
         )
 
         # Send it
@@ -199,9 +199,9 @@ class TestRAIGatherErrors:
         pipeline_job = test_multiple_tool_instances(
             target_column_name="income",
             train_data=JobInput(
-                type="mltable", path=f"adult_train_pq:{version_string}"
+                path=f"adult_train_pq:{version_string}"
             ),
-            test_data=JobInput(type="mltable", path=f"adult_test_pq:{version_string}"),
+            test_data=JobInput(path=f"adult_test_pq:{version_string}"),
         )
 
         # Send it
