@@ -69,7 +69,19 @@ class TestCausalComponent:
                 random_state=10,
             )
 
-            return {}
+            gather_job = rai_components.rai_gather(                
+                constructor=construct_job.outputs.rai_insights_dashboard,
+                insight_1=None,
+                insight_2=causal_job.outputs.causal,
+            )
+
+            gather_job.outputs.dashboard.mode = "upload"
+            gather_job.outputs.ux_json.mode = "upload"
+
+            return {
+                "dashboard": gather_job.outputs.dashboard,
+                "ux_json": gather_job.outputs.ux_json,
+            }
 
         adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}", mode="download")
         adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}", mode="download")
