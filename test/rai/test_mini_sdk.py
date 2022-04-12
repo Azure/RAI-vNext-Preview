@@ -35,8 +35,8 @@ class TestMiniSDK:
         # Pipeline globals
         pipeline_inputs = {
             "target_column_name": "income",
-            "my_training_data": JobInput(dataset=f"adult_train_pq:{version_string}"),
-            "my_test_data": JobInput(dataset=f"adult_test_pq:{version_string}"),
+            "my_training_data": JobInput(dataset=f"adult_train_pq:{version_string}", mode="download"),
+            "my_test_data": JobInput(dataset=f"adult_test_pq:{version_string}", mode="download"),
         }
 
         # The job to fetch the model
