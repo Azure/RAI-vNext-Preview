@@ -1,0 +1,119 @@
+# ---------------------------------------------------------
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# ---------------------------------------------------------
+
+parameters:
+- name: pythonVersion
+  displayName: Python Version
+  type: string
+  default: 3.7
+  values:
+    - 3.7
+    - 3.8
+    - 3.9
+# Defines workspace lifetime
+# Workspaces are used for workspaceWindowSeconds
+# and optionally deleted after another
+# workspaceWindowSeconds have elapsed
+- name: workspaceWindowSeconds
+  displayName: Workspace Active Window (seconds)
+  type: number
+  default: 86000 # Just less than one day
+  # Specifies whether to remove workspaces
+  # older than 2*worksapceWindowSeconds
+- name: oldWorkspaceHandling
+  displayName: How to handle old workspaces
+  type: string
+  default: Cull
+  values:
+    - Cull
+    - Keep
+  # Specifies the region in which to create
+  # any new workspace
+- name: workspaceLocation
+  displayName: Workspace Location
+  type: string
+  default: UKSouth
+  values:
+    - CentralUSEUAP
+    - EastUS
+    - EastUS2EUAP
+    - WestCentralUS
+    - WestUS
+    - UKSouth
+- name: cliSource
+  displayName: Installation source for CLI
+  type: string
+  default: LatestTest
+  values:
+    - LatestRelease
+    - LatestDev
+    - LatestTest
+- name: sdkSource
+  displayName: Installation source for Python SDK
+  type: string
+  default: LatestTest
+  values:
+    - LatestRelease
+    - LatestDev
+    - LatestTest
+
+variables:
+- name: SubscriptionName
+  value: "Project Vienna INT (589c7ae9-223e-45e3-a191-98433e0821a9) - RAI"
+- name: ConfigFileArtifact
+  value: WorkspaceConfiguration
+
+pr:
+  - riedgar-ms/sdkv2-upgrade-fix
+
+trigger: none # No CI build
+
+schedules:
+  - cron: "30 1 * * *" # Time is UTC
+    displayName: Nightly Build
+    branches:
+      include:
+        - riedgar-ms/sdkv2-upgrade-fix
+    always: true
+
+pool:
+  vmImage: "ubuntu-latest"
+
+# =========================================================================
+
+stages:
+- stage: ObtainPrepareWorkspace
+  displayName: Obtain and prepare workspace
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+  - template: templates/obtain-prepare-workspace-job-template.yaml
+    parameters:
+      pythonVersion: ${{parameters.pythonVersion}}
+      workspaceWindowSeconds: ${{parameters.workspaceWindowSeconds}}
+      oldWorkspaceHandling: ${{parameters.oldWorkspaceHandling}}
+      workspaceLocation: ${{parameters.workspaceLocation}}
+      cliSource: ${{parameters.cliSource}}
+      sdkSource: ${{parameters.sdkSource}}
+      subscriptionName: $(SubscriptionName)
+      configFileDirectory: configFiles
+      configFileArtifact: $(ConfigFileArtifact)
+        
+# =========================================================================
+
+- stage: RunPythonTests
+  displayName: Run Python tests
+  dependsOn: ObtainPrepareWorkspace
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+  - template: templates/run-python-tests-job-template.yaml
+    parameters:
+      pythonVersion: ${{parameters.pythonVersion}}
+      cliSource: ${{parameters.cliSource}}
+      sdkSource: ${{parameters.sdkSource}}
+      subscriptionName: $(SubscriptionName)
+      configFileArtifact: $(ConfigFileArtifact)
