@@ -62,7 +62,18 @@ class TestCounterfactualComponent:
                 feature_importance=True,
             )
 
-            return {}
+            gather_job = rai_components.rai_gather(                
+                constructor=construct_job.outputs.rai_insights_dashboard,
+                insight_1=counterfactual_job.outputs.counterfactual,
+            )
+
+            gather_job.outputs.dashboard.mode = "upload"
+            gather_job.outputs.ux_json.mode = "upload"
+
+            return {
+                "dashboard": gather_job.outputs.dashboard,
+                "ux_json": gather_job.outputs.ux_json,
+            }
 
         adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}", mode="download")
         adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}", mode="download")
@@ -74,39 +85,6 @@ class TestCounterfactualComponent:
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
-        """
-        # Configure the gather component
-        gather_inputs = {
-            "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "insight_1": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
-        }
-        gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = CommandComponent(
-            component=f"rai_insights_gather:{version_string}",
-            inputs=gather_inputs,
-            outputs=gather_outputs,
-        )
-
-        # Pipeline to construct the RAI Insights
-        insights_pipeline_job = PipelineJob(
-            experiment_name=f"Counterfactual_Classification_All_Args_{version_string}",
-            description="Test counterfactual component with all arguments",
-            jobs={
-                "fetch-model-job": fetch_job,
-                "create-rai-job": create_rai_job,
-                "counterfactual-rai-job": counterfactual_job,
-                "gather-job": gather_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=None,
-            compute="cpucluster",
-        )
-
-        # Send it
-        insights_pipeline_job = submit_and_wait(
-            ml_client, insights_pipeline_job)
-        assert insights_pipeline_job is not None
-        """
 
     def test_regression_all_args(
         self,
@@ -154,7 +132,19 @@ class TestCounterfactualComponent:
                 feature_importance=True,
             )
 
-            return {}
+            gather_job = rai_components.rai_gather(                
+                constructor=construct_job.outputs.rai_insights_dashboard,
+                insight_1=None,
+                insight_4=counterfactual_job.outputs.counterfactual,
+            )
+
+            gather_job.outputs.dashboard.mode = "upload"
+            gather_job.outputs.ux_json.mode = "upload"
+
+            return {
+                "dashboard": gather_job.outputs.dashboard,
+                "ux_json": gather_job.outputs.ux_json,
+            }
 
         adult_train_pq = JobInput(path=f"boston_train_pq:{version_string}", mode="download")
         adult_test_pq = JobInput(path=f"boston_test_pq:{version_string}", mode="download")
@@ -166,52 +156,3 @@ class TestCounterfactualComponent:
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
-        """
-        # Setup counterfactual
-        counterfactual_inputs = {
-            "rai_insights_dashboard": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "total_CFs": "10",
-            "method": "kdtree",
-            "desired_range": "[20, 100]",
-            "permitted_range": '{"ZN": [0, 10], "AGE": [0, 50], "CRIM": [25, 50], "INDUS": [0, 10]}',
-            "features_to_vary": '["ZN", "AGE", "CRIM", "INDUS"]',
-            "feature_importance": "True",
-        }
-        counterfactual_outputs = {"counterfactual": None}
-        counterfactual_job = CommandComponent(
-            component=f"rai_insights_counterfactual:{version_string}",
-            inputs=counterfactual_inputs,
-            outputs=counterfactual_outputs,
-        )
-
-        # Configure the gather component
-        gather_inputs = {
-            "constructor": "${{jobs.create-rai-job.outputs.rai_insights_dashboard}}",
-            "insight_1": "${{jobs.counterfactual-rai-job.outputs.counterfactual}}",
-        }
-        gather_outputs = {"dashboard": None, "ux_json": None}
-        gather_job = CommandComponent(
-            component=f"rai_insights_gather:{version_string}",
-            inputs=gather_inputs,
-            outputs=gather_outputs,
-        )
-
-        # Pipeline to construct the RAI Insights
-        insights_pipeline_job = PipelineJob(
-            experiment_name=f"Counterfactual_Regression_All_Args_{version_string}",
-            description="Check regression example with all arguments",
-            jobs={
-                "fetch-model-job": fetch_job,
-                "create-rai-job": create_rai_job,
-                "counterfactual-rai-job": counterfactual_job,
-                "gather-job": gather_job,
-            },
-            inputs=pipeline_inputs,
-            outputs=None,
-            compute="cpucluster",
-        )
-
-        # Send it
-        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
-        assert insights_pipeline_job is not None
-        """
