@@ -70,7 +70,7 @@ pr:
 trigger: none # No CI build
 
 schedules:
-  - cron: "0 10 * * *" # Time is UTC
+  - cron: "20 1 * * *" # Time is UTC
     displayName: Nightly Build
     branches:
       include:
