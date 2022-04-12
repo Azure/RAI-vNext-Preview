@@ -69,7 +69,7 @@ class TestCausalComponent:
                 random_state=10,
             )
 
-            gather_job = rai_components.rai_gather(                
+            gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=None,
                 insight_2=causal_job.outputs.causal,
@@ -83,8 +83,12 @@ class TestCausalComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}", mode="download")
-        adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}", mode="download")
+        adult_train_pq = JobInput(
+            path=f"adult_train_pq:{version_string}", mode="download"
+        )
+        adult_test_pq = JobInput(
+            path=f"adult_test_pq:{version_string}", mode="download"
+        )
         rai_pipeline = test_causal_classification(
             target_column_name="income",
             train_data=adult_train_pq,
@@ -93,7 +97,6 @@ class TestCausalComponent:
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
-
 
     def test_regression_all_args(
         self,
@@ -148,7 +151,7 @@ class TestCausalComponent:
                 random_state=10,
             )
 
-            gather_job = rai_components.rai_gather(                
+            gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=None,
                 insight_2=causal_job.outputs.causal,
@@ -162,8 +165,12 @@ class TestCausalComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(path=f"boston_train_pq:{version_string}", mode="download")
-        adult_test_pq = JobInput(path=f"boston_test_pq:{version_string}", mode="download")
+        adult_train_pq = JobInput(
+            path=f"boston_train_pq:{version_string}", mode="download"
+        )
+        adult_test_pq = JobInput(
+            path=f"boston_test_pq:{version_string}", mode="download"
+        )
         rai_pipeline = test_causal_regression(
             target_column_name="y",
             train_data=adult_train_pq,

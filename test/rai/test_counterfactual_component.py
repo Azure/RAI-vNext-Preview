@@ -62,7 +62,7 @@ class TestCounterfactualComponent:
                 feature_importance=True,
             )
 
-            gather_job = rai_components.rai_gather(                
+            gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=counterfactual_job.outputs.counterfactual,
             )
@@ -75,8 +75,12 @@ class TestCounterfactualComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}", mode="download")
-        adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}", mode="download")
+        adult_train_pq = JobInput(
+            path=f"adult_train_pq:{version_string}", mode="download"
+        )
+        adult_test_pq = JobInput(
+            path=f"adult_test_pq:{version_string}", mode="download"
+        )
         rai_pipeline = test_counterfactual_classification(
             target_column_name="income",
             train_data=adult_train_pq,
@@ -132,7 +136,7 @@ class TestCounterfactualComponent:
                 feature_importance=True,
             )
 
-            gather_job = rai_components.rai_gather(                
+            gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=None,
                 insight_4=counterfactual_job.outputs.counterfactual,
@@ -146,8 +150,12 @@ class TestCounterfactualComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(path=f"boston_train_pq:{version_string}", mode="download")
-        adult_test_pq = JobInput(path=f"boston_test_pq:{version_string}", mode="download")
+        adult_train_pq = JobInput(
+            path=f"boston_train_pq:{version_string}", mode="download"
+        )
+        adult_test_pq = JobInput(
+            path=f"boston_test_pq:{version_string}", mode="download"
+        )
         rai_pipeline = test_counterfactual_regression(
             target_column_name="y",
             train_data=adult_train_pq,

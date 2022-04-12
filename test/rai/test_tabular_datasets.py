@@ -77,7 +77,9 @@ class Testregister_tabular_dataset:
             )
             return {}
 
-        adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}", mode="download")
+        adult_train_pq = JobInput(
+            path=f"adult_train_pq:{version_string}", mode="download"
+        )
         pipeline = tabular_registration_pipeline(
             adult_train_pq, base_name=train_tabular_base
         )
@@ -85,7 +87,9 @@ class Testregister_tabular_dataset:
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
 
-        adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}", mode="download")
+        adult_test_pq = JobInput(
+            path=f"adult_test_pq:{version_string}", mode="download"
+        )
         pipeline_2 = tabular_registration_pipeline(
             adult_test_pq, base_name=test_tabular_base
         )

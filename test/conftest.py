@@ -159,7 +159,9 @@ def registered_boston_model_id(ml_client, component_config):
     register_component = load_component(
         client=ml_client, name="register_model", version=version_string
     )
-    boston_train_pq = JobInput(path=f"boston_train_pq:{version_string}", mode="download")
+    boston_train_pq = JobInput(
+        path=f"boston_train_pq:{version_string}", mode="download"
+    )
 
     @dsl.pipeline(
         compute="cpucluster",

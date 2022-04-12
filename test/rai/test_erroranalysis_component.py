@@ -59,12 +59,12 @@ class TestErrorAnalysisComponent:
                 filter_features='["Marital Status", "Workclass"]',
             )
 
-            gather_job = rai_components.rai_gather(                
+            gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=None,
                 insight_2=None,
                 insight_3=erroranalysis_job.outputs.error_analysis,
-                insight_4 =None,
+                insight_4=None,
             )
 
             gather_job.outputs.dashboard.mode = "upload"
@@ -75,8 +75,12 @@ class TestErrorAnalysisComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}", mode="download")
-        adult_test_pq = JobInput(path=f"adult_test_pq:{version_string}", mode="download")
+        adult_train_pq = JobInput(
+            path=f"adult_train_pq:{version_string}", mode="download"
+        )
+        adult_test_pq = JobInput(
+            path=f"adult_test_pq:{version_string}", mode="download"
+        )
         rai_pipeline = test_erroranalysis_classification(
             target_column_name="income",
             train_data=adult_train_pq,
@@ -129,7 +133,7 @@ class TestErrorAnalysisComponent:
                 filter_features="[]",
             )
 
-            gather_job = rai_components.rai_gather(                
+            gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=erroranalysis_job.outputs.error_analysis,
             )
@@ -142,8 +146,12 @@ class TestErrorAnalysisComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(path=f"boston_train_pq:{version_string}", mode="download")
-        adult_test_pq = JobInput(path=f"boston_test_pq:{version_string}", mode="download")
+        adult_train_pq = JobInput(
+            path=f"boston_train_pq:{version_string}", mode="download"
+        )
+        adult_test_pq = JobInput(
+            path=f"boston_test_pq:{version_string}", mode="download"
+        )
         rai_pipeline = test_erroranalysis_regression(
             target_column_name="y",
             train_data=adult_train_pq,
@@ -154,6 +162,5 @@ class TestErrorAnalysisComponent:
         assert rai_pipeline_job is not None
 
         # Send it
-        insights_pipeline_job = submit_and_wait(
-            ml_client, insights_pipeline_job)
+        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
         assert insights_pipeline_job is not None
