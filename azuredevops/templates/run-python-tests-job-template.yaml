@@ -19,6 +19,7 @@ parameters:
   values:
     - LatestRelease
     - LatestDev
+    - LatestTest
 - name: sdkSource
   displayName: Installation source for Python SDK
   type: string
@@ -26,6 +27,7 @@ parameters:
   values:
     - LatestRelease
     - LatestDev
+    - LatestTest
 - name: subscriptionName
   type: string
 - name: configFileArtifact

@@ -33,7 +33,7 @@ parameters:
 - name: workspaceLocation
   displayName: Workspace Location
   type: string
-  default: EastUS
+  default: UKSouth
   values:
     - CentralUSEUAP
     - EastUS
@@ -44,7 +44,7 @@ parameters:
 - name: cliSource
   displayName: Installation source for CLI
   type: string
-  default: LatestRelease
+  default: LatestTest
   values:
     - LatestRelease
     - LatestDev
@@ -52,7 +52,7 @@ parameters:
 - name: sdkSource
   displayName: Installation source for Python SDK
   type: string
-  default: LatestRelease
+  default: LatestTest
   values:
     - LatestRelease
     - LatestDev
@@ -65,16 +65,16 @@ variables:
   value: WorkspaceConfiguration
 
 pr:
-  - main
+  - riedgar-ms/sdkv2-upgrade-fix
 
 trigger: none # No CI build
 
 schedules:
-  - cron: "0 10 * * *" # Time is UTC
+  - cron: "30 1 * * *" # Time is UTC
     displayName: Nightly Build
     branches:
       include:
-        - main
+        - riedgar-ms/sdkv2-upgrade-fix
     always: true
 
 pool:

@@ -3,7 +3,7 @@
 # ---------------------------------------------------------
 
 param (
-    [ValidateSet("LatestRelease", "LatestDev")]        
+    [ValidateSet("LatestRelease", "LatestDev", "LatestTest")]        
     [string]
     $sdkVersionSelect
 )
@@ -21,9 +21,17 @@ if( $sdkVersionSelect -eq "LatestRelease")
 {
     az extension add -n ml -y
 }
-else
+elseif ( $sdkVersionSelect -eq "LatestTest")
+{
+    az extension add --source https://azuremlsdktestpypi.blob.core.windows.net/wheels/test-sdk-cli-v2/ml-latest-py3-none-any.whl --yes
+}
+elseif ( $sdkVersionSelect -eq "LatestDev")
 {
     az extension add --source https://azuremlsdktestpypi.blob.core.windows.net/wheels/sdk-cli-v2/ml-latest-py3-none-any.whl --yes
+}
+else
+{
+    throw "Unrecognised sdkVersionSelect: $sdkVersionSelect"
 }
 
 # Upgrade to latest version
