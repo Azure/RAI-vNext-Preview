@@ -28,6 +28,7 @@ parameters:
   values:
     - LatestRelease
     - LatestDev
+    - LatestTest
 
 
 steps:
