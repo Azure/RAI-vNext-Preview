@@ -7,7 +7,6 @@ import logging
 from azure.ml import MLClient
 from azure.ml import dsl
 from azure.ml.entities import JobInput
-from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 
@@ -158,9 +157,7 @@ class TestErrorAnalysisComponent:
             test_data=adult_test_pq,
         )
 
+        # Send it
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
 
-        # Send it
-        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
-        assert insights_pipeline_job is not None

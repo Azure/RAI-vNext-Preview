@@ -7,7 +7,6 @@ import logging
 from azure.ml import MLClient
 from azure.ml import dsl
 from azure.ml.entities import JobInput
-from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 
