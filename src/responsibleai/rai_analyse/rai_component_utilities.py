@@ -22,12 +22,9 @@ import mlflow.deployments
 
 from azureml.core import Model, Run, Workspace
 
-import azureml.mlflow.deploy
-
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
-from deployed_model import DeployedModel
 
 
 _logger = logging.getLogger(__file__)
