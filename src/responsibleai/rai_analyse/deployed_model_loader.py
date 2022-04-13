@@ -5,9 +5,11 @@
 import json
 import logging
 import os
+import signal
 import subprocess
 import tempfile
 import time
+from wsgiref.simple_server import server_version
 
 import requests
 
@@ -52,17 +54,17 @@ class DeployedModelLoader:
         self._unwrapped_model_dir = tempfile.mkdtemp()
 
     def __enter__(self):
-        self._server = None
+        self._server_pid = None
 
         return self
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
-        if self._server is not None:
-            _logger.info("Sending SIGTERM to server process")
-            self._server.terminate()
+        if self._server_pid is not None:
+            _logger.info(f"Sending SIGTERM to server process {self._server_pid}")
+            os.kill(self._server_pid, signal.SIGTERM)
             time.sleep(5)
-            _logger.info("Sending SIGKILL to server process")
-            self._server.kill()
+            _logger.info("Sending SIGKILL to server process (assuming Unix)")
+            os.kill(self._server_pid, signal.SIGKILL)
             _logger.info("Process killed")
         else:
             _logger.info("No server found")
@@ -109,22 +111,23 @@ class DeployedModelLoader:
             "--model-uri",
             self._target_model_dir,
         ]
-        self._server = subprocess.Popen(
+        server_process = subprocess.Popen(
             args=launch_args,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             universal_newlines=True,
         )
 
-        for line in self._server.stdout:
+        for line in server_process.stdout:
             _logger.info(line.strip())
             if check_for_ready_string(line):
                 break
-            if self._server.returncode is not None:
+            if server_process.returncode is not None:
                 # Server has crashed
                 raise RuntimeError("MLFlow server has crashed")
         _logger.info("Server coming up.... pausing")
         time.sleep(10)
+        self._server_pid = server_process.pid
 
         _logger.info("MLFlow model deployed")
         return self
