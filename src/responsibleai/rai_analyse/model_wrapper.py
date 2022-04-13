@@ -28,13 +28,23 @@ class ModelWrapper(mlflow.pyfunc.PythonModel):
     def predict(self, context, X):
         self._load_model()
         _logger.info("Calling predict and predict_proba")
-        preds = self._model.predict(X)
-        pred_probas = self._model.predict_proba(X)
+        preds = self._call_model('predict', X)
+        pred_probas = self._call_model('predict_probas', X)
+        scores = self._call_model('score', X)
         result = {
             "pred": preds.tolist(),
             "pred_proba": pred_probas.tolist(),
+            "score": scores.tolist()
         }
         return result
+
+    def _call_model(self, method_name: str, X):
+        self._load_model()
+        if hasattr(self._model, method_name):
+            method = getattr(self._model, method_name)
+            return method(self, X)
+        else:
+            return []
 
     @staticmethod
     def wrap_mlflow_model(target_mlflow_dir: str):

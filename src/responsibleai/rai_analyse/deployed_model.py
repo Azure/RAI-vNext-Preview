@@ -87,3 +87,6 @@ class DeployedModel:
 
     def predict_proba(self, input_df: pd.DataFrame):
         return self._call_model_and_extract(input_df, "pred_proba")
+
+    def score(self, input_df: pd.DataFrame):
+        return self._call_model_and_extract(input_df, "score")
