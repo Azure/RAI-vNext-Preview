@@ -86,11 +86,11 @@ class DeployedModelLoader:
         _logger.info(f"Ignoring supplied path: {path}")
         _logger.info("Creating workspace object")
         workspace = Run.get_context().experiment.workspace
-        #workspace = Workspace(
+        # workspace = Workspace(
         #    subscription_id=self._sub_id,
         #    resource_group=self._resource_group,
         #    workspace_name=self._workspace_name,
-        #)
+        # )
 
         _logger.info("Downloading mlflow model from AzureML")
         download_model_to_dir(workspace, self._model_id, self._unwrapped_model_dir)

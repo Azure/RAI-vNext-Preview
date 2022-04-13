@@ -118,7 +118,11 @@ def main(args):
         # Make sure that it actually loads
         _logger.info("Creating RAIInsights object")
         _ = RAIInsights(
-            model=deployed_model, train=train_df, test=test_df, serializer=deployed_model, **constructor_args
+            model=deployed_model,
+            train=train_df,
+            test=test_df,
+            serializer=deployed_model,
+            **constructor_args
         )
 
         _logger.info("Saving JSON for tool components")
