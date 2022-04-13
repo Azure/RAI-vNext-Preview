@@ -58,6 +58,35 @@ class DeployedModelLoader:
 
         return self
 
+
+    def __exit__(self, exception_type, exception_value, exception_traceback):
+        if self._server is not None:
+            _logger.info("Sending SIGTERM to server process")
+            self._server.terminate()
+            time.sleep(5)
+            _logger.info("Sending SIGKILL to server process")
+            self._server.kill()
+            _logger.info("Process killed")
+        else:
+            _logger.info("No server found")
+        
+
+    def _call_model_and_extract(self, input_df: pd.DataFrame, target: str):
+        payload = input_df.to_json(orient="split")
+        _logger.info("Payload: {0}".format(payload))
+        headers = {"Content-Type": "application/json"}
+        r = requests.post(
+            "http://127.0.0.1:5000/invocations",
+            headers=headers,
+            data=payload,
+            timeout=100,
+        )
+        # _logger.info("Call to model completed: {0}".format(r.text))
+        decoded = json.loads(r.text)
+        _logger.info(f"Decoded response: {decoded}")
+        return decoded[target]
+
+
     def load(self, path: str):
         _logger.info(f"Ignoring supplied path: {path}")
         _logger.info("Creating workspace object")
@@ -102,32 +131,9 @@ class DeployedModelLoader:
         _logger.info("MLFlow model deployed")
         return self
 
-    def __exit__(self, exception_type, exception_value, exception_traceback):
-        if self._server is not None:
-            _logger.info("Sending SIGTERM to server process")
-            self._server.terminate()
-            time.sleep(5)
-            _logger.info("Sending SIGKILL to server process")
-            self._server.kill()
-            _logger.info("Process killed")
-        else:
-            _logger.info("No server found")
-        
-
-    def _call_model_and_extract(self, input_df: pd.DataFrame, target: str):
-        payload = input_df.to_json(orient="split")
-        _logger.info("Payload: {0}".format(payload))
-        headers = {"Content-Type": "application/json"}
-        r = requests.post(
-            "http://127.0.0.1:5000/invocations",
-            headers=headers,
-            data=payload,
-            timeout=100,
-        )
-        # _logger.info("Call to model completed: {0}".format(r.text))
-        decoded = json.loads(r.text)
-        _logger.info(f"Decoded response: {decoded}")
-        return decoded[target]
+    def save(self, model, path):
+        _logger.info("Not saving model - already in AzureML")
+        pass
 
     def predict(self, input_df: pd.DataFrame):
         return self._call_model_and_extract(input_df, "pred")
