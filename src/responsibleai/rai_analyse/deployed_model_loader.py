@@ -13,8 +13,6 @@ import requests
 
 import pandas as pd
 
-from azure.identity import DefaultAzureCredential
-
 from azureml.core import Workspace
 
 from rai_component_utilities import (
@@ -91,7 +89,6 @@ class DeployedModelLoader:
             self._sub_id,
             self._resource_group,
             self._workspace_name,
-            auth=DefaultAzureCredential(exclude_shared_token_cache_credential=True),
         )
 
         _logger.info("Downloading mlflow model from AzureML")
