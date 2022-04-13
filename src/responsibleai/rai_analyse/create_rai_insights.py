@@ -103,14 +103,14 @@ def main(args):
     model_id = fetch_model_id(args.model_info_path)
     _logger.info("Loading model: {0}".format(model_id))
 
-    with DeployedModelLoader(my_run.experiment.workspace, model_id) as dm:
-        dm.load("Ignorable path")
+    with DeployedModelLoader(my_run.experiment.workspace, model_id) as deployed_model:
+        deployed_model.load("Ignorable path")
 
         _logger.info("Calling endpoint")
         data = test_df.drop(args.target_column_name, axis=1).iloc[0:2]
-        response = dm.predict(data)
+        response = deployed_model.predict(data)
         _logger.info("predict response: {0}".format(response))
-        response = dm.predict_proba(data)
+        response = deployed_model.predict_proba(data)
         _logger.info("proba response: {0}".format(response))
 
         constructor_args = create_constructor_arg_dict(args)
@@ -118,7 +118,7 @@ def main(args):
         # Make sure that it actually loads
         _logger.info("Creating RAIInsights object")
         _ = RAIInsights(
-            model=dm, train=train_df, test=test_df, loader=dm, **constructor_args
+            model=deployed_model, train=train_df, test=test_df, serializer=deployed_model, **constructor_args
         )
 
         _logger.info("Saving JSON for tool components")
