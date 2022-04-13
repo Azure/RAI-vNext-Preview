@@ -42,7 +42,7 @@ class ModelWrapper(mlflow.pyfunc.PythonModel):
         self._load_model()
         if hasattr(self._model, method_name):
             method = getattr(self._model, method_name)
-            return method(self, X)
+            return method(X)
         else:
             return []
 
