@@ -120,11 +120,11 @@ def main(args):
             _logger.info("Calling endpoint")
             data = test_df.drop(args.target_column_name, axis=1).iloc[0:2]
             response = dm.predict(data)
-            _logger.info("Got response")
-            _logger.info(response)
-            _logger.info("End of context")
+            _logger.info("predict response: {0}".format(response))
             response = dm.predict_proba(data)
             _logger.info("proba response: {0}".format(response))
+            response = dm.score(data)
+            _logger.info("score response: {0}".format(response))
 
     constructor_args = create_constructor_arg_dict(args)
 
