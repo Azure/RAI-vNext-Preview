@@ -102,16 +102,18 @@ def main(args):
 
     model_id = fetch_model_id(args.model_info_path)
     _logger.info("Loading model: {0}".format(model_id))
-    model_estimator = None # load_mlflow_model(my_run.experiment.workspace, model_id)
+    model_estimator = None  # load_mlflow_model(my_run.experiment.workspace, model_id)
 
     with tempfile.TemporaryDirectory() as unwrapped_model_dir:
         download_model_to_dir(
             my_run.experiment.workspace, model_id, unwrapped_model_dir
         )
-        model_name = model_id.split(':')[0]
+        model_name = model_id.split(":")[0]
 
         _logger.info("Trying to create wrapped model")
-        wrapped_dir = ModelWrapper.wrap_mlflow_model(os.path.join(unwrapped_model_dir, model_name))
+        wrapped_dir = ModelWrapper.wrap_mlflow_model(
+            os.path.join(unwrapped_model_dir, model_name)
+        )
         _logger.info("Model wrapped")
 
         with DeployedModel(wrapped_dir) as dm:
