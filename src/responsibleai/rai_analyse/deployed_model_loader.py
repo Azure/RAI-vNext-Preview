@@ -58,7 +58,6 @@ class DeployedModelLoader:
 
         return self
 
-
     def __exit__(self, exception_type, exception_value, exception_traceback):
         if self._server is not None:
             _logger.info("Sending SIGTERM to server process")
@@ -69,7 +68,6 @@ class DeployedModelLoader:
             _logger.info("Process killed")
         else:
             _logger.info("No server found")
-        
 
     def _call_model_and_extract(self, input_df: pd.DataFrame, target: str):
         payload = input_df.to_json(orient="split")
@@ -86,16 +84,18 @@ class DeployedModelLoader:
         _logger.info(f"Decoded response: {decoded}")
         return decoded[target]
 
-
     def load(self, path: str):
         _logger.info(f"Ignoring supplied path: {path}")
         _logger.info("Creating workspace object")
-        workspace = Workspace(self._sub_id, self._resource_group, self._workspace_name, auth=DefaultAzureCredential(exclude_shared_token_cache_credential=True))
+        workspace = Workspace(
+            self._sub_id,
+            self._resource_group,
+            self._workspace_name,
+            auth=DefaultAzureCredential(exclude_shared_token_cache_credential=True),
+        )
 
         _logger.info("Downloading mlflow model from AzureML")
-        download_model_to_dir(
-            workspace, self._model_id, self._unwrapped_model_dir
-        )
+        download_model_to_dir(workspace, self._model_id, self._unwrapped_model_dir)
         model_name = self._model_id.split(":")[0]
 
         _logger.info("Trying to create wrapped model")
