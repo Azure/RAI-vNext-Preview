@@ -30,11 +30,9 @@ class ModelWrapper(mlflow.pyfunc.PythonModel):
         _logger.info("Calling predict and predict_proba")
         preds = self._call_model('predict', X)
         pred_probas = self._call_model('predict_probas', X)
-        scores = self._call_model('score', X)
         result = {
             "pred": preds.tolist(),
             "pred_proba": pred_probas.tolist(),
-            "score": scores.tolist()
         }
         return result
 

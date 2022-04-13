@@ -123,8 +123,6 @@ def main(args):
             _logger.info("predict response: {0}".format(response))
             response = dm.predict_proba(data)
             _logger.info("proba response: {0}".format(response))
-            response = dm.score(data)
-            _logger.info("score response: {0}".format(response))
 
     constructor_args = create_constructor_arg_dict(args)
 
