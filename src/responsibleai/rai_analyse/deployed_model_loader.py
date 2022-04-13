@@ -13,7 +13,7 @@ import requests
 
 import pandas as pd
 
-from azureml.core import Workspace
+from azureml.core import Run, Workspace
 
 from rai_component_utilities import (
     print_dir_tree,
@@ -85,11 +85,12 @@ class DeployedModelLoader:
     def load(self, path: str):
         _logger.info(f"Ignoring supplied path: {path}")
         _logger.info("Creating workspace object")
-        workspace = Workspace(
-            subscription_id=self._sub_id,
-            resource_group=self._resource_group,
-            workspace_name=self._workspace_name,
-        )
+        workspace = Run.get_context().experiment.workspace
+        #workspace = Workspace(
+        #    subscription_id=self._sub_id,
+        #    resource_group=self._resource_group,
+        #    workspace_name=self._workspace_name,
+        #)
 
         _logger.info("Downloading mlflow model from AzureML")
         download_model_to_dir(workspace, self._model_id, self._unwrapped_model_dir)
