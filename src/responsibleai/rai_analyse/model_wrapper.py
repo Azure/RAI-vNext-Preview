@@ -5,12 +5,24 @@
 import logging
 import os
 from pathlib import Path
+from typing import List
 import uuid
 
 import mlflow
 
+import pandas as pd
+import numpy as np
+
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
+
+def ensure_list(input) -> List:
+    if isinstance(input, list):
+        _logger.info("input was list")
+        return input
+    else:
+        _logger.info(f"Converting {type(input)} to list")
+        return list(input)
 
 
 class ModelWrapper(mlflow.pyfunc.PythonModel):
@@ -31,8 +43,8 @@ class ModelWrapper(mlflow.pyfunc.PythonModel):
         preds = self._call_model('predict', X)
         pred_probas = self._call_model('predict_probas', X)
         result = {
-            "pred": preds.tolist(),
-            "pred_proba": pred_probas.tolist(),
+            "pred": ensure_list(preds),
+            "pred_proba": ensure_list(pred_probas),
         }
         return result
 
