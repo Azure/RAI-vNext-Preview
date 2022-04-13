@@ -69,7 +69,7 @@ class DeployedModel:
 
     def _call_model_and_extract(self, input_df: pd.DataFrame, target: str):
         payload = input_df.to_json(orient="split")
-        # _logger.info("Payload: {0}".format(payload))
+        _logger.info("Payload: {0}".format(payload))
         headers = {"Content-Type": "application/json"}
         r = requests.post(
             "http://127.0.0.1:5000/invocations",
