@@ -3,7 +3,7 @@
 # ---------------------------------------------------------
 
 param (
-    [ValidateSet("LatestRelease", "LatestDev")]        
+    [ValidateSet("LatestRelease", "LatestDev", "LatestTest")]        
     [string]
     $sdkVersionSelect
 )
@@ -14,7 +14,15 @@ if( $sdkVersionSelect -eq "LatestRelease")
 {
     pip install -r requirements-dev-releasepackage.txt
 }
-else
+elseif( $sdkVersionSelect -eq "LatestDev" )
 {
     pip install -r requirements-dev.txt
+}
+elseif( $sdkVersionSelect -eq "LatestTest" )
+{
+    pip install -r requirements-dev-test.txt
+}
+else
+{
+    throw "Unrecognised sdkVersionSelect: $sdkVersionSelect"
 }
