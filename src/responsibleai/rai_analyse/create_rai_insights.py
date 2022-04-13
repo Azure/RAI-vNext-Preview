@@ -25,7 +25,7 @@ from rai_component_utilities import (
     load_mlflow_model,
     download_model_to_dir,
 )
-from deployed_model import DeployedModel
+from deployed_model_loader import DeployedModelLoader
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -102,60 +102,47 @@ def main(args):
 
     model_id = fetch_model_id(args.model_info_path)
     _logger.info("Loading model: {0}".format(model_id))
-    model_estimator = None  # load_mlflow_model(my_run.experiment.workspace, model_id)
 
-    with tempfile.TemporaryDirectory() as unwrapped_model_dir:
-        download_model_to_dir(
-            my_run.experiment.workspace, model_id, unwrapped_model_dir
+    with DeployedModelLoader(my_run.experiment.workspace, model_id) as dm:
+        dm.load("Ignorable path")
+
+        _logger.info("Calling endpoint")
+        data = test_df.drop(args.target_column_name, axis=1).iloc[0:2]
+        response = dm.predict(data)
+        _logger.info("predict response: {0}".format(response))
+        response = dm.predict_proba(data)
+        _logger.info("proba response: {0}".format(response))
+
+        constructor_args = create_constructor_arg_dict(args)
+
+        # Make sure that it actually loads
+        _logger.info("Creating RAIInsights object")
+        _ = RAIInsights(
+            model=dm, train=train_df, test=test_df, loader=dm, **constructor_args
         )
-        model_name = model_id.split(":")[0]
 
-        _logger.info("Trying to create wrapped model")
-        wrapped_dir = ModelWrapper.wrap_mlflow_model(
-            os.path.join(unwrapped_model_dir, model_name)
+        _logger.info("Saving JSON for tool components")
+        output_dict = {
+            DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
+            DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
+            DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
+        }
+        output_file = os.path.join(
+            args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
         )
-        _logger.info("Model wrapped")
+        with open(output_file, "w") as of:
+            json.dump(output_dict, of)
 
-        with DeployedModel(wrapped_dir) as dm:
-            _logger.info("Model Deployed")
-            time.sleep(60)
-            _logger.info("Calling endpoint")
-            data = test_df.drop(args.target_column_name, axis=1).iloc[0:2]
-            response = dm.predict(data)
-            _logger.info("predict response: {0}".format(response))
-            response = dm.predict_proba(data)
-            _logger.info("proba response: {0}".format(response))
-
-    constructor_args = create_constructor_arg_dict(args)
-
-    # Make sure that it actually loads
-    _logger.info("Creating RAIInsights object")
-    _ = RAIInsights(
-        model=model_estimator, train=train_df, test=test_df, **constructor_args
-    )
-
-    _logger.info("Saving JSON for tool components")
-    output_dict = {
-        DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
-        DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
-        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
-    }
-    output_file = os.path.join(
-        args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
-    )
-    with open(output_file, "w") as of:
-        json.dump(output_dict, of)
-
-    _logger.info("Copying train data files")
-    shutil.copytree(
-        src=args.train_dataset,
-        dst=os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR),
-    )
-    _logger.info("Copying test data files")
-    shutil.copytree(
-        src=args.test_dataset,
-        dst=os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR),
-    )
+        _logger.info("Copying train data files")
+        shutil.copytree(
+            src=args.train_dataset,
+            dst=os.path.join(args.output_path, DashboardInfo.TRAIN_FILES_DIR),
+        )
+        _logger.info("Copying test data files")
+        shutil.copytree(
+            src=args.test_dataset,
+            dst=os.path.join(args.output_path, DashboardInfo.TEST_FILES_DIR),
+        )
 
 
 # run script
