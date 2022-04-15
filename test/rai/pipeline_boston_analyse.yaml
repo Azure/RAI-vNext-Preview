@@ -16,7 +16,7 @@ inputs:
 compute: azureml:cpucluster
 
 jobs:
-  train-model-job:
+  train_model_job:
     type: command
     component: azureml:train_boston_for_rai:VERSION_REPLACEMENT_STRING
     inputs:
@@ -25,14 +25,14 @@ jobs:
       categorical_features: '[]'
       continuous_features: '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]'
 
-  register-model-job:
+  register_model_job:
     type: command
     component: azureml:register_model:VERSION_REPLACEMENT_STRING
     inputs:
       model_input_path: ${{parent.jobs.train-model-job.outputs.model_output}}
       model_base_name: component_registered_boston_01
 
-  create-rai-job:
+  create_rai_job:
     type: command
     component: azureml:rai_insights_constructor:VERSION_REPLACEMENT_STRING
     inputs:
