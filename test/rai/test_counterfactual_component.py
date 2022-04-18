@@ -73,10 +73,10 @@ class TestCounterfactualComponent:
             }
 
         adult_train_pq = Input(
-            path=f"adult_train_pq:{version_string}", mode="download"
+            type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
         )
         adult_test_pq = Input(
-            path=f"adult_test_pq:{version_string}", mode="download"
+            type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = test_counterfactual_classification(
             target_column_name="income",
@@ -148,10 +148,10 @@ class TestCounterfactualComponent:
             }
 
         adult_train_pq = Input(
-            path=f"boston_train_pq:{version_string}", mode="download"
+            type="uri_file", path=f"boston_train_pq:{version_string}", mode="download"
         )
         adult_test_pq = Input(
-            path=f"boston_test_pq:{version_string}", mode="download"
+            type="uri_file", path=f"boston_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = test_counterfactual_regression(
             target_column_name="y",

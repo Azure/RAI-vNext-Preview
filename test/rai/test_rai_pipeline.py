@@ -183,9 +183,9 @@ class TestRAISmoke:
         pipeline_job = rai_classification_pipeline(
             target_column_name="income",
             train_data=Input(
-                path=f"adult_train_pq:{version_string}", mode="download"
+                type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
             ),
-            test_data=Input(path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
         )
 
         # Send it
@@ -229,9 +229,9 @@ class TestRAISmoke:
         insights_pipeline_job = fetch_analyse_registered_model(
             model_id=registered_adult_model_id,
             train_data=Input(
-                path=f"adult_train_pq:{version_string}", mode="download"
+                type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
             ),
-            test_data=Input(path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
         )
 
         # Send it
