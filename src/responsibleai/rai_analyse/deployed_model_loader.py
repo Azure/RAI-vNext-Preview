@@ -100,9 +100,6 @@ class DeployedModelLoader:
         # Convert to numpy
         result = np.asarray(decoded[target])
 
-        # It seems counterfactuals want a 2-d array?
-        if len(result.shape)==1:
-            result =np.expand_dims(result, axis=1)
         return result
 
     def load(self, path: str):
