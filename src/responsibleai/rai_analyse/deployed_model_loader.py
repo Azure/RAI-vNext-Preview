@@ -13,6 +13,7 @@ from wsgiref.simple_server import server_version
 
 import requests
 
+import numpy as np
 import pandas as pd
 
 import mlflow
@@ -82,7 +83,7 @@ class DeployedModelLoader:
         # _logger.info("Call to model completed: {0}".format(r.text))
         decoded = json.loads(r.text)
         _logger.info(f"Decoded response: {decoded}")
-        return decoded[target]
+        return np.asarray(decoded[target])
 
     def load(self, path: str):
         _logger.info(f"Ignoring supplied path: {path}")
