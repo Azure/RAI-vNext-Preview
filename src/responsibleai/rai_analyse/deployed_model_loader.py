@@ -70,8 +70,21 @@ class DeployedModelLoader:
         else:
             _logger.info("No server found")
 
-    def _call_model_and_extract(self, input_df: pd.DataFrame, target: str):
-        payload = input_df.to_json(orient="split")
+    def _convert_to_json(self, input) -> str:
+        result = ""
+        if isinstance(input, pd.DataFrame) or isinstance(input, pd.Series):
+            result = input.to_json(orient="split")
+        elif isinstance(input. np.ndarray):
+            result = json.dumps(input.tolist())
+        else:
+            # See what we get
+            result = json.dumps(input)
+
+        return result
+
+
+    def _call_model_and_extract(self, input_data, target: str):
+        payload = self._convert_to_json(input_data)
         _logger.info("Payload: {0}".format(payload))
         headers = {"Content-Type": "application/json"}
         r = requests.post(
@@ -83,7 +96,14 @@ class DeployedModelLoader:
         # _logger.info("Call to model completed: {0}".format(r.text))
         decoded = json.loads(r.text)
         _logger.info(f"Decoded response: {decoded}")
-        return np.asarray(decoded[target])
+
+        # Convert to numpy
+        result = np.asarray(decoded[target])
+
+        # It seems counterfactuals want a 2-d array?
+        if len(result.shape)==1:
+            result =np.expand_dims(result, axis=1)
+        return result
 
     def load(self, path: str):
         _logger.info(f"Ignoring supplied path: {path}")
