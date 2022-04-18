@@ -15,13 +15,11 @@ import requests
 
 import pandas as pd
 
-from azureml.core import Run, Workspace
+import mlflow
+
+from azureml.core import Model, Run, Workspace
 
 from rai_component_utilities import (
-    print_dir_tree,
-    load_dataset,
-    fetch_model_id,
-    load_mlflow_model,
     download_model_to_dir,
 )
 
@@ -101,7 +99,7 @@ class DeployedModelLoader:
         # )
 
         _logger.info("Downloading mlflow model from AzureML")
-        download_model_to_dir(workspace, self._model_id, self._unwrapped_model_dir)
+        self._download_model_to_dir(workspace, self._model_id, self._unwrapped_model_dir)
         model_name = self._model_id.split(":")[0]
 
         _logger.info("Trying to create wrapped model")
@@ -150,3 +148,11 @@ class DeployedModelLoader:
 
     def score(self, input_df: pd.DataFrame):
         return self._call_model_and_extract(input_df, "score")
+
+        
+    def _download_model_to_dir(self,
+        workspace: Workspace, model_id: str, target_path: str
+    ) -> None:
+        mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+        model = Model(workspace, id=model_id)
+        model.download(target_dir=target_path, exist_ok=True)
