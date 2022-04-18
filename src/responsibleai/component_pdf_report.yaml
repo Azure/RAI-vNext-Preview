@@ -1,0 +1,24 @@
+$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: PDFReportGenerator
+display_name: Generate PDF report of rai insight
+version: VERSION_REPLACEMENT_STRING
+type: command
+inputs:
+  rai_insights_dashboard:
+    type: path
+  pdf_generation_config:
+    type: path
+  predefined_cohorts_jsonl:
+    type: path
+outputs:
+  pdf_output_path:
+    type: path
+code:
+  local_path: ./src_pdf/
+environment: azureml:rai-pdf:4
+command: >-
+  python generate_pdf.py
+  --rai_insights_dashboard ${{inputs.rai_insights_dashboard}}
+  --pdf_generation_config ${{inputs.pdf_generation_config}}
+  --predefined_cohorts_jsonl ${{inputs.predefined_cohorts_jsonl}}
+  --pdf_output_path ${{outputs.pdf_output_path}}
