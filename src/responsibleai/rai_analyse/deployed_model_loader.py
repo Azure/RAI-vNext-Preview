@@ -52,13 +52,18 @@ class DeployedModelLoader:
         self._workspace_name = workspace._workspace_name
         self._model_id = model_id
         self._unwrapped_model_dir = tempfile.mkdtemp()
-
-    def __enter__(self):
         self._server_pid = None
 
+    def __enter__(self):
         return self
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
+        self._shutdown_server()
+
+    def __del__(self):
+        self._shutdown_server()
+
+    def _shutdown_server(self):
         if self._server_pid is not None:
             _logger.info(f"Sending SIGTERM to server process {self._server_pid}")
             os.kill(self._server_pid, signal.SIGTERM)
@@ -66,6 +71,7 @@ class DeployedModelLoader:
             _logger.info("Sending SIGKILL to server process (assuming Unix)")
             os.kill(self._server_pid, signal.SIGKILL)
             _logger.info("Process killed")
+            self._server_pid = None
         else:
             _logger.info("No server found")
 

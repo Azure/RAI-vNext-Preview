@@ -25,6 +25,7 @@ from azureml.core import Model, Run, Workspace
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from deployed_model_loader import DeployedModelLoader
 
 
 _logger = logging.getLogger(__file__)
@@ -246,10 +247,10 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     _logger.info("Loading model")
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
-    model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
+    dm = DeployedModelLoader(my_run.experiment.workspace, model_id)
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
-        model=model_estimator, train=df_train, test=df_test, **constructor_args
+        model=dm, train=df_train, test=df_test, serializer=dm, **constructor_args
     )
     return rai_i
