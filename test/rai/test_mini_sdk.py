@@ -9,8 +9,7 @@ import tempfile
 
 from responsibleai import RAIInsights
 
-from azure.ml import MLClient
-from azure.ml.entities import JobInput
+from azure.ml import MLClient, Input
 from azure.ml.entities import CommandComponent, PipelineJob
 
 from azure_ml_rai import (
@@ -35,10 +34,10 @@ class TestMiniSDK:
         # Pipeline globals
         pipeline_inputs = {
             "target_column_name": "income",
-            "my_training_data": JobInput(
+            "my_training_data": Input(
                 dataset=f"adult_train_pq:{version_string}", mode="download"
             ),
-            "my_test_data": JobInput(
+            "my_test_data": Input(
                 dataset=f"adult_test_pq:{version_string}", mode="download"
             ),
         }

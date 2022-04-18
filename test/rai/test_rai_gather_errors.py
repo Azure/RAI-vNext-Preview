@@ -4,9 +4,7 @@
 
 import logging
 
-from azure.ml import MLClient
-from azure.ml import dsl
-from azure.ml.entities import JobInput
+from azure.ml import MLClient, dsl, Input
 from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
@@ -124,10 +122,10 @@ class TestRAIGatherErrors:
         # Assemble into a pipeline
         pipeline_job = test_constructor_mismatch(
             target_column_name="income",
-            train_data=JobInput(
+            train_data=Input(
                 path=f"adult_train_pq:{version_string}", mode="download"
             ),
-            test_data=JobInput(path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(path=f"adult_test_pq:{version_string}", mode="download"),
         )
 
         # Send it
@@ -198,10 +196,10 @@ class TestRAIGatherErrors:
         # Assemble into a pipeline
         pipeline_job = test_multiple_tool_instances(
             target_column_name="income",
-            train_data=JobInput(
+            train_data=Input(
                 path=f"adult_train_pq:{version_string}", mode="download"
             ),
-            test_data=JobInput(path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(path=f"adult_test_pq:{version_string}", mode="download"),
         )
 
         # Send it

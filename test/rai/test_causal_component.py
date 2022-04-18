@@ -4,9 +4,7 @@
 
 import logging
 
-from azure.ml import MLClient
-from azure.ml import dsl
-from azure.ml.entities import JobInput
+from azure.ml import MLClient, dsl, Input
 
 from test.utilities_for_test import submit_and_wait
 
@@ -82,10 +80,10 @@ class TestCausalComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(
+        adult_train_pq = Input(
             path=f"adult_train_pq:{version_string}", mode="download"
         )
-        adult_test_pq = JobInput(
+        adult_test_pq = Input(
             path=f"adult_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = test_causal_classification(
@@ -164,10 +162,10 @@ class TestCausalComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(
+        adult_train_pq = Input(
             path=f"boston_train_pq:{version_string}", mode="download"
         )
-        adult_test_pq = JobInput(
+        adult_test_pq = Input(
             path=f"boston_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = test_causal_regression(

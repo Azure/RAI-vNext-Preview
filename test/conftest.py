@@ -8,9 +8,8 @@ import time
 
 from azure.identity import DefaultAzureCredential
 
-from azure.ml import MLClient
-from azure.ml import dsl
-from azure.ml.entities import JobInput, load_component
+from azure.ml import MLClient, dsl, Input
+from azure.ml.entities import load_component
 from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
@@ -117,7 +116,7 @@ def registered_adult_model_id(ml_client, component_config):
     register_component = load_component(
         client=ml_client, name="register_model", version=version_string
     )
-    adult_train_pq = JobInput(path=f"adult_train_pq:{version_string}", mode="download")
+    adult_train_pq = Input(path=f"adult_train_pq:{version_string}", mode="download")
 
     @dsl.pipeline(
         compute="cpucluster",
@@ -159,7 +158,7 @@ def registered_boston_model_id(ml_client, component_config):
     register_component = load_component(
         client=ml_client, name="register_model", version=version_string
     )
-    boston_train_pq = JobInput(
+    boston_train_pq = Input(
         path=f"boston_train_pq:{version_string}", mode="download"
     )
 
