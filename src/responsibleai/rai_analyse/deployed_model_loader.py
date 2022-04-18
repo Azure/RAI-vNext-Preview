@@ -74,7 +74,7 @@ class DeployedModelLoader:
         result = ""
         if isinstance(input, pd.DataFrame) or isinstance(input, pd.Series):
             result = input.to_json(orient="split")
-        elif isinstance(input. np.ndarray):
+        elif isinstance(input, np.ndarray):
             result = json.dumps(input.tolist())
         else:
             # See what we get
