@@ -7,9 +7,8 @@ import logging
 import pathlib
 import time
 
-from azure.ml import dsl
-from azure.ml import MLClient
-from azure.ml.entities import JobInput, load_component
+from azure.ml import MLClient, dsl, Input
+from azure.ml.entities import load_component
 from azure.ml.entities import Job
 
 from test.utilities_for_test import submit_and_wait
@@ -183,10 +182,10 @@ class TestRAISmoke:
 
         pipeline_job = rai_classification_pipeline(
             target_column_name="income",
-            train_data=JobInput(
-                path=f"adult_train_pq:{version_string}", mode="download"
+            train_data=Input(
+                type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
             ),
-            test_data=JobInput(path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
         )
 
         # Send it
@@ -229,10 +228,10 @@ class TestRAISmoke:
 
         insights_pipeline_job = fetch_analyse_registered_model(
             model_id=registered_adult_model_id,
-            train_data=JobInput(
-                path=f"adult_train_pq:{version_string}", mode="download"
+            train_data=Input(
+                type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
             ),
-            test_data=JobInput(path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
         )
 
         # Send it

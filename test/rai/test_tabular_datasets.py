@@ -6,9 +6,8 @@ import logging
 import pathlib
 import time
 
-from azure.ml import MLClient
-from azure.ml import dsl
-from azure.ml.entities import JobInput, load_component
+from azure.ml import MLClient, dsl, Input
+from azure.ml.entities import load_component
 from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
@@ -45,8 +44,8 @@ class Testregister_tabular_dataset:
             return {}
 
         pipeline = my_pipeline(
-            JobInput(path=f"adult_train_pq:{version_string}", mode="download"),
-            JobInput(path=f"adult_test_pq:{version_string}", mode="download"),
+            Input(type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"),
+            Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
         )
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
@@ -77,8 +76,8 @@ class Testregister_tabular_dataset:
             )
             return {}
 
-        adult_train_pq = JobInput(
-            path=f"adult_train_pq:{version_string}", mode="download"
+        adult_train_pq = Input(
+            type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
         )
         pipeline = tabular_registration_pipeline(
             adult_train_pq, base_name=train_tabular_base
@@ -87,8 +86,8 @@ class Testregister_tabular_dataset:
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
 
-        adult_test_pq = JobInput(
-            path=f"adult_test_pq:{version_string}", mode="download"
+        adult_test_pq = Input(
+            type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
         )
         pipeline_2 = tabular_registration_pipeline(
             adult_test_pq, base_name=test_tabular_base

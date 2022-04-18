@@ -4,9 +4,7 @@
 
 import logging
 
-from azure.ml import MLClient
-from azure.ml import dsl
-from azure.ml.entities import JobInput
+from azure.ml import MLClient, dsl, Input
 
 from test.utilities_for_test import submit_and_wait
 
@@ -74,11 +72,11 @@ class TestErrorAnalysisComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(
-            path=f"adult_train_pq:{version_string}", mode="download"
+        adult_train_pq = Input(
+            type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
         )
-        adult_test_pq = JobInput(
-            path=f"adult_test_pq:{version_string}", mode="download"
+        adult_test_pq = Input(
+            type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = test_erroranalysis_classification(
             target_column_name="income",
@@ -145,11 +143,11 @@ class TestErrorAnalysisComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = JobInput(
-            path=f"boston_train_pq:{version_string}", mode="download"
+        adult_train_pq = Input(
+            type="uri_file", path=f"boston_train_pq:{version_string}", mode="download"
         )
-        adult_test_pq = JobInput(
-            path=f"boston_test_pq:{version_string}", mode="download"
+        adult_test_pq = Input(
+            type="uri_file", path=f"boston_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = test_erroranalysis_regression(
             target_column_name="y",
