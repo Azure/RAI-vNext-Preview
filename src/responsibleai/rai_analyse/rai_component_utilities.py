@@ -248,6 +248,7 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
     dm = DeployedModelLoader(my_run.experiment.workspace, model_id)
+    dm.load("Ignorable path")
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
