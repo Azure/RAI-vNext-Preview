@@ -19,10 +19,6 @@ import mlflow
 
 from azureml.core import Model, Run, Workspace
 
-from rai_component_utilities import (
-    download_model_to_dir,
-)
-
 from model_wrapper import ModelWrapper
 
 _logger = logging.getLogger(__file__)
