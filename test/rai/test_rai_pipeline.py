@@ -10,6 +10,7 @@ import time
 from azure.ml import MLClient, dsl, Input
 from azure.ml.entities import load_component
 from azure.ml.entities import Job
+from responsibleai import RAIInsights
 
 from test.utilities_for_test import submit_and_wait
 
@@ -191,6 +192,12 @@ class TestRAISmoke:
         # Send it
         pipeline_job = submit_and_wait(ml_client, pipeline_job)
         assert pipeline_job is not None
+
+        # Try some downloads
+        dashboard_path = 'dashboard_download'
+        ml_client.jobs.download(pipeline_job.id, download_path=dashboard_path, output_name='dashboard')
+        rai_i = RAIInsights.load(dashboard_path)
+        assert rai_i is not None
 
     def test_fetch_registered_model_component(
         self, ml_client, component_config, registered_adult_model_id
