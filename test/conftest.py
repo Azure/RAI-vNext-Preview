@@ -116,7 +116,9 @@ def registered_adult_model_id(ml_client, component_config):
     register_component = load_component(
         client=ml_client, name="register_model", version=version_string
     )
-    adult_train_pq = Input(type="uri_file", path=f"adult_train_pq:{version_string}", mode="download")
+    adult_train_pq = Input(
+        type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
+    )
 
     @dsl.pipeline(
         compute="cpucluster",

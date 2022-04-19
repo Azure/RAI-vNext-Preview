@@ -158,4 +158,3 @@ class TestErrorAnalysisComponent:
         # Send it
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
-

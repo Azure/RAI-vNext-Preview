@@ -123,9 +123,13 @@ class TestRAIGatherErrors:
         pipeline_job = test_constructor_mismatch(
             target_column_name="income",
             train_data=Input(
-                type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
+                type="uri_file",
+                path=f"adult_train_pq:{version_string}",
+                mode="download",
             ),
-            test_data=Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(
+                type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+            ),
         )
 
         # Send it
@@ -197,9 +201,13 @@ class TestRAIGatherErrors:
         pipeline_job = test_multiple_tool_instances(
             target_column_name="income",
             train_data=Input(
-                type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
+                type="uri_file",
+                path=f"adult_train_pq:{version_string}",
+                mode="download",
             ),
-            test_data=Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
+            test_data=Input(
+                type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+            ),
         )
 
         # Send it

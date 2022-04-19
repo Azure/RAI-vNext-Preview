@@ -44,8 +44,14 @@ class Testregister_tabular_dataset:
             return {}
 
         pipeline = my_pipeline(
-            Input(type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"),
-            Input(type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"),
+            Input(
+                type="uri_file",
+                path=f"adult_train_pq:{version_string}",
+                mode="download",
+            ),
+            Input(
+                type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+            ),
         )
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
