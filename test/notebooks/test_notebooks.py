@@ -31,12 +31,7 @@ def assay_one_notebook(notebook_name, test_values, replacement_strings: Dict[str
     output_notebook = "./test/notebooks/" + notebook_name + ".output.ipynb"
 
     update_cells(input_notebook, processed_notebook, replacement_strings)
-    # append_scrapbook_commands(input_notebook, processed_notebook, test_values)
     pm.execute_notebook(processed_notebook, output_notebook)
-    nb = sb.read_notebook(output_notebook)
-
-    # for k, v in test_values.items():
-    #    assert nb.scraps[k].data == v.expected
 
 
 @pytest.mark.notebooks
