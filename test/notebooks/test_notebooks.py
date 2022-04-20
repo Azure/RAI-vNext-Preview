@@ -5,66 +5,23 @@
 import nbformat as nbf
 import papermill as pm
 import pytest
-import scrapbook as sb
 import time
 
 from typing import Dict
 
-class ScrapSpec:
-    def __init__(self, code, expected):
-        self.code = code
-        self.expected = expected
 
-    @property
-    def code(self):
-        """The code to be inserted (string)."""  # noqa:D401
-        return self._code
-
-    @code.setter
-    def code(self, value):
-        self._code = value
-
-    @property
-    def expected(self):
-        """The expected evaluation of the code (Python object)."""  # noqa:D401
-        return self._expected
-
-    @expected.setter
-    def expected(self, value):
-        self._expected = value
-
-
-def append_scrapbook_commands(input_nb_path, output_nb_path, scrap_specs):
+def update_cells(input_nb_path, output_nb_path, replacement_strings: Dict[str, str]):
     notebook = nbf.read(input_nb_path, as_version=nbf.NO_CONVERT)
 
-    scrapbook_cells = []
-    # Always need to import nteract-scrapbook
-    scrapbook_cells.append(nbf.v4.new_code_cell(source="import scrapbook as sb"))
-
-    # Create a cell to store each key and value in the scrapbook
-    for k, v in scrap_specs.items():
-        source = "sb.glue(\"{0}\", {1})".format(k, v.code)
-        scrapbook_cells.append(nbf.v4.new_code_cell(source=source))
-
-    # Append the cells to the notebook
-    [notebook['cells'].append(c) for c in scrapbook_cells]
-
-    # Write out the new notebook
-    nbf.write(notebook, output_nb_path)
-
-
-def update_cells(input_nb_path, output_nb_path, replacement_strings: Dict[str,str]):
-    notebook = nbf.read(input_nb_path, as_version=nbf.NO_CONVERT)
-
-    for cell in notebook['cells']:
+    for cell in notebook["cells"]:
         for original, update in replacement_strings.items():
-            if cell['source'] == original:
-                cell['source'] = update
+            if cell["source"] == original:
+                cell["source"] = update
 
     nbf.write(notebook, output_nb_path)
 
 
-def assay_one_notebook(notebook_name, test_values, replacement_strings: Dict[str,str]):
+def assay_one_notebook(notebook_name, test_values, replacement_strings: Dict[str, str]):
     """Test a single notebook.
     This uses nbformat to replace the contents of given cells for use in automated pipelines
     Makes certain assumptions about directory layout.
@@ -78,11 +35,14 @@ def assay_one_notebook(notebook_name, test_values, replacement_strings: Dict[str
     pm.execute_notebook(processed_notebook, output_notebook)
     nb = sb.read_notebook(output_notebook)
 
-    #for k, v in test_values.items():
+    # for k, v in test_values.items():
     #    assert nb.scraps[k].data == v.expected
 
+
 @pytest.mark.notebooks
-def test_responsibleaidashboard_housing_classification_model_debugging(component_config):
+def test_responsibleaidashboard_housing_classification_model_debugging(
+    component_config,
+):
     nb_name = "responsibleaidashboard-housing-classification-model-debugging"
 
     version_string = component_config["version"]
@@ -90,6 +50,8 @@ def test_responsibleaidashboard_housing_classification_model_debugging(component
 
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
-    replacements["training_component_version_string = '4'"] = f"training_component_version_string = '{train_version_string}'"
+    replacements[
+        "training_component_version_string = '4'"
+    ] = f"training_component_version_string = '{train_version_string}'"
 
     assay_one_notebook(nb_name, dict(), replacements)

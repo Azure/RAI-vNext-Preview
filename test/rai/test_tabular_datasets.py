@@ -177,7 +177,6 @@ class TestRegisterTabularDataset:
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
 
-
         rai_pipeline = use_tabular_rai(
             target_column_name="income",
             train_data_name=f"{train_tabular_base}_{epoch_secs}",
