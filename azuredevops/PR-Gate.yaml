@@ -118,15 +118,6 @@ stages:
       subscriptionName: $(SubscriptionName)
       configFileArtifact: $(ConfigFileArtifact)
 
-# =========================================================================
-
-- stage: RunNotebookTests
-  displayName: Run Notebook tests
-  dependsOn: ObtainPrepareWorkspace
-  pool:
-    vmImage: ubuntu-latest
-
-  jobs:
   - template: templates/run-python-tests-job-template.yaml
     parameters:
       pythonVersion: ${{parameters.pythonVersion}}
