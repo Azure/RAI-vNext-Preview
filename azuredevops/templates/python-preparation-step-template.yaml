@@ -59,7 +59,7 @@ steps:
       arguments: -sdkVersionSelect ${{parameters.sdkSource}}
     displayName: Install pip requirements
 
-  - script: pip install requirements-for-testing.txt
+  - script: pip install -r requirements-for-testing.txt
     displayName: Install pip testing requirements
 
   - task: AzureCLI@2
