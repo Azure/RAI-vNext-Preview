@@ -1,0 +1,6 @@
+nbformat
+nbval
+nteract-scrapbook
+papermill
+pytest
+pytest-xdist

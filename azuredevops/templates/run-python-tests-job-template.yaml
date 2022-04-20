@@ -36,6 +36,12 @@ parameters:
 - name: poolImage
   type: string
   default: ubuntu-latest
+- name: testRunType
+  type: string
+  default: E2E
+  values:
+    - E2E
+    - Notebooks
 
 
 jobs:
@@ -62,15 +68,27 @@ jobs:
       - script: ls -p $(Build.SourcesDirectory)
         displayName: "Show sources directory"
 
-      - task: AzureCLI@2
-        displayName: Run tests
-        inputs:
-          azureSubscription: "${{parameters.subscriptionName}}"
-          addSpnToEnvironment: true
-          scriptType: pscore
-          scriptLocation: scriptPath
-          scriptPath: scripts/Run-Tests.ps1
-          failOnStandardError: false # Since the new CLI writes stuff there
+      - ${{ if eq(parameters.testRunType, 'E2E')}}:
+        - task: AzureCLI@2
+          displayName: Run E2E tests
+          inputs:
+            azureSubscription: "${{parameters.subscriptionName}}"
+            addSpnToEnvironment: true
+            scriptType: pscore
+            scriptLocation: scriptPath
+            scriptPath: scripts/Run-E2E-Tests.ps1
+            failOnStandardError: false # Since the new CLI writes stuff there
+
+      - ${{ if eq(parameters.testRunType, 'Notebooks')}}:
+        - task: AzureCLI@2
+          displayName: Run Notebook tests
+          inputs:
+            azureSubscription: "${{parameters.subscriptionName}}"
+            addSpnToEnvironment: true
+            scriptType: pscore
+            scriptLocation: scriptPath
+            scriptPath: scripts/Run-Notebook-Tests.ps1
+            failOnStandardError: false # Since the new CLI writes stuff there
 
       - task: PublishTestResults@2
         displayName: Publish Test Results
