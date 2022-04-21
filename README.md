@@ -18,7 +18,7 @@ This new feature offers users a new powerful and robust toolkit for understandin
 
 ## Supported scenarios, models and datasets
 
-`azureml-responsibleai` supports computation of Responsible AI insights for `scikit-learn` models that are trained on `pandas.DataFrame`. The `azureml-responsibleai` package accepts both models and SciKit-Learn pipelines as input as long as the model or pipeline implements a `predict` or `predict_proba` function that conforms to the `scikit-learn` convention. If not compatible, you can wrap your model's prediction function into a wrapper class that transforms the output into the format that is supported (`predict` or `predict_proba` of `scikit-learn`), and pass that wrapper class to modules in `azureml-responsibleai`.
+The repo supports computation of Responsible AI insights for `scikit-learn` models that are trained on `pandas.DataFrame`. This repo accepts both models and SciKit-Learn pipelines as input as long as the model or pipeline implements a `predict` or `predict_proba` function that conforms to the `scikit-learn` convention. If not compatible, you can wrap your model's prediction function into a wrapper class that transforms the output into the format that is supported (`predict` or `predict_proba` of `scikit-learn`), and pass that wrapper class to modules in this repo.
 
 Currently, we support datasets having numerical and categorical features. The following table provides the scenarios supported for each of the four responsible AI insights:-
 
