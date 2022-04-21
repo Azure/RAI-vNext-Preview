@@ -39,7 +39,7 @@ Write-Host "=-= Installing Jupyter"
 pip install jupyter "markupsafe<=2.0.1" "itsdangerous==2.0.1"
 
 Write-Host "=-= Installing responsibleai"
-pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
+pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 
 Write-Host "=-= Installing other requirements"
 pip install -r requirements-dev-releasepackage.txt

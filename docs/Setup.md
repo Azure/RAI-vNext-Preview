@@ -64,7 +64,7 @@ The goal of this document is to get your Responsible AI components registered an
 
 ```powershell
 pip install jupyter markupsafe<=2.0.1 itsdangerous==2.0.1
-pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
+pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 ```
 
 1. (Optional) Install the miniature SDK for the RAI components. This allows dashboards created in AzureML to be downloaded to your local machine.
@@ -92,7 +92,7 @@ cd RAI-vNext-Preview
 8. Run the following pip installs
 ``` powershell
 pip install jupyter markupsafe<=2.0.1 itsdangerous==2.0.1
-pip install responsibleai~=0.17.0 raiwidgets~=0.17.0 pyarrow
+pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 ```
 ``` powershell
 pip install -r requirements-dev-releasepackage.txt

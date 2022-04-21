@@ -59,6 +59,9 @@ steps:
       arguments: -sdkVersionSelect ${{parameters.sdkSource}}
     displayName: Install pip requirements
 
+  - script: pip install -r requirements-for-testing.txt
+    displayName: Install pip testing requirements
+
   - task: AzureCLI@2
     displayName: Install AzureML CLI v2
     inputs:

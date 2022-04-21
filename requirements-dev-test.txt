@@ -4,7 +4,5 @@ azure-ml
 colorama # Pending update
 pandas
 pyarrow
-pytest
-pytest-xdist
 scikit-learn
 shap
