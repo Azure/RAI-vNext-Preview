@@ -198,10 +198,10 @@ class TestRAISmoke:
         assert pipeline_job is not None
 
         # Try some downloads
-        # with tempfile.TemporaryDirectory() as dashboard_path:
-        #    ml_client.jobs.download(pipeline_job.name, download_path=dashboard_path, output_name='dashboard')
-        #    rai_i = RAIInsights.load(dashboard_path)
-        #    assert rai_i is not None
+        with tempfile.TemporaryDirectory() as dashboard_path:
+            ml_client.jobs.download(pipeline_job.name, download_path=dashboard_path, output_name='dashboard')
+            rai_i = RAIInsights.load(dashboard_path)
+            assert rai_i is not None
 
     def test_fetch_registered_model_component(
         self, ml_client, component_config, registered_adult_model_id
