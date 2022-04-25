@@ -118,7 +118,7 @@ class TestRAISmoke:
                 train_dataset=train_data,
                 test_dataset=test_data,
                 target_column_name=target_column_name,
-                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]',
+                categorical_column_names='["Race", "Sex", "Workclass", "Marital Status", "Occupation", "Country"]',
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
@@ -198,10 +198,10 @@ class TestRAISmoke:
         assert pipeline_job is not None
 
         # Try some downloads
-        with tempfile.TemporaryDirectory() as dashboard_path:
-            ml_client.jobs.download(pipeline_job.name, download_path=dashboard_path, output_name='dashboard')
-            rai_i = RAIInsights.load(dashboard_path)
-            assert rai_i is not None
+        #with tempfile.TemporaryDirectory() as dashboard_path:
+        #    ml_client.jobs.download(pipeline_job.name, download_path=dashboard_path, output_name='dashboard')
+        #    rai_i = RAIInsights.load(dashboard_path)
+        #    assert rai_i is not None
 
     def test_fetch_registered_model_component(
         self, ml_client, component_config, registered_adult_model_id
