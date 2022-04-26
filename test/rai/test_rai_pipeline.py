@@ -6,6 +6,7 @@ from atexit import register
 import logging
 import pathlib
 import tempfile
+import uuid
 
 from azure.ml import MLClient, dsl, Input, Output
 from azure.ml.entities import load_component
@@ -193,13 +194,14 @@ class TestRAISmoke:
             ),
         )
 
+        rand_path = uuid.uuid4()
         pipeline_job.outputs.dashboard = Output(
-            path=f"azureml://datastores/workspaceblobstore/paths/rai_test/dashboard/",
+            path=f"azureml://datastores/workspaceblobstore/paths/{rand_path}/dashboard/",
             mode="upload",
             type="uri_folder"
         )
         pipeline_job.outputs.ux_json = Output(
-            path=f"azureml://datastores/workspaceblobstore/paths/rai_test/ux_json/",
+            path=f"azureml://datastores/workspaceblobstore/paths/{rand_path}/ux_json/",
             mode="upload",
             type="uri_folder"
         )
