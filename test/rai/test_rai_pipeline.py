@@ -215,7 +215,8 @@ class TestRAISmoke:
             ml_client.jobs.download(
                 pipeline_job.name, download_path=dashboard_path, output_name="dashboard"
             )
-            rai_i = RAIInsights.load(dashboard_path)
+            expected_path = pathlib.Path(dashboard_path) / 'named-outputs' / 'dashboard'
+            rai_i = RAIInsights.load(expected_path)
             assert rai_i is not None
 
     def test_fetch_registered_model_component(
