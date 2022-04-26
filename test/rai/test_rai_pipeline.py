@@ -198,12 +198,12 @@ class TestRAISmoke:
         pipeline_job.outputs.dashboard = Output(
             path=f"azureml://datastores/workspaceblobstore/paths/{rand_path}/dashboard/",
             mode="upload",
-            type="uri_folder"
+            type="uri_folder",
         )
         pipeline_job.outputs.ux_json = Output(
             path=f"azureml://datastores/workspaceblobstore/paths/{rand_path}/ux_json/",
             mode="upload",
-            type="uri_folder"
+            type="uri_folder",
         )
 
         # Send it
@@ -212,7 +212,9 @@ class TestRAISmoke:
 
         # Try some downloads
         with tempfile.TemporaryDirectory() as dashboard_path:
-            ml_client.jobs.download(pipeline_job.name, download_path=dashboard_path, output_name='dashboard')
+            ml_client.jobs.download(
+                pipeline_job.name, download_path=dashboard_path, output_name="dashboard"
+            )
             rai_i = RAIInsights.load(dashboard_path)
             assert rai_i is not None
 
