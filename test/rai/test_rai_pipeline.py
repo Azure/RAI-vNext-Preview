@@ -216,6 +216,7 @@ class TestRAISmoke:
                 pipeline_job.name, download_path=dashboard_path, output_name="dashboard"
             )
             expected_path = pathlib.Path(dashboard_path) / 'named-outputs' / 'dashboard'
+            # This load is very fragile with respect to Python version and conda environment
             rai_i = RAIInsights.load(expected_path)
             assert rai_i is not None
 
