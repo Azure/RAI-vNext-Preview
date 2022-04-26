@@ -2,12 +2,12 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-from atexit import register
 import logging
 import pathlib
 import tempfile
+import uuid
 
-from azure.ml import MLClient, dsl, Input
+from azure.ml import MLClient, dsl, Input, Output
 from azure.ml.entities import load_component
 from azure.ml.entities import Job
 from responsibleai import RAIInsights
@@ -193,15 +193,28 @@ class TestRAISmoke:
             ),
         )
 
+        # Workaround to enable the download
+        rand_path = str(uuid.uuid4())
+        pipeline_job.outputs.dashboard = Output(
+            path=f"azureml://datastores/workspaceblobstore/paths/{rand_path}/dashboard/",
+            mode="upload",
+            type="uri_folder"
+        )
+        pipeline_job.outputs.ux_json = Output(
+            path=f"azureml://datastores/workspaceblobstore/paths/{rand_path}/ux_json/",
+            mode="upload",
+            type="uri_folder"
+        )
+
         # Send it
         pipeline_job = submit_and_wait(ml_client, pipeline_job)
         assert pipeline_job is not None
 
         # Try some downloads
-        #with tempfile.TemporaryDirectory() as dashboard_path:
-        #    ml_client.jobs.download(pipeline_job.name, download_path=dashboard_path, output_name='dashboard')
-        #    rai_i = RAIInsights.load(dashboard_path)
-        #    assert rai_i is not None
+        with tempfile.TemporaryDirectory() as dashboard_path:
+            ml_client.jobs.download(pipeline_job.name, download_path=dashboard_path, output_name='dashboard')
+            rai_i = RAIInsights.load(dashboard_path)
+            assert rai_i is not None
 
     def test_fetch_registered_model_component(
         self, ml_client, component_config, registered_adult_model_id
