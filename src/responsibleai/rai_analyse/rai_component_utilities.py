@@ -7,7 +7,9 @@ import logging
 import os
 import pathlib
 import shutil
+import subprocess
 import tempfile
+import time
 import uuid
 
 from typing import Any, Dict
@@ -16,12 +18,14 @@ from zipfile import Path
 import pandas as pd
 
 import mlflow
+import mlflow.deployments
 
 from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from deployed_model_loader import DeployedModelLoader
 
 
 _logger = logging.getLogger(__file__)
@@ -60,11 +64,23 @@ def fetch_model_id(model_info_path: str):
     return model_info[DashboardInfo.MODEL_ID_KEY]
 
 
+def download_model_to_dir(
+    workspace: Workspace, model_id: str, target_path: str
+) -> None:
+    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+    model = Model(workspace, id=model_id)
+    model.download(target_dir=target_path, exist_ok=True)
+    print("***************************")
+    print_dir_tree(target_path)
+    print("***************************")
+
+
 def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
 
     model = Model._get(workspace, id=model_id)
     model_uri = "models:/{}/{}".format(model.name, model.version)
+
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
@@ -231,10 +247,11 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     _logger.info("Loading model")
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
-    model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
+    dm = DeployedModelLoader(my_run.experiment.workspace, model_id)
+    dm.load("Ignorable path")
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
-        model=model_estimator, train=df_train, test=df_test, **constructor_args
+        model=dm, train=df_train, test=df_test, serializer=dm, **constructor_args
     )
     return rai_i
