@@ -35,9 +35,6 @@ Write-Host "=-= Creating conda environment '$EnvName' with python v3.8"
 conda create -y -n $EnvName python=3.8
 conda activate $EnvName
 
-Write-Host "=-= Installing Jupyter"
-pip install jupyter "markupsafe<=2.0.1" "itsdangerous==2.0.1"
-
 Write-Host "=-= Installing responsibleai"
 pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 
