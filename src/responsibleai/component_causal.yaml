@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: RAIInsightsCausal
+name: rai_insights_causal
 display_name: Add Causal to a RAI Insights Dashboard
 version: VERSION_REPLACEMENT_STRING
 type: command
@@ -55,8 +55,7 @@ outputs:
   causal:
     type: path
 
-code:
-  local_path: ./rai_analyse/
+code: ./rai_analyse/
 
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 

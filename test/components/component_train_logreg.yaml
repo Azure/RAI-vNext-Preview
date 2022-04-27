@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: TrainLogisticRegressionForRAI
+name: train_logistic_regression_for_rai
 display_name: Train LogReg for RAI
 version: VERSION_REPLACEMENT_STRING
 type: command
@@ -11,8 +11,7 @@ inputs:
 outputs:
   model_output:
     type: path
-code:
-  local_path: ./src_train_logreg/
+code: ./src_train_logreg/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
   python train.py

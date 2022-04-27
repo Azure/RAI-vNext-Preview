@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: RAIInsightsExplanation
+name: rai_insights_explanation
 display_name: Add Explanation to RAI Insights Dashboard
 version: VERSION_REPLACEMENT_STRING
 type: command
@@ -14,8 +14,7 @@ outputs:
   explanation:
     type: path
 
-code:
-  local_path: ./rai_analyse/
+code: ./rai_analyse/
 
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 
