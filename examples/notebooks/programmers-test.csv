@@ -1,0 +1,801 @@
+first_name,last_name,score,style,YOE,IDE,Programming language,location,Number of github repos contributed to,Employer,OS,job title,age
+Cody,Morrow ,1,tabs,6,Visual Studio,C#,Antarctica,0,Facebook,Windows,SWE 2,36.5
+Roberto,Mckenzie ,8,tabs,8,Emacs,Java,Africa,0,Apple,Windows,SWE 2,34.3
+Aitana,Rowe ,6,tabs,7,Eclipse,Java,Africa,0,Apple,Windows,SWE 2,36.5
+Zyaire,Pitts ,8,spaces,16,Visual Studio,Java,Africa,1,Twitter,Windows,SWE 1,34.1
+Malik,Hobbs ,0,spaces,18,Visual Studio,Java,Antarctica,0,Amazon,Windows,SWE 2,36.2
+Graham,Olsen ,10,spaces,16,Visual Studio,Python,Africa,0,Apple,MacOS,Senior Engineer,37.5
+Warren,May ,3,tabs,8,Emacs,Python,Antarctica,1,Snapchat,MacOS,Principal Engineer,39.5
+Kaia,Mata ,2,spaces,18,Visual Studio,Python,Asia,2,Google,Windows,SWE 2,33.3
+Corbin,Hail ,9,spaces,18,Visual Studio,Python,Africa,0,Snapchat,Windows,SWE 1,37.2
+Alayna,Wu ,8,tabs,5,Visual Studio,Python,Antarctica,3,Uber,MacOS,Principal Engineer,32
+Angel,Vega ,6,spaces,15,VSCode,Javascript,Africa,5,Twitter,Windows,SWE 1,36.2
+Jude,Nash ,1,tabs,9,Intellij,Python,Africa,4,Instagram,Linux,Distinguished Engineer,31.9
+Gunner,Taylor ,6,spaces,16,Visual Studio,Python,Antarctica,0,Instagram,MacOS,Senior Engineer,31.9
+Alexander,Tapia ,7,spaces,17,Visual Studio,Python,North America,0,Twitter,Windows,SWE 1,22.8
+Luna,Higgins ,6,tabs,6,VSCode,Python,Africa,0,Apple,Linux,Principal Engineer,32.3
+Ace,Gomez ,5,spaces,17,VSCode,C,Africa,0,Spotify,MacOS,Senior Engineer,39.2
+Eloise,Aguirre ,7,tabs,6,Visual Studio,Java,North America,2,Apple,MacOS,Senior Engineer,38.8
+Sarai,Mueller ,7,tabs,9,pyCharm,Python,Antarctica,3,Netflix,Linux,Principal Engineer,31.5
+Wesley,Tyler ,3,spaces,13,pyCharm,C,Antarctica,0,Snapchat,MacOS,Principal Engineer,34.9
+Ari,Foley ,9,spaces,17,Visual Studio,C#,Europe,1,Apple,Windows,Senior Engineer,32.9
+Carolina,Alvarado ,9,spaces,15,Visual Studio,Java,Antarctica,4,Twitter,MacOS,Senior Engineer,23.8
+Lyla,Todd ,7,spaces,15,Eclipse,C#,North America,0,Uber,MacOS,Senior Engineer,34.1
+Emmanuel,Roberson ,3,tabs,8,Emacs,C#,Antarctica,0,Netflix,MacOS,Principal Engineer,25.8
+Elias,Fox ,10,tabs,7,Eclipse,Javascript,Europe,6,Microsoft,Linux,Principal Engineer,33.3
+Gage,Walton ,6,spaces,13,Visual Studio,Swift,Antarctica,0,Microsoft,Windows,SWE 1,29.7
+Briggs,Pratt ,8,spaces,15,Vim,C#,Africa,0,Microsoft,MacOS,Senior Engineer,27.4
+Charli,Morrow ,1,tabs,5,Visual Studio,Javascript,Africa,1,Spotify,Linux,Distinguished Engineer,22.8
+Aaliyah,Sims ,2,spaces,13,Visual Studio,C,Europe,3,Facebook,MacOS,Principal Engineer,33.1
+Jamison,Lambert ,9,spaces,15,Eclipse,Swift,Europe,0,Uber,Windows,SWE 1,39.8
+Joseph,Vance ,3,spaces,15,Eclipse,PHP,Antarctica,0,Facebook,Windows,SWE 2,35.3
+Amiyah,Rosario ,0,tabs,7,Eclipse,Java,Africa,0,Netflix,Windows,SWE 2,32.3
+Aitana,Gibson ,8,spaces,15,VSCode,Javascript,Antarctica,0,Microsoft,Windows,SWE 2,32.1
+Aubree,Baker ,3,tabs,8,Eclipse,Python,Antarctica,0,Facebook,Linux,Distinguished Engineer,41.8
+Mya,Cannon ,5,spaces,13,Visual Studio,Javascript,Africa,0,Snapchat,Windows,SWE 2,34.5
+Rhett,Tucker ,9,tabs,7,Eclipse,Python,Antarctica,0,Twitter,Linux,Distinguished Engineer,32.5
+Sabrina,Barnes ,1,tabs,7,XCode,C++,Antarctica,0,Spotify,Windows,SWE 2,38.8
+Adelyn,Woodard ,6,tabs,8,Eclipse,Python,Antarctica,0,Facebook,Linux,Distinguished Engineer,32.9
+Cash,Ingram ,1,tabs,8,Vim,C#,Antarctica,2,Microsoft,MacOS,Principal Engineer,31.5
+Lawson,Mejia ,1,tabs,6,VSCode,Swift,Asia,0,Apple,MacOS,Principal Engineer,34.1
+Emerson,Ford ,1,tabs,9,Intellij,Javascript,Antarctica,1,Microsoft,Windows,SWE 1,29.7
+Rylie,Riley ,6,spaces,15,Intellij,GO,Antarctica,3,Microsoft,Windows,SWE 2,35.6
+Sienna,Merritt ,8,spaces,15,Visual Studio,GO,Antarctica,0,Netflix,Windows,SWE 2,35.4
+Paris,Parrish ,5,spaces,21,Visual Studio,Java,Antarctica,0,Spotify,MacOS,Senior Engineer,37.1
+Jade,Harrington ,10,spaces,15,Vim,Java,Antarctica,0,Apple,MacOS,Senior Engineer,35.1
+Eden,Mays ,6,spaces,17,XCode,R,Antarctica,1,Amazon,MacOS,Senior Engineer,37.5
+Eli,Mason ,1,tabs,9,pyCharm,C++,Antarctica,0,Microsoft,Windows,SWE 1,32.9
+Jayla,Bates ,9,spaces,13,VSCode,GO,Antarctica,2,Apple,Windows,Senior Engineer,30.7
+Oaklynn,Rollins ,7,tabs,8,Vim,Python,Antarctica,0,Spotify,Windows,SWE 1,35
+Roman,Mclean ,6,spaces,16,Vim,GO,Antarctica,0,Twitter,Windows,SWE 1,25.5
+Avery,Kramer ,1,tabs,6,VSCode,R,Antarctica,3,Snapchat,Windows,SWE 1,35.6
+Brooks,Mullen ,10,spaces,18,Eclipse,Javascript,Europe,4,Twitter,Windows,SWE 1,33.9
+Eden,Hogan ,6,spaces,17,Visual Studio,R,Africa,4,Spotify,Windows,SWE 1,31.8
+Jason,Simpson ,3,tabs,9,Intellij,C#,Antarctica,0,Twitter,MacOS,Principal Engineer,32.7
+Phoenix,Finley ,8,spaces,16,VSCode,C++,Antarctica,0,Apple,Windows,SWE 1,31.8
+Katherine,Ingram ,1,spaces,16,Visual Studio,Python,Africa,1,Microsoft,Windows,SWE 1,37.5
+Phoenix,Mathews ,5,tabs,7,Eclipse,C#,Africa,0,Netflix,MacOS,Senior Engineer,35.9
+Ivy,Martinez ,3,spaces,14,XCode,PHP,Antarctica,0,Amazon,MacOS,Principal Engineer,38.6
+Dominick,Kirby ,3,tabs,8,Emacs,Java,Antarctica,0,Uber,MacOS,Senior Engineer,40.5
+Arabella,Dodson ,8,spaces,15,Visual Studio,GO,Antarctica,1,Apple,Windows,SWE 1,33.1
+Catherine,Hebert ,6,spaces,16,Eclipse,Python,Africa,0,Apple,Windows,SWE 1,27.4
+Cassidy,Hale ,8,spaces,15,Visual Studio,C#,Antarctica,0,Microsoft,Windows,Senior Engineer,30.8
+Eric,Jennings ,8,spaces,18,Intellij,Python,Africa,0,Netflix,Windows,SWE 1,32.4
+Paisley,Koch ,3,tabs,5,Visual Studio,Python,Antarctica,2,Amazon,Windows,SWE 1,38
+Evan,Cunningham ,1,spaces,16,VSCode,Swift,Antarctica,0,Snapchat,Linux,Distinguished Engineer,35
+Josue,Archer ,4,spaces,19,Visual Studio,PHP,Antarctica,0,Snapchat,MacOS,Senior Engineer,28.5
+Sean,Lawrence ,4,spaces,15,Visual Studio,Javascript,Antarctica,0,Spotify,MacOS,Senior Engineer,34.8
+Lucia,Glenn ,4,tabs,6,VSCode,Python,Antarctica,1,Snapchat,Windows,SWE 1,30.4
+Jocelyn,Gibson ,9,spaces,15,VSCode,PHP,Antarctica,0,Facebook,MacOS,Senior Engineer,36.6
+Ashley,Berry ,2,tabs,9,pyCharm,C++,Antarctica,0,Facebook,Windows,SWE 2,31
+Zachary,Garrison ,2,spaces,16,Eclipse,C#,Africa,0,Amazon,Windows,SWE 2,26.4
+Celeste,Mason ,1,tabs,6,VSCode,R,Antarctica,0,Facebook,Windows,SWE 1,25.5
+Jared,Daniels ,6,spaces,13,Visual Studio,R,Antarctica,3,Apple,Linux,Principal Engineer,31.3
+Gwendolyn,Swanson ,4,spaces,16,Visual Studio,C++,Antarctica,1,Microsoft,Windows,SWE 1,34.3
+Julius,Mcfarland ,5,spaces,18,Visual Studio,C#,Antarctica,0,Netflix,Windows,SWE 2,35.7
+Aitana,Zamora ,7,tabs,5,Visual Studio,R,Antarctica,0,Microsoft,Windows,SWE 1,32.7
+Baylor,Schwartz ,8,spaces,17,Visual Studio,Java,Africa,0,Microsoft,Windows,Senior Engineer,33.8
+Ari,Olsen ,8,spaces,15,Visual Studio,Python,Antarctica,0,Netflix,Windows,SWE 1,34.8
+Ayden,Dudley ,4,tabs,8,Emacs,GO,Antarctica,0,Twitter,MacOS,Principal Engineer,28.1
+Sydney,Grimes ,6,spaces,19,Eclipse,Java,Africa,2,Amazon,MacOS,Senior Engineer,25.1
+Anna,Watson ,4,tabs,6,VSCode,C#,Antarctica,0,Facebook,MacOS,Senior Engineer,33.1
+Adaline,Haynes ,10,spaces,11,Visual Studio,GO,Antarctica,0,Apple,Linux,Principal Engineer,38.5
+Elise,Malone ,4,tabs,7,XCode,Python,Antarctica,0,Apple,MacOS,Principal Engineer,31.3
+Kenneth,Pham ,9,spaces,19,Visual Studio,C++,Antarctica,0,Apple,Windows,SWE 1,36
+Selena,Goodwin ,0,tabs,9,pyCharm,R,Antarctica,3,Apple,Linux,Distinguished Engineer,31.8
+Brinley,Gibbs ,5,spaces,20,Vim,C++,Antarctica,0,Netflix,Windows,SWE 2,37.5
+Colson,Weaver ,3,spaces,13,Eclipse,C#,Antarctica,0,Facebook,MacOS,Principal Engineer,38.4
+Eloise,Cameron ,4,tabs,6,Visual Studio,Javascript,Antarctica,2,Amazon,Windows,SWE 1,37.5
+Collin,Marshall ,8,spaces,17,Visual Studio,C#,Africa,0,Apple,Windows,SWE 2,33.5
+Odin,Duncan ,7,tabs,7,Eclipse,GO,Antarctica,0,Twitter,Windows,SWE 2,30.1
+Jane,Crawford ,3,tabs,5,Visual Studio,C#,Antarctica,0,Amazon,MacOS,Principal Engineer,37.5
+Briggs,Dougherty ,2,tabs,6,Visual Studio,Python,Antarctica,2,Facebook,Linux,Principal Engineer,31.1
+Everleigh,Lucas ,0,spaces,16,Visual Studio,C,Asia,2,Snapchat,Windows,SWE 2,27.4
+Oakley,Mclean ,1,tabs,5,Visual Studio,Java,Antarctica,0,Google,Windows,SWE 1,31.3
+Maeve,Dennis ,9,tabs,7,Eclipse,GO,Antarctica,0,Apple,Windows,SWE 1,26.5
+Viviana,Burton ,9,tabs,8,Emacs,GO,Africa,0,Twitter,MacOS,Principal Engineer,32.8
+Ari,Shields ,4,spaces,20,Visual Studio,Java,Antarctica,0,Spotify,Windows,SWE 1,35.2
+Rylee,Rubio ,1,tabs,7,Eclipse,R,Antarctica,0,Microsoft,Windows,SWE 2,32.7
+Kalani,Drake ,2,spaces,14,XCode,C#,Antarctica,0,Twitter,Windows,SWE 1,34.4
+Cairo,O?Neal ,6,tabs,9,Intellij,PHP,Antarctica,0,Microsoft,Linux,Principal Engineer,28.3
+Paige,Clayton ,8,spaces,18,Visual Studio,Java,Antarctica,1,Facebook,MacOS,Senior Engineer,28.8
+Natalia,Rollins ,3,tabs,8,Eclipse,PHP,Antarctica,1,Uber,Linux,Distinguished Engineer,30.7
+Tanner,Gonzales ,6,spaces,19,Visual Studio,C,Antarctica,0,Amazon,Windows,SWE 2,34.5
+Remy,Carlson ,7,tabs,5,Visual Studio,Python,Antarctica,0,Spotify,Windows,SWE 2,35.4
+Kenneth,Leonard ,2,tabs,9,pyCharm,C,Antarctica,4,Snapchat,MacOS,Senior Engineer,30.8
+Maxwell,Richardson ,1,tabs,8,Vim,Javascript,Antarctica,0,Spotify,Windows,SWE 2,25.1
+Wilder,Thornton ,10,spaces,14,VSCode,C#,Antarctica,3,Uber,MacOS,Senior Engineer,28.4
+Grace,Heath ,3,tabs,7,Eclipse,Java,Antarctica,2,Spotify,Windows,SWE 1,32
+Lincoln,Cantrell ,8,tabs,5,Visual Studio,Python,Antarctica,0,Twitter,MacOS,Principal Engineer,31.9
+Harrison,Conway ,9,spaces,17,VSCode,C,Africa,0,Microsoft,Windows,SWE 2,32.3
+Rocco,Wiley ,0,tabs,9,Intellij,C,Africa,2,Apple,Windows,SWE 1,30.1
+Brooklynn,Guzman ,5,tabs,7,Eclipse,Javascript,Antarctica,0,Instagram,Windows,SWE 1,32.3
+Rhett,Gutierrez ,8,spaces,16,Visual Studio,Java,North America,0,Snapchat,Windows,SWE 1,29.7
+Tatum,Delarosa ,6,tabs,6,VSCode,C#,Europe,3,Facebook,Windows,SWE 1,34.5
+Zuri,Woodward ,6,spaces,15,Intellij,C++,Europe,0,Google,Linux,Principal Engineer,34.5
+Edgar,Landry ,5,spaces,18,pyCharm,Python,Antarctica,0,Twitter,Windows,SWE 2,37.4
+Winter,Roman ,8,spaces,16,Visual Studio,GO,Europe,0,Instagram,Windows,SWE 2,31.6
+Nasir,Cantu ,8,spaces,19,VSCode,Java,North America,3,Google,Windows,SWE 1,32.3
+Palmer,Schaefer ,5,spaces,15,XCode,Python,Antarctica,0,Uber,Windows,SWE 1,32.5
+Noa,Shepherd ,9,tabs,8,Emacs,PHP,Antarctica,1,Twitter,Linux,Principal Engineer,33.7
+Michael,Luna ,6,spaces,15,Visual Studio,Python,North America,0,Google,Windows,SWE 1,32.2
+Kash,Kennedy ,2,tabs,6,Visual Studio,C++,Antarctica,3,Netflix,Linux,Distinguished Engineer,32.1
+Makenna,Mcintyre ,3,spaces,18,VSCode,Python,Antarctica,0,Uber,Windows,SWE 2,36.1
+Daniela,Eaton ,2,tabs,7,XCode,Python,Antarctica,0,Spotify,Windows,SWE 1,29.8
+Mira,Flowers ,6,spaces,18,Emacs,Java,Antarctica,2,Apple,Windows,SWE 2,27.7
+Sabrina,Elliott ,3,spaces,16,Emacs,Python,Antarctica,2,Uber,Windows,SWE 2,37.1
+Santiago,Hail ,4,tabs,6,VSCode,Python,Antarctica,0,Amazon,MacOS,Senior Engineer,31.1
+Amanda,Doyle ,3,tabs,6,VSCode,C#,Africa,0,Uber,Windows,SWE 2,37.3
+Julia,Rowland ,3,tabs,8,pyCharm,Python,Africa,0,Spotify,MacOS,Principal Engineer,31.5
+Marlee,Garrison ,8,spaces,19,Visual Studio,C,Antarctica,2,Amazon,Windows,SWE 2,28.6
+Leland,Barnes ,7,spaces,15,Visual Studio,C++,Antarctica,0,Uber,Windows,SWE 1,29
+Israel,Watts ,1,spaces,14,Visual Studio,C++,Antarctica,0,Amazon,Windows,SWE 2,28.3
+Noel,Nixon ,9,tabs,7,Eclipse,Javascript,Africa,0,Apple,Windows,SWE 2,26.1
+John,O?Connor ,2,tabs,8,Emacs,Java,Africa,0,Instagram,MacOS,Principal Engineer,31.4
+Ava,Chung ,3,tabs,8,Emacs,Java,North America,0,Apple,Windows,SWE 1,33
+Ashley,Marshall ,8,tabs,6,VSCode,Java,North America,0,Instagram,Windows,SWE 1,31
+Luciana,Palmer ,5,spaces,14,VSCode,Javascript,Africa,0,Instagram,MacOS,Senior Engineer,37.3
+Ember,Barnett ,7,spaces,16,Visual Studio,Python,North America,0,Microsoft,Windows,SWE 1,29.3
+Rose,Peters ,7,tabs,5,Visual Studio,R,Europe,0,Instagram,MacOS,Senior Engineer,34.4
+Jesus,Massey ,3,tabs,7,XCode,Swift,Antarctica,0,Netflix,MacOS,Senior Engineer,40.2
+Dominick,Farley ,1,spaces,16,Visual Studio,R,Antarctica,0,Spotify,MacOS,Senior Engineer,34.5
+Paige,Nolan ,3,tabs,6,XCode,Java,North America,0,Instagram,Linux,Principal Engineer,37.2
+Kaylee,Nu¤ez ,4,spaces,16,Visual Studio,R,Antarctica,0,Uber,Windows,SWE 2,41.2
+Emerson,Huffman ,4,spaces,19,XCode,Javascript,Antarctica,3,Instagram,MacOS,Principal Engineer,43.6
+Parker,Hurst ,5,tabs,7,XCode,Python,Africa,0,Twitter,MacOS,Senior Engineer,37.9
+Kimberly,Knapp ,8,tabs,9,pyCharm,C#,Antarctica,1,Netflix,Windows,SWE 1,30.1
+Diego,Boyd ,6,spaces,16,Intellij,Python,North America,5,Uber,MacOS,Senior Engineer,29.5
+Armani,Francis ,2,tabs,6,VSCode,Python,Antarctica,0,Spotify,MacOS,Principal Engineer,32.8
+Abel,Greene ,1,spaces,13,Visual Studio,Python,Asia,3,Microsoft,MacOS,Principal Engineer,35.4
+Jasper,Stark ,8,spaces,17,XCode,C++,Asia,0,Snapchat,Linux,Principal Engineer,33.3
+Logan,Cortes ,10,spaces,16,XCode,Python,Antarctica,0,Amazon,Windows,SWE 2,31.1
+Frances,Bullock ,2,tabs,6,VSCode,C,Antarctica,0,Facebook,Windows,SWE 1,33.8
+Ayla,Hansen ,7,tabs,6,Visual Studio,C++,Antarctica,2,Instagram,Windows,SWE 1,33.1
+Ada,Welch ,6,tabs,7,Eclipse,Python,Antarctica,3,Uber,Linux,Principal Engineer,34.1
+Bailey,Byrd ,4,tabs,7,XCode,Python,Antarctica,1,Snapchat,MacOS,Senior Engineer,40.4
+Esther,Booker ,2,tabs,7,XCode,Javascript,Antarctica,0,Instagram,Linux,Distinguished Engineer,32.5
+Maverick,Meadows ,9,spaces,17,Visual Studio,Python,Antarctica,4,Twitter,Windows,SWE 1,29.3
+Ayla,Dominguez ,1,tabs,8,Vim,Javascript,Antarctica,0,Twitter,MacOS,Senior Engineer,34.5
+Leonel,Watts ,9,spaces,17,XCode,Python,Antarctica,0,Microsoft,Windows,SWE 1,35.5
+Addilyn,Mendoza ,0,tabs,8,Emacs,C,Antarctica,0,Twitter,MacOS,Senior Engineer,34.5
+Phoenix,Lara ,6,tabs,8,Emacs,C#,Asia,0,Apple,Windows,SWE 2,28.1
+Malachi,Waller ,1,spaces,16,XCode,C#,Antarctica,0,Netflix,Linux,Distinguished Engineer,32.2
+Kailani,Cross ,0,tabs,7,XCode,Python,Antarctica,2,Twitter,MacOS,Senior Engineer,27.7
+Colton,Thomas ,2,spaces,18,Visual Studio,PHP,Antarctica,2,Spotify,MacOS,Principal Engineer,27.8
+Cali,Robinson ,1,spaces,15,Visual Studio,PHP,Antarctica,2,Snapchat,MacOS,Senior Engineer,29
+Dylan,Hahn ,5,spaces,18,VSCode,C#,Antarctica,0,Microsoft,Linux,Principal Engineer,38.2
+Lily,Gallagher ,7,spaces,17,Visual Studio,Python,Europe,0,Spotify,Windows,SWE 2,34.3
+Jolene,Carson ,6,spaces,11,Vim,PHP,North America,0,Snapchat,MacOS,Senior Engineer,28.5
+Ashton,Vega ,5,spaces,16,Vim,Swift,Africa,0,Uber,Windows,SWE 2,41.4
+Braylen,Wall ,1,tabs,7,Eclipse,Python,Antarctica,0,Uber,Windows,SWE 2,29.3
+Nayeli,Adkins ,7,tabs,7,XCode,Python,Antarctica,4,Facebook,Windows,SWE 1,30
+Lucille,Lowery ,0,tabs,9,Intellij,C,Antarctica,1,Uber,Windows,SWE 2,34.4
+Gabriela,Alvarez ,3,tabs,7,XCode,C++,Antarctica,0,Facebook,MacOS,Principal Engineer,39.2
+Royce,Goodwin ,2,tabs,9,pyCharm,Python,Antarctica,1,Twitter,Windows,SWE 2,30.9
+Kaitlyn,Huber ,2,tabs,5,Visual Studio,C,North America,0,Facebook,Linux,Distinguished Engineer,28.7
+Valerie,Conrad ,5,tabs,7,Eclipse,C,Antarctica,0,Facebook,Windows,SWE 2,39
+Cataleya,Taylor ,5,tabs,6,VSCode,C++,Antarctica,4,Amazon,MacOS,Senior Engineer,40.4
+Journee,Wade ,3,spaces,17,Visual Studio,PHP,Antarctica,0,Uber,Windows,SWE 1,42.4
+Nia,Hampton ,6,tabs,7,XCode,Python,Antarctica,0,Facebook,Windows,SWE 1,34.3
+Ryleigh,Kelley ,4,tabs,8,Emacs,C#,Antarctica,4,Spotify,Linux,Principal Engineer,39.5
+Ava,Francis ,1,tabs,8,Vim,PHP,Africa,0,Snapchat,Linux,Distinguished Engineer,29.5
+Raelynn,Mccall ,7,spaces,17,VSCode,R,Antarctica,0,Netflix,Windows,SWE 1,37.2
+Sterling,Carlson ,6,tabs,6,VSCode,R,Africa,3,Uber,Linux,Principal Engineer,34.2
+Danielle,Cline ,2,tabs,6,VSCode,Java,North America,0,Google,Linux,Distinguished Engineer,30.6
+Porter,Mitchell ,5,tabs,5,Visual Studio,Javascript,Europe,0,Apple,Linux,Principal Engineer,36.7
+Autumn,Finley ,4,tabs,6,Visual Studio,Java,Antarctica,2,Spotify,MacOS,Senior Engineer,34
+Willow,?vila ,2,tabs,9,pyCharm,C#,North America,0,Snapchat,MacOS,Principal Engineer,31.3
+Arya,Harris ,4,spaces,17,VSCode,Python,Africa,0,Instagram,Linux,Principal Engineer,33.2
+Elise,Tanner ,5,tabs,9,pyCharm,C#,Europe,0,Apple,Windows,SWE 2,34.5
+Bryson,Lucero ,4,tabs,6,XCode,Java,Africa,1,Instagram,Linux,Principal Engineer,43.8
+Parker,Berg ,5,spaces,13,Eclipse,Javascript,North America,3,Apple,MacOS,Senior Engineer,37.2
+Lilly,Peralta ,2,tabs,6,Visual Studio,Python,Antarctica,2,Twitter,Linux,Distinguished Engineer,27.6
+Noa,Greer ,5,spaces,16,Visual Studio,Python,Antarctica,0,Uber,MacOS,Senior Engineer,37.6
+Noa,White ,7,spaces,19,Visual Studio,C++,North America,0,Uber,Windows,SWE 1,38.2
+Andrea,Harris ,8,spaces,19,Eclipse,Java,North America,0,Twitter,Windows,SWE 2,33.7
+Muhammad,Rocha ,9,tabs,6,VSCode,Python,Europe,2,Microsoft,MacOS,Senior Engineer,36.4
+Gideon,Mcclain ,4,tabs,7,Eclipse,PHP,North America,3,Facebook,Windows,SWE 2,37.3
+Angela,Crane ,3,tabs,8,Emacs,C,Europe,0,Spotify,MacOS,Senior Engineer,51
+Blair,Ortiz ,6,spaces,16,Visual Studio,Java,Africa,0,Amazon,MacOS,Principal Engineer,40.6
+Elijah,Coleman ,3,tabs,6,VSCode,Java,Antarctica,0,Netflix,Linux,Distinguished Engineer,38.8
+Kailani,Lynn ,1,tabs,7,Eclipse,Java,Antarctica,0,Spotify,MacOS,Principal Engineer,33.1
+Kyson,Nixon ,3,spaces,17,VSCode,Java,Antarctica,0,Netflix,MacOS,Principal Engineer,34.2
+Journee,Wang ,10,spaces,17,pyCharm,C++,Antarctica,0,Google,Windows,SWE 1,35.5
+Oaklynn,Vaughn ,7,tabs,8,Vim,C++,North America,0,Amazon,Linux,Principal Engineer,34.9
+Dante,Levy ,8,spaces,20,VSCode,Java,Antarctica,0,Amazon,MacOS,Senior Engineer,33.3
+Paul,Guzman ,6,spaces,15,Visual Studio,C++,Europe,0,Facebook,MacOS,Senior Engineer,37.4
+Tate,O?Connell ,0,spaces,19,Intellij,C,Antarctica,3,Uber,Windows,SWE 1,34.1
+Marco,Jacobs ,6,tabs,6,VSCode,Java,Antarctica,0,Apple,MacOS,Senior Engineer,35.2
+Jasper,Barnett ,6,spaces,19,Visual Studio,C++,Antarctica,0,Apple,Linux,Principal Engineer,38.4
+Margaret,Ryan ,5,tabs,5,Visual Studio,C++,North America,0,Instagram,MacOS,Senior Engineer,33.8
+Rosie,Pruitt ,2,tabs,9,Intellij,PHP,North America,0,Uber,Windows,SWE 2,30
+Stephen,Watson ,5,spaces,19,Visual Studio,Java,Antarctica,0,Facebook,MacOS,Senior Engineer,32.9
+Kailani,Roberson ,7,tabs,6,VSCode,Javascript,North America,0,Apple,MacOS,Senior Engineer,36.2
+Briggs,Edwards ,9,spaces,19,Vim,Javascript,Europe,0,Amazon,Windows,SWE 1,35.5
+Cohen,Duarte ,4,tabs,8,pyCharm,C#,Antarctica,2,Uber,Windows,SWE 1,34.6
+Rosalie,Blair ,10,tabs,9,Intellij,R,Antarctica,0,Twitter,Windows,Senior Engineer,33.2
+Franklin,Haley ,9,spaces,14,Visual Studio,GO,North America,3,Spotify,Windows,SWE 2,28.7
+Maisie,Ali ,6,spaces,16,Visual Studio,Javascript,Antarctica,0,Apple,Windows,SWE 2,36
+Leona,Wall ,3,tabs,5,Visual Studio,C#,Antarctica,0,Spotify,Linux,Principal Engineer,35.4
+Leila,Acevedo ,5,spaces,18,Visual Studio,R,Antarctica,0,Spotify,Windows,SWE 2,37
+Emily,Medrano ,0,tabs,7,XCode,C,Antarctica,0,Amazon,Linux,Distinguished Engineer,28.1
+Josiah,Woodward ,10,spaces,18,XCode,Java,Africa,0,Microsoft,MacOS,Principal Engineer,30
+Athena,Patrick ,2,spaces,18,VSCode,C++,Antarctica,0,Uber,MacOS,Senior Engineer,29.1
+Edward,Wyatt ,3,tabs,8,Emacs,C#,Asia,4,Netflix,MacOS,Senior Engineer,38
+Damian,Delgado ,0,spaces,15,XCode,C,Antarctica,0,Amazon,Linux,Distinguished Engineer,34.3
+Harmony,Bartlett ,1,tabs,7,Eclipse,C,Antarctica,2,Spotify,MacOS,Principal Engineer,28.5
+Caiden,Cain ,2,tabs,8,Eclipse,C#,Antarctica,0,Facebook,MacOS,Principal Engineer,32.3
+Myles,Zimmerman ,5,tabs,7,Eclipse,R,North America,1,Snapchat,Windows,SWE 2,35.6
+Silas,Wyatt ,4,tabs,8,pyCharm,Javascript,North America,0,Netflix,Windows,SWE 2,35
+Ronin,Doyle ,2,tabs,8,Emacs,Java,North America,0,Facebook,MacOS,Principal Engineer,32.7
+Samuel,Mcmillan ,1,tabs,7,XCode,C#,Antarctica,3,Netflix,Windows,SWE 1,30
+Cecilia,Moran ,5,tabs,8,pyCharm,C,Antarctica,0,Netflix,MacOS,Senior Engineer,32.2
+Rory,Bonilla ,2,spaces,15,Visual Studio,Java,Antarctica,0,Facebook,MacOS,Senior Engineer,32.3
+Winter,Herrera ,8,spaces,19,Intellij,Javascript,Africa,0,Twitter,Windows,Senior Engineer,33.2
+Roberto,Callahan ,3,tabs,7,Eclipse,R,Antarctica,0,Uber,MacOS,Senior Engineer,35.2
+Nicholas,Reed ,8,spaces,19,Visual Studio,Javascript,Asia,4,Spotify,MacOS,Senior Engineer,32.1
+Jade,Hamilton ,0,tabs,6,Visual Studio,R,Asia,3,Spotify,Windows,SWE 2,34.3
+Everlee,Benitez ,2,tabs,6,VSCode,Java,Europe,0,Instagram,Windows,SWE 2,32.2
+Valerie,Powers ,10,tabs,6,VSCode,C,Africa,0,Instagram,Windows,SWE 1,30.3
+Mateo,Garrett ,6,tabs,7,Eclipse,C#,Antarctica,0,Microsoft,Windows,SWE 2,37.4
+Griffin,Ruiz ,5,spaces,14,Emacs,GO,Africa,1,Uber,Windows,SWE 2,24
+Santino,Brennan ,8,spaces,16,Intellij,Javascript,Europe,0,Instagram,MacOS,Principal Engineer,29.8
+Cassius,Bartlett ,2,tabs,6,XCode,C,Antarctica,0,Google,MacOS,Senior Engineer,31.1
+Ricardo,Swanson ,3,tabs,7,XCode,C#,Antarctica,0,Spotify,Windows,SWE 2,37.6
+Sadie,Pennington ,3,spaces,17,XCode,R,Antarctica,0,Instagram,Windows,SWE 2,36.7
+Eden,Gutierrez ,7,spaces,17,VSCode,Python,Antarctica,4,Microsoft,Windows,SWE 1,39.4
+Eliana,?vila ,5,tabs,6,XCode,Python,Asia,0,Microsoft,Windows,SWE 2,36.5
+Alani,Olsen ,2,spaces,17,Visual Studio,Python,North America,0,Snapchat,Windows,SWE 2,28.8
+Sadie,Mahoney ,8,spaces,15,Visual Studio,Javascript,Antarctica,1,Google,Windows,Senior Engineer,30.5
+Prince,Ferguson ,3,tabs,6,VSCode,Python,Antarctica,0,Facebook,MacOS,Senior Engineer,36.8
+Asher,Robinson ,8,spaces,16,Visual Studio,C#,Antarctica,1,Google,Windows,SWE 2,30.6
+Orion,Kaur ,6,tabs,8,Emacs,C++,Africa,0,Amazon,MacOS,Senior Engineer,36.5
+Ava,Sellers ,8,spaces,18,VSCode,C#,Antarctica,0,Uber,Linux,Principal Engineer,33.2
+Madison,Guzman ,2,tabs,8,Vim,C++,Antarctica,0,Instagram,MacOS,Principal Engineer,29.5
+Averie,Hinton ,4,tabs,6,Visual Studio,Python,Antarctica,0,Instagram,MacOS,Principal Engineer,23.9
+Cooper,Glover ,7,spaces,16,Visual Studio,C#,North America,0,Netflix,Windows,SWE 1,33.7
+Elliot,Schneider ,7,spaces,18,XCode,Swift,Antarctica,0,Uber,Windows,SWE 1,31
+Corbin,Hernandez ,7,tabs,9,Intellij,C#,Asia,3,Netflix,MacOS,Senior Engineer,30.2
+Logan,Contreras ,0,tabs,6,VSCode,Python,Antarctica,0,Instagram,Linux,Distinguished Engineer,37.2
+Aidan,Crawford ,2,tabs,6,VSCode,C,Antarctica,0,Twitter,Windows,SWE 2,29.6
+Kolton,Solis ,1,spaces,17,Visual Studio,PHP,Antarctica,0,Apple,Windows,SWE 1,34.2
+Lyla,Barker ,4,spaces,16,Visual Studio,Python,Antarctica,0,Snapchat,MacOS,Principal Engineer,37
+Daniela,Armstrong ,1,tabs,8,pyCharm,C#,Antarctica,0,Spotify,MacOS,Principal Engineer,38.2
+Jeremy,Combs ,1,tabs,7,Eclipse,Python,Asia,0,Apple,Linux,Distinguished Engineer,40.6
+Lucca,Parrish ,8,spaces,19,Visual Studio,Python,Antarctica,2,Amazon,Windows,SWE 2,30.7
+Leo,Quintana ,7,spaces,13,Visual Studio,PHP,North America,2,Snapchat,Linux,Principal Engineer,31.5
+Finnegan,Ponce ,6,tabs,8,Vim,Python,Europe,0,Google,Windows,SWE 1,40.8
+Kane,Pe¤a ,1,tabs,8,Vim,PHP,North America,4,Apple,Linux,Distinguished Engineer,34.9
+Stella,Mccann ,10,spaces,15,XCode,PHP,Antarctica,0,Apple,MacOS,Senior Engineer,35.4
+Sofia,Perez ,3,tabs,6,VSCode,Java,Antarctica,1,Twitter,Windows,SWE 1,39.8
+Dawson,Bryant ,6,tabs,6,Visual Studio,Python,Africa,0,Google,Linux,Principal Engineer,34.2
+Angel,Patel ,2,tabs,6,XCode,Python,Antarctica,0,Uber,Linux,Distinguished Engineer,32.2
+Lennon,Parker ,5,spaces,12,Visual Studio,R,Africa,1,Snapchat,Windows,SWE 1,37.6
+Remington,Andrade ,7,tabs,7,XCode,Python,Antarctica,0,Uber,Windows,SWE 2,34.6
+Alison,Marks ,5,spaces,16,Intellij,Python,Antarctica,0,Spotify,Windows,SWE 2,27.1
+Jordyn,Beasley ,5,spaces,15,pyCharm,Python,Antarctica,0,Facebook,Windows,SWE 2,34.6
+Dante,Campos ,5,tabs,7,XCode,C++,Antarctica,0,Apple,MacOS,Senior Engineer,37.5
+Grace,Dudley ,2,spaces,17,Intellij,Swift,Antarctica,0,Spotify,Windows,SWE 1,29.7
+Taylor,Mueller ,6,tabs,7,Eclipse,C#,North America,1,Twitter,Linux,Distinguished Engineer,34.3
+Nash,Gates ,1,tabs,8,Emacs,Python,Africa,0,Instagram,MacOS,Senior Engineer,37.4
+Troy,Stevens ,6,spaces,16,Visual Studio,C++,Antarctica,0,Apple,MacOS,Senior Engineer,48
+Bryce,Savage ,9,spaces,16,Eclipse,Swift,Antarctica,2,Google,Windows,SWE 2,30.5
+Tatum,Solis ,2,spaces,19,Visual Studio,Python,Asia,0,Uber,MacOS,Senior Engineer,31.6
+Rebecca,Villanueva ,7,spaces,14,VSCode,Python,North America,1,Instagram,Linux,Principal Engineer,35.8
+Karter,Owens ,7,spaces,14,XCode,PHP,Europe,0,Apple,Windows,SWE 2,31.2
+Louis,Soto ,8,spaces,16,VSCode,Python,Africa,0,Uber,Windows,SWE 1,32.6
+Lydia,Nelson ,4,spaces,18,Visual Studio,Javascript,North America,3,Facebook,MacOS,Principal Engineer,34.9
+Aubree,Burns ,5,spaces,16,Visual Studio,Swift,Antarctica,0,Spotify,Windows,SWE 2,38.4
+Gunner,Ward ,6,spaces,14,Visual Studio,PHP,Asia,5,Apple,Windows,SWE 2,30.8
+Sara,Butler ,4,tabs,8,Eclipse,C++,Antarctica,1,Spotify,Windows,SWE 2,44.1
+Patrick,Estes ,9,tabs,6,VSCode,C,North America,0,Spotify,Windows,SWE 2,34.1
+Finley,Mcbride ,9,spaces,14,Visual Studio,C++,Antarctica,0,Netflix,Windows,Senior Engineer,35.1
+Leilani,Payne ,0,spaces,15,Visual Studio,Python,Antarctica,0,Twitter,Windows,SWE 2,35.2
+Cecilia,Wall ,0,tabs,5,Visual Studio,C,Africa,0,Snapchat,MacOS,Principal Engineer,38.4
+Riley,Hurst ,3,tabs,8,Emacs,C#,Asia,1,Netflix,Linux,Distinguished Engineer,34.8
+Leia,Andrews ,4,spaces,15,Vim,C,Antarctica,0,Spotify,MacOS,Senior Engineer,40.5
+Melody,Valentine ,9,spaces,11,VSCode,Python,Asia,0,Apple,Windows,SWE 1,29.1
+Kali,Norman ,1,spaces,17,Intellij,C,Antarctica,0,Snapchat,MacOS,Principal Engineer,36.2
+Reid,Blanchard ,5,spaces,18,Visual Studio,Java,Africa,0,Uber,MacOS,Senior Engineer,36.9
+Blake,Wilkerson ,9,spaces,16,Visual Studio,C#,Europe,1,Instagram,MacOS,Principal Engineer,35.3
+Poppy,Parks ,3,tabs,9,Intellij,Python,Antarctica,0,Spotify,Linux,Distinguished Engineer,34.3
+Elsie,Spencer ,3,tabs,6,VSCode,PHP,North America,0,Instagram,Windows,Senior Engineer,29.2
+Felix,Buckley ,5,tabs,8,Eclipse,Python,Africa,0,Facebook,Windows,SWE 1,36.5
+Allison,David ,4,tabs,7,Eclipse,Java,Antarctica,0,Uber,Windows,SWE 2,38.4
+Kamden,Landry ,3,tabs,7,XCode,Java,Antarctica,0,Instagram,Linux,Distinguished Engineer,39.6
+Rhys,Parrish ,9,spaces,14,Emacs,R,Antarctica,0,Netflix,Windows,SWE 1,29.5
+Emily,Combs ,2,spaces,15,pyCharm,PHP,North America,2,Microsoft,MacOS,Senior Engineer,32.1
+Harper,Harvey ,7,tabs,6,VSCode,C,North America,0,Apple,Linux,Principal Engineer,29.9
+Leilani,Gentry ,7,spaces,20,Eclipse,Python,Antarctica,5,Google,Windows,SWE 1,31.6
+Jonah,Cooper ,5,tabs,9,pyCharm,C++,Africa,0,Instagram,MacOS,Senior Engineer,39
+Miriam,Donaldson ,10,tabs,5,Visual Studio,R,Africa,0,Twitter,Linux,Principal Engineer,31
+Jeffrey,O?Donnell ,7,tabs,8,pyCharm,Python,Antarctica,0,Snapchat,Windows,SWE 2,32.4
+Gianni,Curry ,5,tabs,5,Visual Studio,Python,North America,0,Spotify,MacOS,Principal Engineer,25.3
+Kali,Waters ,8,tabs,8,Eclipse,Java,Europe,0,Amazon,Linux,Principal Engineer,33.1
+Eliana,Mcgee ,4,tabs,5,Visual Studio,Javascript,Africa,0,Google,Linux,Distinguished Engineer,33.8
+Vincent,Guerra ,0,spaces,18,pyCharm,PHP,Antarctica,0,Apple,Windows,SWE 2,36
+Kashton,Nixon ,6,spaces,16,Visual Studio,Java,Africa,0,Apple,Windows,SWE 2,34
+Charlie,Crosby ,10,tabs,5,Visual Studio,Java,Antarctica,0,Uber,Windows,Senior Engineer,35.3
+Orion,Compton ,7,spaces,16,Visual Studio,C++,Antarctica,2,Snapchat,Linux,Principal Engineer,35
+Cesar,Reynolds ,1,tabs,6,VSCode,C,Antarctica,4,Uber,MacOS,Senior Engineer,37.4
+Kaitlyn,Phelps ,5,tabs,5,Visual Studio,Python,Antarctica,0,Netflix,Linux,Principal Engineer,29.9
+Lilah,Flynn ,4,spaces,14,Vim,PHP,Antarctica,0,Spotify,Windows,SWE 2,35.8
+Everly,Vaughn ,5,tabs,7,XCode,Swift,Antarctica,0,Uber,Windows,SWE 2,36.1
+Edward,Cantu ,7,tabs,8,Vim,PHP,Antarctica,0,Microsoft,MacOS,Senior Engineer,32.6
+Celine,Ware ,0,spaces,16,Vim,C,Antarctica,0,Instagram,MacOS,Principal Engineer,39.4
+Emery,Hodge ,9,spaces,13,pyCharm,Python,Europe,0,Twitter,MacOS,Principal Engineer,38.2
+Silas,Bautista ,4,spaces,19,VSCode,Java,Antarctica,0,Facebook,Linux,Principal Engineer,30.5
+Ariana,Meyer ,5,spaces,13,Visual Studio,R,Africa,0,Snapchat,Windows,SWE 2,34.6
+Vincent,Knapp ,1,tabs,7,Eclipse,Java,Antarctica,0,Apple,MacOS,Principal Engineer,36.5
+Matilda,Cunningham ,1,tabs,7,Eclipse,Python,Antarctica,1,Apple,Windows,SWE 1,33.7
+Owen,Farmer ,7,spaces,13,Eclipse,Java,North America,0,Amazon,Windows,SWE 1,32
+Zander,Perkins ,4,spaces,15,Visual Studio,C,Antarctica,4,Twitter,MacOS,Senior Engineer,35.3
+Phoenix,Boyer ,5,tabs,6,Visual Studio,C++,Europe,0,Netflix,Linux,Principal Engineer,34
+Beckett,Graves ,6,tabs,8,Eclipse,C#,Europe,0,Instagram,Windows,SWE 1,29.2
+Kashton,Rhodes ,9,spaces,16,Visual Studio,C#,Africa,4,Snapchat,Windows,SWE 2,35.2
+Erik,Villa ,4,tabs,5,Visual Studio,Javascript,Antarctica,0,Microsoft,MacOS,Senior Engineer,44.6
+Jase,Adkins ,9,spaces,15,Intellij,Java,Europe,0,Snapchat,Linux,Principal Engineer,39.2
+Briella,Lozano ,8,spaces,18,Eclipse,Java,Africa,2,Facebook,Windows,Senior Engineer,30
+Axel,Day ,6,tabs,6,VSCode,Python,Europe,4,Microsoft,Windows,SWE 2,32.2
+Jane,Medina ,9,spaces,17,Intellij,Javascript,Antarctica,0,Twitter,MacOS,Senior Engineer,41.6
+Hadley,Cardenas ,4,tabs,6,VSCode,Javascript,Antarctica,0,Uber,Linux,Principal Engineer,39.9
+Bella,Stanton ,3,tabs,6,VSCode,C#,Antarctica,2,Facebook,MacOS,Senior Engineer,36.1
+Miguel,Shepard ,4,spaces,14,Visual Studio,Python,Africa,0,Microsoft,Linux,Principal Engineer,43.8
+Evangeline,Macias ,2,tabs,7,Eclipse,C,Antarctica,0,Apple,Linux,Distinguished Engineer,29
+Scarlet,Phillips ,9,spaces,17,Visual Studio,C,Antarctica,3,Twitter,Windows,SWE 1,35.9
+Logan,Molina ,2,tabs,7,XCode,Java,North America,3,Uber,Windows,SWE 2,32.1
+Alejandro,Gibson ,1,tabs,6,VSCode,C,Asia,0,Facebook,MacOS,Principal Engineer,31
+Autumn,Mcfarland ,2,tabs,7,Eclipse,Python,Antarctica,0,Instagram,Windows,SWE 2,29.3
+Elliott,Molina ,7,spaces,14,Eclipse,Python,North America,3,Microsoft,Linux,Principal Engineer,21
+Carter,Orr ,4,spaces,12,VSCode,R,Antarctica,3,Microsoft,MacOS,Senior Engineer,32.4
+Meadow,Parker ,0,tabs,7,XCode,Python,Asia,0,Spotify,Linux,Principal Engineer,30.2
+Elizabeth,Taylor ,6,tabs,5,Visual Studio,C#,Antarctica,0,Microsoft,Windows,SWE 1,34.6
+Aidan,Mullins ,3,tabs,8,Vim,Java,Antarctica,4,Apple,Linux,Distinguished Engineer,42.4
+Warren,Palacios ,1,spaces,17,XCode,C#,Antarctica,1,Uber,Windows,SWE 2,31.5
+Cairo,Schneider ,8,spaces,18,Eclipse,PHP,North America,3,Uber,Windows,SWE 2,33.1
+Rose,Young ,3,tabs,7,Eclipse,C++,Africa,0,Spotify,Linux,Distinguished Engineer,33.5
+Emmanuel,Rosas ,7,tabs,6,Visual Studio,PHP,Europe,0,Amazon,MacOS,Senior Engineer,33.7
+Roman,Baxter ,5,spaces,20,Visual Studio,Java,Europe,0,Instagram,MacOS,Senior Engineer,28.2
+Ophelia,Harvey ,6,spaces,14,Visual Studio,Java,Africa,0,Spotify,Windows,SWE 1,33.5
+Gracelynn,Bowen ,7,tabs,7,XCode,R,North America,0,Uber,Windows,SWE 1,33.8
+Ember,Foster ,3,tabs,7,XCode,Javascript,Africa,0,Snapchat,Linux,Distinguished Engineer,40.4
+Kora,Buckley ,8,spaces,15,VSCode,Java,Antarctica,0,Apple,MacOS,Principal Engineer,30.3
+Johnathan,Whitehead ,3,spaces,17,Visual Studio,PHP,Antarctica,0,Google,Windows,SWE 2,35.6
+Selena,Friedman ,1,tabs,6,VSCode,PHP,Asia,0,Spotify,MacOS,Senior Engineer,40.8
+Alex,Olson ,9,spaces,15,pyCharm,C,Antarctica,0,Microsoft,MacOS,Principal Engineer,38.4
+Amari,Horne ,5,spaces,18,Vim,Swift,Antarctica,0,Snapchat,MacOS,Senior Engineer,35.3
+Keira,Wagner ,4,spaces,13,VSCode,R,North America,4,Uber,Windows,SWE 2,43
+Anthony,Mcpherson ,2,tabs,6,XCode,PHP,Antarctica,0,Facebook,MacOS,Principal Engineer,30
+Luis,Blankenship ,9,spaces,14,Visual Studio,C++,Antarctica,3,Uber,Windows,Senior Engineer,36.2
+Sofia,Ray ,6,tabs,7,XCode,Swift,Europe,3,Snapchat,MacOS,Principal Engineer,20.9
+Cecilia,Donovan ,6,tabs,7,XCode,Java,Africa,0,Amazon,MacOS,Senior Engineer,34
+Zane,Bates ,2,spaces,16,Intellij,C#,Asia,0,Uber,Linux,Distinguished Engineer,32.1
+Dallas,Garza ,1,tabs,7,XCode,R,Asia,2,Facebook,Windows,Senior Engineer,34.2
+Connor,Casey ,0,tabs,6,VSCode,C#,Antarctica,0,Uber,Windows,SWE 2,34.6
+Finley,Austin ,2,tabs,7,Eclipse,C,North America,1,Netflix,MacOS,Principal Engineer,33.6
+Alexandria,Whitney ,8,spaces,18,Visual Studio,Java,Asia,0,Apple,Windows,Senior Engineer,31
+Cohen,Hayes ,7,spaces,18,Visual Studio,Java,Antarctica,0,Uber,Windows,SWE 2,36.8
+Eleanor,Fitzpatrick ,7,tabs,8,Vim,R,Asia,2,Twitter,Windows,SWE 1,34.6
+Jason,Nu¤ez ,6,spaces,16,Visual Studio,R,Africa,0,Facebook,MacOS,Senior Engineer,24.1
+Ari,Ryan ,3,tabs,8,pyCharm,C++,Antarctica,0,Microsoft,Linux,Distinguished Engineer,38.6
+Aubree,Green ,7,tabs,9,pyCharm,PHP,North America,0,Spotify,Linux,Principal Engineer,31.6
+Nehemiah,Schmidt ,0,tabs,7,XCode,C,Antarctica,0,Spotify,Windows,SWE 1,34.3
+Kyrie,Salazar ,8,spaces,19,Visual Studio,C++,Africa,0,Instagram,Linux,Principal Engineer,33.1
+Alaina,Hall ,5,spaces,19,VSCode,C#,Asia,1,Instagram,Windows,SWE 2,32.8
+Kashton,Spencer ,3,tabs,6,XCode,Java,Asia,0,Snapchat,MacOS,Principal Engineer,41.5
+Ryan,Ballard ,3,tabs,8,Eclipse,Python,Antarctica,1,Microsoft,Windows,SWE 2,32.6
+Gunner,Lawson ,8,tabs,6,VSCode,C,North America,0,Uber,Windows,Senior Engineer,34.6
+Kayson,Fleming ,7,tabs,5,Visual Studio,Javascript,North America,5,Twitter,Windows,SWE 2,34.5
+Evelynn,Atkinson ,2,tabs,6,VSCode,Java,North America,0,Snapchat,Linux,Distinguished Engineer,32.1
+Stetson,Daniels ,8,spaces,15,VSCode,Java,Europe,0,Amazon,Windows,Senior Engineer,33.1
+Avery,Wilkinson ,1,tabs,9,Intellij,Python,North America,3,Google,Linux,Distinguished Engineer,48
+Alejandro,Peters ,4,tabs,8,Vim,GO,Antarctica,1,Facebook,MacOS,Senior Engineer,39.6
+Emory,Holloway ,3,spaces,15,pyCharm,Python,Antarctica,1,Facebook,Linux,Distinguished Engineer,35.4
+Jett,Ochoa ,5,tabs,8,pyCharm,Javascript,Africa,1,Snapchat,MacOS,Senior Engineer,39.2
+Paislee,Ramos ,7,tabs,7,Eclipse,Javascript,North America,2,Uber,MacOS,Senior Engineer,31.9
+Santiago,Crosby ,6,tabs,5,Visual Studio,PHP,Antarctica,0,Snapchat,MacOS,Principal Engineer,35.4
+Kian,Cross ,4,spaces,18,Visual Studio,GO,Antarctica,0,Facebook,Linux,Principal Engineer,35.6
+Bryce,Espinosa ,10,spaces,16,Eclipse,Javascript,Antarctica,3,Apple,MacOS,Senior Engineer,39.4
+Hector,Medina ,0,tabs,7,Eclipse,Swift,Antarctica,4,Uber,MacOS,Senior Engineer,35.8
+Kade,Bradshaw ,9,spaces,15,VSCode,C#,Africa,0,Amazon,Windows,SWE 1,37.2
+Dax,Moore ,4,spaces,18,Visual Studio,PHP,Antarctica,0,Uber,MacOS,Senior Engineer,26.9
+Juliana,Baldwin ,9,spaces,16,Eclipse,Javascript,Europe,0,Snapchat,Windows,SWE 2,37
+Brielle,Roman ,0,tabs,8,Eclipse,C#,Antarctica,0,Microsoft,Windows,SWE 1,31.2
+Jaxon,Nu¤ez ,5,spaces,19,Visual Studio,Javascript,Africa,0,Facebook,MacOS,Senior Engineer,29.1
+Preston,Delarosa ,2,tabs,7,Eclipse,PHP,Antarctica,0,Apple,MacOS,Principal Engineer,34.1
+James,Collins ,4,tabs,6,VSCode,Java,Africa,0,Uber,Windows,SWE 2,34.1
+Austin,Diaz ,7,spaces,14,Eclipse,GO,Antarctica,1,Microsoft,MacOS,Senior Engineer,41.1
+Kylie,Glass ,8,spaces,18,Vim,GO,Antarctica,0,Instagram,Windows,SWE 2,35.1
+Leighton,Caldwell ,10,spaces,13,Visual Studio,GO,Europe,0,Twitter,Windows,SWE 2,38.4
+Patrick,Adams ,5,tabs,7,XCode,C#,Africa,0,Uber,MacOS,Principal Engineer,38.2
+Chase,Andrade ,5,tabs,8,Vim,C++,Antarctica,0,Twitter,Windows,SWE 1,31.3
+Lena,Roy ,10,tabs,9,pyCharm,Javascript,Europe,0,Apple,Windows,SWE 2,40.4
+Gavin,Griffith ,7,tabs,6,XCode,C++,Europe,0,Microsoft,Windows,SWE 2,31.8
+Damian,Bradley ,3,spaces,15,Visual Studio,C#,Antarctica,0,Netflix,MacOS,Principal Engineer,34.5
+Alexander,Burns ,4,tabs,9,Intellij,Python,Africa,0,Uber,Linux,Principal Engineer,33.6
+Andrew,Henderson ,8,tabs,9,Intellij,C,Africa,3,Amazon,Windows,Senior Engineer,36.3
+Everly,Saunders ,4,spaces,14,Intellij,Python,Antarctica,0,Facebook,Windows,SWE 1,38.9
+Eden,Strong ,4,tabs,8,Eclipse,C#,Antarctica,0,Spotify,Linux,Principal Engineer,32.5
+Brooklynn,Shelton ,2,spaces,16,Vim,C#,Antarctica,0,Facebook,Windows,SWE 1,35.3
+Anna,Stone ,6,tabs,6,VSCode,Python,Africa,0,Instagram,MacOS,Senior Engineer,37.5
+Sloane,Schultz ,1,tabs,7,XCode,PHP,Africa,0,Uber,Windows,SWE 1,30.8
+Iker,Barker ,1,tabs,5,Visual Studio,PHP,Antarctica,0,Netflix,MacOS,Principal Engineer,29.9
+Joanna,Dodson ,2,tabs,9,Intellij,R,North America,0,Netflix,Windows,SWE 2,32.4
+Karter,Dickson ,7,spaces,17,Intellij,Swift,North America,0,Twitter,Windows,SWE 1,33.9
+Preston,Weiss ,0,tabs,6,VSCode,PHP,Antarctica,0,Uber,Linux,Principal Engineer,31.6
+Kashton,Meyers ,5,tabs,6,VSCode,R,Africa,0,Amazon,Windows,SWE 1,40.9
+Alexa,Harrington ,5,tabs,5,Visual Studio,C#,Antarctica,0,Microsoft,Windows,SWE 2,34.3
+Ezequiel,Howard ,4,spaces,13,Visual Studio,Java,Africa,0,Facebook,Linux,Principal Engineer,34.9
+Zara,Donovan ,6,spaces,14,Intellij,PHP,Antarctica,0,Amazon,MacOS,Senior Engineer,31.3
+Clayton,Byrd ,8,tabs,5,Visual Studio,C#,Europe,4,Spotify,Windows,SWE 2,33.4
+Esmeralda,Patel ,8,spaces,17,Visual Studio,GO,Africa,0,Apple,Windows,SWE 2,34.7
+Valeria,Richardson ,0,tabs,6,VSCode,C#,Africa,0,Uber,MacOS,Principal Engineer,32.4
+Matthias,Hoover ,7,tabs,7,Eclipse,Python,North America,1,Twitter,Windows,SWE 2,26.2
+Adelaide,Hale ,1,spaces,16,Visual Studio,C#,Antarctica,0,Apple,Windows,SWE 2,34
+Francisco,Montgomery ,9,spaces,11,Visual Studio,Python,Africa,1,Microsoft,Windows,SWE 1,37.5
+Peyton,Tate ,6,tabs,7,XCode,Python,North America,1,Microsoft,MacOS,Principal Engineer,33.5
+Thiago,Collier ,3,tabs,6,VSCode,Swift,Antarctica,0,Apple,Windows,SWE 1,37.1
+Annie,Everett ,0,spaces,19,VSCode,Swift,Antarctica,0,Spotify,MacOS,Principal Engineer,35
+Regina,Jordan ,5,tabs,5,Visual Studio,Python,North America,0,Amazon,Windows,SWE 1,34.9
+Christopher,Middleton ,8,spaces,14,Visual Studio,Python,Africa,0,Facebook,Windows,SWE 2,33.6
+Hugo,Wells ,1,tabs,7,XCode,PHP,Antarctica,0,Netflix,Linux,Distinguished Engineer,32.6
+Briella,James ,7,tabs,6,VSCode,Javascript,Europe,0,Instagram,MacOS,Senior Engineer,35.4
+Rhys,Bowen ,2,tabs,8,Emacs,C#,Europe,0,Netflix,MacOS,Senior Engineer,33.7
+Harley,English ,3,tabs,6,VSCode,Java,Antarctica,0,Apple,Windows,SWE 2,27.8
+Emilia,Walters ,1,tabs,8,Emacs,C++,Antarctica,4,Microsoft,MacOS,Principal Engineer,32
+Caroline,Steele ,3,tabs,5,Visual Studio,Java,Europe,0,Twitter,MacOS,Principal Engineer,29.1
+Celeste,Diaz ,4,tabs,6,Visual Studio,C#,Antarctica,0,Snapchat,Windows,SWE 1,39.6
+Royalty,Valenzuela ,3,tabs,9,Intellij,Java,Antarctica,0,Uber,MacOS,Senior Engineer,34.3
+Dylan,Mcmillan ,0,tabs,7,Eclipse,PHP,Antarctica,0,Facebook,Linux,Principal Engineer,29.2
+Amira,Crane ,3,tabs,7,Eclipse,GO,Antarctica,0,Facebook,Linux,Distinguished Engineer,26.2
+Abel,Cline ,5,tabs,8,Emacs,C#,Antarctica,0,Spotify,Windows,SWE 1,31.9
+Ronin,Todd ,1,tabs,6,VSCode,PHP,Asia,0,Instagram,MacOS,Principal Engineer,32.2
+Ezequiel,Allen ,6,tabs,6,XCode,Swift,Asia,0,Microsoft,MacOS,Senior Engineer,36.6
+Cora,Larsen ,8,tabs,6,XCode,C++,Antarctica,0,Amazon,MacOS,Senior Engineer,35.2
+Bennett,Zhang ,8,tabs,8,Vim,Python,Africa,0,Apple,MacOS,Principal Engineer,34.1
+Ayla,Crane ,9,spaces,16,Visual Studio,C#,North America,6,Microsoft,Windows,SWE 1,34.7
+Omari,Rivers ,5,tabs,7,XCode,Python,Antarctica,3,Microsoft,Linux,Principal Engineer,35.2
+Dax,Norton ,7,tabs,6,VSCode,C++,Antarctica,0,Microsoft,Windows,SWE 1,36
+Alina,Matthews ,10,spaces,16,Visual Studio,Swift,North America,0,Amazon,Windows,SWE 1,32
+Peyton,Riley ,7,spaces,13,Visual Studio,C#,North America,0,Apple,Windows,SWE 2,22.3
+Emery,Miles ,7,spaces,16,Intellij,Javascript,Antarctica,0,Snapchat,Windows,SWE 2,30.8
+Emersyn,Klein ,5,spaces,13,Visual Studio,R,Antarctica,2,Twitter,Windows,SWE 1,36
+Emory,Jacobs ,5,spaces,20,Visual Studio,Javascript,Antarctica,0,Instagram,Windows,SWE 1,32
+Danna,Cruz ,8,spaces,18,XCode,C#,Antarctica,0,Microsoft,MacOS,Senior Engineer,34
+Emmett,Zhang ,2,tabs,8,Emacs,Java,Antarctica,0,Snapchat,MacOS,Principal Engineer,32.6
+Cash,Barron ,6,tabs,6,VSCode,R,Asia,0,Uber,Windows,SWE 2,26.9
+Phoebe,Andrews ,1,tabs,8,Emacs,C#,Antarctica,0,Microsoft,Windows,Senior Engineer,21
+Archer,Shepherd ,3,tabs,7,Eclipse,C++,Antarctica,0,Netflix,MacOS,Principal Engineer,36.1
+Nicole,Velazquez ,8,spaces,16,pyCharm,Python,North America,0,Microsoft,MacOS,Principal Engineer,34.7
+Josie,Estrada ,2,tabs,8,Emacs,C#,Antarctica,0,Instagram,Linux,Distinguished Engineer,34.2
+Joy,Hale ,9,spaces,17,Intellij,PHP,Antarctica,3,Google,Linux,Principal Engineer,31.2
+Angela,Taylor ,3,tabs,6,Visual Studio,C++,Antarctica,0,Instagram,Windows,SWE 2,35.5
+Tessa,Herring ,5,tabs,7,XCode,R,Antarctica,0,Google,Windows,SWE 2,35.7
+Alex,Henderson ,8,tabs,8,Vim,Javascript,Asia,0,Twitter,Windows,SWE 1,35.7
+Carter,Blanchard ,1,tabs,8,Vim,C++,Antarctica,0,Uber,Windows,SWE 2,34.6
+Braxton,Sexton ,9,tabs,8,Eclipse,Python,Asia,4,Instagram,MacOS,Principal Engineer,32.5
+Sofia,Watson ,5,spaces,19,VSCode,Javascript,Europe,0,Netflix,Linux,Principal Engineer,34.6
+Phoebe,Ponce ,6,tabs,5,Visual Studio,Javascript,Antarctica,0,Twitter,Windows,SWE 1,32.8
+Eve,Pham ,7,tabs,6,VSCode,PHP,North America,4,Apple,MacOS,Senior Engineer,33.1
+Gia,Gomez ,7,tabs,6,Visual Studio,R,Asia,1,Uber,Windows,SWE 1,27.5
+Ellis,Villegas ,2,tabs,7,XCode,Python,Africa,3,Microsoft,Linux,Distinguished Engineer,33.1
+Kai,Santos ,6,spaces,16,Intellij,PHP,Antarctica,0,Spotify,Windows,SWE 2,31.6
+Ember,Holmes ,8,spaces,14,Visual Studio,GO,Asia,2,Amazon,Windows,SWE 1,34.2
+Joseph,Chung ,1,tabs,5,Visual Studio,Python,Antarctica,0,Microsoft,Windows,SWE 1,33.7
+Clark,Paul ,10,spaces,16,VSCode,Python,Antarctica,0,Apple,Windows,SWE 2,41.8
+Cyrus,Giles ,7,spaces,15,VSCode,Javascript,Asia,0,Amazon,MacOS,Senior Engineer,32.3
+Finley,Sanford ,3,tabs,5,Visual Studio,C#,Antarctica,1,Microsoft,Linux,Distinguished Engineer,35.1
+Marco,Jordan ,1,tabs,8,Emacs,Python,Antarctica,0,Apple,MacOS,Principal Engineer,33.5
+Harley,Proctor ,8,spaces,14,VSCode,Python,Antarctica,0,Apple,Windows,SWE 2,32.8
+Amari,Truong ,3,tabs,8,Vim,PHP,Africa,0,Facebook,Windows,SWE 2,34.2
+Madilyn,Short ,6,spaces,17,Visual Studio,PHP,Antarctica,0,Amazon,Linux,Principal Engineer,31
+Esther,Orozco ,8,spaces,16,Visual Studio,Python,Antarctica,0,Netflix,Windows,SWE 2,31.5
+Elianna,Cortz ,3,tabs,7,Eclipse,Swift,Antarctica,0,Instagram,Windows,SWE 1,37.5
+Layla,Wong ,6,spaces,16,VSCode,Javascript,Europe,0,Microsoft,MacOS,Senior Engineer,41.6
+Apollo,Matthews ,10,tabs,5,Visual Studio,C,North America,0,Twitter,Windows,Senior Engineer,35.2
+Kevin,Jordan ,6,tabs,9,Intellij,Javascript,Antarctica,0,Instagram,Windows,SWE 1,36.9
+Sage,Cortes ,7,spaces,16,Emacs,Python,Antarctica,4,Twitter,MacOS,Senior Engineer,33.1
+Noa,Padilla ,3,tabs,6,VSCode,C#,Antarctica,0,Netflix,MacOS,Senior Engineer,39.4
+Karter,Watts ,0,tabs,7,Eclipse,C#,Antarctica,3,Apple,Linux,Distinguished Engineer,33.8
+Lily,Adkins ,4,spaces,17,Visual Studio,C#,Antarctica,1,Uber,MacOS,Principal Engineer,33.8
+Kyler,French ,8,spaces,16,Visual Studio,C#,Antarctica,0,Microsoft,Linux,Distinguished Engineer,31.1
+Prince,Weaver ,0,tabs,6,VSCode,PHP,Antarctica,0,Netflix,MacOS,Principal Engineer,20.9
+Dylan,Mann ,4,spaces,15,Visual Studio,Java,Antarctica,0,Twitter,Windows,SWE 2,34.3
+Summer,Christian ,9,spaces,20,Visual Studio,C,Africa,0,Spotify,Windows,Senior Engineer,35.6
+Keira,Sweeney ,1,tabs,7,XCode,Java,Antarctica,0,Netflix,MacOS,Senior Engineer,34
+Collin,Powers ,1,tabs,8,Vim,Java,Antarctica,0,Microsoft,Linux,Distinguished Engineer,36.8
+Ximena,Taylor ,1,tabs,7,XCode,Java,Antarctica,0,Snapchat,Windows,SWE 2,34.6
+Nina,Martinez ,6,tabs,7,Eclipse,Python,Asia,1,Apple,Windows,SWE 2,40.8
+Dominic,Marin ,1,tabs,7,XCode,Java,Antarctica,0,Google,MacOS,Principal Engineer,24.1
+Mario,Col¢n ,1,tabs,6,VSCode,C#,Antarctica,0,Spotify,Windows,SWE 1,31.6
+Cade,Zuniga ,1,tabs,7,Eclipse,C,Antarctica,0,Google,Windows,SWE 1,34.5
+Mira,Chavez ,8,spaces,15,Visual Studio,Python,North America,0,Apple,Linux,Principal Engineer,31.7
+Josiah,Woods ,4,tabs,5,Visual Studio,Python,Antarctica,1,Instagram,Windows,SWE 2,32.3
+Alayah,Woods ,2,tabs,7,Eclipse,PHP,Antarctica,0,Apple,MacOS,Senior Engineer,33
+Parker,Blackwell ,3,tabs,9,pyCharm,Python,Antarctica,0,Amazon,Linux,Distinguished Engineer,33.4
+Stevie,Stephenson ,10,spaces,18,Eclipse,Swift,Antarctica,5,Apple,Windows,SWE 2,35.3
+Kylo,Velez ,7,spaces,17,pyCharm,Python,Antarctica,0,Twitter,Windows,SWE 2,29.4
+Kaison,Carpenter ,9,spaces,14,Intellij,Java,Europe,0,Apple,MacOS,Principal Engineer,49
+Morgan,Sandoval ,4,spaces,19,VSCode,PHP,Antarctica,1,Instagram,Windows,SWE 2,38.2
+Winter,Haynes ,1,tabs,6,VSCode,C++,Antarctica,0,Facebook,Windows,SWE 1,31.9
+Wilder,Fuentes ,7,tabs,8,Vim,Java,Antarctica,2,Amazon,Linux,Distinguished Engineer,39.4
+Diego,Hartman ,3,tabs,8,Vim,C#,Antarctica,2,Apple,Windows,Senior Engineer,36.9
+Zander,Chung ,4,spaces,19,Visual Studio,Javascript,North America,0,Instagram,Windows,SWE 1,37.4
+Sophia,Perry ,8,spaces,10,Eclipse,R,Antarctica,0,Google,Windows,SWE 2,36.4
+Messiah,Chan ,6,spaces,12,Visual Studio,C++,Asia,0,Microsoft,MacOS,Senior Engineer,30.5
+Christian,Mann ,1,tabs,8,Emacs,Java,Antarctica,0,Snapchat,Windows,SWE 2,35.4
+Brynlee,Weeks ,4,spaces,16,Visual Studio,Swift,Antarctica,0,Snapchat,Linux,Principal Engineer,38.1
+Aitana,Hess ,9,spaces,14,pyCharm,PHP,Europe,0,Apple,Windows,SWE 2,36.8
+Bristol,Lucero ,6,tabs,7,XCode,PHP,Antarctica,0,Microsoft,MacOS,Senior Engineer,25.2
+Jaiden,James ,8,spaces,16,VSCode,C,Asia,0,Amazon,Windows,SWE 2,33.1
+Samara,Hunt ,7,tabs,7,Eclipse,C,North America,0,Google,Windows,SWE 1,37.4
+Viviana,Ho ,3,spaces,15,Vim,R,Antarctica,0,Amazon,Windows,SWE 1,33.1
+Sebastian,Woodard ,6,tabs,7,Eclipse,PHP,Asia,0,Facebook,MacOS,Principal Engineer,32.6
+Jayla,Pugh ,5,spaces,16,Visual Studio,Python,Antarctica,0,Instagram,Windows,SWE 1,34.5
+Asher,Abbott ,8,spaces,17,Visual Studio,C,Asia,0,Netflix,Windows,Senior Engineer,33.3
+Everleigh,Rush ,8,spaces,15,Visual Studio,Java,Antarctica,0,Google,MacOS,Senior Engineer,33.1
+Liliana,Chandler ,9,tabs,7,XCode,Python,Antarctica,4,Apple,Windows,SWE 1,32.2
+Sienna,Gentry ,2,spaces,18,VSCode,Java,North America,0,Amazon,Windows,SWE 1,33.7
+Sara,Deleon ,5,tabs,8,pyCharm,C#,Antarctica,0,Instagram,Windows,SWE 2,43.7
+Kyle,Larsen ,2,tabs,9,pyCharm,R,Antarctica,0,Facebook,MacOS,Senior Engineer,34.7
+Regina,Fitzpatrick ,2,tabs,5,Visual Studio,R,Antarctica,2,Microsoft,Windows,SWE 2,33.2
+Rory,Ramirez ,0,tabs,5,Visual Studio,Java,Antarctica,0,Netflix,Linux,Distinguished Engineer,41.1
+Eliza,Bender ,8,spaces,15,XCode,Java,Asia,2,Twitter,Windows,SWE 2,40
+Sage,Woodward ,1,tabs,6,VSCode,Java,Antarctica,0,Netflix,Windows,SWE 1,31.8
+Annalise,Valenzuela ,7,tabs,7,XCode,C#,Antarctica,0,Apple,Windows,SWE 1,32.3
+Amaya,Norman ,5,tabs,9,Intellij,C,Antarctica,4,Uber,MacOS,Senior Engineer,41.1
+Walker,Salinas ,5,tabs,5,Visual Studio,Python,Antarctica,1,Uber,Windows,SWE 2,33.5
+Amaya,Velez ,4,tabs,7,Eclipse,Java,Antarctica,2,Uber,Windows,SWE 2,42.5
+Blair,Vo ,8,tabs,9,Intellij,C#,Antarctica,0,Amazon,Linux,Principal Engineer,33.9
+Garrett,Banks ,7,spaces,17,Visual Studio,C,Asia,0,Netflix,Windows,SWE 2,40
+Zayden,Montgomery ,8,spaces,14,Vim,Javascript,Asia,0,Instagram,Windows,SWE 1,31.6
+Luca,Calhoun ,1,tabs,6,VSCode,PHP,Antarctica,0,Microsoft,MacOS,Principal Engineer,37.5
+Ari,Blackwell ,2,tabs,6,VSCode,Swift,Antarctica,0,Microsoft,Windows,SWE 1,31.8
+Crew,Arnold ,4,tabs,7,XCode,R,Antarctica,0,Snapchat,Windows,SWE 1,35.4
+Travis,Santiago ,7,tabs,7,XCode,Python,Asia,5,Amazon,Windows,SWE 1,35.6
+Luciana,Keller ,4,tabs,6,XCode,Javascript,Antarctica,0,Microsoft,Windows,SWE 1,38.4
+Zion,Gardner ,2,spaces,15,Vim,PHP,Antarctica,2,Uber,MacOS,Senior Engineer,30.5
+Chance,Mitchell ,4,tabs,9,Intellij,Java,Antarctica,0,Microsoft,Windows,SWE 2,40.6
+Ariyah,Jensen ,6,tabs,6,Visual Studio,Javascript,Antarctica,0,Apple,Windows,SWE 2,29.8
+Nasir,Pi¤eda ,5,spaces,16,Emacs,Java,Antarctica,0,Microsoft,MacOS,Senior Engineer,34.3
+Reed,Novak ,7,tabs,8,Vim,GO,Antarctica,0,Microsoft,Linux,Principal Engineer,38.5
+Natalia,Greer ,6,spaces,15,Visual Studio,Swift,Asia,0,Apple,Windows,SWE 2,29.6
+Ryder,Lam ,4,tabs,8,Vim,PHP,Africa,0,Snapchat,Windows,SWE 2,36.7
+Margaret,Li ,9,spaces,15,XCode,C++,Africa,0,Amazon,Windows,Senior Engineer,31.8
+Trinity,Mckee ,3,tabs,7,XCode,Java,Antarctica,1,Microsoft,MacOS,Principal Engineer,37.3
+Matias,Friedman ,5,tabs,9,Intellij,C#,Antarctica,0,Facebook,MacOS,Senior Engineer,38.7
+Amanda,Taylor ,9,spaces,20,Eclipse,Python,Europe,0,Microsoft,Windows,SWE 2,30.9
+Angelina,Richard ,6,spaces,17,VSCode,Python,Africa,0,Microsoft,Windows,SWE 2,36.6
+Octavia,Conway ,10,spaces,19,Intellij,Python,Asia,0,Twitter,MacOS,Principal Engineer,32.6
+Ari,Wyatt ,7,spaces,18,VSCode,R,Asia,0,Apple,Windows,SWE 2,32.4
+Rowan,Lawrence ,1,spaces,19,Visual Studio,PHP,Antarctica,0,Facebook,Linux,Distinguished Engineer,33.9
+Alejandro,Burgess ,4,spaces,13,XCode,Python,Antarctica,0,Uber,Linux,Principal Engineer,39.1
+Hunter,Benjamin ,3,tabs,8,Vim,Java,Antarctica,0,Facebook,MacOS,Principal Engineer,37.7
+Finn,Wilkinson ,5,spaces,19,Visual Studio,Java,Antarctica,0,Facebook,Linux,Principal Engineer,34.7
+Ruth,Avery ,2,tabs,7,Eclipse,Java,Antarctica,1,Apple,Windows,SWE 2,30.1
+Graham,Davis ,1,tabs,8,pyCharm,Python,Antarctica,0,Twitter,MacOS,Principal Engineer,31.3
+Kensley,Jacobson ,8,spaces,14,XCode,Java,Africa,0,Netflix,Linux,Distinguished Engineer,31.4
+Kasen,Armstrong ,4,tabs,7,XCode,Swift,Antarctica,0,Instagram,Windows,SWE 2,32.4
+Caleb,Hammond ,3,tabs,5,Visual Studio,C#,Antarctica,0,Microsoft,Linux,Distinguished Engineer,26.5
+Angelina,Cherry ,7,tabs,7,Eclipse,C,Antarctica,0,Netflix,Windows,SWE 1,36.2
+Kenzie,Mason ,1,tabs,9,Intellij,C#,Antarctica,2,Apple,Windows,SWE 2,26.2
+Seth,Knight ,1,tabs,8,Vim,Python,Antarctica,0,Amazon,Windows,SWE 2,33.5
+Baylor,Marshall ,4,tabs,6,Visual Studio,R,Antarctica,1,Facebook,Windows,SWE 1,36.3
+Helen,Woods ,10,spaces,15,VSCode,Java,Europe,0,Microsoft,Windows,SWE 2,33.4
+Kinsley,Alvarez ,7,spaces,14,Visual Studio,Python,Asia,1,Microsoft,Windows,SWE 1,32.6
+Bruce,Harrell ,7,tabs,7,Eclipse,Python,North America,5,Facebook,Windows,SWE 2,23.9
+Porter,Davila ,3,tabs,7,XCode,Python,Antarctica,3,Spotify,Windows,SWE 2,34.5
+Clayton,Heath ,9,spaces,17,Visual Studio,C++,Europe,0,Spotify,Linux,Principal Engineer,35
+Amiyah,Randolph ,2,tabs,7,XCode,Python,North America,0,Uber,Windows,SWE 2,30.7
+Fatima,Mathews ,10,tabs,8,Vim,Javascript,Antarctica,0,Amazon,Linux,Principal Engineer,36
+Kensley,Skinner ,4,tabs,5,Visual Studio,Javascript,Antarctica,0,Twitter,Windows,SWE 1,32.7
+Raiden,Gentry ,9,spaces,18,Visual Studio,Swift,Africa,0,Apple,Windows,SWE 2,33.6
+Cataleya,Li ,1,spaces,16,Visual Studio,PHP,Antarctica,0,Spotify,MacOS,Senior Engineer,35.4
+Morgan,Bravo ,0,tabs,9,Intellij,C#,Africa,0,Uber,Linux,Distinguished Engineer,36.6
+Khalil,Ryan ,0,spaces,19,Eclipse,Java,Africa,0,Apple,Windows,SWE 1,36
+Jaiden,Chapman ,8,tabs,7,XCode,Swift,Asia,0,Apple,Windows,SWE 2,30.9
+Emelia,Benjamin ,6,spaces,19,Visual Studio,C#,Africa,0,Twitter,Windows,SWE 1,26.1
+Garrett,Griffin ,1,spaces,18,Visual Studio,C++,Antarctica,3,Netflix,MacOS,Principal Engineer,22.3
+Henry,Wiggins ,1,tabs,7,Eclipse,PHP,Africa,2,Netflix,Linux,Distinguished Engineer,30.8
+Zayne,Maldonado ,7,tabs,6,Visual Studio,C++,Europe,0,Snapchat,MacOS,Senior Engineer,31.1
+Molly,Hudson ,3,tabs,6,Visual Studio,PHP,Antarctica,3,Apple,MacOS,Principal Engineer,41.9
+Lukas,Austin ,8,spaces,14,Eclipse,PHP,Antarctica,2,Microsoft,MacOS,Senior Engineer,31.8
+Ada,Williams ,5,spaces,18,Emacs,Java,Africa,0,Microsoft,Windows,SWE 1,37.1
+Valentina,Walsh ,5,spaces,14,pyCharm,R,Asia,3,Twitter,Linux,Distinguished Engineer,36.5
+Parker,Bean ,4,spaces,19,VSCode,R,Antarctica,0,Twitter,Linux,Distinguished Engineer,30.9
+Matthew,Cline ,2,tabs,8,Vim,C,Antarctica,0,Facebook,Windows,SWE 1,35.4
+Sydney,Branch ,1,tabs,7,XCode,PHP,Antarctica,3,Twitter,Linux,Principal Engineer,26.9
+Callie,Salazar ,2,spaces,17,Visual Studio,Python,Antarctica,1,Spotify,Windows,SWE 2,32.1
+Lucia,Lin ,1,tabs,7,Eclipse,C,Antarctica,0,Netflix,Windows,SWE 2,32.8
+Julius,Morris ,8,spaces,19,VSCode,Java,Africa,0,Facebook,MacOS,Principal Engineer,32.2
+Odin,Blanchard ,10,spaces,15,VSCode,GO,Europe,0,Spotify,Windows,SWE 2,33
+Josiah,Jordan ,3,tabs,7,Eclipse,C#,Antarctica,0,Instagram,Windows,SWE 2,36
+Rosemary,Pe¤a ,9,spaces,17,Vim,Java,Antarctica,0,Spotify,Windows,SWE 1,30.2
+Clara,Knight ,6,tabs,8,pyCharm,R,Antarctica,0,Microsoft,Windows,SWE 1,35.2
+Teagan,Hartman ,1,tabs,7,XCode,C,Antarctica,0,Spotify,MacOS,Principal Engineer,33.1
+Paul,Yoder ,8,spaces,17,Visual Studio,C#,Antarctica,4,Netflix,Windows,Senior Engineer,33
+Mateo,Farley ,6,tabs,8,pyCharm,Java,Africa,0,Instagram,Windows,SWE 1,28.3
+Everleigh,Solis ,8,spaces,17,Vim,C++,North America,0,Snapchat,MacOS,Principal Engineer,33.5
+Ariella,Bates ,8,tabs,8,Emacs,C#,Antarctica,4,Apple,Windows,SWE 1,32.3
+Silas,Herrera ,6,spaces,15,Visual Studio,C++,Antarctica,0,Amazon,MacOS,Senior Engineer,31.5
+Isabel,Webster ,2,tabs,7,Eclipse,Java,Antarctica,2,Uber,Windows,SWE 2,32.3
+Eden,Best ,10,spaces,18,Visual Studio,Javascript,Africa,0,Netflix,MacOS,Senior Engineer,33.2
+Milan,Shields ,8,spaces,16,Eclipse,Python,Antarctica,4,Microsoft,Windows,SWE 2,32
+Manuel,Grant ,6,spaces,17,VSCode,C++,Europe,1,Microsoft,MacOS,Principal Engineer,30.6
+Esther,Willis ,8,spaces,17,Eclipse,Javascript,Antarctica,0,Microsoft,Linux,Principal Engineer,30.6
+Carolina,Reese ,1,tabs,9,Intellij,C#,Africa,0,Google,Windows,SWE 2,27.5
+Nolan,Green ,10,spaces,13,Visual Studio,Python,Europe,0,Microsoft,MacOS,Principal Engineer,22
+Mario,Rosales ,6,spaces,17,Visual Studio,C#,Antarctica,0,Apple,Windows,SWE 2,35.9
+Lainey,Duffy ,0,tabs,7,XCode,C,Antarctica,0,Facebook,MacOS,Senior Engineer,31.6
+Lila,Zhang ,6,tabs,6,VSCode,PHP,Antarctica,0,Instagram,Windows,SWE 2,29.5
+Lane,Castro ,6,tabs,7,XCode,C,Antarctica,0,Netflix,Windows,SWE 1,37.9
+Ivy,Sanford ,7,tabs,6,VSCode,Java,Antarctica,0,Microsoft,MacOS,Senior Engineer,31.3
+Ariana,Mcbride ,5,tabs,9,pyCharm,C++,Antarctica,0,Spotify,Linux,Principal Engineer,32.9
+Archer,Potter ,5,tabs,6,VSCode,Python,Africa,0,Twitter,Windows,SWE 1,37.6
+Antonio,Hoover ,10,spaces,15,pyCharm,Python,Antarctica,5,Google,MacOS,Principal Engineer,35.6
+Tessa,Wolfe ,2,tabs,5,Visual Studio,Swift,Antarctica,0,Uber,Windows,SWE 1,32.1
+Vanessa,Fuentes ,3,tabs,6,VSCode,Javascript,Antarctica,0,Google,Windows,SWE 2,40
+Adelaide,Costa ,5,tabs,8,Vim,C++,Antarctica,0,Uber,MacOS,Senior Engineer,33
+Jonas,Ruiz ,1,tabs,7,XCode,Java,Antarctica,0,Uber,Windows,SWE 1,32.3
+August,Salinas ,3,tabs,5,Visual Studio,C#,Africa,0,Microsoft,MacOS,Senior Engineer,34.9
+Kane,French ,7,spaces,18,Eclipse,C#,North America,0,Instagram,MacOS,Principal Engineer,31.9
+Emory,Jensen ,1,tabs,7,Eclipse,Java,Africa,0,Instagram,MacOS,Senior Engineer,31
+Kade,Rangel ,1,spaces,17,Visual Studio,C#,Antarctica,0,Spotify,MacOS,Senior Engineer,41.6
+Niko,Foster ,10,spaces,15,Eclipse,GO,Antarctica,0,Uber,Windows,Senior Engineer,34.7
+Layla,Patton ,7,spaces,18,XCode,Javascript,Antarctica,5,Netflix,MacOS,Principal Engineer,34.1
+Josue,May ,4,spaces,15,Intellij,Python,Antarctica,2,Facebook,Windows,SWE 1,29
+Kora,Friedman ,1,tabs,6,VSCode,C++,Africa,0,Netflix,Linux,Distinguished Engineer,36.9
+Malani,Huber ,9,tabs,5,Visual Studio,C#,Europe,0,Microsoft,Windows,SWE 1,34.5
+Everett,Porter ,1,spaces,18,XCode,PHP,Africa,0,Facebook,MacOS,Senior Engineer,33.1
+Alayna,Sutton ,10,tabs,8,Emacs,Swift,Antarctica,5,Twitter,MacOS,Senior Engineer,34.8
+Amaya,Eaton ,4,tabs,6,VSCode,Python,Antarctica,0,Microsoft,Linux,Principal Engineer,36.3
+Bennett,English ,1,tabs,8,Eclipse,PHP,North America,1,Instagram,Windows,SWE 2,40.8
+Iris,Carey ,6,spaces,15,Intellij,Java,Antarctica,0,Apple,Linux,Principal Engineer,31.9
+Seth,Sampson ,2,tabs,7,Eclipse,C#,Antarctica,0,Microsoft,MacOS,Principal Engineer,39
+Cade,Mcmillan ,2,spaces,20,pyCharm,Javascript,Antarctica,0,Twitter,Windows,SWE 2,32.9
+Blake,Villanueva ,2,tabs,7,Eclipse,R,Antarctica,1,Spotify,Windows,SWE 2,30.6
+Ali,Holland ,1,tabs,8,Vim,Java,Antarctica,0,Instagram,Linux,Distinguished Engineer,29.4
+Marshall,Haynes ,1,spaces,17,Visual Studio,C#,Antarctica,0,Snapchat,Linux,Distinguished Engineer,39.4
+Charles,Knight ,7,tabs,6,VSCode,GO,North America,0,Twitter,Linux,Principal Engineer,24.8
+Gavin,Mendoza ,3,tabs,8,pyCharm,PHP,Antarctica,0,Netflix,MacOS,Senior Engineer,25.2
+Nylah,Schultz ,2,tabs,6,VSCode,C,Europe,0,Facebook,Windows,SWE 1,30.4
+Parker,Lawson ,9,spaces,17,VSCode,Java,Antarctica,1,Apple,MacOS,Senior Engineer,21.9
+Regina,Parks ,9,spaces,16,pyCharm,Java,Europe,1,Snapchat,Windows,SWE 1,35
+Peyton,Dorsey ,9,tabs,6,Visual Studio,R,Asia,0,Microsoft,Windows,SWE 1,37.8
+Ford,Trejo ,2,tabs,9,pyCharm,R,Antarctica,0,Amazon,Windows,SWE 1,29.9
+Hector,Francis ,8,spaces,18,Vim,Swift,Antarctica,3,Apple,Windows,Senior Engineer,32.1
+Jayceon,Hartman ,1,tabs,7,Eclipse,Python,Antarctica,0,Amazon,Windows,SWE 2,30.5
+Poppy,Morrison ,2,tabs,7,XCode,Python,Antarctica,0,Uber,MacOS,Senior Engineer,30.8
+Charli,Underwood ,0,tabs,6,VSCode,Java,North America,0,Twitter,Windows,SWE 1,25.2
+Eleanor,Grimes ,9,spaces,20,VSCode,GO,Africa,0,Snapchat,Windows,SWE 2,35.6
+Liliana,Vo ,8,spaces,18,Eclipse,R,Asia,0,Apple,MacOS,Principal Engineer,26.5
+Joy,Valenzuela ,4,spaces,17,VSCode,Python,Antarctica,2,Spotify,Windows,SWE 1,31.8
+Esme,Blackburn ,3,spaces,16,Visual Studio,C,Antarctica,0,Uber,Windows,SWE 1,34
+Emmett,Fitzpatrick ,7,tabs,8,pyCharm,Python,Antarctica,1,Microsoft,Windows,SWE 2,26.1
+Gavin,Charles ,2,tabs,7,Eclipse,C,Europe,0,Twitter,MacOS,Principal Engineer,31.2
+Savannah,Mcdaniel ,3,spaces,16,XCode,C#,Antarctica,2,Facebook,Windows,SWE 1,30.9
+Joanna,Stewart ,6,tabs,7,Eclipse,GO,Asia,0,Snapchat,Linux,Distinguished Engineer,36.6
+Devin,Lugo ,7,spaces,17,Emacs,R,Antarctica,0,Twitter,Windows,SWE 1,31.3
+Gabrielle,Oliver ,5,tabs,6,VSCode,Swift,Europe,0,Snapchat,Windows,SWE 1,32.7
+Eve,Mendez ,2,tabs,6,Visual Studio,Swift,Antarctica,0,Amazon,Linux,Distinguished Engineer,32
+Zachary,Crosby ,10,tabs,5,Visual Studio,Java,Antarctica,0,Spotify,Windows,Senior Engineer,25.1
+Elsie,Lewis ,2,spaces,16,pyCharm,Swift,North America,4,Uber,Linux,Distinguished Engineer,32.5
+Adelynn,Bernal ,9,spaces,17,Visual Studio,Java,Antarctica,0,Apple,Windows,SWE 2,32.6
+Nathaniel,Espinoza ,6,spaces,11,VSCode,C#,Antarctica,1,Snapchat,Windows,SWE 1,23.2
+Kai,Bravo ,8,tabs,6,VSCode,R,Antarctica,0,Apple,Windows,SWE 1,33.3
+Taylor,Roman ,1,tabs,8,pyCharm,PHP,Antarctica,0,Microsoft,Windows,SWE 1,37.4
+Dahlia,Watts ,1,tabs,8,Eclipse,C#,Antarctica,0,Netflix,Windows,SWE 1,32.6
+Parker,Gardner ,5,tabs,8,Vim,Javascript,Antarctica,0,Facebook,Windows,SWE 1,35.5
+Cameron,Portillo ,9,spaces,13,VSCode,R,Antarctica,4,Instagram,Windows,Senior Engineer,35.5
+Tobias,Torres ,6,tabs,7,Eclipse,C#,Antarctica,2,Apple,Windows,SWE 2,28.9
+Elliana,Col¢n ,10,tabs,6,VSCode,Swift,Africa,3,Microsoft,MacOS,Principal Engineer,32.9
+Anastasia,Chang ,4,spaces,15,Visual Studio,C,Antarctica,0,Microsoft,Linux,Principal Engineer,29.6
+Ember,Holt ,7,tabs,8,Eclipse,R,Antarctica,0,Instagram,Linux,Principal Engineer,32.2
+Mary,Blevins ,10,spaces,15,Emacs,C#,Europe,3,Netflix,Windows,SWE 2,36.4
+Freya,Hickman ,9,tabs,5,Visual Studio,Javascript,Antarctica,0,Amazon,Windows,SWE 2,42.1
+Kaison,Mcclure ,6,spaces,15,VSCode,Python,Antarctica,4,Amazon,Windows,SWE 1,33
+Joshua,Osborne ,7,spaces,14,VSCode,R,Antarctica,1,Amazon,Windows,SWE 2,29
+Graham,Dickson ,0,tabs,8,pyCharm,C,Antarctica,2,Instagram,MacOS,Senior Engineer,32.3
+Mario,Galvan ,0,tabs,7,Eclipse,C++,Antarctica,2,Uber,Linux,Principal Engineer,40
+Cristian,Sexton ,9,tabs,6,VSCode,GO,Europe,0,Microsoft,Windows,Senior Engineer,32.8
+Amelia,West ,4,tabs,6,VSCode,Javascript,Antarctica,0,Uber,Linux,Principal Engineer,39.9
+Aurora,Trejo ,8,tabs,8,Emacs,Javascript,Antarctica,1,Microsoft,MacOS,Senior Engineer,32.8
+Orion,Clay ,6,spaces,17,Visual Studio,Python,North America,2,Spotify,MacOS,Senior Engineer,33.1
+Jeffrey,Barber ,2,tabs,8,Vim,C#,Antarctica,1,Twitter,Windows,Senior Engineer,31.3
+Ryan,Lee ,3,tabs,6,VSCode,PHP,Antarctica,0,Uber,Windows,SWE 2,23.7
+Dawson,Vargas ,8,tabs,8,Emacs,Java,Antarctica,0,Microsoft,Windows,Senior Engineer,32.7
+Avery,Clark ,8,spaces,15,Visual Studio,PHP,North America,5,Amazon,MacOS,Principal Engineer,32.9
+Harmony,Mays ,6,spaces,15,Visual Studio,GO,Africa,0,Microsoft,Linux,Distinguished Engineer,32.5
+Grant,Skinner ,2,tabs,5,Visual Studio,C,Antarctica,0,Uber,Windows,SWE 2,31
+Riley,Knight ,4,spaces,18,Visual Studio,C,Antarctica,0,Google,Windows,SWE 1,32.5
+Sullivan,Church ,4,tabs,6,XCode,C++,Antarctica,0,Uber,MacOS,Senior Engineer,36
+Major,Ashley ,9,spaces,18,Visual Studio,GO,Antarctica,0,Microsoft,Linux,Principal Engineer,38.5
+Omar,Baxter ,8,spaces,16,Visual Studio,Swift,Africa,0,Twitter,Windows,Senior Engineer,26.5
+Kyler,Moon ,3,tabs,6,VSCode,C#,Antarctica,0,Spotify,MacOS,Principal Engineer,35.9
+Eduardo,Simpson ,5,spaces,16,VSCode,Python,Antarctica,0,Apple,Windows,SWE 1,39.6
+Nina,Shaw ,3,tabs,7,XCode,C,Antarctica,2,Instagram,Linux,Distinguished Engineer,30.1
+Rory,Jarvis ,9,spaces,15,Vim,Javascript,Asia,1,Microsoft,MacOS,Senior Engineer,34.9
+Annabelle,Faulkner ,8,tabs,8,Vim,Java,Antarctica,0,Apple,Windows,SWE 2,33
+Emersyn,Hoover ,6,spaces,15,Visual Studio,Python,Antarctica,0,Apple,MacOS,Senior Engineer,32.7
+Kayson,Le ,8,spaces,18,Emacs,GO,Antarctica,0,Google,Windows,Senior Engineer,34.4
+Finley,Mejia ,8,tabs,8,Eclipse,C#,Asia,0,Apple,MacOS,Principal Engineer,33.3
+Alivia,Horton ,2,tabs,7,XCode,Python,Antarctica,0,Uber,Windows,SWE 1,29.6
+Bradley,Jennings ,6,tabs,9,Intellij,Swift,Antarctica,0,Amazon,Windows,SWE 1,31.6
+Trevor,Skinner ,10,spaces,18,Visual Studio,C++,Africa,0,Microsoft,Windows,SWE 1,32.3
+Andres,Dalton ,4,spaces,19,VSCode,C++,Africa,0,Apple,Linux,Principal Engineer,36.4
+Kamden,Williamson ,6,spaces,17,Visual Studio,Javascript,Asia,0,Facebook,Windows,SWE 1,32.1
+Javier,Wiley ,2,tabs,5,Visual Studio,C++,Antarctica,3,Facebook,MacOS,Senior Engineer,31.1
+Silas,Salinas ,8,tabs,9,Intellij,C++,Asia,0,Instagram,Windows,SWE 2,28
+Amanda,Shields ,3,spaces,18,Visual Studio,C#,Antarctica,0,Netflix,Linux,Distinguished Engineer,30.4
+Lucas,Nicholson ,5,tabs,7,XCode,C++,Antarctica,3,Netflix,Windows,SWE 1,36.7
+Harper,Miller ,7,tabs,9,Intellij,C++,Asia,0,Microsoft,Linux,Principal Engineer,31.2
+Shawn,Xiong ,2,tabs,5,Visual Studio,Java,Antarctica,3,Snapchat,Linux,Principal Engineer,25.5
+Elliana,Raymond ,9,tabs,7,Eclipse,Python,Asia,1,Microsoft,MacOS,Principal Engineer,27.2
+Catherine,Daugherty ,2,tabs,6,VSCode,Python,Antarctica,0,Apple,Windows,SWE 1,32.3
+Cade,Drake ,3,tabs,7,XCode,Python,Antarctica,2,Instagram,Linux,Distinguished Engineer,35.4
+Major,Barnett ,4,tabs,8,Vim,PHP,Antarctica,0,Uber,Windows,SWE 2,35
+Ford,Navarro ,8,spaces,17,XCode,Python,Antarctica,0,Apple,Windows,SWE 1,31.8
+Zayden,Perez ,0,spaces,18,Visual Studio,C#,Antarctica,0,Facebook,Linux,Distinguished Engineer,35.6
+Kayden,Jennings ,7,tabs,8,Emacs,C++,Antarctica,0,Apple,Windows,SWE 1,34.5
+Aspen,Solomon ,7,spaces,18,XCode,PHP,Antarctica,0,Uber,MacOS,Principal Engineer,36.4
+Wade,Barry ,0,tabs,9,Intellij,R,Antarctica,0,Apple,Linux,Distinguished Engineer,29.8
+Cataleya,Andrews ,10,spaces,16,Eclipse,C#,North America,0,Amazon,Linux,Principal Engineer,34.5
+Elliott,Barnett ,8,spaces,18,Visual Studio,Python,Antarctica,0,Uber,MacOS,Senior Engineer,33.3
+Adrian,Dean ,7,tabs,7,Eclipse,Swift,Antarctica,0,Twitter,MacOS,Senior Engineer,30.8
+Kenneth,Farrell ,5,spaces,14,pyCharm,Python,Antarctica,0,Uber,MacOS,Principal Engineer,32.1
+Manuel,Gibson ,1,tabs,7,XCode,Javascript,Antarctica,0,Uber,Windows,SWE 2,38.5
+Evelyn,Hall ,7,spaces,17,VSCode,C#,North America,0,Amazon,Windows,SWE 1,31.3
+Cruz,O?Donnell ,9,spaces,17,Visual Studio,R,Antarctica,0,Microsoft,Windows,SWE 1,36.4
+Sergio,Ali ,4,tabs,9,Intellij,Swift,Antarctica,0,Snapchat,Linux,Principal Engineer,35.3
+Rosemary,Lopez ,6,tabs,8,Vim,R,Asia,0,Instagram,Windows,SWE 1,29.3
+Maria,Lim ,1,tabs,6,VSCode,Javascript,Africa,0,Uber,Windows,SWE 2,29.6
+Riley,Compton ,9,spaces,14,Eclipse,GO,Asia,6,Netflix,Windows,SWE 1,37.6
+Leonardo,Atkinson ,1,tabs,7,XCode,C++,Antarctica,0,Facebook,Linux,Distinguished Engineer,36.6
+Raegan,Patel ,1,tabs,8,Emacs,PHP,Antarctica,0,Microsoft,Windows,SWE 1,32.4
+Kendrick,Byrd ,7,tabs,6,XCode,C,North America,0,Microsoft,Linux,Principal Engineer,30.4
+Dylan,Ahmed ,3,tabs,7,XCode,PHP,Europe,4,Facebook,Windows,SWE 1,41.5
+Sienna,Michael ,5,tabs,6,VSCode,GO,Antarctica,0,Snapchat,Windows,SWE 2,30.8
+Elliott,Ferguson ,4,tabs,8,Eclipse,C#,Antarctica,0,Uber,Windows,SWE 1,35.6
+Ronan,Jordan ,5,spaces,19,Eclipse,Python,Antarctica,0,Google,Linux,Principal Engineer,33.4
+Connor,O?Neill ,9,tabs,6,Visual Studio,C#,Antarctica,0,Microsoft,Windows,SWE 2,37
+Jose,Hughes ,6,tabs,5,Visual Studio,C++,Antarctica,0,Facebook,Linux,Distinguished Engineer,35.2
+Cash,Benjamin ,5,spaces,14,Visual Studio,Swift,Antarctica,0,Spotify,Windows,SWE 2,39.5
+Remy,Davidson ,8,spaces,18,Visual Studio,Java,Antarctica,0,Facebook,Linux,Principal Engineer,31.9
+Elle,Andersen ,2,tabs,6,VSCode,C#,Antarctica,0,Apple,Windows,SWE 1,31.8
+Aiden,Matthews ,1,tabs,8,Vim,Java,Antarctica,0,Spotify,Windows,SWE 1,36.2
+Waylon,Reeves ,1,tabs,5,Visual Studio,C#,Antarctica,0,Google,Windows,SWE 2,32.6
+Elliott,Fischer ,7,spaces,17,Visual Studio,Swift,Antarctica,0,Apple,Windows,SWE 2,33.9
+Aidan,Pennington ,9,spaces,16,Intellij,PHP,Asia,6,Facebook,MacOS,Senior Engineer,23.3
+Ayla,Potts ,3,tabs,7,XCode,C,Antarctica,2,Instagram,Linux,Distinguished Engineer,31.2
+Isabel,Fleming ,0,tabs,7,XCode,R,Africa,0,Uber,Linux,Distinguished Engineer,23.9
+Piper,Stafford ,5,tabs,6,XCode,C#,Antarctica,0,Twitter,Windows,SWE 2,36.7
+Callan,Hardy ,4,spaces,22,VSCode,C,Antarctica,0,Uber,Windows,SWE 1,31.5
+Aidan,Short ,4,spaces,16,Eclipse,C#,Antarctica,0,Twitter,Windows,SWE 1,44
+Lydia,Woods ,5,spaces,19,Visual Studio,Python,North America,0,Snapchat,MacOS,Principal Engineer,35.8
+Angela,Cochran ,6,spaces,13,Visual Studio,R,Antarctica,0,Uber,Windows,SWE 1,34.4
+Seth,Ali ,2,tabs,7,Eclipse,Javascript,Antarctica,0,Uber,Windows,SWE 1,31.7
+Dylan,Pitts ,7,tabs,8,Emacs,C,Antarctica,0,Instagram,Windows,SWE 2,35.1
+Malakai,Mccarty ,6,tabs,8,Emacs,C#,Antarctica,0,Snapchat,Windows,SWE 1,30.1
+Emanuel,Boyer ,6,spaces,14,VSCode,Python,Antarctica,0,Twitter,Windows,SWE 1,31.5
+Isaac,Rosas ,7,spaces,15,XCode,Java,Asia,0,Amazon,MacOS,Senior Engineer,40.7
+Kaitlyn,Barker ,4,spaces,16,Visual Studio,Python,Antarctica,2,Apple,Windows,SWE 1,33.6
+Daphne,Morrow ,0,spaces,12,Visual Studio,Swift,Africa,1,Snapchat,MacOS,Senior Engineer,26.1
+Gwendolyn,Larsen ,9,tabs,5,Visual Studio,Javascript,Europe,0,Apple,Windows,SWE 2,31.8
+Nicole,Austin ,5,tabs,8,Vim,Java,Africa,0,Facebook,Windows,SWE 2,30
+Jacqueline,Little ,4,spaces,20,VSCode,Python,Antarctica,0,Snapchat,Windows,SWE 1,37.3
+Riley,Green ,6,tabs,6,Visual Studio,Javascript,North America,0,Apple,Windows,SWE 2,38.1
+Bailey,Lee ,1,tabs,8,pyCharm,Java,Antarctica,2,Spotify,Linux,Distinguished Engineer,31.1
+Sebastian,Strickland ,7,tabs,7,Eclipse,C#,Asia,5,Uber,Windows,SWE 2,30.5
+Ford,Day ,2,tabs,6,VSCode,Python,North America,1,Facebook,MacOS,Principal Engineer,31.9
+Maverick,Owen ,5,spaces,16,Visual Studio,R,Antarctica,0,Facebook,Windows,SWE 2,32.5
+John,Horton ,7,tabs,5,Visual Studio,Python,Antarctica,0,Facebook,Windows,SWE 1,39.5
+Corbin,Nielsen ,4,spaces,15,Visual Studio,R,Antarctica,0,Uber,MacOS,Senior Engineer,37.9
+Steven,Smith ,7,tabs,7,Eclipse,Python,Antarctica,0,Google,Linux,Principal Engineer,32.4
+Giovanni,Good ,9,spaces,18,XCode,Javascript,Africa,0,Apple,MacOS,Principal Engineer,27.9
+Alonzo,Dodson ,6,spaces,16,Visual Studio,C,Asia,0,Google,Windows,SWE 1,35.4
+Averie,Rojas ,3,tabs,8,Emacs,C++,Antarctica,0,Microsoft,Linux,Distinguished Engineer,41.6
+Leon,Blair ,2,spaces,15,Visual Studio,C,Africa,0,Apple,Windows,SWE 1,25.5
+Vivienne,Lester ,3,tabs,5,Visual Studio,C++,Antarctica,0,Netflix,MacOS,Principal Engineer,32.9
+Isabel,Reynolds ,9,spaces,15,Visual Studio,Javascript,Antarctica,0,Amazon,Windows,SWE 1,33.8
+Cameron,Ellison ,4,tabs,8,Vim,Java,North America,0,Instagram,Windows,SWE 1,36
+Miguel,Gordon ,9,tabs,6,VSCode,Javascript,Europe,2,Microsoft,MacOS,Senior Engineer,34.1

@@ -12,6 +12,11 @@ import mlflow.sklearn
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
 
 def parse_args():
     # setup arg parser
@@ -28,6 +33,29 @@ def parse_args():
     # return args
     return args
 
+def create_regression_pipeline(X, y):
+    pipe_cfg = {
+        'num_cols': X.dtypes[X.dtypes == 'int64'].index.values.tolist(),
+        'cat_cols': X.dtypes[X.dtypes == 'object'].index.values.tolist(),
+    }
+    num_pipe = Pipeline([
+        ('num_imputer', SimpleImputer(strategy='median')),
+        ('num_scaler', StandardScaler())
+    ])
+    cat_pipe = Pipeline([
+        ('cat_imputer', SimpleImputer(strategy='constant', fill_value='?')),
+        ('cat_encoder', OneHotEncoder(handle_unknown='ignore', sparse=False))
+    ])
+    feat_pipe = ColumnTransformer([
+        ('num_pipe', num_pipe, pipe_cfg['num_cols']),
+        ('cat_pipe', cat_pipe, pipe_cfg['cat_cols'])
+    ])
+
+    # Append classifier to preprocessing pipeline.
+    # Now we have a full prediction pipeline.
+    pipeline = Pipeline(steps=[('preprocessor', feat_pipe),
+                               ('model', LinearRegression())])
+    return pipeline.fit(X, y)
 
 def main(args):
     current_experiment = Run.get_context().experiment
@@ -35,7 +63,14 @@ def main(args):
     print("tracking_uri: {0}".format(tracking_uri))
     mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment(current_experiment.name)
-
+    
+    #train_file = None
+    #for filename in os.listdir(args.training_data):
+    #    if filename.endswith('.csv'):
+    #        train_file = filename
+    #        break
+    #print(train_file)
+    #print(os.path.join(args.training_data, train_file))
     # Read in data
     print("Reading data")
     all_data = pd.read_parquet(args.training_data)
@@ -48,8 +83,7 @@ def main(args):
 
     print("Training model")
     # The estimator can be changed to suit
-    model = LinearRegression()
-    model.fit(X_train, y_train)
+    model = create_regression_pipeline(X_train, y_train)
 
     # Saving model with mlflow - leave this section unchanged
     with tempfile.TemporaryDirectory() as td:
