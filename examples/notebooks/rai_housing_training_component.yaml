@@ -1,0 +1,21 @@
+$$schema: http://azureml/sdk-2-0/CommandComponent.json
+name: rai_housing_training_component
+display_name: Simple training component for housing Dataset
+version: PLACEHOLDER_COMPONENT_VERSION
+type: command
+inputs:
+  training_data:
+    type: uri_file
+  target_column_name:
+    type: string
+outputs:
+  model_output:
+    type: uri_folder
+
+code: ./src/
+environment: azureml:AML-RAI-Environment:PLACEHOLDER_ENV_VERSION
+command: >-
+  python housing_training_script.py
+  --training_data ${{inputs.training_data}}
+  --target_column_name ${{inputs.target_column_name}}
+  --model_output ${{outputs.model_output}}
