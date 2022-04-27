@@ -46,7 +46,7 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
-        "training_component_version_string = '4'"
-    ] = f"training_component_version_string = '{train_version_string}'"
+        "rai_housing_example_version_string = '4'"
+    ] = f"rai_housing_example_version_string = '{train_version_string}'"
 
     assay_one_notebook(nb_name, dict(), replacements)
