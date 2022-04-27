@@ -46,7 +46,7 @@ parameters:
 
 jobs:
   - job:
-    displayName: "Run Python tests"
+    displayName: "Run ${{parameters.testRunType}} tests"
     
     pool:
       vmImage: ${{parameters.poolImage}}
