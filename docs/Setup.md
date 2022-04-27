@@ -91,7 +91,6 @@ cd RAI-vNext-Preview
 ```
 8. Run the following pip installs
 ``` powershell
-pip install jupyter markupsafe<=2.0.1 itsdangerous==2.0.1
 pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 ```
 ``` powershell
