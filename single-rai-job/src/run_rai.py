@@ -402,13 +402,10 @@ def main(args):
     _logger.info("Triggering computation")
     rai_i.compute()
 
-    _logger.info("Doing local save")
+    _logger.info("Doing local save and upload")
     binary_dir = "./responsibleai"
-    rai_i.save("./responsibleai")
+    rai_i.save(binary_dir)
     my_run.upload_folder("dashboard", binary_dir)
-
-    # _logger.info("Saving binary output")
-    # rai_i.save(args.dashboard)
 
     _logger.info("Saving UX JSON")
     rai_data = rai_i.get_data()
