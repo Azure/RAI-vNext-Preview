@@ -6,10 +6,9 @@ import logging
 import pathlib
 import time
 
-from azure.ml import MLClient
-from azure.ml import dsl
-from azure.ml.entities import JobInput
-from azure.ml.entities import ComponentJob, PipelineJob
+from azure.ml import MLClient, dsl, Input
+from azure.ml.entities import load_component
+from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 
@@ -17,15 +16,13 @@ _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
 
-class TestRegisterTabularDataset:
-    def test_smoke_registration(
-        self, ml_client: MLClient, component_config, registered_adult_model_id: str
-    ):
+class Testregister_tabular_dataset:
+    def test_smoke_registration(self, ml_client: MLClient, component_config):
         version_string = component_config["version"]
         epoch_secs = int(time.time())
 
-        register_tabular_component = dsl.load_component(
-            client=ml_client, name="RegisterTabularDataset", version=version_string
+        register_tabular_component = load_component(
+            client=ml_client, name="register_tabular_dataset", version=version_string
         )
 
         @dsl.pipeline(
@@ -46,13 +43,16 @@ class TestRegisterTabularDataset:
             )
             return {}
 
-        adult_train_pq = ml_client.datasets.get(
-            name="Adult_Train_PQ", version=version_string
+        pipeline = my_pipeline(
+            Input(
+                type="uri_file",
+                path=f"adult_train_pq:{version_string}",
+                mode="download",
+            ),
+            Input(
+                type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+            ),
         )
-        adult_test_pq = ml_client.datasets.get(
-            name="Adult_Test_PQ", version=version_string
-        )
-        pipeline = my_pipeline(adult_train_pq, adult_test_pq)
 
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
@@ -65,8 +65,8 @@ class TestRegisterTabularDataset:
         train_tabular_base = "train_tabular_adult"
         test_tabular_base = "test_tabular_adult"
 
-        register_tabular_component = dsl.load_component(
-            client=ml_client, name="RegisterTabularDataset", version=version_string
+        register_tabular_component = load_component(
+            client=ml_client, name="register_tabular_dataset", version=version_string
         )
 
         @dsl.pipeline(
@@ -82,8 +82,8 @@ class TestRegisterTabularDataset:
             )
             return {}
 
-        adult_train_pq = ml_client.datasets.get(
-            name="Adult_Train_PQ", version=version_string
+        adult_train_pq = Input(
+            type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
         )
         pipeline = tabular_registration_pipeline(
             adult_train_pq, base_name=train_tabular_base
@@ -92,8 +92,8 @@ class TestRegisterTabularDataset:
         conversion_pipeline_job = submit_and_wait(ml_client, pipeline)
         assert conversion_pipeline_job is not None
 
-        adult_test_pq = ml_client.datasets.get(
-            name="Adult_Test_PQ", version=version_string
+        adult_test_pq = Input(
+            type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
         )
         pipeline_2 = tabular_registration_pipeline(
             adult_test_pq, base_name=test_tabular_base
@@ -105,25 +105,26 @@ class TestRegisterTabularDataset:
 
         # Now we want to consume the dataset in one of our pipelines
 
-        fetch_model_component = dsl.load_component(
-            client=ml_client, name="FetchRegisteredModel", version=version_string
+        fetch_model_component = load_component(
+            client=ml_client, name="fetch_registered_model", version=version_string
         )
 
-        tabular_to_parquet_component = dsl.load_component(
-            client=ml_client, name="TabularToParquet", version=version_string
+        tabular_to_parquet_component = load_component(
+            client=ml_client, name="convert_tabular_to_parquet", version=version_string
         )
 
-        rai_constructor_component = dsl.load_component(
-            client=ml_client, name="RAIInsightsConstructor", version=version_string
+        rai_constructor_component = load_component(
+            client=ml_client, name="rai_insights_constructor", version=version_string
         )
 
-        rai_explanation_component = dsl.load_component(
-            client=ml_client, name="RAIInsightsExplanation", version=version_string
+        rai_explanation_component = load_component(
+            client=ml_client, name="rai_insights_explanation", version=version_string
         )
 
-        rai_gather_component = dsl.load_component(
-            client=ml_client, name="RAIInsightsGather", version=version_string
+        rai_gather_component = load_component(
+            client=ml_client, name="rai_insights_gather", version=version_string
         )
+        _logger.info("Loaded all components: {0}".format(type(rai_gather_component)))
 
         @dsl.pipeline(
             compute="cpucluster",
@@ -165,9 +166,6 @@ class TestRegisterTabularDataset:
             rai_gather_job = rai_gather_component(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=rai_explanation_job.outputs.explanation,
-                insight_2=None,
-                insight_3=None,
-                insight_4=None,
             )
             rai_gather_job.outputs.dashboard.mode = "upload"
             rai_gather_job.outputs.ux_json.mode = "upload"

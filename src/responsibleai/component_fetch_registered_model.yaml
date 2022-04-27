@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: FetchRegisteredModel
+name: fetch_registered_model
 display_name: Fetch Registered Model
 version: VERSION_REPLACEMENT_STRING
 type: command
@@ -9,8 +9,7 @@ inputs:
 outputs:
   model_info_output_path:
     type: path
-code:
-  local_path: ./src_fetch_registered/
+code: ./src_fetch_registered/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
   python fetch_registered.py

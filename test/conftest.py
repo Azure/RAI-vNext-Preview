@@ -8,11 +8,56 @@ import time
 
 from azure.identity import DefaultAzureCredential
 
-from azure.ml import dsl, MLClient
-from azure.ml.entities import JobInput
-from azure.ml.entities import ComponentJob, PipelineJob
+from azure.ml import MLClient, dsl, Input
+from azure.ml.entities import load_component
+from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
+
+
+class Components:
+    def __init__(self, ml_client: MLClient, version_string: str):
+        self.fetch_model = load_component(
+            client=ml_client, name="fetch_registered_model", version=version_string
+        )
+
+        self.tabular_to_parquet = load_component(
+            client=ml_client, name="convert_tabular_to_parquet", version=version_string
+        )
+
+        self.rai_constructor = load_component(
+            client=ml_client, name="rai_insights_constructor", version=version_string
+        )
+
+        self.rai_explanation = load_component(
+            client=ml_client, name="rai_insights_explanation", version=version_string
+        )
+
+        self.rai_gather = load_component(
+            client=ml_client, name="rai_insights_gather", version=version_string
+        )
+
+        self.rai_causal = load_component(
+            client=ml_client, name="rai_insights_causal", version=version_string
+        )
+
+        self.rai_counterfactual = load_component(
+            client=ml_client, name="rai_insights_counterfactual", version=version_string
+        )
+
+        self.rai_erroranalysis = load_component(
+            client=ml_client, name="rai_insights_erroranalysis", version=version_string
+        )
+
+        self.train_adult = load_component(
+            client=ml_client,
+            name="train_logistic_regression_for_rai",
+            version=version_string,
+        )
+
+        self.register_model = load_component(
+            client=ml_client, name="register_model", version=version_string
+        )
 
 
 @pytest.fixture(scope="session")
@@ -50,20 +95,29 @@ def ml_client(workspace_config):
 
 
 @pytest.fixture(scope="session")
+def rai_components(ml_client, component_config):
+    version_string = component_config["version"]
+
+    return Components(ml_client, version_string)
+
+
+@pytest.fixture(scope="session")
 def registered_adult_model_id(ml_client, component_config):
     version_string = component_config["version"]
 
     model_name_suffix = int(time.time())
     model_name = "common_fetch_model_adult"
 
-    train_component = dsl.load_component(
-        client=ml_client, name="TrainLogisticRegressionForRAI", version=version_string
+    train_component = load_component(
+        client=ml_client,
+        name="train_logistic_regression_for_rai",
+        version=version_string,
     )
-    register_component = dsl.load_component(
-        client=ml_client, name="RegisterModel", version=version_string
+    register_component = load_component(
+        client=ml_client, name="register_model", version=version_string
     )
-    adult_train_pq = ml_client.datasets.get(
-        name="Adult_Train_PQ", version=version_string
+    adult_train_pq = Input(
+        type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
     )
 
     @dsl.pipeline(
@@ -100,55 +154,41 @@ def registered_boston_model_id(ml_client, component_config):
     model_name_suffix = int(time.time())
     model_name = "common_fetch_model_boston"
 
-    # Configure the global pipeline inputs:
-    pipeline_inputs = {
-        "target_column_name": "y",
-        "my_training_data": JobInput(dataset=f"Boston_Train_PQ:{version_string}"),
-        "my_test_data": JobInput(dataset=f"Boston_Test_PQ:{version_string}"),
-    }
-
-    # Specify the training job
-    train_job_inputs = {
-        "target_column_name": "${{inputs.target_column_name}}",
-        "training_data": "${{inputs.my_training_data}}",
-        "categorical_features": "[]",
-        "continuous_features": '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
-    }
-    train_job_outputs = {"model_output": None}
-    train_job = ComponentJob(
-        component=f"TrainBostonForRAI:{version_string}",
-        inputs=train_job_inputs,
-        outputs=train_job_outputs,
+    train_component = load_component(
+        client=ml_client, name="train_boston_for_rai", version=version_string
+    )
+    register_component = load_component(
+        client=ml_client, name="register_model", version=version_string
+    )
+    boston_train_pq = Input(
+        type="uri_file", path=f"boston_train_pq:{version_string}", mode="download"
     )
 
-    # The model registration job
-    register_job_inputs = {
-        "model_input_path": "${{jobs.train-model-job.outputs.model_output}}",
-        "model_base_name": model_name,
-        "model_name_suffix": model_name_suffix,
-    }
-    register_job_outputs = {"model_info_output_path": None}
-    register_job = ComponentJob(
-        component=f"RegisterModel:{version_string}",
-        inputs=register_job_inputs,
-        outputs=register_job_outputs,
-    )
-    # Assemble into a pipeline
-    register_pipeline = PipelineJob(
-        experiment_name=f"Register_Boston_Model_Fixture_{version_string}",
-        description="Python submitted Boston model registration",
-        jobs={
-            "train-model-job": train_job,
-            "register-model-job": register_job,
-        },
-        inputs=pipeline_inputs,
-        outputs=register_job_outputs,
+    @dsl.pipeline(
         compute="cpucluster",
+        description="Register Common Model for Boston",
+        experiment_name="Fixture_Common_Boston_Model",
     )
+    def my_training_pipeline(target_column_name, training_data):
+        trained_model = train_component(
+            target_column_name=target_column_name,
+            training_data=training_data,
+            categorical_features="[]",
+            continuous_features='["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
+        )
 
-    # Send it
-    register_pipeline_job = submit_and_wait(ml_client, register_pipeline)
-    assert register_pipeline_job is not None
+        _ = register_component(
+            model_input_path=trained_model.outputs.model_output,
+            model_base_name=model_name,
+            model_name_suffix=model_name_suffix,
+        )
+
+        return {}
+
+    training_pipeline = my_training_pipeline("y", boston_train_pq)
+
+    training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
+    assert training_pipeline_job is not None
 
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
     return expected_model_id

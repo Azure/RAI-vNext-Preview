@@ -19,10 +19,10 @@ type: pipeline
 inputs:
   target_column_name: income
   my_training_data:
-    dataset: azureml:Adult_Train_PQ:VERSION_REPLACEMENT_STRING
+    dataset: azureml:adult_train_pq:VERSION_REPLACEMENT_STRING
     mode: ro_mount
   my_test_data:
-    dataset: azureml:Adult_Test_PQ:VERSION_REPLACEMENT_STRING
+    dataset: azureml:adult_test_pq:VERSION_REPLACEMENT_STRING
     mode: ro_mount
 
 outputs:
@@ -43,7 +43,7 @@ settings:
 jobs:
   train-model-job:
     type: component_job
-    component: azureml:TrainLogisticRegressionForRAI:VERSION_REPLACEMENT_STRING
+    component: azureml:train_logistic_regression_for_rai:VERSION_REPLACEMENT_STRING
     inputs:
       training_data: ${{inputs.my_training_data}}
       target_column_name: ${{inputs.target_column_name}}
@@ -52,7 +52,7 @@ jobs:
 
   register-model-job:
     type: component_job
-    component: azureml:RegisterModel:VERSION_REPLACEMENT_STRING
+    component: azureml:register_model:VERSION_REPLACEMENT_STRING
     inputs:
       model_input_path: ${{jobs.train-model-job.outputs.model_output}}
       model_base_name: component_registered_lr_01
@@ -61,7 +61,7 @@ jobs:
 
   create-rai-job:
     type: component_job
-    component: azureml:RAIInsightsConstructor:VERSION_REPLACEMENT_STRING
+    component: azureml:rai_insights_constructor:VERSION_REPLACEMENT_STRING
     inputs:
       title: With just the OSS
       task_type: classification
@@ -75,14 +75,14 @@ jobs:
 
   explain_01:
     type: component_job
-    component: azureml:RAIInsightsExplanation:VERSION_REPLACEMENT_STRING
+    component: azureml:rai_insights_explanation:VERSION_REPLACEMENT_STRING
     inputs:
       comment: Some random string
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
 
   causal_01:
     type: component_job
-    component: azureml:RAIInsightsCausal:VERSION_REPLACEMENT_STRING
+    component: azureml:rai_insights_causal:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       treatment_features: '["Age", "Sex"]'
@@ -90,7 +90,7 @@ jobs:
 
   counterfactual_01:
     type: component_job
-    component: azureml:RAIInsightsCounterfactual:VERSION_REPLACEMENT_STRING
+    component: azureml:rai_insights_counterfactual:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       total_CFs: 10
@@ -98,14 +98,14 @@ jobs:
 
   error_analysis_01:
     type: component_job
-    component: azureml:RAIInsightsErrorAnalysis:VERSION_REPLACEMENT_STRING
+    component: azureml:rai_insights_erroranalysis:VERSION_REPLACEMENT_STRING
     inputs:
       rai_insights_dashboard: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       filter_features: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
 
   gather_01:
     type: component_job
-    component: azureml:RAIInsightsGather:VERSION_REPLACEMENT_STRING
+    component: azureml:rai_insights_gather:VERSION_REPLACEMENT_STRING
     inputs:
       constructor: ${{jobs.create-rai-job.outputs.rai_insights_dashboard}}
       insight_1: ${{jobs.causal_01.outputs.causal}}

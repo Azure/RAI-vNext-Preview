@@ -1,5 +1,5 @@
 $schema: http://azureml/sdk-2-0/CommandComponent.json
-name: RAIInsightsCounterfactual
+name: rai_insights_counterfactual
 display_name: Add Counterfactuals to RAI Insights Dashboard
 version: VERSION_REPLACEMENT_STRING
 type: command
@@ -35,8 +35,7 @@ outputs:
   counterfactual:
     type: path
 
-code:
-  local_path: ./rai_analyse/
+code: ./rai_analyse/
 
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 

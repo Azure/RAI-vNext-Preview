@@ -6,7 +6,7 @@ parameters:
 - name: pythonVersion
   displayName: Python Version
   type: string
-  default: 3.7
+  default: 3.8
   values:
     - 3.7
     - 3.8
@@ -117,3 +117,12 @@ stages:
       sdkSource: ${{parameters.sdkSource}}
       subscriptionName: $(SubscriptionName)
       configFileArtifact: $(ConfigFileArtifact)
+
+  - template: templates/run-python-tests-job-template.yaml
+    parameters:
+      pythonVersion: ${{parameters.pythonVersion}}
+      cliSource: ${{parameters.cliSource}}
+      sdkSource: ${{parameters.sdkSource}}
+      subscriptionName: $(SubscriptionName)
+      configFileArtifact: $(ConfigFileArtifact)
+      testRunType: Notebooks
