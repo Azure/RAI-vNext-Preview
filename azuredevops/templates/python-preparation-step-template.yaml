@@ -71,9 +71,3 @@ steps:
       scriptPath: scripts/Install-CLIv2.ps1
       failOnStandardError: false
       arguments: -sdkVersionSelect ${{parameters.cliSource}}
-
-  - powershell: |
-      cd src/azure-ml-rai
-      pip install -e .
-      pip install responsibleai
-    displayName: Install miniSDK
