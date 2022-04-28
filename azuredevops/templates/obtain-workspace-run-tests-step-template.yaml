@@ -148,12 +148,6 @@ steps:
     inlineScript: |
       python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
 
-- powershell: |
-    cd src/azure-ml-rai
-    pip install -e .
-    pip install responsibleai
-  displayName: Install miniSDK
-
 - task: AzureCLI@2
   displayName: Run tests
   inputs:

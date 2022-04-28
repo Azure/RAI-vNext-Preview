@@ -182,56 +182,6 @@ print(latest_job.status)
 (or by looking in the AzureML portal).
 
 
-## Downloading the dashboard
-
-Once the pipeline has completed, we can download the results to our local machine.
-Support for this is planned within the official SDK, but for now we provide a miniature SDK within this repository.
-It can be installed by running:
-
-```bash
-pip install src/azure-ml-rai
-```
-
-With this SDK installed, we can use its three APIs.
-The first lists all dashboards computed within a single AzureML experiment:
-
-```python
-experiment_name = f"classification_pipeline_from_python_{version_string}"
-
-from azure_ml_rai import list_rai_insights
-
-run_list = list_rai_insights(ml_client, experiment_name)
-print(run_list)
-```
-
-For the example above, this should only have a single entry.
-The ids listed will be the run ids of the gather jobs found.
-In addition, the `list_rai_insights()` function can take an optional `model_id` argument, to filter the returned list based on the model which was analysed
-
-We can download the `RAIInsights` object associated with one of these, and load it into the `RAIInsightsDashboard`:
-
-```python
-from azure_ml_rai import download_rai_insights
-
-download_dir = 'my_downloaded_insight'
-
-download_rai_insights(
-    ml_client,
-    rai_insight_id=run_list[0],
-    path=download_dir,
-)
-
-from responsibleai import RAIInsights
-from raiwidgets import ResponsibleAIDashboard
-
-rai_i = RAIInsights.load(download_dir)
-
-ResponsibleAIDashboard(rai_i)
-```
-
-There is a third API, `download_rai_insights_ux()` which only downloads the JSON file used by the static UX.
-However, this is mainly for use within the AzureML portal.
-
 ## To be deleted?
 
 ### Sample exploring....

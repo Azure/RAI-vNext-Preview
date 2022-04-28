@@ -44,9 +44,6 @@ pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 Write-Host "=-= Installing other requirements"
 pip install -r requirements-dev-releasepackage.txt
 
-Write-Host "=-= Installing mini SDK"
-pip install -e src/azure-ml-rai
-
 Write-Host "=-= Creating workspace config JSON"
 Create-ConfigJson $SubId $ResourceGroup $Workspace
 
