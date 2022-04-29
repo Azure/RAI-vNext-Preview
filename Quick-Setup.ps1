@@ -31,24 +31,24 @@ function Create-ComponentConfigJson(
 }
 
 
-Write-Host "=-= Creating conda environment '$EnvName' with python v3.8"
-conda create -y -n $EnvName python=3.8
-conda activate $EnvName
+# Write-Host "=-= Creating conda environment '$EnvName' with python v3.8"
+# conda create -y -n $EnvName python=3.8
+# conda activate $EnvName
 
-Write-Host "=-= Installing Jupyter"
-pip install jupyter "markupsafe<=2.0.1" "itsdangerous==2.0.1"
+# Write-Host "=-= Installing Jupyter"
+# pip install jupyter "markupsafe<=2.0.1" "itsdangerous==2.0.1"
 
-Write-Host "=-= Installing responsibleai"
-pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
+# Write-Host "=-= Installing responsibleai"
+# pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 
-Write-Host "=-= Installing other requirements"
-pip install -r requirements-dev-releasepackage.txt
+# Write-Host "=-= Installing other requirements"
+# pip install -r requirements-dev-releasepackage.txt
 
 Write-Host "=-= Creating workspace config JSON"
 Create-ConfigJson $SubId $ResourceGroup $Workspace
 
 Write-Host "=-= Creating component config JSON"
-Create-ComponentConfigJson -version 1
+Create-ComponentConfigJson -version 11
 
 Write-Host "=-= Registering RAI components"
 python scripts/register_azureml.py --workspace_config config.json --component_config component_config.json --base_directory .
