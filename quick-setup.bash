@@ -22,7 +22,7 @@ echo "{ \"subscription_id\":\"${subId}\", \"resource_group\":\"$rgName\", \"work
 echo
 
 echo "=-= Creating comoponent_config.json"
-echo "{ \"version\":\"1000000011\" }" > component_config.json
+echo "{ \"version\":\"1\" }" > component_config.json
 echo
 
 echo "=-= Creating conda environment"
