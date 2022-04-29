@@ -36,6 +36,11 @@ This is all available via Python SDK or CLI.
 ## Set Up
 In this section, we will go over the basic setup steps that you need in order to generate Responsible AI insights for your models from SDK v2, CLI v2 and visualize the generated Responsible AI insights in [AML studio](https://ml.azure.com/).
 
+### Install Miniconda
+
+Our setup script assumes that `conda` is installed and configured for your shell. [Download and install MiniConda](https://docs.conda.io/en/latest/miniconda.html) (External link).
+After installation, restart your shell, and make sure that you can run `conda` commands.
+
 ### Create an AzureML workspace
 Create an AzureML workspace by using the [configuration notebook](https://github.com/Azure/MachineLearningNotebooks/blob/master/configuration.ipynb)
 
