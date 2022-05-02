@@ -76,6 +76,11 @@ To run the script in powershell, from the repository root, run:
 ```powershell
  .\Quick-Setup.ps1
  ```
+ alternatively, an equivalent script for `bash`:
+ ```bash
+ ./quick-setup.bash <CONDA-ENV-NAME> <SUBSCRIPTION-ID> <RESOURCE-GROUP-NAME> <WORKSPACE-NAME>
+ ```
+ This script will echo the supplied arguments and then pause briefly before continuing.
  
 
 ### Generating Responsibleai AI Dashboard insights
