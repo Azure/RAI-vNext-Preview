@@ -83,7 +83,7 @@ To run the script in powershell, from the repository root, run:
  This script will echo the supplied arguments and then pause briefly before continuing.
  
 
-### Generating Responsibleai AI Dashboard insights
+### Generating Responsible AI Dashboard insights
 Once you have created an Azure workspace and registered your components in the one-time setup above, you can create a Responsible AI dashboard via the CLI or SDK. Start here for `examples` [folder](examples) to get started.
 
 ### Viewing your Responsible AI Dashboard in the AzureML studio portal
