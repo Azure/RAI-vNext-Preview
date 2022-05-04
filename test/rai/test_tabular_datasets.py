@@ -194,7 +194,6 @@ class Testregister_tabular_dataset:
         pipeline_file = current_dir / "pipeline_fetch_tabular.yaml"
         pipeline_processed_file = "pipeline_fetch_tabular.processed.yaml"
 
-
         replacements = {
             "VERSION_REPLACEMENT_STRING": str(component_config["version"]),
             "MODEL_ID_REPLACEMENT_STRING": registered_adult_model_id,
