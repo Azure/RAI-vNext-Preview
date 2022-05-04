@@ -174,10 +174,13 @@ class Testregister_tabular_dataset:
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
 
+        train_data_name = f"{train_tabular_base}_{epoch_secs}"
+        test_data_name = f"{test_tabular_base}_{epoch_secs}"
+
         rai_pipeline = use_tabular_rai(
             target_column_name="income",
-            train_data_name=f"{train_tabular_base}_{epoch_secs}",
-            test_data_name=f"{test_tabular_base}_{epoch_secs}",
+            train_data_name=train_data_name,
+            test_data_name=test_data_name,
         )
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
@@ -186,4 +189,10 @@ class Testregister_tabular_dataset:
         # ----
 
         # Now do the same thing from a YAML file
-
+        replacements = {
+            "VERSION_REPLACEMENT_STRING": str(component_config["version"]),
+            "MODEL_ID_REPLACEMENT_STRING": registered_adult_model_id,
+            "TRAIN_TABULAR_REPLACEMENT_STRING": train_data_name,
+            "TEST_TABULAR_REPLACEMENT_STRING": test_data_name,
+        }
+        process_file(pipeline_file, pipeline_processed_file, replacements)
