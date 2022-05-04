@@ -8,9 +8,8 @@ import time
 
 from azure.ml import MLClient, dsl, Input
 from azure.ml.entities import load_component
-from azure.ml.entities import CommandComponent, PipelineJob
 
-from test.utilities_for_test import submit_and_wait
+from test.utilities_for_test import submit_and_wait, process_file
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -183,3 +182,8 @@ class Testregister_tabular_dataset:
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
+
+        # ----
+
+        # Now do the same thing from a YAML file
+

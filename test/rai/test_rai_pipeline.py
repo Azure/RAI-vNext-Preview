@@ -12,18 +12,10 @@ from azure.ml.entities import load_component
 from azure.ml.entities import Job
 from responsibleai import RAIInsights
 
-from test.utilities_for_test import submit_and_wait
+from test.utilities_for_test import submit_and_wait, process_file
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
-
-
-def process_file(input_file, output_file, replacements):
-    with open(input_file, "r") as infile, open(output_file, "w") as outfile:
-        for line in infile:
-            for f, r in replacements.items():
-                line = line.replace(f, r)
-            outfile.write(line)
 
 
 class TestRAISmoke:
@@ -32,7 +24,8 @@ class TestRAISmoke:
         pipeline_file = current_dir / "pipeline_adult_analyse.yaml"
         pipeline_processed_file = "pipeline_adult_analyse.processed.yaml"
 
-        replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
+        replacements = {"VERSION_REPLACEMENT_STRING": str(
+            component_config["version"])}
         process_file(pipeline_file, pipeline_processed_file, replacements)
 
         pipeline_job = Job.load(path=pipeline_processed_file)
@@ -44,7 +37,8 @@ class TestRAISmoke:
         pipeline_file = current_dir / "pipeline_boston_analyse.yaml"
         pipeline_processed_file = "pipeline_boston_analyse.processed.yaml"
 
-        replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
+        replacements = {"VERSION_REPLACEMENT_STRING": str(
+            component_config["version"])}
         process_file(pipeline_file, pipeline_processed_file, replacements)
 
         pipeline_job = Job.load(path=pipeline_processed_file)
@@ -215,7 +209,8 @@ class TestRAISmoke:
             ml_client.jobs.download(
                 pipeline_job.name, download_path=dashboard_path, output_name="dashboard"
             )
-            expected_path = pathlib.Path(dashboard_path) / 'named-outputs' / 'dashboard'
+            expected_path = pathlib.Path(
+                dashboard_path) / 'named-outputs' / 'dashboard'
             # This load is very fragile with respect to Python version and conda environment
             rai_i = RAIInsights.load(expected_path)
             assert rai_i is not None
@@ -267,5 +262,6 @@ class TestRAISmoke:
         )
 
         # Send it
-        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
+        insights_pipeline_job = submit_and_wait(
+            ml_client, insights_pipeline_job)
         assert insights_pipeline_job is not None
