@@ -67,10 +67,10 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
         "rai_programmer_example_version_string = '5'"
     ] = f"rai_programmer_example_version_string = '{train_version_string}'"
     replacements[
-        'train_data_path = "data/programmers-train.parquet"'
+        "train_data_path = 'data/programmers-train.parquet'"
     ] = 'train_data_path = "examples/notebooks/data/programmers-train.parquet"'
     replacements[
-        'test_data_path = "data/programmers-test.parquet"'
+        "test_data_path = 'data/programmers-test.parquet'"
     ] = 'test_data_path = "examples/notebooks/data/programmers-test.parquet"'
 
     assay_one_notebook(nb_name, dict(), replacements)
