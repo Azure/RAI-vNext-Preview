@@ -1,0 +1,56 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+experiment_name: AML_RAI_Fetch_Tabular_VERSION_REPLACEMENT_STRING
+type: pipeline
+
+inputs:
+  target_column_name: income
+
+settings:
+  default_datastore: azureml:workspaceblobstore
+  default_compute: azureml:cpucluster
+  continue_on_step_failure: false
+
+jobs:
+  fetch_model_job:
+    type: command
+    component: azureml:fetch_registered_model:VERSION_REPLACEMENT_STRING
+    inputs:
+      model_id: MODEL_ID_REPLACEMENT_STRING
+
+  convert_train_job:
+    type: command
+    component: azureml:convert_tabular_to_parquet:VERSION_REPLACEMENT_STRING
+    inputs:
+      tabular_dataset_name: TRAIN_TABULAR_REPLACEMENT_STRING
+
+  convert_test_job:
+    type: command
+    component: azureml:convert_tabular_to_parquet:VERSION_REPLACEMENT_STRING
+    inputs:
+      tabular_dataset_name: TEST_TABULAR_REPLACEMENT_STRING
+
+  create_rai_job:
+    type: command
+    component: azureml:rai_insights_constructor:VERSION_REPLACEMENT_STRING
+    inputs:
+      title: Minimal YAML
+      task_type: classification
+      model_info_path: ${{parent.jobs.fetch_model_job.outputs.model_info_output_path}}
+      train_dataset: ${{parent.jobs.convert_train_job.outputs.dataset_output_path}}
+      test_dataset: ${{parent.jobs.convert_test_job.outputs.dataset_output_path}}
+      target_column_name: ${{parent.inputs.target_column_name}}
+      categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+
+  explain_01:
+    type: command
+    component: azureml:rai_insights_explanation:VERSION_REPLACEMENT_STRING
+    inputs:
+      comment: Some random string
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+
+  gather_01:
+    type: command
+    component: azureml:rai_insights_gather:VERSION_REPLACEMENT_STRING
+    inputs:
+      constructor: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      insight_4: ${{parent.jobs.explain_01.outputs.explanation}}

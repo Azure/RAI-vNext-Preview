@@ -30,3 +30,11 @@ def submit_and_wait(
         _logger.error(str(created_job))
     assert created_job.status == expected_state
     return created_job
+
+
+def process_file(input_file, output_file, replacements):
+    with open(input_file, "r") as infile, open(output_file, "w") as outfile:
+        for line in infile:
+            for f, r in replacements.items():
+                line = line.replace(f, r)
+            outfile.write(line)

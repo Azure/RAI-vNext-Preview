@@ -8,9 +8,9 @@ import time
 
 from azure.ml import MLClient, dsl, Input
 from azure.ml.entities import load_component
-from azure.ml.entities import CommandComponent, PipelineJob
+from azure.ml.entities import Job
 
-from test.utilities_for_test import submit_and_wait
+from test.utilities_for_test import submit_and_wait, process_file
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -175,11 +175,33 @@ class Testregister_tabular_dataset:
                 "ux_json": rai_gather_job.outputs.ux_json,
             }
 
+        train_data_name = f"{train_tabular_base}_{epoch_secs}"
+        test_data_name = f"{test_tabular_base}_{epoch_secs}"
+
         rai_pipeline = use_tabular_rai(
             target_column_name="income",
-            train_data_name=f"{train_tabular_base}_{epoch_secs}",
-            test_data_name=f"{test_tabular_base}_{epoch_secs}",
+            train_data_name=train_data_name,
+            test_data_name=test_data_name,
         )
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
         assert rai_pipeline_job is not None
+
+        # ----
+
+        # Now do the same thing from a YAML file
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = current_dir / "pipeline_fetch_tabular.yaml"
+        pipeline_processed_file = "pipeline_fetch_tabular.processed.yaml"
+
+        replacements = {
+            "VERSION_REPLACEMENT_STRING": str(component_config["version"]),
+            "MODEL_ID_REPLACEMENT_STRING": registered_adult_model_id,
+            "TRAIN_TABULAR_REPLACEMENT_STRING": train_data_name,
+            "TEST_TABULAR_REPLACEMENT_STRING": test_data_name,
+        }
+        process_file(pipeline_file, pipeline_processed_file, replacements)
+
+        pipeline_job = Job.load(path=pipeline_processed_file)
+
+        submit_and_wait(ml_client, pipeline_job)
