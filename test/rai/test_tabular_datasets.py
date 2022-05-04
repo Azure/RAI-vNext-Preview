@@ -8,6 +8,7 @@ import time
 
 from azure.ml import MLClient, dsl, Input
 from azure.ml.entities import load_component
+from azure.ml.entities import Job
 
 from test.utilities_for_test import submit_and_wait, process_file
 
@@ -189,6 +190,11 @@ class Testregister_tabular_dataset:
         # ----
 
         # Now do the same thing from a YAML file
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = current_dir / "pipeline_fetch_tabular.yaml"
+        pipeline_processed_file = "pipeline_fetch_tabular.processed.yaml"
+
+
         replacements = {
             "VERSION_REPLACEMENT_STRING": str(component_config["version"]),
             "MODEL_ID_REPLACEMENT_STRING": registered_adult_model_id,
@@ -196,3 +202,7 @@ class Testregister_tabular_dataset:
             "TEST_TABULAR_REPLACEMENT_STRING": test_data_name,
         }
         process_file(pipeline_file, pipeline_processed_file, replacements)
+
+        pipeline_job = Job.load(path=pipeline_processed_file)
+
+        submit_and_wait(ml_client, pipeline_job)
