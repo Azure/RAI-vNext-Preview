@@ -36,8 +36,8 @@ jobs:
       title: Minimal YAML
       task_type: classification
       model_info_path: ${{parent.jobs.fetch_model_job.outputs.model_info_output_path}}
-      train_dataset: ${{parent.convert_train_job.outputs.dataset_output_path}}
-      test_dataset: ${{parent.convert_test_job.outputs.dataset_output_path}}
+      train_dataset: ${{parent.jobs.convert_train_job.outputs.dataset_output_path}}
+      test_dataset: ${{parent.jobs.convert_test_job.outputs.dataset_output_path}}
       target_column_name: ${{parent.inputs.target_column_name}}
       categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
 
