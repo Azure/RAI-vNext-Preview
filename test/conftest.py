@@ -129,6 +129,7 @@ def registered_adult_model_id(ml_client, component_config):
         trained_model = train_component(
             target_column_name=target_column_name, training_data=training_data
         )
+        trained_model.set_limits(timeout=360)
 
         _ = register_component(
             model_input_path=trained_model.outputs.model_output,
