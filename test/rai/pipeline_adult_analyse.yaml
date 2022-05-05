@@ -18,6 +18,9 @@ settings:
   default_compute: azureml:cpucluster
   continue_on_step_failure: false
 
+limits:
+  timeout: 1800
+
 jobs:
   train_model_job:
     type: command
