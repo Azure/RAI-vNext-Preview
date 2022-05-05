@@ -19,8 +19,6 @@ jobs:
   train_model_job:
     type: command
     component: azureml:train_boston_for_rai:VERSION_REPLACEMENT_STRING
-    limits:
-      timeout: 30
     inputs:
       training_data: ${{parent.inputs.my_training_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
