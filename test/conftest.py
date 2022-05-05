@@ -131,12 +131,12 @@ def registered_adult_model_id(ml_client, component_config):
         )
         trained_model.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
-        _ = register_component(
+        register_job = register_component(
             model_input_path=trained_model.outputs.model_output,
             model_base_name=model_name,
             model_name_suffix=model_name_suffix,
         )
-        register_component.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
+        register_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
         return {}
 
