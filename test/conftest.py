@@ -180,12 +180,12 @@ def registered_boston_model_id(ml_client, component_config):
         )
         trained_model.set_limits(timeout=360)
 
-        _ = register_component(
+        register_job = register_component(
             model_input_path=trained_model.outputs.model_output,
             model_base_name=model_name,
             model_name_suffix=model_name_suffix,
         )
-        register_component.set_limits(timeout=120)
+        register_job.set_limits(timeout=120)
 
         return {}
 
