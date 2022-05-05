@@ -3,6 +3,7 @@
 # ---------------------------------------------------------
 
 import nbformat as nbf
+import os
 import papermill as pm
 import pytest
 import time
@@ -48,5 +49,36 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
     replacements[
         "rai_housing_example_version_string = '4'"
     ] = f"rai_housing_example_version_string = '{train_version_string}'"
+
+    assay_one_notebook(nb_name, dict(), replacements)
+
+
+@pytest.mark.notebooks
+def test_responsibleaidashboard_programmer_regression_model_debugging(
+    component_config,
+):
+    nb_name = "responsibleaidashboard-programmer-regression-model-debugging"
+
+    version_string = component_config["version"]
+    train_version_string = int(time.time())
+
+    current_file_directory = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(
+        os.path.join(current_file_directory, "../..", "examples/notebooks/data")
+    )
+    train_filename = "programmers-train.parquet"
+    test_filename = "programmers-test.parquet"
+
+    replacements = dict()
+    replacements["version_string = '1'"] = f"version_string = '{version_string}'"
+    replacements[
+        "rai_programmer_example_version_string = '5'"
+    ] = f"rai_programmer_example_version_string = '{train_version_string}'"
+    replacements[
+        "train_data_path = 'data/programmers-train.parquet'"
+    ] = f'train_data_path = "{os.path.join(data_dir, train_filename)}"'
+    replacements[
+        "test_data_path = 'data/programmers-test.parquet'"
+    ] = f'test_data_path = "{os.path.join(data_dir, test_filename)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)

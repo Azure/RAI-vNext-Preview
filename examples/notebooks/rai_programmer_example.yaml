@@ -1,0 +1,78 @@
+
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+experiment_name: RAI_Programmer_Example_YAML_4
+type: pipeline
+
+inputs:
+  target_column_name: score
+  my_training_data:
+    type: uri_file
+    path: azureml:Programmers_Train_Data:4
+    mode: download
+  my_test_data:
+    type: uri_file
+    path: azureml:Programmers_Train_Data:4
+    mode: download
+
+settings:
+  default_datastore: azureml:workspaceblobstore
+  default_compute: azureml:cpucluster
+  continue_on_step_failure: false
+
+jobs:
+  fetch_model_job:
+    type: command
+    component: azureml:fetch_registered_model:1651680099
+    inputs:
+      model_id: rai_programmer_example_reg_1651685575:1
+
+  create_rai_job:
+    type: command
+    component: azureml:rai_insights_constructor:1651680099
+    inputs:
+      title: RAI Programmer Analysis from YAML
+      task_type: regression
+      model_info_path: ${{parent.jobs.fetch_model_job.outputs.model_info_output_path}}
+      train_dataset: ${{parent.inputs.my_training_data}}
+      test_dataset: ${{parent.inputs.my_test_data}}
+      target_column_name: ${{parent.inputs.target_column_name}}
+      categorical_column_names: '["location", "style", "job title", "OS", "Employer", "IDE", "Programming language"]'
+      
+  explain_01:
+    type: command
+    component: azureml:rai_insights_explanation:1651680099
+    inputs:
+      comment: Explanation from YAML for RAI Programmer example
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+
+  causal_01:
+    type: command
+    component: azureml:rai_insights_causal:1651680099
+    inputs:
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      treatment_features: '["Number of github repos contributed to", "YOE"]'
+
+  counterfactual_01:
+    type: command
+    component: azureml:rai_insights_counterfactual:1651680099
+    inputs:
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      total_CFs: 10
+      desired_range: '[5, 10]'
+
+  error_analysis_01:
+    type: command
+    component: azureml:rai_insights_erroranalysis:1651680099
+    inputs:
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      filter_features: '["style", "Employer"]'
+
+  gather_01:
+    type: command
+    component: azureml:rai_insights_gather:1651680099
+    inputs:
+      constructor: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      insight_1: ${{parent.jobs.causal_01.outputs.causal}}
+      insight_2: ${{parent.jobs.counterfactual_01.outputs.counterfactual}}
+      insight_3: ${{parent.jobs.error_analysis_01.outputs.error_analysis}}
+      insight_4: ${{parent.jobs.explain_01.outputs.explanation}}
