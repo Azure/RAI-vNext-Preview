@@ -6,6 +6,7 @@ import logging
 
 from azure.ml import MLClient, dsl, Input
 
+from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait
 
 _logger = logging.getLogger(__file__)
@@ -35,7 +36,7 @@ class TestCounterfactualComponent:
             fetch_model_job = rai_components.fetch_model(
                 model_id=registered_adult_model_id
             )
-            fetch_model_job.set_limits(timeout=120)
+            fetch_model_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
@@ -48,7 +49,7 @@ class TestCounterfactualComponent:
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
-            construct_job.set_limits(timeout=120)
+            construct_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             counterfactual_job = rai_components.rai_counterfactual(
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
@@ -60,13 +61,13 @@ class TestCounterfactualComponent:
                 features_to_vary='["Capital Gain", "Hours per week", "Age", "Country", "Sex"]',
                 feature_importance=True,
             )
-            counterfactual_job.set_limits(timeout=600)
+            counterfactual_job.set_limits(timeout=Timeouts.COUNTERFACTUAL_TIMEOUT)
 
             gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=counterfactual_job.outputs.counterfactual,
             )
-            gather_job.set_limits(timeout=120)
+            gather_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             gather_job.outputs.dashboard.mode = "upload"
             gather_job.outputs.ux_json.mode = "upload"
@@ -113,7 +114,7 @@ class TestCounterfactualComponent:
             fetch_model_job = rai_components.fetch_model(
                 model_id=registered_boston_model_id
             )
-            fetch_model_job.set_limits(timeout=120)
+            fetch_model_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
@@ -126,7 +127,7 @@ class TestCounterfactualComponent:
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
-            construct_job.set_limits(timeout=120)
+            construct_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             counterfactual_job = rai_components.rai_counterfactual(
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
@@ -138,7 +139,7 @@ class TestCounterfactualComponent:
                 features_to_vary='["ZN", "AGE", "CRIM", "INDUS"]',
                 feature_importance=True,
             )
-            counterfactual_job.set_limits(timeout=600)
+            counterfactual_job.set_limits(timeout=Timeouts.COUNTERFACTUAL_TIMEOUT)
 
             gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,

@@ -9,7 +9,9 @@ import time
 from azure.ml import MLClient, dsl, Input
 from azure.ml.entities import load_component
 from azure.ml.entities import Job
+from urllib3 import Timeout
 
+from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait, process_file
 
 _logger = logging.getLogger(__file__)
@@ -80,7 +82,7 @@ class Testregister_tabular_dataset:
                 dataset_base_name=base_name,
                 dataset_name_suffix=str(epoch_secs),
             )
-            reg_job.set_limits(timeout=120)
+            reg_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
             return {}
 
         adult_train_pq = Input(
@@ -138,17 +140,17 @@ class Testregister_tabular_dataset:
             test_data_name,
         ):
             fetch_model_job = fetch_model_component(model_id=registered_adult_model_id)
-            fetch_model_job.set_limits(timeout=120)
+            fetch_model_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             to_parquet_job_train = tabular_to_parquet_component(
                 tabular_dataset_name=train_data_name
             )
-            to_parquet_job_train.set_limits(timeout=120)
+            to_parquet_job_train.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             to_parquet_job_test = tabular_to_parquet_component(
                 tabular_dataset_name=test_data_name
             )
-            to_parquet_job_test.set_limits(timeout=120)
+            to_parquet_job_test.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             construct_job = rai_constructor_component(
                 title="Run built from DSL",
@@ -161,19 +163,20 @@ class Testregister_tabular_dataset:
                 maximum_rows_for_test_dataset=5000,
                 classes="[]",
             )
-            construct_job.set_limits(timeout=120)
+            construct_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             rai_explanation_job = rai_explanation_component(
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
                 comment="Something, something",
             )
-            rai_explanation_job.set_limits(timeout=120)
+            rai_explanation_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             rai_gather_job = rai_gather_component(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=rai_explanation_job.outputs.explanation,
             )
-            rai_gather_job.set_limits(timeout=120)
+            rai_gather_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
+            
             rai_gather_job.outputs.dashboard.mode = "upload"
             rai_gather_job.outputs.ux_json.mode = "upload"
 
