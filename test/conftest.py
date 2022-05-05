@@ -15,6 +15,7 @@ from azure.ml.entities import CommandComponent, PipelineJob
 from test.utilities_for_test import submit_and_wait
 from test.constants_for_test import Timeouts
 
+
 class Components:
     def __init__(self, ml_client: MLClient, version_string: str):
         self.fetch_model = load_component(

@@ -176,7 +176,7 @@ class Testregister_tabular_dataset:
                 insight_1=rai_explanation_job.outputs.explanation,
             )
             rai_gather_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
-            
+
             rai_gather_job.outputs.dashboard.mode = "upload"
             rai_gather_job.outputs.ux_json.mode = "upload"
 
