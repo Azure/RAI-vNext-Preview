@@ -136,6 +136,7 @@ def registered_adult_model_id(ml_client, component_config):
             model_base_name=model_name,
             model_name_suffix=model_name_suffix,
         )
+        register_component.set_limits(timeout=120)
 
         return {}
 
@@ -177,12 +178,14 @@ def registered_boston_model_id(ml_client, component_config):
             categorical_features="[]",
             continuous_features='["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
         )
+        trained_model.set_limits(timeout=360)
 
         _ = register_component(
             model_input_path=trained_model.outputs.model_output,
             model_base_name=model_name,
             model_name_suffix=model_name_suffix,
         )
+        register_component.set_limits(timeout=120)
 
         return {}
 
