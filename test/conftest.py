@@ -13,6 +13,7 @@ from azure.ml.entities import load_component
 from azure.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
+from test.constants_for_test import Timeouts
 
 
 class Components:
@@ -129,12 +130,14 @@ def registered_adult_model_id(ml_client, component_config):
         trained_model = train_component(
             target_column_name=target_column_name, training_data=training_data
         )
+        trained_model.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
-        _ = register_component(
+        register_job = register_component(
             model_input_path=trained_model.outputs.model_output,
             model_base_name=model_name,
             model_name_suffix=model_name_suffix,
         )
+        register_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
         return {}
 
@@ -176,12 +179,14 @@ def registered_boston_model_id(ml_client, component_config):
             categorical_features="[]",
             continuous_features='["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
         )
+        trained_model.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
-        _ = register_component(
+        register_job = register_component(
             model_input_path=trained_model.outputs.model_output,
             model_base_name=model_name,
             model_name_suffix=model_name_suffix,
         )
+        register_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
         return {}
 

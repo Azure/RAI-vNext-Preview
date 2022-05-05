@@ -18,7 +18,9 @@ This new feature offers users a new powerful and robust toolkit for understandin
 
 ## Supported scenarios, models and datasets
 
-The repo supports computation of Responsible AI insights for `scikit-learn` models that are trained on `pandas.DataFrame`. This repo accepts both models and SciKit-Learn pipelines as input as long as the model or pipeline implements a `predict` or `predict_proba` function that conforms to the `scikit-learn` convention. If not compatible, you can wrap your model's prediction function into a wrapper class that transforms the output into the format that is supported (`predict` or `predict_proba` of `scikit-learn`), and pass that wrapper class to modules in this repo.
+The AzureML components in this repo support computation of Responsible AI insights for `scikit-learn` models that are trained on `pandas.DataFrame`.
+The components accept both models and SciKit-Learn pipelines as input as long as the model or pipeline implements `predict` and `predict_proba` functions that conforms to the `scikit-learn` convention.
+If not compatible, you can wrap your model's prediction function into a wrapper class that transforms the output into the format that is supported (`predict` and `predict_proba` of `scikit-learn`), and pass that wrapper class to modules in this repo.
 
 Currently, we support datasets having numerical and categorical features. The following table provides the scenarios supported for each of the four responsible AI insights:-
 
@@ -34,10 +36,19 @@ This is all available via Python SDK or CLI.
 ## Set Up
 In this section, we will go over the basic setup steps that you need in order to generate Responsible AI insights for your models from SDK v2, CLI v2 and visualize the generated Responsible AI insights in [AML studio](https://ml.azure.com/).
 
+### Install Miniconda
+
+Our setup script assumes that `conda` is installed and configured for your shell. [Download and install MiniConda](https://docs.conda.io/en/latest/miniconda.html) (External link).
+After installation, restart your shell, and make sure that you can run `conda` commands.
+
 ### Create an AzureML workspace
 Create an AzureML workspace by using the [configuration notebook](https://github.com/Azure/MachineLearningNotebooks/blob/master/configuration.ipynb)
 
-### Clone this workspace
+### Install the Azure CLI
+
+Install the Azure CLI by [following the instructions on the Microsoft docs site](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
+
+### Clone this repository
 
 If you have not already done so, clone this repository, and move into the root directory:
 ```bash
@@ -65,9 +76,14 @@ To run the script in powershell, from the repository root, run:
 ```powershell
  .\Quick-Setup.ps1
  ```
+ alternatively, an equivalent script for `bash`:
+ ```bash
+ ./quick-setup.bash <CONDA-ENV-NAME> <SUBSCRIPTION-ID> <RESOURCE-GROUP-NAME> <WORKSPACE-NAME>
+ ```
+ This script will echo the supplied arguments and then pause briefly before continuing.
  
 
-### Generating Responsibleai AI Dashboard insights
+### Generating Responsible AI Dashboard insights
 Once you have created an Azure workspace and registered your components in the one-time setup above, you can create a Responsible AI dashboard via the CLI or SDK. Start here for `examples` [folder](examples) to get started.
 
 ### Viewing your Responsible AI Dashboard in the AzureML studio portal

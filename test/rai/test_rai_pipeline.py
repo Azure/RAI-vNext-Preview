@@ -12,6 +12,7 @@ from azure.ml.entities import load_component
 from azure.ml.entities import Job
 from responsibleai import RAIInsights
 
+from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait, process_file
 
 _logger = logging.getLogger(__file__)
@@ -96,12 +97,14 @@ class TestRAISmoke:
             train_job = train_log_reg_component(
                 target_column_name=target_column_name, training_data=train_data
             )
+            train_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             register_job = register_model_component(
                 model_input_path=train_job.outputs.model_output,
                 model_base_name="test_classification_pipeline_from_python",
                 model_name_suffix=-1,  # Should be default
             )
+            register_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             create_rai_job = rai_constructor_component(
                 title="Run built from Python",
@@ -114,11 +117,13 @@ class TestRAISmoke:
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
+            create_rai_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             explain_job = rai_explanation_component(
                 comment="Insert text here",
                 rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
             )
+            explain_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             causal_job = rai_causal_component(
                 rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
@@ -137,6 +142,7 @@ class TestRAISmoke:
                 verbose=1,  # Should be default
                 random_state="None",  # Should be default
             )
+            causal_job.set_limits(timeout=Timeouts.CAUSAL_TIMEOUT)
 
             counterfactual_job = rai_counterfactual_component(
                 rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
@@ -148,6 +154,7 @@ class TestRAISmoke:
                 features_to_vary="all",  # Should be default
                 feature_importance=True,  # Should be default
             )
+            counterfactual_job.set_limits(timeout=Timeouts.COUNTERFACTUAL_TIMEOUT)
 
             erroranalysis_job = rai_erroranalysis_component(
                 rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
@@ -156,6 +163,7 @@ class TestRAISmoke:
                 num_leaves=31,  # Should be default
                 min_child_samples=20,  # Should be default
             )
+            erroranalysis_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             rai_gather_job = rai_gather_component(
                 constructor=create_rai_job.outputs.rai_insights_dashboard,
@@ -164,6 +172,7 @@ class TestRAISmoke:
                 insight_3=counterfactual_job.outputs.counterfactual,
                 insight_4=erroranalysis_job.outputs.error_analysis,
             )
+            rai_gather_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             rai_gather_job.outputs.dashboard.mode = "upload"
             rai_gather_job.outputs.ux_json.mode = "upload"
@@ -233,8 +242,9 @@ class TestRAISmoke:
         )
         def fetch_analyse_registered_model(model_id, train_data, test_data):
             fetch_model_job = fetch_model_component(model_id=model_id)
+            fetch_model_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
-            _ = rai_constructor_component(
+            construct_job = rai_constructor_component(
                 title="Run built from DSL",
                 task_type="classification",
                 model_info_path=fetch_model_job.outputs.model_info_output_path,
@@ -245,6 +255,7 @@ class TestRAISmoke:
                 maximum_rows_for_test_dataset=5000,
                 classes="[]",  # Should be default value
             )
+            construct_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
         insights_pipeline_job = fetch_analyse_registered_model(
             model_id=registered_adult_model_id,
