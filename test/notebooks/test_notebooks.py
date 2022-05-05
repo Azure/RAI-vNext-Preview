@@ -3,6 +3,7 @@
 # ---------------------------------------------------------
 
 import nbformat as nbf
+import os
 import papermill as pm
 import pytest
 import time
@@ -61,6 +62,9 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
     version_string = component_config["version"]
     train_version_string = int(time.time())
 
+    current_file_directory = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(current_file_directory, '../..', 'examples/notebooks/data'))
+
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
@@ -68,9 +72,9 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
     ] = f"rai_programmer_example_version_string = '{train_version_string}'"
     replacements[
         "train_data_path = 'data/programmers-train.parquet'"
-    ] = 'train_data_path = "examples/notebooks/data/programmers-train.parquet"'
+    ] = f'train_data_path = "{os.path.join(data_dir, 'programmers-train.parquet')}"'
     replacements[
         "test_data_path = 'data/programmers-test.parquet'"
-    ] = 'test_data_path = "examples/notebooks/data/programmers-test.parquet"'
+    ] = f'test_data_path = "{os.path.join(data_dir, 'programmers-test.parquet')}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
