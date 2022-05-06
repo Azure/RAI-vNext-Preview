@@ -101,6 +101,7 @@ def test_responsibleaidashboard_diabetes_regression_model_debugging(
 
     assay_one_notebook(nb_name, dict(), replacements)
 
+
 @pytest.mark.notebooks
 def test_responsibleaidashboard_wine_multiclass_model_debugging(
     component_config,
