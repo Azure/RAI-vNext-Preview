@@ -105,7 +105,7 @@ def test_responsibleaidashboard_diabetes_regression_model_debugging(
 def test_responsibleaidashboard_wine_multiclass_model_debugging(
     component_config,
 ):
-    nb_name = "responsibleaidashboard-wine-multiclass-model-debugging"
+    nb_name = "responsibleaidashboard-multiclass-dnn-model-debugging"
 
     version_string = component_config["version"]
     train_version_string = int(time.time())
