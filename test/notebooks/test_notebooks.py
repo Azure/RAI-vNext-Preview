@@ -100,3 +100,20 @@ def test_responsibleaidashboard_diabetes_regression_model_debugging(
     ] = f"rai_diabetes_regression_example_version_string = '{train_version_string}'"
 
     assay_one_notebook(nb_name, dict(), replacements)
+
+@pytest.mark.notebooks
+def test_responsibleaidashboard_wine_multiclass_model_debugging(
+    component_config,
+):
+    nb_name = "responsibleaidashboard-wine-multiclass-model-debugging"
+
+    version_string = component_config["version"]
+    train_version_string = int(time.time())
+
+    replacements = dict()
+    replacements["version_string = '1'"] = f"version_string = '{version_string}'"
+    replacements[
+        "rai_wine_multiclass_example_version_string = '13'"
+    ] = f"rai_wine_multiclass_example_version_string = '{train_version_string}'"
+
+    assay_one_notebook(nb_name, dict(), replacements)
