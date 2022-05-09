@@ -64,7 +64,7 @@ def test_responsibleaidashboard_housing_improvement(
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
-        "rai_house_improvement_version_string = '4'"
+        "rai_house_improvement_version_string = '16'"
     ] = f"rai_house_improvement_version_string = '{train_version_string}'"
 
     assay_one_notebook(nb_name, dict(), replacements)
