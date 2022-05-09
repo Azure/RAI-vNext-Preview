@@ -15,5 +15,3 @@ dependencies:
     - raiwidgets~=0.18.0
     - azureml-dataset-runtime
     - azureml-core
-    - torch
-    - ml-wrappers
