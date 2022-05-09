@@ -52,6 +52,23 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
 
     assay_one_notebook(nb_name, dict(), replacements)
 
+@pytest.mark.notebooks
+def test_responsibleaidashboard_housing_improvement(
+    component_config,
+):
+    nb_name = "responsibleaidashboard-housing-decision-making"
+
+    version_string = component_config["version"]
+    train_version_string = int(time.time())
+
+    replacements = dict()
+    replacements["version_string = '1'"] = f"version_string = '{version_string}'"
+    replacements[
+        "rai_house_improvement_version_string = '16'"
+    ] = f"rai_house_improvement_version_string = '{train_version_string}'"
+
+    assay_one_notebook(nb_name, dict(), replacements)
+
 
 @pytest.mark.notebooks
 def test_responsibleaidashboard_programmer_regression_model_debugging(
@@ -80,5 +97,41 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
     replacements[
         "test_data_path = 'data/programmers-test.parquet'"
     ] = f'test_data_path = "{os.path.join(data_dir, test_filename)}"'
+
+    assay_one_notebook(nb_name, dict(), replacements)
+
+
+@pytest.mark.notebooks
+def test_responsibleaidashboard_diabetes_regression_model_debugging(
+    component_config,
+):
+    nb_name = "responsibleaidashboard-diabetes-regression-model-debugging"
+
+    version_string = component_config["version"]
+    train_version_string = int(time.time())
+
+    replacements = dict()
+    replacements["version_string = '1'"] = f"version_string = '{version_string}'"
+    replacements[
+        "rai_diabetes_regression_example_version_string = '6'"
+    ] = f"rai_diabetes_regression_example_version_string = '{train_version_string}'"
+
+    assay_one_notebook(nb_name, dict(), replacements)
+    
+
+@pytest.mark.notebooks
+def test_responsibleaidashboard_diabetes_decision_making(
+    component_config,
+):
+    nb_name = "responsibleaidashboard-diabetes-decision-making"
+
+    version_string = component_config["version"]
+    train_version_string = int(time.time())
+
+    replacements = dict()
+    replacements["version_string = '1'"] = f"version_string = '{version_string}'"
+    replacements[
+        "rai_diabetes_decision_making_example_version_string = '8'"
+    ] = f"rai_diabetes_decision_making_example_version_string = '{train_version_string}'"
 
     assay_one_notebook(nb_name, dict(), replacements)
