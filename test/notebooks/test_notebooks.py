@@ -56,7 +56,7 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
 def test_responsibleaidashboard_housing_improvement(
     component_config,
 ):
-    nb_name = "responsibleaidashboard-programmer-regression-model-debugging"
+    nb_name = "responsibleaidashboard-housing-decision-making"
 
     version_string = component_config["version"]
     train_version_string = int(time.time())
