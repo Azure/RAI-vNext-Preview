@@ -1,7 +1,7 @@
 azure-common
 #--extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2-public
 --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2
-azure-ml==0.0.61771647 # To be updated regularly
+azure-ml==0.0.62362561 # To be updated regularly
 colorama # Pending update
 pandas
 pyarrow
