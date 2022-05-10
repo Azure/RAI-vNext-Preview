@@ -10,14 +10,14 @@ This needs to be placed in the directory from where you run `python` (or `jupyte
 ### Required libraries
 ```Python
 #import required libraries
-from azure.ml import MLClient
-from azure.ml.entities import CommandJob, Code, PipelineJob, Dataset, InputDatasetEntry
+from azure.ai.ml import MLClient
+from azure.ai.ml.entities import CommandJob, Code, PipelineJob, Dataset, InputDatasetEntry
 ```
 
 ### Your Azure ML Details
 ```Python
 # Obtain a client
-from azure.ml import MLClient
+from azure.ai.ml import MLClient
 from azure.identity import DefaultAzureCredential
 ml_client = MLClient.from_config(credential=DefaultAzureCredential(exclude_shared_token_cache_credential=True),
                      logging_enable=True)
@@ -186,7 +186,7 @@ print(latest_job.status)
 
 ### Sample exploring....
 ```Python
-from azure.ml import dsl, load_component, MLClient
+from azure.ai.ml import dsl, load_component, MLClient
 from contoso.components import (
     data_ingestion,
     data_preprocess,
