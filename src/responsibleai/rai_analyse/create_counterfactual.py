@@ -46,6 +46,9 @@ def parse_args():
     # parse args
     args = parser.parse_args()
 
+    _logger.info(f"desired_range: {args.desired_range}")
+    _logger.info(f"permitted_rage: {args.permitted_range}")
+
     # return args
     return args
 
