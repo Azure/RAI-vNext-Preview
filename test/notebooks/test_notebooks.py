@@ -52,6 +52,7 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
 
     assay_one_notebook(nb_name, dict(), replacements)
 
+
 @pytest.mark.notebooks
 def test_responsibleaidashboard_housing_improvement(
     component_config,
@@ -117,7 +118,7 @@ def test_responsibleaidashboard_diabetes_regression_model_debugging(
     ] = f"rai_diabetes_regression_example_version_string = '{train_version_string}'"
 
     assay_one_notebook(nb_name, dict(), replacements)
-    
+
 
 @pytest.mark.notebooks
 def test_responsibleaidashboard_diabetes_decision_making(
