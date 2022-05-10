@@ -8,9 +8,9 @@ import time
 
 from azure.identity import DefaultAzureCredential
 
-from azure.ml import MLClient, dsl, Input
-from azure.ml.entities import load_component
-from azure.ml.entities import CommandComponent, PipelineJob
+from azure.ai.ml import MLClient, dsl, Input
+from azure.ai.ml.entities import load_component
+from azure.ai.ml.entities import CommandComponent, PipelineJob
 
 from test.utilities_for_test import submit_and_wait
 from test.constants_for_test import Timeouts

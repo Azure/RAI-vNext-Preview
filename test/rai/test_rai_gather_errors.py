@@ -4,8 +4,8 @@
 
 import logging
 
-from azure.ml import MLClient, dsl, Input
-from azure.ml.entities import CommandComponent, PipelineJob
+from azure.ai.ml import MLClient, dsl, Input
+from azure.ai.ml.entities import CommandComponent, PipelineJob
 
 from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait
