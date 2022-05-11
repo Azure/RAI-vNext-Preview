@@ -1,0 +1,26 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+experiment_name: AML_RAI_SCORECARD
+type: pipeline
+
+inputs:
+  raidashboard:
+    type: uri_folder
+    path: boston_analyze_dashboard
+    mode: download
+
+compute: azureml:kicha
+
+jobs:
+  scorecard_01:
+     type: command
+     component: azureml:rai_score_card@latest
+     inputs:
+       dashboard: ${{parent.inputs.raidashboard}}
+       pdf_generation_config:
+         type: uri_file
+         path: ./boston_analyse/pdf_gen.json
+         mode: download
+       predefined_cohorts_json:
+         type: uri_file
+         path: ./boston_analyse/cohorts.json
+         mode: download

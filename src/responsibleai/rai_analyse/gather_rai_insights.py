@@ -24,6 +24,7 @@ from rai_component_utilities import (
     load_dashboard_info_file,
     add_properties_to_gather_run,
     print_dir_tree,
+    copy_dashboard_info_file
 )
 
 _DASHBOARD_CONSTRUCTOR_MISMATCH = (
@@ -117,6 +118,8 @@ def main(args):
         _logger.info("Object loaded")
 
         rai_i.save(args.dashboard)
+        # Copy dashboard info file
+        copy_dashboard_info_file(args.constructor, args.dashboard)
         _logger.info("Saved dashboard to oputput")
 
         rai_data = rai_i.get_data()
