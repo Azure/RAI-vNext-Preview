@@ -7,9 +7,9 @@ import pathlib
 import tempfile
 import uuid
 
-from azure.ml import MLClient, dsl, Input, Output
-from azure.ml.entities import load_component
-from azure.ml.entities import Job
+from azure.ai.ml import MLClient, dsl, Input, Output
+from azure.ai.ml.entities import load_component
+from azure.ai.ml.entities import Job
 from responsibleai import RAIInsights
 
 from test.constants_for_test import Timeouts

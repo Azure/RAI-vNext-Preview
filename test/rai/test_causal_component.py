@@ -4,7 +4,7 @@
 
 import logging
 
-from azure.ml import MLClient, dsl, Input
+from azure.ai.ml import MLClient, dsl, Input
 
 from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait
