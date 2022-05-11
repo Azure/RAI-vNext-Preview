@@ -1,19 +1,13 @@
-from responsibleai import RAIInsights
-import json
-
 import os
 import pandas as pd
+import json
 import sklearn.metrics as skm
 
-# from erroranalysis._internal.constants import Metrics
+from collections import OrderedDict
 from erroranalysis._internal.metrics import metric_to_func
 from fairlearn.metrics import selection_rate
-
+from responsibleai import RAIInsights
 from datetime import datetime
-
-# from raiwidgets.cohort import ClassificationOutcomes, Cohort, CohortFilter, CohortFilterMethods
-
-from collections import OrderedDict
 
 
 def false_positive(y_test, y_pred):
