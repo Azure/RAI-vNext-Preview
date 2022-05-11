@@ -5,7 +5,8 @@ import sklearn.metrics as skm
 
 from collections import OrderedDict
 from erroranalysis._internal.metrics import metric_to_func
-from fairlearn.metrics import selection_rate
+from erroranalysis._internal.cohort_filter import filter_from_cohort
+from fairlearn.metrics import selection_rate, MetricFrame
 from responsibleai import RAIInsights
 from datetime import datetime
 
@@ -92,8 +93,6 @@ class RaiInsightData:
         return self.raiinsight
 
     def filter_from_cohort(self, cohort):
-        from erroranalysis._internal.cohort_filter import filter_from_cohort
-
         analyzer = self.raiinsight.error_analysis._analyzer
         return filter_from_cohort(analyzer, filters=cohort, composite_filters=[])
 
@@ -120,8 +119,6 @@ class RaiInsightData:
         return self.raiinsight.test
 
     def get_fairlearn_grouped_metric(self, sensitive_feature, metric):
-        from fairlearn.metrics import MetricFrame
-
         grouped_metric = MetricFrame(
             metrics=metric_func_map[metric],
             y_true=self.get_y_test(),

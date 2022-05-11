@@ -1,7 +1,8 @@
 import plotly.graph_objects as go
-import base64
 import plotly.io as pio
+import base64
 
+from statistics import mean
 from domonic.html import div, h3, h2, h1, p, img, table, td, th, tr, thead, tbody
 from . import common_components as cc
 
@@ -16,8 +17,6 @@ def get_model_overview_page(data):
 
 
 def get_bar_plot_explanation_image():
-    import base64
-
     with open("./_score_card/box_plot_explain.png", "rb") as img_file:
         png_base64 = base64.b64encode(img_file.read()).decode("utf-8")
     return div(
@@ -246,8 +245,6 @@ def get_fairlearn_page(data):
         return tr(table_row_elems, _class="row")
 
     def get_table(data):
-        from statistics import mean
-
         metric_list = [d for d in data["metrics"]]
         # metric_list = [m for sublist in metric_list for m in sublist]
 
