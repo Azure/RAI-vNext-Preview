@@ -3,6 +3,7 @@
 # ---------------------------------------------------------
 
 import json
+import logging
 import pytest
 import time
 
@@ -16,8 +17,12 @@ from test.utilities_for_test import submit_and_wait
 from test.constants_for_test import Timeouts
 
 
+_logger = logging.getLogger(__file__)
+logging.basicConfig(level=logging.INFO)
+
 class Components:
     def __init__(self, ml_client: MLClient, version_string: str):
+        _logger.info("Initialising Components class")
         self.fetch_model = load_component(
             client=ml_client, name="fetch_registered_model", version=version_string
         )
@@ -59,6 +64,7 @@ class Components:
         self.register_model = load_component(
             client=ml_client, name="register_model", version=version_string
         )
+        _logger.info("Components class initialised")
 
 
 @pytest.fixture(scope="session")
@@ -83,6 +89,7 @@ def workspace_config():
 
 @pytest.fixture(scope="session")
 def ml_client(workspace_config):
+    _logger.info("Creating MLClient")
     client = MLClient(
         # For local testing, may need exclude_shared_token_cache_credential=True
         credential=DefaultAzureCredential(),
@@ -104,6 +111,7 @@ def rai_components(ml_client, component_config):
 
 @pytest.fixture(scope="session")
 def registered_adult_model_id(ml_client, component_config):
+    _logger.info("Registering common adult model")
     version_string = component_config["version"]
 
     model_name_suffix = int(time.time())
@@ -142,16 +150,19 @@ def registered_adult_model_id(ml_client, component_config):
         return {}
 
     training_pipeline = my_training_pipeline("income", adult_train_pq)
+    _logger.info("Simple Adult model pipeline constructed")
 
     training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
     assert training_pipeline_job is not None
 
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
+    _logger.info(f"Registered simple Adult model as {expected_model_id}")
     return expected_model_id
 
 
 @pytest.fixture(scope="session")
 def registered_boston_model_id(ml_client, component_config):
+    _logger.info("Registering simplified Boston model")
     version_string = component_config["version"]
 
     model_name_suffix = int(time.time())
@@ -191,9 +202,11 @@ def registered_boston_model_id(ml_client, component_config):
         return {}
 
     training_pipeline = my_training_pipeline("y", boston_train_pq)
+    _logger.info("Simple Boston model pipeline constructed")
 
     training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
     assert training_pipeline_job is not None
 
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
+    _logger.info(f"Registered simple Boston model as {expected_model_id}")
     return expected_model_id
