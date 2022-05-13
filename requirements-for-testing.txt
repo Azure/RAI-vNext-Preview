@@ -3,6 +3,7 @@ nbval
 nteract-scrapbook
 papermill
 pytest
+pytest-timeout
 pytest-xdist
 raiwidgets~=0.18.0
 responsibleai~=0.18.0

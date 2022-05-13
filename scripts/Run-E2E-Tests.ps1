@@ -5,4 +5,4 @@
 # Enable all the commands
 $Env:AZURE_ML_CLI_PRIVATE_FEATURES_ENABLED=$true
 
-python -m pytest -n 6 ./test/  -m "not notebooks" -o junit_family=xunit2 --junitxml=junit.xml
+python -m pytest --timeout=600 ./test/  -m "not notebooks" -o junit_family=xunit2 --junitxml=junit.xml
