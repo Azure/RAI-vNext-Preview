@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
 name: AML-RAI-Scorecard-Environment
 build:
-  path: docker_env/docker_buildcontext
+  path: docker_env
 version: VERSION_REPLACEMENT_STRING
