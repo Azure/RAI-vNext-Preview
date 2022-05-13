@@ -13,8 +13,8 @@ ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
 
 # Install pip dependencies
 # markupsafe and itsdangerous are bug workarounds
-RUN pip install 'responsibleai~=0.18' \
-                'raiwidgets~=0.18' \
+RUN pip install 'responsibleai~=0.18.1' \
+                'raiwidgets~=0.18.1' \
                 'pyarrow' \
                 'markupsafe<=2.0.1' \
                 'itsdangerous==2.0.1' \

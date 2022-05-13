@@ -59,9 +59,11 @@ class RaiInsightData:
 
     def _set_component_paths_prefix(self):
         for c in self.components:
-            first_guid = next(
-                iter(os.listdir(os.path.join(self.raiinsight_path, c))), None
-            )
+            component_path = os.path.join(self.raiinsight_path, c)
+            if os.path.isdir(component_path):
+                first_guid = next(iter(os.listdir(component_path)), None)
+            else:
+                continue
             if first_guid:
                 self.component_path_prefix[c] = os.path.join(
                     self.raiinsight_path, c, first_guid, "data"
