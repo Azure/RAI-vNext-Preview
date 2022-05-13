@@ -20,6 +20,7 @@ from test.constants_for_test import Timeouts
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
+
 class Components:
     def __init__(self, ml_client: MLClient, version_string: str):
         _logger.info("Initialising Components class")
