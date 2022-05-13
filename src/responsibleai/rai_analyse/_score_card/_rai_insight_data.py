@@ -319,12 +319,7 @@ class PdfDataGen:
             df["label"] = df["label"].apply(
                 lambda x: "{} to {}".format(round(x.left, 2), round(x.right, 2))
             )
-            return (df["label"].value_counts().index.to_list(), df["label"])
-
-    def _get_categorical_feature_data(self, feature, metric):
-        dataset = self.data.get_test()
-        distribution = dataset[feature].value_counts()
-        total = len(dataset[feature])
+            return df["label"].value_counts().index.to_list(), df["label"]
 
     def get_data_explorer_data(self):
         de_data = []

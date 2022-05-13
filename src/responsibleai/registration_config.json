@@ -1,6 +1,7 @@
 {
     "environments" : [
-        "responsibleai-environment.yaml"
+        "responsibleai-environment.yaml",
+        "responsibleai-environment-scorecard.yaml"
     ],
     "components" : [
         "component_register_model.yaml",

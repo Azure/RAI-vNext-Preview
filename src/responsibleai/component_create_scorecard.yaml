@@ -15,7 +15,7 @@ outputs:
   scorecard:
     type: path
 
-environment: azureml:build-rai-score-card@latest
+environment: azureml:AML-RAI-Scorecard-Environment:VERSION_REPLACEMENT_STRING
 
 code: ./rai_analyse/
 
