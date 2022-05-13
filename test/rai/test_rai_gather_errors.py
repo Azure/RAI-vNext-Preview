@@ -4,9 +4,10 @@
 
 import logging
 
-from azure.ml import MLClient, dsl, Input
-from azure.ml.entities import CommandComponent, PipelineJob
+from azure.ai.ml import MLClient, dsl, Input
+from azure.ai.ml.entities import CommandComponent, PipelineJob
 
+from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait
 
 _logger = logging.getLogger(__file__)
@@ -34,6 +35,7 @@ class TestRAIGatherErrors:
             train_job = rai_components.train_adult(
                 target_column_name=target_column_name, training_data=train_data
             )
+            train_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             # Register twice (nondeterministically)
             model_base_name = "TestRAIGatherErrors_test_tool_component_mismatch"
@@ -42,11 +44,13 @@ class TestRAIGatherErrors:
                 model_base_name=model_base_name,
                 model_name_suffix=-1,
             )
+            reg1_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
             reg2_job = rai_components.register_model(
                 model_input_path=train_job.outputs.model_output,
                 model_base_name=model_base_name,
                 model_name_suffix=-1,
             )
+            reg2_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             # Two RAI constructors
             construct1_job = rai_components.rai_constructor(
@@ -60,6 +64,7 @@ class TestRAIGatherErrors:
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
+            construct1_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             construct2_job = rai_components.rai_constructor(
                 title="Run built from DSL",
@@ -72,6 +77,7 @@ class TestRAIGatherErrors:
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
+            construct2_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             # Setup causal for constructor 1
             causal1_job = rai_components.rai_causal(
@@ -91,6 +97,7 @@ class TestRAIGatherErrors:
                 verbose=1,  # Should be default
                 random_state="None",  # Should be default
             )
+            causal1_job.set_limits(timeout=Timeouts.CAUSAL_TIMEOUT)
 
             # Setup counterfactual for constructor 2
             counterfactual2_job = rai_components.rai_counterfactual(
@@ -103,6 +110,7 @@ class TestRAIGatherErrors:
                 features_to_vary="all",  # Should be default
                 feature_importance=True,  # Should be default
             )
+            counterfactual2_job.set_limits(timeout=Timeouts.COUNTERFACTUAL_TIMEOUT)
 
             # Now a single gather component
             gather_job = rai_components.rai_gather(
@@ -110,6 +118,7 @@ class TestRAIGatherErrors:
                 insight_1=causal1_job.outputs.causal,
                 insight_2=counterfactual2_job.outputs.counterfactual,
             )
+            gather_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             gather_job.outputs.dashboard.mode = "upload"
             gather_job.outputs.ux_json.mode = "upload"
@@ -160,6 +169,7 @@ class TestRAIGatherErrors:
             fetch_model_job = rai_components.fetch_model(
                 model_id=registered_adult_model_id
             )
+            fetch_model_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             construct_job = rai_components.rai_constructor(
                 title="Run built from DSL",
@@ -172,22 +182,26 @@ class TestRAIGatherErrors:
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
+            construct_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             explain1_job = rai_components.rai_explanation(
                 comment="explain1_job",
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
             )
+            explain1_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             explain2_job = rai_components.rai_explanation(
                 comment="explain2_job",
                 rai_insights_dashboard=construct_job.outputs.rai_insights_dashboard,
             )
+            explain2_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             gather_job = rai_components.rai_gather(
                 constructor=construct_job.outputs.rai_insights_dashboard,
                 insight_1=explain1_job.outputs.explanation,
                 insight_2=explain2_job.outputs.explanation,
             )
+            gather_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
             gather_job.outputs.dashboard.mode = "upload"
             gather_job.outputs.ux_json.mode = "upload"
