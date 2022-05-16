@@ -58,15 +58,15 @@ class TestCausalComponent:
                 nuisance_model="automl",
                 heterogeneity_model="forest",
                 alpha=0.06,
-                upper_bound_on_cat_expansion=51,
+                upper_bound_on_cat_expansion=49,
                 treatment_cost="[0.1, 0.2]",
-                min_tree_leaf_samples=3,
+                min_tree_leaf_samples=2,
                 max_tree_depth=1,
-                skip_cat_limit_checks=True,
+                skip_cat_limit_checks=False,
                 categories="auto",
-                n_jobs=2,
+                n_jobs=1,
                 verbose=1,
-                random_state=10,
+                random_state=100,
             )
             causal_job.set_limits(timeout=Timeouts.CAUSAL_TIMEOUT)
 
