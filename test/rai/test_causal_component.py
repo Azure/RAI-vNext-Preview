@@ -61,11 +61,11 @@ class TestCausalComponent:
                 upper_bound_on_cat_expansion=51,
                 treatment_cost="[0.1, 0.2]",
                 min_tree_leaf_samples=3,
-                max_tree_depth=3,
+                max_tree_depth=1,
                 skip_cat_limit_checks=True,
                 categories="auto",
                 n_jobs=2,
-                verbose=0,
+                verbose=1,
                 random_state=10,
             )
             causal_job.set_limits(timeout=Timeouts.CAUSAL_TIMEOUT)
