@@ -95,9 +95,9 @@ jobs:
        dashboard: ${{parent.jobs.gather_01.outputs.dashboard}}
        pdf_generation_config:
          type: uri_file
-         path: ./boston_analyse_scorecard_config/pdf_gen.json
+         path: ./test/rai/boston_analyse_scorecard_config/pdf_gen.json
          mode: download
        predefined_cohorts_json:
          type: uri_file
-         path: ./boston_analyse_scorecard_config/cohorts.json
+         path: ./test/rai/boston_analyse_scorecard_config/cohorts.json
          mode: download
