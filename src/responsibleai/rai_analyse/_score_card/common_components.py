@@ -27,16 +27,12 @@ def get_css():
           page-break-inside: avoid !important;
           position: relative;
           min-height: 80%;
-          /* border: 4px solid red; */
-          /*           height: 11in; */
           overflow: hidden;
         }
 
         .left {
           float: left;
           width: 3in;
-          /* border: 2px solid blue; */
-          /*           background-color: #cfc; */
           padding-bottom: 9999px;
           margin-bottom: -9999px;
         }
@@ -44,8 +40,6 @@ def get_css():
         .main {
           position: relative;
           margin-left: 3.05in;
-          /* border: 2px solid yellow; */
-          /*           background-color: #ffc; */
           padding-bottom: 9999px;
           margin-bottom: -9999px;
         }
@@ -53,8 +47,6 @@ def get_css():
         .left_model_overview {
           float: left;
           width: 4.2in;
-          /* border: 2px solid blue; */
-          /*           background-color: #cfc; */
           padding-bottom: 9999px;
           margin-bottom: -9999px;
         }
@@ -62,8 +54,6 @@ def get_css():
         .main_model_overview {
           position: relative;
           margin-left: 4.25in;
-          /* border: 2px solid yellow; */
-          /*           background-color: #ffc; */
           padding-bottom: 9999px;
           margin-bottom: -9999px;
         }
@@ -89,9 +79,6 @@ def get_css():
 
         .image_div {
           break-inside: avoid;
-          /*border: 2px solid black;*/
-          /*border-radius: 5px;*/
-          /*width: 99%;*/
         }
 
         .nobreak_div {
