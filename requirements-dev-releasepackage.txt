@@ -5,5 +5,5 @@ azure-ai-ml==0.0.62653692  # To be updated regularly
 colorama # Pending update
 pandas
 pyarrow
-scikit-learn
+scikit-learn<1.1 # See PR #1429 in responsible-ai-toolbox repo
 shap

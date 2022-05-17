@@ -8,7 +8,7 @@ dependencies:
     - numpy
     - pandas
     - pyarrow
-    - scikit-learn
+    - scikit-learn<1.1 # See PR 1429 in responsible-ai-toolbox
     - mlflow
     - azureml-mlflow
     - responsibleai~=0.18.0
