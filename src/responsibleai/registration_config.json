@@ -11,7 +11,8 @@
         "component_explain.yaml",
         "component_rai_insights.yaml",
         "component_gather_rai_insights.yaml",
-        "component_tabular_to_parquet.yaml"
+        "component_tabular_to_parquet.yaml",
+        "component_create_scorecard.yaml"
     ],
     "data" : [],
     "nested_directories": []

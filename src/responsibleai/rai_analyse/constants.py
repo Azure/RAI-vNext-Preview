@@ -41,9 +41,16 @@ class PropertyKeyValues:
     # Property format to indicate presence of a tool
     RAI_INSIGHTS_TOOL_KEY_FORMAT = "_azureml.responsibleai.rai_insights.has_{0}"
 
+    # Dashboard id
+    RAI_INSIGHTS_DASHBOARD_ID_KEY = "_azureml.responsibleai.rai_insights.dashboard_id"
+
+    # RAI insight score card key
+    RAI_INSIGHTS_SCORE_CARD_TITLE_KEY = "_azureml.responsibleai.rai_insights.rai_scorecard_title"
+
 
 class RAIToolType:
     CAUSAL = "causal"
     COUNTERFACTUAL = "counterfactual"
     ERROR_ANALYSIS = "error_analysis"
     EXPLANATION = "explanation"
+    SCORECARD = "scorecard"

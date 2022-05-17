@@ -201,6 +201,9 @@ def add_properties_to_gather_run(
 
     run_properties = {
         PropertyKeyValues.RAI_INSIGHTS_TYPE_KEY: PropertyKeyValues.RAI_INSIGHTS_TYPE_GATHER,
+        PropertyKeyValues.RAI_INSIGHTS_DASHBOARD_ID_KEY: dashboard_info[
+            DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY
+        ],
         PropertyKeyValues.RAI_INSIGHTS_RESPONSIBLEAI_VERSION_KEY: responsibleai_version,
         PropertyKeyValues.RAI_INSIGHTS_MODEL_ID_KEY: dashboard_info[
             DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY
