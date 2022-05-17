@@ -91,7 +91,7 @@ Once you have created an Azure workspace and registered your components in the o
 The current set of components have a number of limitations on their use:
 
 - All models must be in registered in AzureML in MLFlow format with an sklearn flavour
-- The models must be loadable in the component environment (largely based on the `responsibleai` package)
+- The models must be loadable in the component environment
 - The models must be pickleable
 - The models must be supplied to the RAI components using the 'Fetch Registered Model' component which we provide. We plan to switch to the new AzureML 'model-as-input' feature in the near future
 - The dataset inputs must be `pandas` DataFrames in Parquet format. We plan to start using AzureML's new `MLTable` feature in the near future
