@@ -19,6 +19,7 @@ RUN pip install 'responsibleai~=0.18.1' \
                 'markupsafe<=2.0.1' \
                 'itsdangerous==2.0.1' \
                 'mlflow' \
+                'scikit-learn<1.1' \
                 'azureml-core==1.41.0.post1' \
                 'azureml-dataset-runtime==1.41.0' \
                 'azureml-mlflow==1.41.0' \
