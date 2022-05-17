@@ -86,6 +86,19 @@ To run the script in powershell, from the repository root, run:
 ### Generating Responsible AI Dashboard insights
 Once you have created an Azure workspace and registered your components in the one-time setup above, you can create a Responsible AI dashboard via the CLI or SDK. Start here for `examples` [folder](examples) to get started.
 
+#### Limitations
+
+The current set of components have a number of limitations on their use:
+
+- All models must be in registered in AzureML in MLFlow format with an sklearn flavour
+- The models must be loadable in the component environment
+- The models must be pickleable
+- The models must be supplied to the RAI components using the 'Fetch Registered Model' component which we provide. We plan to switch to the new AzureML 'model-as-input' feature in the near future
+- The dataset inputs must be `pandas` DataFrames in Parquet format. We plan to start using AzureML's new `MLTable` feature in the near future
+- A model must still be supplied even if only a causal analysis of the data is performed. The `DummyClassifier` and `DummyRegressor` estimators from SciKit-Learn can be used for this purpose
+
+
+
 ### Viewing your Responsible AI Dashboard in the AzureML studio portal
 After generating the Responsible AI insights, you can view them in your associated workspace in AzureML studio, under your model registry.
 
