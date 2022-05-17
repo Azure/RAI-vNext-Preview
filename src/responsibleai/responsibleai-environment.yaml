@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
 name: AML-RAI-Environment
+build:
+  path: docker_env
 version: VERSION_REPLACEMENT_STRING
-image: mcr.microsoft.com/azureml/openmpi3.1.2-ubuntu18.04:20220303.v1
-conda_file: conda_envs/python-aml-rai.yaml
