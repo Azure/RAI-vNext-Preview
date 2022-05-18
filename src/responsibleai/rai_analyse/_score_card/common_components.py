@@ -720,7 +720,7 @@ def get_causal_page(data):
                 [
                     [
                         p["index"],
-                        p["Current treatment"],
+                        round(p["Current treatment"], 2),
                         p["Treatment"],
                         round(p["Effect of treatment"], 2),
                     ]
