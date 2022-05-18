@@ -670,7 +670,7 @@ def get_causal_page(data):
     def get_table(data):
         horizontal_headings = [
             "Index",
-            "Current<br>Treatment",
+            "Current<br>Value",
             "Recommended<br>Treatment",
             "Effect<br>Estimate",
         ]
