@@ -126,7 +126,7 @@ def get_model_performance_page(data):
     )
     main_histogram = div(
         h3(
-            "Histogram of your model errors "
+            "Histogram of your residuals values "
             "(distance between a predicted value and the observed actual value)"
         ),
         get_mp_error_histogram_plot(data),
