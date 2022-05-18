@@ -710,8 +710,8 @@ def get_causal_page(data):
         )
         main_elems.append(
             p(
-                "What data points experience the largest impact (causal effect) to changes"
-                ', while treating "{}"'.format(f["feature"])
+                "Data points which experience the largest treatment impact (causal effect) "
+                'when adjusting "{}"'.format(f["feature"])
             )
         )
 
