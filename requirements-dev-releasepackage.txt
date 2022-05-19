@@ -3,7 +3,6 @@ azure-common
 #--extra-index-url  https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2
 --pre
 azure-ai-ml
-azure-identity
 colorama # Pending update
 pandas
 pyarrow
