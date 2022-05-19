@@ -520,8 +520,7 @@ def get_model_overview(data):
         [
             h3("Target values"),
             p(
-                "Here are your defined target minimum/maximum performance levels "
-                "and/or target performance differences between groups/cohorts:"
+                "Here are your defined target values:"
             ),
         ]
     )

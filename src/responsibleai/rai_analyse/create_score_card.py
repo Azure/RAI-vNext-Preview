@@ -8,14 +8,6 @@ from azureml.core import Run
 from responsibleai import __version__ as responsibleai_version
 
 from _score_card._rai_insight_data import RaiInsightData, PdfDataGen
-
-# from _score_card.generate_pdf import (
-#     RegressionComponents,
-#     ClassificationComponents,
-#     to_pdf,
-#     get_full_html,
-# )
-
 from _score_card.common_components import to_pdf, get_full_html
 import _score_card.regression_components as RegressionComponents
 import _score_card.classification_components as ClassificationComponents
