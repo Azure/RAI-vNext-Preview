@@ -670,7 +670,7 @@ def get_causal_page(data):
     def get_table(data):
         horizontal_headings = [
             "Index",
-            "Current<br>Treatment",
+            "Current<br>Value",
             "Recommended<br>Treatment",
             "Effect<br>Estimate",
         ]
@@ -710,8 +710,8 @@ def get_causal_page(data):
         )
         main_elems.append(
             p(
-                "What data points experience the largest impact (causal effect) to changes"
-                ', while treating "{}"'.format(f["feature"])
+                "Data points which experience the largest treatment impact (causal effect) "
+                'when adjusting "{}"'.format(f["feature"])
             )
         )
 
@@ -720,7 +720,7 @@ def get_causal_page(data):
                 [
                     [
                         p["index"],
-                        p["Current treatment"],
+                        round(p["Current treatment"], 2),
                         p["Treatment"],
                         round(p["Effect of treatment"], 2),
                     ]
