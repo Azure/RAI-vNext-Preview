@@ -72,7 +72,7 @@ def get_data_explorer_page(data):
 
 def get_metric_explanation_text(mname, mvalue):
     text_lookup = {
-        "mean_squared_error": "{} is the average of the sqaured difference between the actual values and the predicted values.",
+        "mean_squared_error": "{} is the average of the squared difference between the actual values and the predicted values.",
         "mean_absolute_error": "{} is the average of the absolute error values.",
     }
     return text_lookup[mname].format(round(mvalue, 2))
