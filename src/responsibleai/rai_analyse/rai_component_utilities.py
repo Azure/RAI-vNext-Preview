@@ -238,6 +238,10 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
-        model=model_estimator, train=df_train, test=df_test, serializer=CloudPickleLoader(), **constructor_args
+        model=model_estimator,
+        train=df_train,
+        test=df_test,
+        serializer=CloudPickleLoader(),
+        **constructor_args,
     )
     return rai_i

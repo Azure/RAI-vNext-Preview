@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 class CloudPickleLoader:
-    SAVE_FILE = 'model.pkl'
+    SAVE_FILE = "model.pkl"
 
     def __init__(self):
         pass
@@ -24,7 +24,7 @@ class CloudPickleLoader:
 
         target_path = Path(path) / CloudPickleLoader.SAVE_FILE
 
-        with open(target_path, 'rb') as f:
+        with open(target_path, "rb") as f:
             model = cloudpickle.load(f)
 
         return model
@@ -34,5 +34,5 @@ class CloudPickleLoader:
 
         target_path = Path(path) / CloudPickleLoader.SAVE_FILE
 
-        with open(target_path, 'wb') as f:
+        with open(target_path, "wb") as f:
             model = cloudpickle.dump(model, f)
