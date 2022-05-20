@@ -39,7 +39,7 @@ Write-Host "=-= Installing responsibleai"
 pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 
 Write-Host "=-= Installing other requirements"
-pip install -r requirements-dev-releasepackage.txt
+pip install -r requirements.txt
 
 Write-Host "=-= Creating workspace config JSON"
 Create-ConfigJson $SubId $ResourceGroup $Workspace
