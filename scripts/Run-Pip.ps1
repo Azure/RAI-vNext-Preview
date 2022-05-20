@@ -12,7 +12,7 @@ param (
 Write-Host "Now installing $sdkVersionSelect"
 if( $sdkVersionSelect -eq "LatestRelease")
 {
-    pip install -r requirements-dev-releasepackage.txt
+    pip install -r requirements.txt
 }
 elseif( $sdkVersionSelect -eq "LatestDev" )
 {

@@ -40,7 +40,7 @@ pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 echo
 
 echo "=-= Instaling other requirements"
-pip install -r requirements-dev-releasepackage.txt
+pip install -r requirements.txt
 echo
 
 echo "=-= Runnning AzureML registrations"
