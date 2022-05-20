@@ -127,9 +127,7 @@ After generating the Responsible AI insights, you can view them in your associat
 ![05](images/05_add_dashboard.png)
 6. In between each component you can add components by clicking the blue circular button with a plus sign. This will pop up a tooltip that will give you an option of adding whichever Responsible AI component you enabled with your SDK.
 
-#### Known limitations of viewing dashboard in AzureML studio
-Due to the (current) lack of active compute, the dashboard in AzureML studio has fewer features than the dashboard generated with the open source package. To generate the full dashboard in a Jupyter python notebook, please download and use our [open source Responsible AI Dashboard SDK](https://github.com/microsoft/responsible-ai-widgets). 
-
+#### Accessing full functionality with a connected compute resource in Azure ML studio
 Integrated compute instance must be attached to the Responsible AI dashboard to enable full functionality:
 **Error analysis**
 - Setting your global data cohort to any cohort of interest will update the error tree instead of disabling it.
