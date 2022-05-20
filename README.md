@@ -137,9 +137,9 @@ Integrated compute instance must be attached to the Responsible AI dashboard to 
 - Dynamically updating the heatmap for up to two features is supported.
 **Feature importances**
 - An individual conditional expectation (ICE) plot in the individual feature importance tab is supported.
-Counterfactual analysis
+**Counterfactual analysis**
 - Generating a new what-if counterfactual datapoint to understand the minimum change required for a desired outcome is supported.
-***Causal analysis***
+**Causal analysis**
 - Selecting any individual datapoint, perturbing its treatment features, and seeing the expected causal outcome of causal what-if is supported (only for regression ML scenarios).
 
 If the Responsible AI dashboard is created and viewed in a Jupyter notebook with a Python backend, it will be fully featured when running in that notebook.
