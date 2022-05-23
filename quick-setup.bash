@@ -31,6 +31,10 @@ conda create -y -n ${condaEnv} python=3.8
 conda activate ${condaEnv}
 echo
 
+echo "=-= Installing nbconda"
+conda install nbconda
+echo
+
 echo "=-= Installing Jupyter"
 pip install jupyter "markupsafe<=2.0.1" "itsdangerous==2.0.1"
 echo
