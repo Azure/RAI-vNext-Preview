@@ -35,6 +35,9 @@ Write-Host "=-= Creating conda environment '$EnvName' with python v3.8"
 conda create -y -n $EnvName python=3.8
 conda activate $EnvName
 
+Write-Host "=-= Installing nbconda"
+conda install nbconda
+
 Write-Host "=-= Installing responsibleai"
 pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
 
