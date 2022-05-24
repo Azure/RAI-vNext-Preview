@@ -208,7 +208,13 @@ def get_fi_bar_plot(data):
     tickappend = ""
     x_title = "Feature Importance"
 
-    return get_bar_plot(y_data, x_data, tickappend=tickappend, xrange=x_range, x_title="Feature Importance")
+    return get_bar_plot(
+        y_data,
+        x_data,
+        tickappend=tickappend,
+        xrange=x_range,
+        x_title="Feature Importance",
+    )
 
 
 def get_binary_cp_bar_plot(data, m):
@@ -347,7 +353,7 @@ def get_bar_plot(
             tickvals=tickvals if tickvals else None,
             ticktext=ticktext if ticktext else None,
             range=xrange if xrange else None,
-            title=x_title if x_title else None
+            title=x_title if x_title else None,
         ),
         yaxis=dict(
             showgrid=False,
@@ -445,11 +451,14 @@ def get_de_box_plot(data):
 def get_de_box_plot_image(data):
     processed_label = data
     for c in processed_label["data"]:
-        c["title"] = (
-            "Prediction value distribution on ranges in feature \"{}\"".format(c["feature_name"])
+        c["title"] = 'Prediction value distribution on ranges in feature "{}"'.format(
+            c["feature_name"]
         )
         c["label"] = (
-            c["label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "% population"
+            c["label"]
+            + "<br>"
+            + str(int(100 * round(c["population"], 3)))
+            + "% population"
         )
         c["datapoints"] = c["prediction"]
 
@@ -470,7 +479,7 @@ def get_box_plot(data):
                 fillcolor="rgba(218, 227, 243, 1)",
                 name=i["label"],
                 showlegend=False,
-                title=i.get("title", None)
+                title=i.get("title", None),
             )
         )
 
@@ -527,9 +536,7 @@ def get_model_overview(data):
     model_main_items.extend(
         [
             h3("Target values"),
-            p(
-                "Here are your defined target values:"
-            ),
+            p("Here are your defined target values:"),
         ]
     )
 

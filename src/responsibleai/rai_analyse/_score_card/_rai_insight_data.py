@@ -12,13 +12,13 @@ from responsibleai import RAIInsights
 from datetime import datetime
 
 
-def false_positive(y_test, y_pred, ordered_label):
-    tn, fp, fn, tp = skm.confusion_matrix(y_test, y_pred).ravel()
+def false_positive(y_test, y_pred, labels):
+    tn, fp, fn, tp = skm.confusion_matrix(y_test, y_pred, labels=labels).ravel()
     return fp
 
 
-def false_negative(y_test, y_pred, ordered_label):
-    tn, fp, fn, tp = skm.confusion_matrix(y_test, y_pred).ravel()
+def false_negative(y_test, y_pred, labels):
+    tn, fp, fn, tp = skm.confusion_matrix(y_test, y_pred, labels=labels).ravel()
     return fn
 
 
@@ -48,11 +48,13 @@ def get_metric(metric, y_test, y_pred, **kwargs):
 def fairness_metric_wrapper(y_test, y_pred, **kwargs):
     get_metric(kwargs["metric"], y_test, y_pred, **kwargs)
 
+
 class ExplainerFiles:
     GLOBAL_IMPORTANCE = "global_importance_values.json"
     LOCAL_IMPORTANCE = "local_importance_values.json"
     FEATURES = "features.json"
     CLASSES = "classes.json"
+
 
 class RaiInsightData:
     def __init__(self, raiinsight_path):
@@ -140,7 +142,7 @@ class RaiInsightData:
             y_true=self.get_y_test(),
             y_pred=self.get_y_pred(),
             sensitive_features=self.raiinsight.test[sensitive_feature].to_numpy(),
-            sample_params=sample_params
+            sample_params=sample_params,
         )
 
         return grouped_metric
@@ -259,19 +261,17 @@ class PdfDataGen:
         self._y_pred = pd.Series(self.data.get_y_pred())
 
         if self.tasktype == "classification":
-            self.is_multiclass = len(np.unique(
-                self.data.get_y_test())) > 2
+            self.is_multiclass = len(np.unique(self.data.get_y_test())) > 2
 
         self.classes = self.data._classes
         self.pos_label = self.data._classes[1]
-        self.other_class = 'other'
+        self.other_class = "other"
         if self.is_multiclass:
             self.pos_label = str(self.data._classes[0])
             self.classes = [self.other_class, self.pos_label]
 
     def get_metric_kwargs(self):
-        return { "pos_label": self.pos_label,
-                 "labels": self.classes}
+        return {"pos_label": self.pos_label, "labels": self.classes}
 
     def relabel_y_classes(self, series):
         def relabel(x):
@@ -293,15 +293,6 @@ class PdfDataGen:
 
         return self._y_pred
 
-    def get_classes(self):
-        if self.data.raiinsight._classes:
-            if self.is_multiclass:
-                return self.data.raiinsight._classes
-
-            return self.data.raiinsight._classes
-
-        return None
-
     def get_model_overview_data(self):
         return_data = self.config["Model"]
 
@@ -318,8 +309,8 @@ class PdfDataGen:
                 "%m/%d/%Y"
             )
 
-        if self.get_classes():
-            return_data["classes"] = self.get_classes()
+        if self.classes:
+            return_data["classes"] = self.classes
 
         return return_data
 
@@ -364,7 +355,7 @@ class PdfDataGen:
             def relabel(item, topnlabels):
                 if item in topnlabels:
                     return item
-                return "other"
+                return self.other_class
 
             total_labels = dataset[target_feature].nunique()
             topnlabels = dataset[target_feature].value_counts().nlargest(3).index
@@ -372,7 +363,7 @@ class PdfDataGen:
             if len(topnlabels) >= total_labels:
                 all_labels = topnlabels.to_list()
             else:
-                all_labels = topnlabels.to_list() + ["other"]
+                all_labels = topnlabels.to_list() + [self.other_class]
             return (
                 all_labels,
                 dataset[target_feature].apply(relabel, args=(topnlabels,)),
@@ -407,10 +398,12 @@ class PdfDataGen:
                 }
 
                 if primary_metric:
-                    f_data[primary_metric] = get_metric(primary_metric,
-                                                        y_predict[index_filter],
-                                                        y_test[index_filter],
-                                                        **self.get_metric_kwargs())
+                    f_data[primary_metric] = get_metric(
+                        primary_metric,
+                        y_predict[index_filter],
+                        y_test[index_filter],
+                        **self.get_metric_kwargs()
+                    )
 
                 data["data"].append(f_data)
 
@@ -431,7 +424,7 @@ class PdfDataGen:
         sorted_tuple = sorted(
             [(f, importances[index]) for index, f in enumerate(features)],
             key=lambda x: x[1],
-            reverse=True
+            reverse=True,
         )[-top_n:]
         sorted_dict = {
             t[0]: {"value": t[1], "short_label": short_labels[index]}
@@ -455,7 +448,7 @@ class PdfDataGen:
                 m_sample_params = {
                     "metric": m,
                     "pos_label": self.pos_label,
-                    "labels": self.classes
+                    "labels": self.classes,
                 }
                 gm = self.data.get_fairlearn_grouped_metric(f, m_sample_params)
 
@@ -488,22 +481,32 @@ class PdfDataGen:
         y_test = self.get_y_test()
         return_data = {"y_pred": y_pred, "y_test": y_test, "metrics": {}}
 
+        report_metrics = self.config["Metrics"]
         if self.tasktype == "regression":
             return_data["y_error"] = list(map(lambda x, y: x - y, y_pred, y_test))
-            report_metrics = self.config["Metrics"]
 
         if self.tasktype == "classification":
-            tn, fp, fn, tp = skm.confusion_matrix(y_pred, y_test, labels=self.classes).ravel()
+            tn, fp, fn, tp = skm.confusion_matrix(
+                y_pred, y_test, labels=self.classes
+            ).ravel()
             return_data["confusion_matrix"] = {"tn": tn, "fp": fp, "fn": fn, "tp": tp}
             return_data["classes"] = self.classes
             return_data["pos_label"] = self.pos_label
-            return_data["neg_label"] = next(iter(set(self.classes) - set(self.pos_label)))
-            report_metrics = ["accuracy_score", "recall_score",
-                              "precision_score", "false_negative",
-                              "false_positive"]
+            return_data["neg_label"] = next(
+                iter(set(self.classes) - set(self.pos_label))
+            )
+            report_metrics = [
+                "accuracy_score",
+                "recall_score",
+                "precision_score",
+                "false_negative",
+                "false_positive",
+            ]
 
         for m in report_metrics:
-            return_data["metrics"][m] = get_metric(m, y_test, y_pred, **self.get_metric_kwargs())
+            return_data["metrics"][m] = get_metric(
+                m, y_test, y_pred, **self.get_metric_kwargs()
+            )
 
         return_data["user_requested_metrics"] = self.config["Metrics"]
         return return_data
@@ -524,8 +527,12 @@ class PdfDataGen:
 
                         # relabel classes for y_pred and y_test if multiclass
                         if self.is_multiclass:
-                            relabelled_y_pred = self.relabel_y_classes(pd.Series(filtered_dataset["y_pred"]))
-                            relabelled_y_test = self.relabel_y_classes(pd.Series(filtered_dataset["y_test"]))
+                            relabelled_y_pred = self.relabel_y_classes(
+                                pd.Series(filtered_dataset["y_pred"])
+                            )
+                            relabelled_y_test = self.relabel_y_classes(
+                                pd.Series(filtered_dataset["y_test"])
+                            )
 
                             filtered_dataset["y_pred"] = relabelled_y_pred
                             filtered_dataset["y_test"] = relabelled_y_test
@@ -533,11 +540,12 @@ class PdfDataGen:
                         cd = {
                             "label": c,
                             "short_label": short_labels[index],
-                            m: get_metric(m,
-                                          filtered_dataset["y_test"],
-                                          filtered_dataset["y_pred"],
-                                          **self.get_metric_kwargs()
-                                          ),
+                            m: get_metric(
+                                m,
+                                filtered_dataset["y_test"],
+                                filtered_dataset["y_pred"],
+                                **self.get_metric_kwargs()
+                            ),
                             "population": len(filtered_dataset["y_pred"])
                             / len(self.get_y_test()),
                         }
