@@ -75,6 +75,7 @@ def get_metric_explanation_text(mname, mvalue):
     text_lookup = {
         "mean_squared_error": "{} is the average of the squared difference between "
                               "the actual values and the predicted values.",
+        "mean_squared_error": "{} is the average of the squared difference between the actual values and the predicted values.",
         "mean_absolute_error": "{} is the average of the absolute error values.",
         "median_absolute_error": "{} is the median of the absolute error values.",
         "r2_score": "{} is amount of variation in the predicted values that can be explained by the model inputs."

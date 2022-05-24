@@ -29,7 +29,7 @@ metric_func_map["confusion_matrix"] = skm.confusion_matrix
 metric_func_map["false_positive"] = false_positive
 metric_func_map["false_negative"] = false_negative
 
-pos_label_metrics = ["selection_rate", "f1_score"]
+pos_label_metrics = ["selection_rate", "f1_score", "recall_score", "precision_score"]
 ordered_label_metrics = ["confusion_matrix", "false_positive", "false_negative"]
 
 
@@ -490,17 +490,22 @@ class PdfDataGen:
 
         if self.tasktype == "regression":
             return_data["y_error"] = list(map(lambda x, y: x - y, y_pred, y_test))
+            report_metrics = self.config["Metrics"]
 
         if self.tasktype == "classification":
-            tn, fp, fn, tp = skm.confusion_matrix(y_pred, y_test, labels=).ravel()
+            tn, fp, fn, tp = skm.confusion_matrix(y_pred, y_test, labels=self.classes).ravel()
             return_data["confusion_matrix"] = {"tn": tn, "fp": fp, "fn": fn, "tp": tp}
+            return_data["classes"] = self.classes
+            return_data["pos_label"] = self.pos_label
+            return_data["neg_label"] = next(iter(set(self.classes) - set(self.pos_label)))
+            report_metrics = ["accuracy_score", "recall_score",
+                              "precision_score", "false_negative",
+                              "false_positive"]
 
-            if self.data.raiinsight._classes:
-                return_data["classes"] = self.data.raiinsight._classes
-
-        for m in self.config["Metrics"]:
+        for m in report_metrics:
             return_data["metrics"][m] = get_metric(m, y_test, y_pred, **self.get_metric_kwargs())
 
+        return_data["user_requested_metrics"] = self.config["Metrics"]
         return return_data
 
     def get_cohorts_data(self):

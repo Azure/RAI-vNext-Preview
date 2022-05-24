@@ -81,27 +81,68 @@ def get_data_explorer_page(data):
 
 
 def _get_model_performance_explanation_text(metric, data):
+    score_value = str(int(100 * data["metrics"][metric]))
+    pos_label = data["pos_label"]
+    neg_label = data["neg_label"]
     if metric == "accuracy_score":
+        tp = data["confusion_matrix"]["tp"]
+        tn = data["confusion_matrix"]["tn"]
+        total = len(data["y_pred"])
         return div(
             h3(
-                "{}% Accuracy".format(str(int(100 * data["metrics"]["accuracy_score"])))
+                "{}% Accuracy".format(score_value)
             ),
             p(
-                "{}% of data points have the correct prediction.<br>".format(
-                    str(int(100 * data["metrics"]["accuracy_score"]))
-                )
+                "{}% of data points have the correct prediction.<br>".format(score_value)
             ),
             p(
                 "Accuracy = correct predictions / all predictions<br>"
-                "= ({} + {}) / {}".format(
-                    data["confusion_matrix"]["tp"],
-                    data["confusion_matrix"]["tn"],
-                    data["confusion_matrix"]["tp"]
-                    + data["confusion_matrix"]["tn"]
-                    + data["confusion_matrix"]["fp"]
-                    + data["confusion_matrix"]["fn"],
-                )
+                "= ({} + {}) / {}".format(tp, tn, total)
             ),
+        )
+    elif metric == "recall_score":
+        return div(
+            h3(
+                "{}% Recall".format(score_value)
+            ),
+            p(
+                "{}% of data points that are actually \"{}\" are likely to be predicted as \"{}\"".format(
+                    score_value, pos_label, pos_label
+                )
+            )
+        )
+    elif metric == "precision_score":
+        return div(
+            h3(
+                "{}% Precision".format(score_value)
+            ),
+            p(
+                "{}% of data points predicted as \"{}\", are likely to actually be \"\"".format(
+                    score_value, pos_label, neg_label
+                )
+            )
+        )
+    elif metric == "false_negative":
+        return div(
+            h3(
+                "{}% False Negative".format(score_value)
+            ),
+            p(
+                "{}% of data points that are predicted as \"{}\" should have been predicted as \"{}\"".format(
+                    score_value, neg_label, pos_label
+                )
+            )
+        )
+    elif metric == "false_positive":
+        return div(
+            h3(
+                "{}% False Positive".format(score_value)
+            ),
+            p(
+                "{}% of data points that are predicted as \"{}\" should have been predicted as \"{}\"".format(
+                    score_value, pos_label, neg_label
+                )
+            )
         )
 
 
