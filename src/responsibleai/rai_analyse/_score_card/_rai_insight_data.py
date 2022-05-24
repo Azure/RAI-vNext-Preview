@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import json
 import sklearn.metrics as skm
+import numpy as np
 
 from collections import OrderedDict
 from erroranalysis._internal.metrics import metric_to_func
@@ -11,12 +12,12 @@ from responsibleai import RAIInsights
 from datetime import datetime
 
 
-def false_positive(y_test, y_pred):
+def false_positive(y_test, y_pred, ordered_label):
     tn, fp, fn, tp = skm.confusion_matrix(y_test, y_pred).ravel()
     return fp
 
 
-def false_negative(y_test, y_pred):
+def false_negative(y_test, y_pred, ordered_label):
     tn, fp, fn, tp = skm.confusion_matrix(y_test, y_pred).ravel()
     return fn
 
@@ -28,17 +29,30 @@ metric_func_map["confusion_matrix"] = skm.confusion_matrix
 metric_func_map["false_positive"] = false_positive
 metric_func_map["false_negative"] = false_negative
 
+pos_label_metrics = ["selection_rate", "f1_score"]
+ordered_label_metrics = ["confusion_matrix", "false_positive", "false_negative"]
+
+
+def get_metric(metric, y_test, y_pred, **kwargs):
+    func = metric_func_map[metric]
+
+    if metric in pos_label_metrics:
+        return func(y_test, y_pred, pos_label=kwargs["pos_label"])
+
+    if metric in ordered_label_metrics:
+        return func(y_test, y_pred, labels=kwargs["labels"])
+
+    return func(y_test, y_pred)
+
+
+def fairness_metric_wrapper(y_test, y_pred, **kwargs):
+    get_metric(kwargs["metric"], y_test, y_pred, **kwargs)
 
 class ExplainerFiles:
     GLOBAL_IMPORTANCE = "global_importance_values.json"
     LOCAL_IMPORTANCE = "local_importance_values.json"
     FEATURES = "features.json"
     CLASSES = "classes.json"
-
-
-def get_metric(metric, y_pred, y_test):
-    return metric_func_map[metric](y_pred, y_test)
-
 
 class RaiInsightData:
     def __init__(self, raiinsight_path):
@@ -120,12 +134,13 @@ class RaiInsightData:
     def get_test(self):
         return self.raiinsight.test
 
-    def get_fairlearn_grouped_metric(self, sensitive_feature, metric):
+    def get_fairlearn_grouped_metric(self, sensitive_feature, sample_params):
         grouped_metric = MetricFrame(
-            metrics=metric_func_map[metric],
+            metrics=fairness_metric_wrapper,
             y_true=self.get_y_test(),
             y_pred=self.get_y_pred(),
             sensitive_features=self.raiinsight.test[sensitive_feature].to_numpy(),
+            sample_params=sample_params
         )
 
         return grouped_metric
@@ -239,13 +254,60 @@ class PdfDataGen:
             if self.config["Model"]["ModelType"] == "Regression"
             else "classification"
         )
+        self.is_multiclass = False
+        self._y_test = pd.Series(self.data.get_y_test())
+        self._y_pred = pd.Series(self.data.get_y_pred())
+
+        if self.tasktype == "classification":
+            self.is_multiclass = len(np.unique(
+                self.data.get_y_test())) > 2
+
+        self.classes = self.data._classes
+        self.pos_label = self.data._classes[1]
+        self.other_class = 'other'
+        if self.is_multiclass:
+            self.pos_label = str(self.data._classes[0])
+            self.classes = [self.other_class, self.pos_label]
+
+    def get_metric_kwargs(self):
+        return { "pos_label": self.pos_label,
+                 "labels": self.classes}
+
+    def relabel_y_classes(self, series):
+        def relabel(x):
+            if str(x) == self.pos_label:
+                return self.pos_label
+            return self.other_class
+
+        return series.apply(relabel)
+
+    def get_y_test(self):
+        if self.is_multiclass:
+            return self.relabel_y_classes(self._y_test)
+
+        return self._y_test
+
+    def get_y_pred(self):
+        if self.is_multiclass:
+            return self.relabel_y_classes(self._y_pred)
+
+        return self._y_pred
+
+    def get_classes(self):
+        if self.data.raiinsight._classes:
+            if self.is_multiclass:
+                return self.data.raiinsight._classes
+
+            return self.data.raiinsight._classes
+
+        return None
 
     def get_model_overview_data(self):
         return_data = self.config["Model"]
 
         return_data["metrics_targets"] = self.get_metrics_targets()
         return_data["runinfo"] = None
-        return_data["y_test"] = self.data.get_y_test()
+        return_data["y_test"] = self.get_y_test()
 
         if "runinfo" in self.config.keys():
             return_data["runinfo"] = self.config["runinfo"]
@@ -256,8 +318,8 @@ class PdfDataGen:
                 "%m/%d/%Y"
             )
 
-        if self.data.raiinsight._classes:
-            return_data["classes"] = self.data.raiinsight._classes
+        if self.get_classes():
+            return_data["classes"] = self.get_classes()
 
         return return_data
 
@@ -326,17 +388,13 @@ class PdfDataGen:
 
     def get_data_explorer_data(self):
         de_data = []
-        y_test = self.data.get_y_test()
-        y_predict = self.data.get_y_pred()
+        y_test = self.get_y_test()
+        y_predict = self.get_y_pred()
         for f in self.config["DataExplorer"]["features"]:
             label_list, new_labels = self.get_binning_information(f)
             counts = new_labels.value_counts()
             total = len(new_labels)
             primary_metric = self.primary_metric
-            metric_func = None
-            if primary_metric:
-                metric_func = metric_func_map[primary_metric]
-
             data = {"feature_name": f, "primary_metric": primary_metric, "data": []}
 
             for label in label_list:
@@ -348,10 +406,11 @@ class PdfDataGen:
                     "prediction": y_predict[index_filter],
                 }
 
-                if metric_func:
-                    f_data[primary_metric] = metric_func(
-                        y_predict[index_filter], y_test[index_filter]
-                    )
+                if primary_metric:
+                    f_data[primary_metric] = get_metric(primary_metric,
+                                                        y_predict[index_filter],
+                                                        y_test[index_filter],
+                                                        **self.get_metric_kwargs())
 
                 data["data"].append(f_data)
 
@@ -372,6 +431,7 @@ class PdfDataGen:
         sorted_tuple = sorted(
             [(f, importances[index]) for index, f in enumerate(features)],
             key=lambda x: x[1],
+            reverse=True
         )[-top_n:]
         sorted_dict = {
             t[0]: {"value": t[1], "short_label": short_labels[index]}
@@ -392,7 +452,12 @@ class PdfDataGen:
             fm[f]["metrics"] = {}
             fm[f]["statistics"] = {}
             for m in fair_con["metric"]:
-                gm = self.data.get_fairlearn_grouped_metric(f, m)
+                m_sample_params = {
+                    "metric": m,
+                    "pos_label": self.pos_label,
+                    "labels": self.classes
+                }
+                gm = self.data.get_fairlearn_grouped_metric(f, m_sample_params)
 
                 fm_lookup = {
                     "difference": gm.difference(method="between_groups"),
@@ -419,22 +484,22 @@ class PdfDataGen:
         return fm
 
     def get_model_performance_data(self):
-        y_pred = self.data.get_y_pred()
-        y_test = self.data.get_y_test()
+        y_pred = self.get_y_pred()
+        y_test = self.get_y_test()
         return_data = {"y_pred": y_pred, "y_test": y_test, "metrics": {}}
 
         if self.tasktype == "regression":
             return_data["y_error"] = list(map(lambda x, y: x - y, y_pred, y_test))
 
         if self.tasktype == "classification":
-            tn, fp, fn, tp = metric_func_map["confusion_matrix"](y_pred, y_test).ravel()
+            tn, fp, fn, tp = skm.confusion_matrix(y_pred, y_test, labels=).ravel()
             return_data["confusion_matrix"] = {"tn": tn, "fp": fp, "fn": fn, "tp": tp}
 
             if self.data.raiinsight._classes:
                 return_data["classes"] = self.data.raiinsight._classes
 
         for m in self.config["Metrics"]:
-            return_data["metrics"][m] = metric_func_map[m](y_pred, y_test)
+            return_data["metrics"][m] = get_metric(m, y_test, y_pred, **self.get_metric_kwargs())
 
         return return_data
 
@@ -452,14 +517,24 @@ class PdfDataGen:
                         code = self.config["cohorts_definition"][c]
                         filtered_dataset = self.data.get_filtered_dataset(code)
 
+                        # relabel classes for y_pred and y_test if multiclass
+                        if self.is_multiclass:
+                            relabelled_y_pred = self.relabel_y_classes(pd.Series(filtered_dataset["y_pred"]))
+                            relabelled_y_test = self.relabel_y_classes(pd.Series(filtered_dataset["y_test"]))
+
+                            filtered_dataset["y_pred"] = relabelled_y_pred
+                            filtered_dataset["y_test"] = relabelled_y_test
+
                         cd = {
                             "label": c,
                             "short_label": short_labels[index],
-                            m: metric_func_map[m](
-                                filtered_dataset["y_pred"], filtered_dataset["y_test"]
-                            ),
+                            m: get_metric(m,
+                                          filtered_dataset["y_test"],
+                                          filtered_dataset["y_pred"],
+                                          **self.get_metric_kwargs()
+                                          ),
                             "population": len(filtered_dataset["y_pred"])
-                            / len(self.data.get_y_test()),
+                            / len(self.get_y_test()),
                         }
                         if "threshold" in self.config["Metrics"][m]:
                             cd["threshold"] = self.config["Metrics"][m]["threshold"][1]
@@ -486,7 +561,7 @@ class PdfDataGen:
                             "short_label": short_labels[index],
                             m: treemap[node["id"]]["metricValue"],
                             "population": treemap[node["id"]]["size"]
-                            / len(self.data.get_y_test()),
+                            / len(self.get_y_test()),
                         }
                         if "threshold" in self.config["Metrics"][m]:
                             cd["threshold"] = self.config["Metrics"][m]["threshold"][1]

@@ -187,7 +187,7 @@ def get_feature_importance_page(data):
 
     fi_left_container = div(container, _class="left")
 
-    heading_main = div(h3("Feature Importance"), get_fi_image(data), _class="main")
+    heading_main = div(get_fi_image(data), _class="main")
     return div(
         get_page_divider("Feature relevance (explanability)"),
         fi_left_container,
@@ -206,8 +206,9 @@ def get_fi_bar_plot(data):
     # tickvals = [0.0, 0.25, 0.5, 0.75, 1.0]
     # ticktext = [0.0, 0.25, 0.5, 0.75, 1.0]
     tickappend = ""
+    x_title = "Feature Importance"
 
-    return get_bar_plot(y_data, x_data, tickappend=tickappend, xrange=x_range)
+    return get_bar_plot(y_data, x_data, tickappend=tickappend, xrange=x_range, x_title="Feature Importance")
 
 
 def get_binary_cp_bar_plot(data, m):
@@ -303,6 +304,7 @@ def get_bar_plot(
     ticktext=None,
     xrange=None,
     tickappend="",
+    x_title=None,
 ):
     fig = go.Figure()
     series = 0
@@ -345,6 +347,7 @@ def get_bar_plot(
             tickvals=tickvals if tickvals else None,
             ticktext=ticktext if ticktext else None,
             range=xrange if xrange else None,
+            title=x_title if x_title else None
         ),
         yaxis=dict(
             showgrid=False,
@@ -442,10 +445,14 @@ def get_de_box_plot(data):
 def get_de_box_plot_image(data):
     processed_label = data
     for c in processed_label["data"]:
+        c["title"] = (
+            "Prediction value distribution on ranges in feature \"{}\"".format(c["feature_name"])
+        )
         c["label"] = (
-            c["label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "%"
+            c["label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "% population"
         )
         c["datapoints"] = c["prediction"]
+
     png_base64 = get_de_box_plot(processed_label)
     return div(
         img(_src="data:image/png;base64,{}".format(png_base64)), _class="image_div"
@@ -463,6 +470,7 @@ def get_box_plot(data):
                 fillcolor="rgba(218, 227, 243, 1)",
                 name=i["label"],
                 showlegend=False,
+                title=i.get("title", None)
             )
         )
 
@@ -644,7 +652,7 @@ def get_causal_page(data):
     left_elem = [
         div(
             p(
-                "Causal analysis answers real world what if "
+                "Causal analysis answers real world what-if "
                 "questions about how changes of treatments would impact a real world outcome."
             )
         )
@@ -732,7 +740,7 @@ def get_causal_page(data):
 
     return div(
         div(
-            get_page_divider("Causal"),
+            get_page_divider("Causal analysis"),
             left_container,
             main_container,
             _class="nobreak_div",
