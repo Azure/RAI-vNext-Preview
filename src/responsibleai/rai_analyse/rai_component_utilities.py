@@ -22,7 +22,7 @@ from azureml.core import Model, Run, Workspace
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
-
+from cloud_pickle_loader import CloudPickleLoader
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -238,6 +238,10 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
-        model=model_estimator, train=df_train, test=df_test, **constructor_args
+        model=model_estimator,
+        train=df_train,
+        test=df_test,
+        serializer=CloudPickleLoader(),
+        **constructor_args,
     )
     return rai_i
