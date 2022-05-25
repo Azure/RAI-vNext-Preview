@@ -1,6 +1,6 @@
 azure-common
 --pre
-azure-ai-ml==0.1.0b2
+azure-ai-ml==0.1.0b3
 colorama # Pending update
 jupyter
 pandas
