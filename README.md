@@ -1,6 +1,6 @@
 # Azure Machine Learning Responsible AI Dashboard
 
-Welcome to the public preview for the new Responsible AI dashboard in Azure Machine Learning (AzureML) SDK/CLIv2 and studio. The following is a guide for you to onboard to the new capabilities. For questions, please contact mithigpe@microsoft.com. Visit the [Microsoft how-to docs](aka.ms/https://aka.ms/DocsHowtoRAI) relating to this repo.
+Welcome to the public preview for the new Responsible AI dashboard in Azure Machine Learning (AzureML) SDK/CLIv2 and studio. The following is a guide for you to onboard to the new capabilities. For questions, please contact mithigpe@microsoft.com. Visit the [Microsoft how-to docs](https://aka.ms/DocsHowtoRAI) relating to this repo.
 
 ## What is this new feature?
 
