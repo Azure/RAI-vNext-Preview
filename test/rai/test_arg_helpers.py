@@ -10,16 +10,16 @@ import pytest
 
 from src.responsibleai.rai_analyse.arg_helpers import (
     boolean_parser,
-    float_or_json_parser
+    float_or_json_parser,
 )
 
 
 class TestBooleanParser:
-    @pytest.mark.parametrize("value", ['True', 'true'])
+    @pytest.mark.parametrize("value", ["True", "true"])
     def test_true(self, value):
         assert boolean_parser(value)
 
-    @pytest.mark.parametrize("value", ["False", 'false'])
+    @pytest.mark.parametrize("value", ["False", "false"])
     def test_false(self, value):
         assert not boolean_parser(value)
 
@@ -28,10 +28,11 @@ class TestBooleanParser:
         with pytest.raises(ValueError, match="Failed to parse to boolean:"):
             boolean_parser(value)
 
+
 class TestFloatOrJSONParser:
     def test_is_float(self):
         flt = 1.25
-        assert float_or_json_parser(str(flt))==flt
+        assert float_or_json_parser(str(flt)) == flt
 
     def test_is_json(self):
         target = [0, 1, 2]
