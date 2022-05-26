@@ -10,6 +10,7 @@ dependencies:
     - pyarrow
     - scikit-learn<1.1 # See PR 1429 in responsible-ai-toolbox
     - mlflow
+    - protobuf<4 # Release
     - azureml-mlflow
     - responsibleai~=0.18.0
     - raiwidgets~=0.18.0
