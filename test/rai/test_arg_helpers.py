@@ -13,6 +13,8 @@ from src.responsibleai.rai_analyse.arg_helpers import (
     float_or_json_parser,
     str_or_int_parser,
     str_or_list_parser,
+    int_or_none_parser,
+    json_empty_is_none_parser,
 )
 
 
@@ -72,3 +74,29 @@ class TestStrOrListParser:
 
         with pytest.raises(ValueError, match="Supplied JSON string not list"):
             str_or_list_parser(target_json)
+
+class TestIntOrNoneParser:
+    def test_is_none(self):
+        assert int_or_none_parser("None") is None
+
+    @pytest.mark.parametrize("value", [1, 2, -1])
+    def test_is_int(self, value):
+        assert int_or_none_parser(str(value)) == value
+
+    @pytest.mark.parametrize("value", ["a", "10.1", "[]"])
+    def test_bad_value(self, value):
+        with pytest.raises(ValueError, match="int_or_none_parser failed on:"):
+            int_or_none_parser(value)
+
+class TestJSONEmptyIsNoneParser:
+    @pytest.mark.parametrize("value", [ [1,2], {'a':1, 'b':2}])
+    def test_json_strings(self, value):
+        value_json = json.dumps(value)
+
+        assert value == json_empty_is_none_parser(value_json)
+
+    @pytest.mark.parametrize("value", [ [], dict()])
+    def test_empty(self, value):
+        value_json = json.dumps(value)
+
+        assert json_empty_is_none_parser(value_json) is None
