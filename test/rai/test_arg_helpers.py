@@ -75,6 +75,7 @@ class TestStrOrListParser:
         with pytest.raises(ValueError, match="Supplied JSON string not list"):
             str_or_list_parser(target_json)
 
+
 class TestIntOrNoneParser:
     def test_is_none(self):
         assert int_or_none_parser("None") is None
@@ -88,14 +89,15 @@ class TestIntOrNoneParser:
         with pytest.raises(ValueError, match="int_or_none_parser failed on:"):
             int_or_none_parser(value)
 
+
 class TestJSONEmptyIsNoneParser:
-    @pytest.mark.parametrize("value", [ [1,2], {'a':1, 'b':2}])
+    @pytest.mark.parametrize("value", [[1, 2], {"a": 1, "b": 2}])
     def test_json_strings(self, value):
         value_json = json.dumps(value)
 
         assert value == json_empty_is_none_parser(value_json)
 
-    @pytest.mark.parametrize("value", [ [], dict()])
+    @pytest.mark.parametrize("value", [[], dict()])
     def test_empty(self, value):
         value_json = json.dumps(value)
 
