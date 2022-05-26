@@ -11,6 +11,7 @@ import pytest
 from src.responsibleai.rai_analyse.arg_helpers import (
     boolean_parser,
     float_or_json_parser,
+    str_or_int_parser,
 )
 
 
@@ -41,3 +42,13 @@ class TestFloatOrJSONParser:
 
         actual = float_or_json_parser(target_json)
         assert np.array_equal(target, actual)
+
+
+class TestStrOrIntParser:
+    @pytest.mark.parametrize("value", [0, -1, 10, 100])
+    def test_is_int(self, value):
+        assert str_or_int_parser(str(value)) == value
+
+    @pytest.mark.parametrize("value", ["10.1", "a", "None"])
+    def test_is_string(self, value):
+        assert str_or_int_parser(value) == value
