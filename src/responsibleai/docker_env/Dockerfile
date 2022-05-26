@@ -26,7 +26,8 @@ RUN pip install 'responsibleai~=0.18.1' \
                 'azureml-telemetry==1.41.0' \
                 'pdfkit==1.0.0' \
                 'plotly==5.6.0' \
-                'kaleido==0.2.1'
+                'kaleido==0.2.1' \
+                'protobuf<4'
 
 # no-deps install for domonic due to unresolable dependencies requirment on urllib3 and requests. 
 RUN pip install --no-deps 'charset-normalizer==2.0.12' \
