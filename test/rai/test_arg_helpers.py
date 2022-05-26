@@ -12,6 +12,7 @@ from src.responsibleai.rai_analyse.arg_helpers import (
     boolean_parser,
     float_or_json_parser,
     str_or_int_parser,
+    str_or_list_parser,
 )
 
 
@@ -37,7 +38,6 @@ class TestFloatOrJSONParser:
 
     def test_is_json(self):
         target = [0, 1, 2]
-
         target_json = json.dumps(target)
 
         actual = float_or_json_parser(target_json)
@@ -52,3 +52,23 @@ class TestStrOrIntParser:
     @pytest.mark.parametrize("value", ["10.1", "a", "None"])
     def test_is_string(self, value):
         assert str_or_int_parser(value) == value
+
+
+class TestStrOrListParser:
+    def test_is_list(self):
+        target = [10.25, 1, 2]
+        target_json = json.dumps(target)
+
+        actual = str_or_list_parser(target_json)
+        assert np.array_equal(target, actual)
+
+    @pytest.mark.parametrize("value", ["", "a"])
+    def test_is_string(self, value):
+        assert str_or_list_parser(value) == value
+
+    def test_json_not_list(self):
+        target = {"a": 1, "b": 2}
+        target_json = json.dumps(target)
+
+        with pytest.raises(ValueError, match="Supplied JSON string not list"):
+            str_or_list_parser(target_json)
