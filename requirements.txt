@@ -4,5 +4,4 @@ colorama # Pending update
 jupyter
 pandas
 pyarrow
-scikit-learn<1.1 # See PR #1429 in responsible-ai-toolbox repo
 shap
