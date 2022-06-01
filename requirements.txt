@@ -1,6 +1,5 @@
 azure-common
 azure-ai-ml==0.1.0b3
-colorama # Pending update
 jupyter
 pandas
 pyarrow

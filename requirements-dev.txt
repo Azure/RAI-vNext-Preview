@@ -1,7 +1,6 @@
 azure-common
 --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2
 azure-ai-ml
-colorama # Pending update
 jupyter
 pandas
 pyarrow
