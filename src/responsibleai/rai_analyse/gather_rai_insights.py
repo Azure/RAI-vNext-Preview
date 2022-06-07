@@ -66,7 +66,7 @@ def main(args):
         rai_temp = create_rai_insights_from_port_path(my_run, args.constructor)
         rai_temp.save(incoming_temp_dir)
 
-        print("Savied rai_temp")
+        print("Saved rai_temp")
         print_dir_tree(incoming_temp_dir)
         print("=======")
 
