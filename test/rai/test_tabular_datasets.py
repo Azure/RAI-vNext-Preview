@@ -7,7 +7,7 @@ import pathlib
 import time
 
 from azure.ai.ml import MLClient, dsl, Input
-from azure.ai.ml.entities import load_component
+from azure.ai.ml.entities import load_component, load_job
 from azure.ai.ml.entities import Job
 from urllib3 import Timeout
 
@@ -212,6 +212,6 @@ class Testregister_tabular_dataset:
         }
         process_file(pipeline_file, pipeline_processed_file, replacements)
 
-        pipeline_job = Job.load(path=pipeline_processed_file)
+        pipeline_job = load_job(path=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)
