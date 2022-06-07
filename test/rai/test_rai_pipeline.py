@@ -9,7 +9,6 @@ import uuid
 
 from azure.ai.ml import MLClient, dsl, Input, Output
 from azure.ai.ml.entities import load_component, load_job
-from azure.ai.ml.entities import Job
 from responsibleai import RAIInsights
 
 from test.constants_for_test import Timeouts
