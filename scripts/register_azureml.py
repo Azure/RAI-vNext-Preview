@@ -13,8 +13,8 @@ from typing import Any
 
 from azure.identity import DefaultAzureCredential
 
-from azure.ai.ml import MLClient
-from azure.ai.ml.entities import load_component, Data, Environment
+from azure.ai.ml import MLClient, load_component
+from azure.ai.ml.entities import Data, Environment
 
 
 _logger = logging.getLogger(__file__)
@@ -91,7 +91,7 @@ def process_directory(directory: Path, ml_client: MLClient, version: int) -> Non
             _logger.info("Registering component: {0}".format(c))
             processed_file = c + ".processed"
             process_file(c, processed_file, replacements)
-            curr_component = load_component(yaml_file=processed_file)
+            curr_component = load_component(path=processed_file)
             ml_client.components.create_or_update(curr_component)
             _logger.info("Registered {0}".format(curr_component.name))
     else:
