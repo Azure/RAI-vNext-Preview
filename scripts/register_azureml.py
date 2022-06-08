@@ -13,8 +13,8 @@ from typing import Any
 
 from azure.identity import DefaultAzureCredential
 
-from azure.ai.ml import MLClient
-from azure.ai.ml.entities import load_component, Data, Environment
+from azure.ai.ml import MLClient, load_component
+from azure.ai.ml.entities import Data, Environment
 
 
 _logger = logging.getLogger(__file__)
