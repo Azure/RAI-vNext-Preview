@@ -58,30 +58,28 @@ diabetes_test_pq = Input(
 
 Pipelines are built from components, so we need to load them next:
 ```python
-from azure.ai.ml.entities import load_component
-
-fetch_model_component = load_component(
-    client=ml_client, name='fetch_registered_model', version=version_string
+fetch_model_component = ml_client.components.get(
+    name='fetch_registered_model', version=version_string
 )
 
-rai_constructor_component = load_component(
-    client=ml_client, name="rai_insights_constructor", version=version_string
+rai_constructor_component = ml_client.components.get(
+    name="rai_insights_constructor", version=version_string
 )
 
-rai_causal_component = load_component(
-    client=ml_client, name="rai_insights_causal", version=version_string
+rai_causal_component = ml_client.components.get(
+    name="rai_insights_causal", version=version_string
 )
 
-rai_counterfactual_component = load_component(
-    client=ml_client, name="rai_insights_counterfactual", version=version_string
+rai_counterfactual_component = ml_client.components.get(
+    name="rai_insights_counterfactual", version=version_string
 )
 
-rai_gather_component = load_component(
-    client=ml_client, name="rai_insights_gather", version=version_string
+rai_gather_component = ml_client.components.get(
+    name="rai_insights_gather", version=version_string
 )
 
-rai_scorecard_component = load_component(
-    client=ml_client, name="rai_score_card", version=version_string
+rai_scorecard_component = ml_client.components.get(
+    name="rai_score_card", version=version_string
 )
 ```
 
