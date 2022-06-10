@@ -43,10 +43,10 @@ class TestRAISmoke:
 
         submit_and_wait(ml_client, pipeline_job)
 
-    def test_cli_doc_sample_yaml(self, ml_client, component_config):
+    def test_cli_example_sample_yaml(self, ml_client, component_config):
         current_dir = pathlib.Path(__file__).parent.absolute()
         pipeline_file = (
-            current_dir.parent.parent / "docs" / "cli" / "pipeline_rai_adult.yaml"
+            current_dir.parent.parent / "examples" / "cli" / "pipeline_rai_adult.yaml"
         )
         pipeline_processed_file = "pipeline_rai_adult.processed.yaml"
 
