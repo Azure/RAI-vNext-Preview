@@ -32,7 +32,7 @@ jobs:
     component: azureml:register_model:1
     inputs:
       model_input_path: ${{parent.jobs.train_model_job.outputs.model_output}}
-      model_base_name: component_registered_lr_01
+      model_base_name: rai_adult_cli_01
 
   create_rai_job:
     type: command
