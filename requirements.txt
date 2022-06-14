@@ -1,5 +1,8 @@
 azure-common
 azure-ai-ml==0.1.0b3
+mltable==0.1.0b2
+azureml_dataprep
+azureml_dataprep_rslex
 jupyter
 pandas
 pyarrow
