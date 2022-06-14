@@ -5,12 +5,12 @@ type: pipeline
 inputs:
   target_column_name: income
   my_training_data:
-    type: uri_file
-    path: azureml:adult_train_pq:VERSION_REPLACEMENT_STRING
+    type: mltable
+    path: azureml:adult_train:VERSION_REPLACEMENT_STRING
     mode: download
   my_test_data:
-    type: uri_file
-    path: azureml:adult_test_pq:VERSION_REPLACEMENT_STRING
+    type: mltable
+    path: azureml:adult_test:VERSION_REPLACEMENT_STRING
     mode: download
 
 settings:
