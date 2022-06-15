@@ -114,7 +114,7 @@ def registered_adult_model_id(ml_client, component_config):
         name="register_model", version=version_string
     )
     adult_train = Input(
-        type="mlmodel", path=f"adult_train:{version_string}", mode="download"
+        type="mltable", path=f"adult_train:{version_string}", mode="download"
     )
 
     @dsl.pipeline(
