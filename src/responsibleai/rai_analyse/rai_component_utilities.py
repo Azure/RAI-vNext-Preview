@@ -17,6 +17,8 @@ import pandas as pd
 
 import mlflow
 
+import mltable
+
 from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
@@ -68,9 +70,10 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
-def load_dataset(parquet_path: str):
-    _logger.info("Loading parquet file: {0}".format(parquet_path))
-    df = pd.read_parquet(parquet_path)
+def load_dataset(mltable_path: str):
+    _logger.info("Loading MLTable: {0}".format(mltable_path))
+    tbl = mltable.load(mltable_path)
+    df : pd.DataFrame = tbl.to_pandas_dataframe()
     print(df.dtypes)
     print(df.head(10))
     return df
