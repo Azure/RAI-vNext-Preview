@@ -86,10 +86,10 @@ class TestCausalComponent:
             }
 
         adult_train_pq = Input(
-            type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
+            type="mlmodel", path=f"adult_train:{version_string}", mode="download"
         )
         adult_test_pq = Input(
-            type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+            type="mlmodel", path=f"adult_test:{version_string}", mode="download"
         )
         rai_pipeline = test_causal_classification(
             target_column_name="income",
