@@ -77,16 +77,16 @@ class TestCounterfactualComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = Input(
-            type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
+        adult_train = Input(
+            type="mltable", path=f"adult_train:{version_string}", mode="download"
         )
-        adult_test_pq = Input(
-            type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+        adult_test = Input(
+            type="mltable", path=f"adult_test:{version_string}", mode="download"
         )
         rai_pipeline = test_counterfactual_classification(
             target_column_name="income",
-            train_data=adult_train_pq,
-            test_data=adult_test_pq,
+            train_data=adult_train,
+            test_data=adult_test,
         )
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
