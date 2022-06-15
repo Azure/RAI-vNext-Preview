@@ -85,16 +85,16 @@ class TestCausalComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = Input(
+        adult_train = Input(
             type="mlmodel", path=f"adult_train:{version_string}", mode="download"
         )
-        adult_test_pq = Input(
+        adult_test = Input(
             type="mlmodel", path=f"adult_test:{version_string}", mode="download"
         )
         rai_pipeline = test_causal_classification(
             target_column_name="income",
-            train_data=adult_train_pq,
-            test_data=adult_test_pq,
+            train_data=adult_train,
+            test_data=adult_test,
         )
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
