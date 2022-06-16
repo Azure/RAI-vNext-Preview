@@ -70,10 +70,30 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
-def load_dataset(mltable_path: str):
+def load_mltable(mltable_path: str) -> pd.DataFrame:
     _logger.info("Loading MLTable: {0}".format(mltable_path))
-    tbl = mltable.load(mltable_path)
-    df : pd.DataFrame = tbl.to_pandas_dataframe()
+    df: pd.DataFrame = None
+    try:
+        tbl = mltable.load(mltable_path)
+        df: pd.DataFrame = tbl.to_pandas_dataframe()
+    except Exception as e:
+        _logger.info("Failed to load MLTable")
+        _logger.info(e)
+    return df
+
+
+def load_parquet(parquet_path: str) -> pd.DataFrame:
+    _logger.info("Loading parquet file: {0}".format(parquet_path))
+    df = pd.read_parquet(parquet_path)
+    return df
+
+
+def load_dataset(dataset_path: str) -> pd.DataFrame:
+    _logger.info(f"Attempting to load: {dataset_path}")
+    df = load_mltable(dataset_path)
+    if df is None:
+        df = load_parquet(dataset_path)
+
     print(df.dtypes)
     print(df.head(10))
     return df
@@ -227,8 +247,8 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     _logger.info("Creating RAIInsights from constructor component output")
 
     _logger.info("Loading data files")
-    df_train = load_dataset(os.path.join(port_path, DashboardInfo.TRAIN_FILES_DIR))
-    df_test = load_dataset(os.path.join(port_path, DashboardInfo.TEST_FILES_DIR))
+    df_train = load_mltable(os.path.join(port_path, DashboardInfo.TRAIN_FILES_DIR))
+    df_test = load_mltable(os.path.join(port_path, DashboardInfo.TEST_FILES_DIR))
 
     _logger.info("Loading config file")
     config = load_dashboard_info_file(port_path)
