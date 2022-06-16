@@ -13,7 +13,7 @@ from typing import Any
 
 from azure.identity import DefaultAzureCredential
 
-from azure.ai.ml import MLClient, load_component
+from azure.ai.ml import MLClient, load_component, load_data, load_environment
 from azure.ai.ml.entities import Data, Environment
 
 
@@ -80,7 +80,7 @@ def process_directory(directory: Path, ml_client: MLClient, version: int) -> Non
             _logger.info("Registering environment: {0}".format(e))
             processed_file = e + ".processed"
             process_file(e, processed_file, replacements)
-            curr_env: Environment = Environment.load(processed_file)
+            curr_env: Environment = load_environment(processed_file)
             ml_client.environments.create_or_update(curr_env)
             _logger.info("Registered {0}".format(curr_env.name))
     else:
@@ -107,7 +107,7 @@ def process_directory(directory: Path, ml_client: MLClient, version: int) -> Non
                 _logger.info("Processing {0}".format(d))
                 processed_file = d + ".processed"
                 process_file(d, processed_file, replacements)
-                curr_dataset: Data = Data.load(processed_file)
+                curr_dataset: Data = load_data(processed_file)
                 ml_client.data.create_or_update(curr_dataset)
                 _logger.info("Registered {0}".format(curr_dataset.name))
     else:
