@@ -247,8 +247,8 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     _logger.info("Creating RAIInsights from constructor component output")
 
     _logger.info("Loading data files")
-    df_train = load_mltable(os.path.join(port_path, DashboardInfo.TRAIN_FILES_DIR))
-    df_test = load_mltable(os.path.join(port_path, DashboardInfo.TEST_FILES_DIR))
+    df_train = load_parquet(os.path.join(port_path, DashboardInfo.TRAIN_FILES_DIR))
+    df_test = load_parquet(os.path.join(port_path, DashboardInfo.TEST_FILES_DIR))
 
     _logger.info("Loading config file")
     config = load_dashboard_info_file(port_path)
