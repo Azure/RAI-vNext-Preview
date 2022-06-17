@@ -97,7 +97,7 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
         f"train_data_path = '{train_path}'"
     ] = f'train_data_path = r"{os.path.join(data_dir, train_path)}"'
     replacements[
-        "test_data_path = '{test_path}'"
+        f"test_data_path = '{test_path}'"
     ] = f'test_data_path = r"{os.path.join(data_dir, test_path)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
