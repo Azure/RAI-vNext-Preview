@@ -17,6 +17,7 @@ def update_cells(input_nb_path, output_nb_path, replacement_strings: Dict[str, s
     for cell in notebook["cells"]:
         for original, update in replacement_strings.items():
             if cell["source"] == original:
+                print(f"Replacing ---{original}--- with ---{update}---")
                 cell["source"] = update
 
     nbf.write(notebook, output_nb_path)
