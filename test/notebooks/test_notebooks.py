@@ -82,7 +82,7 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
 
     current_file_directory = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(
-        os.path.join(current_file_directory, "../..", "examples/notebooks/data")
+        os.path.join(current_file_directory, "../..", "examples/notebooks")
     )
     train_path = 'data-programmer-regression/train/'
     test_path = 'data-programmer-regression/test/'
