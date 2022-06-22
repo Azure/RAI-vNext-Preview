@@ -26,7 +26,7 @@ echo "{ \"version\":\"1\" }" > component_config.json
 echo
 
 echo "=-= Creating conda environment"
-source ~/miniconda3/etc/profile.d/conda.sh
+# source ~/miniconda3/etc/profile.d/conda.sh
 conda create -y -n ${condaEnv} python=3.8
 conda activate ${condaEnv}
 echo
