@@ -43,6 +43,23 @@ class TestRAISmoke:
 
         submit_and_wait(ml_client, pipeline_job)
 
+    def test_cli_example_sample_yaml(self, ml_client, component_config):
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = (
+            current_dir.parent.parent / "examples" / "CLI" / "pipeline_rai_adult.yaml"
+        )
+        pipeline_processed_file = "pipeline_rai_adult.processed.yaml"
+
+        replacements = {
+            ":1": f":{component_config['version']}",
+            "RAI_CLI_Submission_Adult_1": f"RAI_CLI_Submission_Adult_{component_config['version']}",
+        }
+        process_file(pipeline_file, pipeline_processed_file, replacements)
+
+        pipeline_job = load_job(path=pipeline_processed_file)
+
+        submit_and_wait(ml_client, pipeline_job)
+
     def test_classification_pipeline_from_python(
         self, ml_client: MLClient, component_config
     ):
