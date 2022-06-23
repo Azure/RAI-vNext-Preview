@@ -1,5 +1,5 @@
 azure-common
-azure-ai-ml==0.1.0b3
+azure-ai-ml==0.1.0b4
 jupyter
 pandas
 pyarrow
