@@ -7,8 +7,7 @@ import pathlib
 import time
 
 from azure.ai.ml import MLClient, dsl, Input
-from azure.ai.ml.entities import load_component
-from azure.ai.ml.entities import Job
+from azure.ai.ml import load_job
 from urllib3 import Timeout
 
 from test.constants_for_test import Timeouts
@@ -23,8 +22,8 @@ class Testregister_tabular_dataset:
         version_string = component_config["version"]
         epoch_secs = int(time.time())
 
-        register_tabular_component = load_component(
-            client=ml_client, name="register_tabular_dataset", version=version_string
+        register_tabular_component = ml_client.components.get(
+            name="register_tabular_dataset", version=version_string
         )
 
         @dsl.pipeline(
@@ -67,8 +66,8 @@ class Testregister_tabular_dataset:
         train_tabular_base = "train_tabular_adult"
         test_tabular_base = "test_tabular_adult"
 
-        register_tabular_component = load_component(
-            client=ml_client, name="register_tabular_dataset", version=version_string
+        register_tabular_component = ml_client.components.get(
+            name="register_tabular_dataset", version=version_string
         )
 
         @dsl.pipeline(
@@ -108,24 +107,24 @@ class Testregister_tabular_dataset:
 
         # Now we want to consume the dataset in one of our pipelines
 
-        fetch_model_component = load_component(
-            client=ml_client, name="fetch_registered_model", version=version_string
+        fetch_model_component = ml_client.components.get(
+            name="fetch_registered_model", version=version_string
         )
 
-        tabular_to_parquet_component = load_component(
-            client=ml_client, name="convert_tabular_to_parquet", version=version_string
+        tabular_to_parquet_component = ml_client.components.get(
+            name="convert_tabular_to_parquet", version=version_string
         )
 
-        rai_constructor_component = load_component(
-            client=ml_client, name="rai_insights_constructor", version=version_string
+        rai_constructor_component = ml_client.components.get(
+            name="rai_insights_constructor", version=version_string
         )
 
-        rai_explanation_component = load_component(
-            client=ml_client, name="rai_insights_explanation", version=version_string
+        rai_explanation_component = ml_client.components.get(
+            name="rai_insights_explanation", version=version_string
         )
 
-        rai_gather_component = load_component(
-            client=ml_client, name="rai_insights_gather", version=version_string
+        rai_gather_component = ml_client.components.get(
+            name="rai_insights_gather", version=version_string
         )
         _logger.info("Loaded all components: {0}".format(type(rai_gather_component)))
 
@@ -212,6 +211,6 @@ class Testregister_tabular_dataset:
         }
         process_file(pipeline_file, pipeline_processed_file, replacements)
 
-        pipeline_job = Job.load(path=pipeline_processed_file)
+        pipeline_job = load_job(path=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)

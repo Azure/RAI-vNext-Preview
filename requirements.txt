@@ -1,9 +1,6 @@
 azure-common
---pre
-azure-ai-ml==0.1.0b2
-colorama # Pending update
+azure-ai-ml==0.1.0b4
 jupyter
 pandas
 pyarrow
-scikit-learn<1.1 # See PR #1429 in responsible-ai-toolbox repo
 shap

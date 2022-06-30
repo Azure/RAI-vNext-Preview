@@ -36,7 +36,7 @@ conda install nbconda
 echo
 
 echo "=-= Installing Jupyter"
-pip install jupyter "markupsafe<=2.0.1" "itsdangerous==2.0.1"
+pip install jupyter
 echo
 
 echo "=-= Installing responsibleai"

@@ -24,7 +24,7 @@ from rai_component_utilities import (
     load_dashboard_info_file,
     add_properties_to_gather_run,
     print_dir_tree,
-    copy_dashboard_info_file
+    copy_dashboard_info_file,
 )
 
 _DASHBOARD_CONSTRUCTOR_MISMATCH = (
@@ -66,7 +66,7 @@ def main(args):
         rai_temp = create_rai_insights_from_port_path(my_run, args.constructor)
         rai_temp.save(incoming_temp_dir)
 
-        print("Savied rai_temp")
+        print("Saved rai_temp")
         print_dir_tree(incoming_temp_dir)
         print("=======")
 
