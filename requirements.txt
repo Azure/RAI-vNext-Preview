@@ -1,5 +1,7 @@
 azure-common
 azure-ai-ml==0.1.0b4
+responsibleai~=0.18.0
+raiwidgets~=0.18.0
 jupyter
 pandas
 pyarrow

@@ -38,9 +38,6 @@ conda activate $EnvName
 Write-Host "=-= Installing nbconda"
 conda install nbconda
 
-Write-Host "=-= Installing responsibleai"
-pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
-
 Write-Host "=-= Installing other requirements"
 pip install -r requirements.txt
 

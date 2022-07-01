@@ -39,10 +39,6 @@ echo "=-= Installing Jupyter"
 pip install jupyter
 echo
 
-echo "=-= Installing responsibleai"
-pip install responsibleai~=0.18.0 raiwidgets~=0.18.0 pyarrow
-echo
-
 echo "=-= Instaling other requirements"
 pip install -r requirements.txt
 echo

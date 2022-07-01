@@ -5,3 +5,5 @@ jupyter
 pandas
 pyarrow
 shap
+responsibleai~=0.18.0
+raiwidgets~=0.18.0
