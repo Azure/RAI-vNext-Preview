@@ -8,14 +8,6 @@ from azureml.core import Run
 from responsibleai import __version__ as responsibleai_version
 
 from _score_card._rai_insight_data import RaiInsightData, PdfDataGen
-
-# from _score_card.generate_pdf import (
-#     RegressionComponents,
-#     ClassificationComponents,
-#     to_pdf,
-#     get_full_html,
-# )
-
 from _score_card.common_components import to_pdf, get_full_html
 import _score_card.regression_components as RegressionComponents
 import _score_card.classification_components as ClassificationComponents
@@ -153,10 +145,18 @@ def main(args):
             "startTimeUtc": run.get_details()["startTimeUtc"],
         }
 
-    if config["Model"]["ModelType"] == "Regression":
+    model_type = config["Model"]["ModelType"]
+    if model_type == "Regression":
         wf = Workflow(insight_data, config, args, RegressionComponents)
-    else:
+    elif model_type == "Classification":
         wf = Workflow(insight_data, config, args, ClassificationComponents)
+    else:
+        # move logic to config validation
+        error_msg = "Invalid model type supplied: {}".format(model_type)
+        _logger.error(
+            error_msg
+        )
+        raise ValueError(error_msg)
 
     wf.generate_pdf()
 

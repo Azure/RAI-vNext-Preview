@@ -41,7 +41,8 @@ def get_data_explorer_page(data):
         for i in c["data"]:
             de_main_elems.append(
                 p(
-                    "For {} datapoints, {} is the average of the {} between the actual value and the predicted value".format(
+                    "For datapoints with {} between {}, {} is the average of the {} between the actual value and the predicted value".format(
+                        c["feature_name"],
                         i["label"],
                         round(i[c["primary_metric"]], 1),
                         c["primary_metric"],
@@ -72,8 +73,12 @@ def get_data_explorer_page(data):
 
 def get_metric_explanation_text(mname, mvalue):
     text_lookup = {
+        "mean_squared_error": "{} is the average of the squared difference between "
+        "the actual values and the predicted values.",
         "mean_squared_error": "{} is the average of the squared difference between the actual values and the predicted values.",
         "mean_absolute_error": "{} is the average of the absolute error values.",
+        "median_absolute_error": "{} is the median of the absolute error values.",
+        "r2_score": "{} is amount of variation in the predicted values that can be explained by the model inputs.",
     }
     return text_lookup[mname].format(round(mvalue, 2))
 
@@ -112,7 +117,9 @@ def get_mp_error_histogram_plot(data):
 
 
 def get_model_performance_page(data):
-    left_metric_elems = []
+    left_metric_elems = [
+        p("Observe evidence of model error rates and performance here:")
+    ]
     for m in data["metrics"]:
         left_metric_elems.append(h3(metric_name_lookup[m]))
         left_metric_elems.append(p(get_metric_explanation_text(m, data["metrics"][m])))
