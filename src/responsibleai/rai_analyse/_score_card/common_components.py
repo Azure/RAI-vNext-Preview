@@ -500,7 +500,7 @@ def get_model_overview(data):
             )
         )
     else:
-        model_left_items.append(div(p("This is {} model".format(data["ModelType"]))))
+        model_left_items.append(div(p("This is a {} model".format(data["ModelType"].lower()))))
 
     model_left_items.append(
         div(
@@ -520,8 +520,7 @@ def get_model_overview(data):
         [
             h3("Target values"),
             p(
-                "Here are your defined target minimum/maximum performance levels "
-                "and/or target performance differences between groups/cohorts:"
+                "Here are your defined target values:"
             ),
         ]
     )
