@@ -60,7 +60,7 @@ parameters:
 
 variables:
 - name: SubscriptionName
-  value: "Project Vienna INT (589c7ae9-223e-45e3-a191-98433e0821a9) - RAI"
+  value: "AML - Responsible AI R&D"
 - name: ConfigFileArtifact
   value: WorkspaceConfiguration
 
