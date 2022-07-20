@@ -45,11 +45,20 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
     version_string = component_config["version"]
     train_version_string = int(time.time())
 
+    current_file_directory = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(
+        os.path.join(current_file_directory, "../..", "examples/notebooks/data")
+    )
+    input_data_filename = "apartments-train.csv"
+
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
         "rai_housing_example_version_string = '4'"
     ] = f"rai_housing_example_version_string = '{train_version_string}'"
+    replacements[
+        "data_path = 'data/apartments-train.csv'"
+    ] = f'data_path = r"{os.path.join(data_dir, input_data_filename)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
 
@@ -60,6 +69,12 @@ def test_responsibleaidashboard_housing_improvement(
 ):
     nb_name = "responsibleaidashboard-housing-decision-making"
 
+    current_file_directory = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(
+        os.path.join(current_file_directory, "../..", "examples/notebooks/data")
+    )
+    input_data_filename = "apartments-train.csv"
+
     version_string = component_config["version"]
     train_version_string = int(time.time())
 
@@ -68,6 +83,9 @@ def test_responsibleaidashboard_housing_improvement(
     replacements[
         "rai_house_improvement_version_string = '16'"
     ] = f"rai_house_improvement_version_string = '{train_version_string}'"
+    replacements[
+        "data_path = 'data/apartments-train.csv'"
+    ] = f'data_path = r"{os.path.join(data_dir, input_data_filename)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
 
