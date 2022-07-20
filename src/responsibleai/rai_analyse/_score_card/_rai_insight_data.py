@@ -269,7 +269,8 @@ class PdfDataGen:
                     "{}: {} {}".format(k, v["threshold"][0], v["threshold"][1])
                 )
             else:
-                metric_targets.append("{}".format(k))
+                # no threshold specified, skip in metric targets
+                continue
 
         if "FeatureImportance" in self.config.keys():
             metric_targets.append(
