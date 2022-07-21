@@ -17,6 +17,7 @@ def update_cells(input_nb_path, output_nb_path, replacement_strings: Dict[str, s
     for cell in notebook["cells"]:
         for original, update in replacement_strings.items():
             if cell["source"] == original:
+                print(f"Replacing ---{original}--- with ---{update}---")
                 cell["source"] = update
 
     nbf.write(notebook, output_nb_path)
@@ -100,10 +101,10 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
 
     current_file_directory = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(
-        os.path.join(current_file_directory, "../..", "examples/notebooks/data")
+        os.path.join(current_file_directory, "../..", "examples/notebooks")
     )
-    train_filename = "programmers-train.parquet"
-    test_filename = "programmers-test.parquet"
+    train_path = 'data-programmer-regression/train/'
+    test_path = 'data-programmer-regression/test/'
 
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
@@ -111,11 +112,11 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
         "rai_programmer_example_version_string = '5'"
     ] = f"rai_programmer_example_version_string = '{train_version_string}'"
     replacements[
-        "train_data_path = 'data/programmers-train.parquet'"
-    ] = f'train_data_path = r"{os.path.join(data_dir, train_filename)}"'
+        f"train_data_path = '{train_path}'"
+    ] = f'train_data_path = r"{os.path.join(data_dir, train_path)}"'
     replacements[
-        "test_data_path = 'data/programmers-test.parquet'"
-    ] = f'test_data_path = r"{os.path.join(data_dir, test_filename)}"'
+        f"test_data_path = '{test_path}'"
+    ] = f'test_data_path = r"{os.path.join(data_dir, test_path)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
 

@@ -129,23 +129,23 @@ class TestRAIGatherErrors:
             }
 
         # Assemble into a pipeline
-        pipeline_job = test_constructor_mismatch(
+        pipeline_job_xfail = test_constructor_mismatch(
             target_column_name="income",
             train_data=Input(
-                type="uri_file",
-                path=f"adult_train_pq:{version_string}",
+                type="mltable",
+                path=f"adult_train:{version_string}",
                 mode="download",
             ),
             test_data=Input(
-                type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+                type="mltable", path=f"adult_test:{version_string}", mode="download"
             ),
         )
 
         # Send it
-        pipeline_job = submit_and_wait(ml_client, pipeline_job, "Failed")
+        pipeline_job_xfail = submit_and_wait(ml_client, pipeline_job_xfail, "Failed")
         # Want to do more here, but there isn't anything useful in the returned job
         # Problem is, the job might have failed for some other reason
-        assert pipeline_job is not None
+        assert pipeline_job_xfail is not None
 
     def test_multiple_tool_instances(
         self,
@@ -212,20 +212,20 @@ class TestRAIGatherErrors:
             }
 
         # Assemble into a pipeline
-        pipeline_job = test_multiple_tool_instances(
+        pipeline_job_xfail = test_multiple_tool_instances(
             target_column_name="income",
             train_data=Input(
-                type="uri_file",
-                path=f"adult_train_pq:{version_string}",
+                type="mltable",
+                path=f"adult_train:{version_string}",
                 mode="download",
             ),
             test_data=Input(
-                type="uri_file", path=f"adult_test_pq:{version_string}", mode="download"
+                type="mltable", path=f"adult_test:{version_string}", mode="download"
             ),
         )
 
         # Send it
-        pipeline_job = submit_and_wait(ml_client, pipeline_job, "Failed")
+        pipeline_job_xfail = submit_and_wait(ml_client, pipeline_job_xfail, "Failed")
         # Want to do more here, but there isn't anything useful in the returned job
         # Problem is, the job might have failed for some other reason
-        assert pipeline_job is not None
+        assert pipeline_job_xfail is not None

@@ -16,5 +16,5 @@ data_train, data_test = train_test_split(
 
 # Don't write out the row indices to the CSV.....
 print("Saving to files")
-data_train.to_parquet("adult_train.parquet", index=False)
-data_test.to_parquet("adult_test.parquet", index=False)
+data_train.to_parquet("./train/adult_train.parquet", index=False)
+data_test.to_parquet("./test/adult_test.parquet", index=False)

@@ -17,6 +17,8 @@ import pandas as pd
 
 import mlflow
 
+import mltable
+
 from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
@@ -68,9 +70,30 @@ def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
-def load_dataset(parquet_path: str):
+def load_mltable(mltable_path: str) -> pd.DataFrame:
+    _logger.info("Loading MLTable: {0}".format(mltable_path))
+    df: pd.DataFrame = None
+    try:
+        tbl = mltable.load(mltable_path)
+        df: pd.DataFrame = tbl.to_pandas_dataframe()
+    except Exception as e:
+        _logger.info("Failed to load MLTable")
+        _logger.info(e)
+    return df
+
+
+def load_parquet(parquet_path: str) -> pd.DataFrame:
     _logger.info("Loading parquet file: {0}".format(parquet_path))
     df = pd.read_parquet(parquet_path)
+    return df
+
+
+def load_dataset(dataset_path: str) -> pd.DataFrame:
+    _logger.info(f"Attempting to load: {dataset_path}")
+    df = load_mltable(dataset_path)
+    if df is None:
+        df = load_parquet(dataset_path)
+
     print(df.dtypes)
     print(df.head(10))
     return df

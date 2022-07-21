@@ -1,6 +1,9 @@
 azure-common
 --extra-index-url https://azuremlsdktestpypi.azureedge.net/sdk-cli-v2
 azure-ai-ml
+mltable
+azureml_dataprep
+azureml_dataprep_rslex
 jupyter
 pandas
 pyarrow

@@ -16,14 +16,17 @@ RUN pip install 'responsibleai~=0.18.1' \
                 'raiwidgets~=0.18.1' \
                 'pyarrow' \
                 'mlflow' \
-                'azureml-core==1.41.0.post1' \
-                'azureml-dataset-runtime==1.41.0' \
-                'azureml-mlflow==1.41.0' \
-                'azureml-telemetry==1.41.0' \
+                'azureml-core~=1.42.0' \
+                'azureml-dataset-runtime~=1.42.0' \
+                'azureml-mlflow~=1.42.0' \
+                'azureml-telemetry~=1.42.0' \
                 'pdfkit==1.0.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
-                'protobuf<4'
+                'protobuf<4' \
+                'mltable' \
+                'azureml_dataprep' \
+                'azureml_dataprep_rslex'
 
 RUN pip install --pre azure-ai-ml
 

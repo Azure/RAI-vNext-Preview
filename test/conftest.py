@@ -113,8 +113,8 @@ def registered_adult_model_id(ml_client, component_config):
     register_component = ml_client.components.get(
         name="register_model", version=version_string
     )
-    adult_train_pq = Input(
-        type="uri_file", path=f"adult_train_pq:{version_string}", mode="download"
+    adult_train = Input(
+        type="mltable", path=f"adult_train:{version_string}", mode="download"
     )
 
     @dsl.pipeline(
@@ -137,7 +137,7 @@ def registered_adult_model_id(ml_client, component_config):
 
         return {}
 
-    training_pipeline = my_training_pipeline("income", adult_train_pq)
+    training_pipeline = my_training_pipeline("income", adult_train)
 
     training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
     assert training_pipeline_job is not None

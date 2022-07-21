@@ -13,6 +13,8 @@ from azureml.core import Run
 import mlflow
 import mlflow.sklearn
 
+import mltable
+
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
@@ -47,7 +49,8 @@ def main(args):
 
     # Read in data
     print("Reading data")
-    all_data = pd.read_parquet(args.training_data)
+    tbl = mltable.load(args.training_data)
+    all_data = tbl.to_pandas_dataframe()
 
     print("Extracting X_train, y_train")
     print("all_data cols: {0}".format(all_data.columns))
