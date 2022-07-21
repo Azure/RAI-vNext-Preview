@@ -28,6 +28,8 @@ RUN pip install 'responsibleai~=0.18.1' \
                 'azureml_dataprep' \
                 'azureml_dataprep_rslex'
 
+RUN pip install --pre azure-ai-ml
+
 # no-deps install for domonic due to unresolable dependencies requirment on urllib3 and requests. 
 RUN pip install --no-deps 'charset-normalizer==2.0.12' \
                           'cssselect==1.1.0' \
