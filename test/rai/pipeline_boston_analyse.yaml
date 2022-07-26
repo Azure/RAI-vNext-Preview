@@ -117,3 +117,19 @@ jobs:
          type: uri_file
          path: ./test/rai/boston_analyse_scorecard_config/cohorts.json
          mode: download
+
+  scorecard_b64_01:
+      code: ../../src/responsibleai/rai_analyse
+      environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+      command: >-
+        python create_score_card.py
+        --rai_insights_dashboard ${{inputs.dashboard}}
+        --encoded_json ${{inputs.encoded_json}}
+        [--predefined_cohorts_json ${{inputs.predefined_cohorts_json}}]
+      inputs:
+        dashboard: ${{parent.jobs.gather_01.outputs.dashboard}}
+        encoded_json: ewogICJNb2RlbCI6IHsKICAgICJNb2RlbE5hbWUiOiAiQm9zdG9uIEFuYWx5emUiLAogICAgIk1vZGVsVHlwZSI6ICJSZWdyZXNzaW9uIiwKICAgICJNb2RlbFN1bW1hcnkiOiAiVGhpcyBpcyBhIHJlZ3Jlc3Npb24gbW9kZWwgZm9yIGJvc3RvbiBhbmFseXplIgogIH0sCiAgIk1ldHJpY3MiOiB7CiAgICAibWVhbl9hYnNvbHV0ZV9lcnJvciI6IHsKICAgICAgInRocmVzaG9sZCI6ICI8PTIwIgogICAgfSwKICAgICJtZWFuX3NxdWFyZWRfZXJyb3IiOiB7fQogIH0sCiAgIkZlYXR1cmVJbXBvcnRhbmNlIjogewogICAgInRvcF9uIjogNgogIH0sCiAgIkRhdGFFeHBsb3JlciI6IHsKICAgICJmZWF0dXJlcyI6IFsKICAgICAgIlRBWCIsCiAgICAgICJBR0UiLAogICAgICAiQ1JJTSIsCiAgICAgICJESVMiCiAgICBdCiAgfSwKICAiQ29ob3J0cyI6IFsKICAgICJIaWdoIFRheCIsCiAgICAiTG93IFRheCIKICBdCn0=
+        predefined_cohorts_json:
+           type: uri_file
+           path: ./test/rai/boston_analyse_scorecard_config/cohorts.json
+           mode: download

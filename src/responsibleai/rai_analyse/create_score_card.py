@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import re
+import base64
 
 from azureml.core import Run
 from responsibleai import __version__ as responsibleai_version
@@ -38,10 +39,10 @@ def parse_args():
         "--rai_insights_dashboard", type=str, help="name:version", required=True
     )
     parser.add_argument(
-        "--pdf_output_path", type=str, help="pdf output path", required=True
+        "--pdf_output_path", type=str, help="pdf output path", required=False
     )
     parser.add_argument(
-        "--pdf_generation_config", type=str, help="pdf config", required=True
+        "--pdf_generation_config", type=str, help="pdf config", required=False
     )
     parser.add_argument(
         "--predefined_cohorts_json", type=str, help="cohorts defintion", required=False
@@ -50,6 +51,7 @@ def parse_args():
     parser.add_argument(
         "--wkhtml2pdfpath", type=str, help="path to wkhtml2pdf", required=False
     )
+    parser.add_argument("--encoded_json", type=str, help="base64 encoded json string", required=False)
 
     return parser.parse_args()
 
@@ -125,8 +127,18 @@ def main(args):
     _logger.info("Constructor info: {0}".format(dashboard_info))
 
     insight_data = RaiInsightData(args.rai_insights_dashboard)
-    with open(args.pdf_generation_config, "r") as json_file:
-        config = json.load(json_file)
+
+    if args.pdf_output_path is None:
+        args.pdf_output_path = "./dashboard/scorecard"
+        os.makedirs(args.pdf_output_path)
+
+    if args.pdf_generation_config:
+        with open(args.pdf_generation_config, "r") as json_file:
+            config = json.load(json_file)
+    elif args.encoded_json:
+        config = json.loads(base64.b64decode(args.encoded_json))
+    else:
+        raise ValueError("Neither pdf config json or base64 encoded json are provided.")
 
     if args.predefined_cohorts_json:
         with open(args.predefined_cohorts_json, "r") as json_file:
@@ -152,6 +164,7 @@ def main(args):
             "submittedBy": run.get_details()["submittedBy"],
             "startTimeUtc": run.get_details()["startTimeUtc"],
         }
+        run.upload_folder("dashboard", args.pdf_output_path)
 
     if config["Model"]["ModelType"] == "Regression":
         wf = Workflow(insight_data, config, args, RegressionComponents)
