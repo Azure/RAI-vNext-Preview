@@ -402,9 +402,21 @@ def main(args):
     _logger.info("Triggering computation")
     rai_i.compute()
 
+    dashboard_info = {
+        DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
+        DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: args.model_id,
+        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
+    }
+    
     _logger.info("Doing local save and upload")
     binary_dir = "./responsibleai"
     rai_i.save(binary_dir)
+    # write dashboard_info to rai_insights.json and upload artifacts
+    dashboardinfo_path = os.path.join(
+        binary_dir, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
+    )
+    with open(dashboardinfo_path, "w") as of:
+        json.dump(dashboard_info, of)
     my_run.upload_folder("dashboard", binary_dir)
 
     _logger.info("Saving UX JSON")
@@ -417,11 +429,6 @@ def main(args):
     my_run.upload_file("ux_json", output_path)
 
     _logger.info("Adding properties to run")
-    dashboard_info = {
-        DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
-        DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: args.model_id,
-        DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
-    }
 
     add_properties_to_gather_run(dashboard_info, included_tools)
     _logger.info("Processing completed")
