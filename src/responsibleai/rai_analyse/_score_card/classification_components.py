@@ -168,10 +168,16 @@ def get_model_performance_page(data):
             True if i == data["classes"][1] else False for i in data["y_test"]
         ]
         class_0_metric = get_metric(
-            mname, data["y_pred"][y_0_filtermap], data["y_test"][y_0_filtermap]
+            mname, data["y_test"][y_0_filtermap],
+            data["y_pred"][y_0_filtermap],
+            pos_label=data["classes"][0],
+            labels=data["classes"]
         )
         class_1_metric = get_metric(
-            mname, data["y_pred"][y_1_filtermap], data["y_test"][y_1_filtermap]
+            mname, data["y_test"][y_1_filtermap],
+            data["y_pred"][y_1_filtermap],
+            pos_label=data["classes"][1],
+            labels=data["classes"]
         )
 
         y_data = [
