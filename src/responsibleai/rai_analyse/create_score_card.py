@@ -29,7 +29,7 @@ _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
 
-def parse_args():
+def get_parser():
     # setup arg parser
     parser = argparse.ArgumentParser()
 
@@ -51,7 +51,7 @@ def parse_args():
         "--wkhtml2pdfpath", type=str, help="path to wkhtml2pdf", required=False
     )
 
-    return parser.parse_args()
+    return parser
 
 
 def parse_threshold(threshold):
@@ -153,10 +153,12 @@ def main(args):
             "startTimeUtc": run.get_details()["startTimeUtc"],
         }
 
-    if config["Model"]["ModelType"] == "Regression":
-        wf = Workflow(insight_data, config, args, RegressionComponents)
-    else:
+    if config["Model"]["ModelType"].lower() == "regression":	
+        wf = Workflow(insight_data, config, args, RegressionComponents)	
+    elif config["Model"]["ModelType"].lower() in ("classification", "multiclass"):
         wf = Workflow(insight_data, config, args, ClassificationComponents)
+    else:
+        raise ValueError("Model type {} cannot be matched to a score card generation workflow".format(config["Model"]["ModelType"]))
 
     wf.generate_pdf()
 
@@ -164,6 +166,7 @@ def main(args):
         add_properties_to_gather_run(
             dashboard_info, {"ScoreCardTitle": config["Model"]["ModelName"]}
         )
+        run.upload_folder("scorecard", args.pdf_output_path)
 
 
 class Workflow:
@@ -248,7 +251,7 @@ if __name__ == "__main__":
     print("\n\n")
 
     # run main function
-    main(parse_args())
+    main(get_parser().parse_args())
 
     # add space in logs
     print("*" * 60)

@@ -9,6 +9,7 @@ from . import common_components as cc
 metric_name_lookup = {
     "mean_squared_error": "Mean squared error",
     "mean_absolute_error": "Mean absolute error",
+    "r2_score": "R2 score"
 }
 
 
@@ -75,6 +76,9 @@ def get_metric_explanation_text(mname, mvalue):
         "mean_squared_error": "{} is the average of the squared difference between the actual values and the predicted values.",
         "mean_absolute_error": "{} is the average of the absolute error values.",
     }
+
+    if mname not in text_lookup.keys():
+        return "{}: {}".format(mname, round(mvalue, 2))
     return text_lookup[mname].format(round(mvalue, 2))
 
 
