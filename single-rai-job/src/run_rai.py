@@ -5,6 +5,7 @@
 import argparse
 import json
 import logging
+import os
 
 from pathlib import Path
 from typing import Any, Dict, List, Union
@@ -135,6 +136,9 @@ class PropertyKeyValues:
     # Property format to indicate presence of a tool
     RAI_INSIGHTS_TOOL_KEY_FORMAT = "_azureml.responsibleai.rai_insights.has_{0}"
 
+    # Dashboard id
+    RAI_INSIGHTS_DASHBOARD_ID_KEY = "_azureml.responsibleai.rai_insights.dashboard_id"
+
 
 def add_properties_to_gather_run(
     dashboard_info: Dict[str, str], tool_present_dict: Dict[str, str]
@@ -144,6 +148,9 @@ def add_properties_to_gather_run(
 
     run_properties = {
         PropertyKeyValues.RAI_INSIGHTS_TYPE_KEY: PropertyKeyValues.RAI_INSIGHTS_TYPE_GATHER,
+        PropertyKeyValues.RAI_INSIGHTS_DASHBOARD_ID_KEY: dashboard_info[
+            DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY
+        ],
         PropertyKeyValues.RAI_INSIGHTS_RESPONSIBLEAI_VERSION_KEY: responsibleai_version,
         PropertyKeyValues.RAI_INSIGHTS_MODEL_ID_KEY: dashboard_info[
             DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY
