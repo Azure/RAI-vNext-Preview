@@ -367,14 +367,19 @@ class PdfDataGen:
 
             data = {"feature_name": f, "primary_metric": primary_metric, "data": []}
 
+            short_labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+            sl_index = 0
             for label in label_list:
                 index_filter = [True if x == label else False for x in new_labels]
 
                 f_data = {
                     "label": label,
+                    "short_label": short_labels[sl_index],
                     "population": counts[label] / total,
                     "prediction": y_predict[index_filter],
                 }
+
+                sl_index = sl_index + 1
 
                 if primary_metric:
                     f_data[primary_metric] = get_metric(
@@ -410,6 +415,8 @@ class PdfDataGen:
             for index, t in enumerate(sorted_tuple)
         }
 
+        print(sorted_dict)
+
         return OrderedDict(sorted_dict)
 
     def get_causal_data(self):
@@ -418,11 +425,13 @@ class PdfDataGen:
     def get_fairlearn_data(self):
         fair_con = self.config["Fairness"]
         fm = {}
+        dataset = self.data.get_test()
 
         for f in fair_con["sensitive_features"]:
             fm[f] = {}
             fm[f]["metrics"] = {}
             fm[f]["statistics"] = {}
+            topnlabels = dataset[f].value_counts().nlargest(20).index.to_list()
             for m in fair_con["metric"]:
                 m_sample_params = {
                     "metric": m,
@@ -436,8 +445,11 @@ class PdfDataGen:
                     "ratio": gm.ratio(),
                 }
 
+                gmd = gm.by_group.to_dict()
+                gmd = {k:gmd[k] for k in topnlabels}
+
                 sorted_group_metric = sorted(
-                    gm.by_group.to_dict().items(), key=lambda x: x[1]
+                    gmd.items(), key=lambda x: x[1]
                 )
 
                 fm[f]["metrics"][m] = {

@@ -231,7 +231,7 @@ def get_binary_cp_bar_plot(data, m):
 
 def get_de_bar_plot(data):
     y_data = [
-        y["label"] + "<br>" + str(int(y["population"] * 100)) + "% pop."
+        y["label"] + "<br>" + str(int(y["population"] * 100)) + "% n"
         for y in data["classes"]
     ]
     x_data = [int(float(x["prediction_0_ratio"]) * 100) for x in data["classes"]]
@@ -443,7 +443,7 @@ def get_de_box_plot_image(data):
     processed_label = data
     for c in processed_label["data"]:
         c["label"] = (
-            c["label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "%"
+            c["label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "% n"
         )
         c["datapoints"] = c["prediction"]
     png_base64 = get_de_box_plot(processed_label)
@@ -504,7 +504,7 @@ def get_model_overview(data):
 
     model_left_items.append(
         div(
-            h3("How the model is evaluated"),
+            h3("Model evaluation"),
             p(
                 "This model is evaluated on a test set with {} datapoints.".format(
                     len(data["y_test"])
@@ -520,7 +520,8 @@ def get_model_overview(data):
         [
             h3("Target values"),
             p(
-                "Here are your defined target values:"
+                "Here are your defined target values for your model "
+                "performance and/or other model assessment parameters:"
             ),
         ]
     )
@@ -582,7 +583,7 @@ def get_cohorts_page(data, metric_config):
             if first_data_point:
                 threshold = first_data_point.get("threshold", None)
             y_data = [
-                [y["short_label"], str(int(y["population"] * 100)) + "%"] for y in d
+                [y["short_label"], str(int(y["population"] * 100)) + "% n"] for y in d
             ]
             y_data = ["<br>".join(y) for y in y_data]
             x_data = [x[m] for x in d]
@@ -644,8 +645,8 @@ def get_causal_page(data):
     left_elem = [
         div(
             p(
-                "Causal analysis answers real world what if "
-                "questions about how changes of treatments would impact a real world outcome."
+                "ausal analysis answers real-world what-if questions " 
+                "about how changing specific treatments would impact outcomes."
             )
         )
     ]
@@ -689,7 +690,7 @@ def get_causal_page(data):
             div(
                 h3(f["feature"]),
                 p(
-                    'On average, increasing "{}" by 1 unit increases the prediction outcome by {}'.format(
+                    'On average, increasing "{}" by 1 unit increases the outcome by {}'.format(
                         f["feature"], round(f["point"], 3)
                     )
                 ),
@@ -709,8 +710,8 @@ def get_causal_page(data):
         )
         main_elems.append(
             p(
-                "Data points which experience the largest treatment impact (causal effect) "
-                'when adjusting "{}"'.format(f["feature"])
+                "Datapoints with the largest estimated causal responses to treatment feature: "
+                '"{}"'.format(f["feature"])
             )
         )
 
@@ -732,7 +733,7 @@ def get_causal_page(data):
 
     return div(
         div(
-            get_page_divider("Causal"),
+            get_page_divider("Causal Inference"),
             left_container,
             main_container,
             _class="nobreak_div",

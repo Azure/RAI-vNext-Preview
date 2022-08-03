@@ -28,7 +28,7 @@ def get_bar_plot_explanation_image():
 
 def get_data_explorer_page(data):
     de_heading_left_elms = p(
-        "Evaluate your dataset to assess representation of identified subgroups:"
+        "Evaluate your dataset to assess representation of identified cohorts:"
     )
 
     de_heading_left_elms.append(get_bar_plot_explanation_image())
@@ -42,7 +42,7 @@ def get_data_explorer_page(data):
         for i in c["data"]:
             de_main_elems.append(
                 p(
-                    "For {} datapoints, {} is the average of the {} between the actual value and the predicted value".format(
+                    "For {} datapoints, {} is the average of the {} between the actual values and the predicted values.".format(
                         i["label"],
                         round(i[c["primary_metric"]], 1),
                         c["primary_metric"],
@@ -52,7 +52,7 @@ def get_data_explorer_page(data):
         de_main_elems.append(
             div(
                 p(
-                    "The distribution of prediction value for the different sets of data points are as follows:"
+                    "Histogram of your model errors (difference between predicted and actual values)"
                 ),
                 cc.get_de_box_plot_image(c),
                 _class="nobreak_div",
@@ -166,7 +166,7 @@ def get_fairlearn_page(data):
             p(
                 "Understand your model’s fairness issues "
                 "using group-fairness metrics across sensitive features and cohorts. "
-                "Pay particular attention to the subgroups who receive worse treatments "
+                "Pay particular attention to the cohorts who receive worse treatments "
                 "(predictions) by your model."
             )
         )
@@ -229,7 +229,7 @@ def get_fairlearn_page(data):
         for c in data:
             box_plot_data["data"].append(
                 {
-                    "label": c + "<br>" + str(int(100 * data[c]["population"])) + "%",
+                    "label": c + "<br>" + str(int(100 * data[c]["population"])) + "% n",
                     "datapoints": data[c]["y_pred"],
                 }
             )
@@ -301,7 +301,7 @@ def get_fairlearn_page(data):
 
     return str(
         div(
-            cc.get_page_divider("Fairness"),
+            cc.get_page_divider("Fairness Assessment"),
             left_container,
             main_container,
             _class="container nobreak_div",

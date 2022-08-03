@@ -116,7 +116,13 @@ def add_properties_to_gather_run(dashboard_info, rai_info):
     _logger.info("Properties added to score card run")
 
 
-def validate_and_correct_config(config):
+def validate_and_correct_config(config, insight_data):
+    if "Fairness" in config.keys():
+        fc = config["Fairness"]
+        cat_features = [f for f in fc["sensitive_features"] if f in insight_data.categorical_features]
+        dropped_features = [f for f in fc["sensitive_features"] if f not in insight_data.categorical_features]
+        _logger.warn("Non categorical features in fairness dropped: {}".format(dropped_features))
+        fc["sensitive_features"] = cat_features
     return config
 
 
@@ -136,7 +142,7 @@ def main(args):
             }
             config["cohorts_definition"] = cohorts_map
 
-    config = validate_and_correct_config(config)
+    config = validate_and_correct_config(config, insight_data)
 
     for k, v in config["Metrics"].items():
         if "threshold" in v.keys():
@@ -191,7 +197,7 @@ class Workflow:
             "feature_importance": "FeatureImportance" in self.config
             and self.raiinsight.list()["explainer"]["is_computed"],
             "fairness": "Fairness" in self.config,
-            "causal": len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
+            "causal": "Causal" in self.config and len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
         }
 
     def generate_pdf(self):
