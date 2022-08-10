@@ -1,5 +1,5 @@
 azure-common
-azure-ai-ml==0.1.0b4
+azure-ai-ml==0.1.0b6
 mltable==0.1.0b3
 azureml_dataprep
 azureml_dataprep_rslex
