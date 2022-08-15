@@ -10,7 +10,7 @@ import shutil
 import tempfile
 import uuid
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from zipfile import Path
 
 import pandas as pd
@@ -62,11 +62,13 @@ def fetch_model_id(model_info_path: str):
     return model_info[DashboardInfo.MODEL_ID_KEY]
 
 
-def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
-    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+def load_mlflow_model(workspace: Workspace, model_id: Optional[str] = None, model_path: Optional[str] = None) -> Any:
+    model_uri = model_path
+    if model_id:
+        model = Model._get(workspace, id=model_id)
+        mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+        model_uri = "models:/{}/{}".format(model.name, model.version)
 
-    model = Model._get(workspace, id=model_id)
-    model_uri = "models:/{}/{}".format(model.name, model.version)
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 

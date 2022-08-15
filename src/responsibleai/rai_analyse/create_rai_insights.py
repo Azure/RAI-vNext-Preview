@@ -31,10 +31,6 @@ def parse_args():
         "--task_type", type=str, required=True, choices=["classification", "regression"]
     )
 
-    parser.add_argument(
-        "--model_info_path", type=str, help="name:version", required=True
-    )
-
     parser.add_argument("--train_dataset", type=str, required=True)
     parser.add_argument("--test_dataset", type=str, required=True)
 
@@ -43,6 +39,18 @@ def parse_args():
     parser.add_argument("--maximum_rows_for_test_dataset", type=int, default=5000)
     parser.add_argument(
         "--categorical_column_names", type=str, help="Optional[List[str]]"
+    )
+
+    parser.add_argument(
+        "--model_info_path", type=str, help="name:version"
+    )
+
+    parser.add_argument(
+        "--model_input", type=str, help="model local path on remote"
+    )
+
+    parser.add_argument(
+        "--model_info", type=str, help="name:version"
     )
 
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
@@ -101,9 +109,19 @@ def main(args):
     _logger.info("Dealing with evaluation dataset")
     test_df = load_dataset(args.test_dataset)
 
-    model_id = fetch_model_id(args.model_info_path)
-    _logger.info("Loading model: {0}".format(model_id))
-    model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
+    if args.model_info_path is None and (args.model_input is None or args.model_info is None):
+        raise ValueError("Either model info or model input needs to be supplied.")
+
+    model_estimator = None
+    model_id = None
+    if args.model_info_path:
+        model_id = fetch_model_id(args.model_info_path)
+        _logger.info("Loading model: {0}".format(model_id))
+        model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id=model_id)
+    elif args.model_input and args.model_info:
+        model_id = args.model_info
+        _logger.info("Loading model: {0}".format(model_id))
+        model_estimator = load_mlflow_model(my_run.experiment.workspace, model_path=args.model_input)
 
     constructor_args = create_constructor_arg_dict(args)
 

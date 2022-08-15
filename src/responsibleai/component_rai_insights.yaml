@@ -10,11 +10,18 @@ inputs:
     type: string # [classification, regression]
     enum: ['classification', 'regression']
   model_info_path:
-    type: path # To model_info.json
+    type: path # model_info.json
+    optional: true
+  model_input: # mlflow model name:version
+    type: mlflow_model
+    optional: true
+  model_info:
+    type: string # model name:version
+    optional: true
   train_dataset:
-    type: path # Must be Parquet
+    type: path # Parquet, or MLTable
   test_dataset:
-    type: path # Must be Parquet
+    type: path # Parquet, or MLTable
   target_column_name:
     type: string
   maximum_rows_for_test_dataset:
@@ -35,7 +42,9 @@ command: >-
   python create_rai_insights.py
   --title '${{inputs.title}}'
   --task_type ${{inputs.task_type}}
-  --model_info_path ${{inputs.model_info_path}}
+  [--model_info_path '${{inputs.model_info_path}}']
+  [--model_input '${{inputs.model_input}}']
+  [--model_info '${{inputs.model_info}}']
   --train_dataset ${{inputs.train_dataset}}
   --test_dataset ${{inputs.test_dataset}}
   --target_column_name ${{inputs.target_column_name}}
