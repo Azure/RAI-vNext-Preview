@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import plotly.graph_objects as go
 import base64
 import plotly.io as pio
@@ -187,9 +190,13 @@ def get_feature_importance_page(data):
 
     fi_left_container = div(container, _class="left")
 
-    heading_main = div(h3("Feature Importance"), get_fi_image(data), _class="main")
+    heading_main = div(
+        h3("Feature Importance"),
+        p("Shown below is the mean of SHAP value of the most important features:"),
+        get_fi_image(data), 
+        _class="main")
     return div(
-        get_page_divider("Feature relevance (explanability)"),
+        get_page_divider("Feature Importance (Explainability)"),
         fi_left_container,
         heading_main,
         _class="container",
@@ -207,7 +214,17 @@ def get_fi_bar_plot(data):
     # ticktext = [0.0, 0.25, 0.5, 0.75, 1.0]
     tickappend = ""
 
-    return get_bar_plot(y_data, x_data, tickappend=tickappend, xrange=x_range)
+    if any((i>=10000 or i <= 0.01 for i in [x for sublist in x_data for x in sublist])):
+        text_formatter = lambda x: "{:.2e}".format(x)
+    else:
+        text_formatter = lambda x: str(round(x, 1))
+
+    return get_bar_plot(
+        list(reversed(y_data)),
+        list(reversed(x_data)), 
+        tickappend=tickappend,
+        xrange=x_range,
+        anno_text_formatter=text_formatter)
 
 
 def get_binary_cp_bar_plot(data, m):
@@ -231,7 +248,7 @@ def get_binary_cp_bar_plot(data, m):
 
 def get_de_bar_plot(data):
     y_data = [
-        y["label"] + "<br>" + str(int(y["population"] * 100)) + "% pop."
+        y["label"] + "<br>" + str(int(y["population"] * 100)) + "% n"
         for y in data["classes"]
     ]
     x_data = [int(float(x["prediction_0_ratio"]) * 100) for x in data["classes"]]
@@ -303,6 +320,8 @@ def get_bar_plot(
     ticktext=None,
     xrange=None,
     tickappend="",
+    xtitle=None,
+    anno_text_formatter=lambda x: str(round(x, 1))
 ):
     fig = go.Figure()
     series = 0
@@ -383,11 +402,21 @@ def get_bar_plot(
                 yref="y",
                 x=0.17,
                 y=yd,
-                text=str(round(xd[0], 1)) + tickappend,
+                text=anno_text_formatter(xd[0]) + tickappend,
                 font=dict(family="Consolas", size=22, color="rgb(0, 0, 0)"),
                 showarrow=False,
             )
         )
+    
+    # if xtitle:
+    #     annotations.append(dict(
+    #         xanchor="left",
+    #         yanchor="bottom",
+    #         x=0.2,
+    #         y=-1,
+    #                         text=xtitle,
+    #                         font=dict(family='Consolas', size=22, color='rgb(0, 0, 0)'),
+    #                         showarrow=False))
 
     fig.update_layout(
         annotations=annotations,
@@ -443,9 +472,11 @@ def get_de_box_plot_image(data):
     processed_label = data
     for c in processed_label["data"]:
         c["label"] = (
-            c["label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "%"
+            c["short_label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "% n"
         )
         c["datapoints"] = c["prediction"]
+
+    processed_label["data"] = list(reversed(processed_label["data"]))
     png_base64 = get_de_box_plot(processed_label)
     return div(
         img(_src="data:image/png;base64,{}".format(png_base64)), _class="image_div"
@@ -500,11 +531,11 @@ def get_model_overview(data):
             )
         )
     else:
-        model_left_items.append(div(p("This is a {} model".format(data["ModelType"].lower()))))
+        model_left_items.append(div(p("This is a {} model.".format(data["ModelType"].lower()))))
 
     model_left_items.append(
         div(
-            h3("How the model is evaluated"),
+            h3("Model evaluation"),
             p(
                 "This model is evaluated on a test set with {} datapoints.".format(
                     len(data["y_test"])
@@ -520,7 +551,8 @@ def get_model_overview(data):
         [
             h3("Target values"),
             p(
-                "Here are your defined target values:"
+                "Here are your defined target values for your model "
+                "performance and/or other model assessment parameters:"
             ),
         ]
     )
@@ -582,7 +614,7 @@ def get_cohorts_page(data, metric_config):
             if first_data_point:
                 threshold = first_data_point.get("threshold", None)
             y_data = [
-                [y["short_label"], str(int(y["population"] * 100)) + "%"] for y in d
+                [y["short_label"], str(int(y["population"] * 100)) + "% n"] for y in d
             ]
             y_data = ["<br>".join(y) for y in y_data]
             x_data = [x[m] for x in d]
@@ -593,7 +625,11 @@ def get_cohorts_page(data, metric_config):
             x_data = [[x, max_x - x] for x in x_data]
             legend = [m]
 
-            return get_bar_plot(y_data, x_data, legend=legend, threshold=threshold)
+            return get_bar_plot(
+                list(reversed(y_data)),
+                list(reversed(x_data)),
+                legend=legend,
+                threshold=threshold)
 
         message_lookup = {
             "cohorts": {
@@ -644,8 +680,8 @@ def get_causal_page(data):
     left_elem = [
         div(
             p(
-                "Causal analysis answers real world what if "
-                "questions about how changes of treatments would impact a real world outcome."
+                "ausal analysis answers real-world what-if questions " 
+                "about how changing specific treatments would impact outcomes."
             )
         )
     ]
@@ -689,7 +725,7 @@ def get_causal_page(data):
             div(
                 h3(f["feature"]),
                 p(
-                    'On average, increasing "{}" by 1 unit increases the prediction outcome by {}'.format(
+                    'On average, increasing "{}" by 1 unit increases the outcome by {}'.format(
                         f["feature"], round(f["point"], 3)
                     )
                 ),
@@ -709,8 +745,8 @@ def get_causal_page(data):
         )
         main_elems.append(
             p(
-                "Data points which experience the largest treatment impact (causal effect) "
-                'when adjusting "{}"'.format(f["feature"])
+                "Datapoints with the largest estimated causal responses to treatment feature: "
+                '"{}"'.format(f["feature"])
             )
         )
 
@@ -732,7 +768,7 @@ def get_causal_page(data):
 
     return div(
         div(
-            get_page_divider("Causal"),
+            get_page_divider("Causal Inference"),
             left_container,
             main_container,
             _class="nobreak_div",

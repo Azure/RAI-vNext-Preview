@@ -17,8 +17,6 @@ import pandas as pd
 
 import mlflow
 
-import mltable
-
 from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
@@ -73,9 +71,17 @@ def load_mlflow_model(workspace: Workspace, model_id: Optional[str] = None, mode
 
 
 def load_mltable(mltable_path: str) -> pd.DataFrame:
+    import pip
+    pip.main(['install', '--no-deps', 'mltable==0.1.0b3'])
+
+    import mltable
     _logger.info("Loading MLTable: {0}".format(mltable_path))
     df: pd.DataFrame = None
     try:
+        assetid_path = os.path.join(mltable_path, "assetid")
+        if os.path.exists(assetid_path):
+            mltable_path = assetid_path
+        
         tbl = mltable.load(mltable_path)
         df: pd.DataFrame = tbl.to_pandas_dataframe()
     except Exception as e:

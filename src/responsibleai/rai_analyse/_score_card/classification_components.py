@@ -1,4 +1,7 @@
-from domonic.html import div, h3, h2, p, img, table, td, th, tr, thead, tbody
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+from domonic.html import div, h3, h2, p, img, table, td, th, tr, ul, li, thead, tbody
 from . import common_components as cc
 from ._rai_insight_data import get_metric
 
@@ -9,18 +12,18 @@ def get_model_overview_page(data):
 
 def get_data_explorer_page(data):
     de_heading_left_elms = p(
-        "Evaluate your dataset to assess representation of identified subgroups:"
+        "Evaluate your dataset to assess representation of identified cohorts:"
     )
 
     de_heading_left_container = div(de_heading_left_elms, _class="left")
 
-    de_main_elems = []
+    de_containers = [div(de_heading_left_container, _class="container")]
 
     def get_de_bar_plot(data):
         class_0 = data[0]["prediction"][0]
 
         y_data = [
-            str(c["label"]) + "<br>" + str(int(100 * c["population"])) + "%"
+            str(c["short_label"]) + "<br>" + str(int(100 * c["population"])) + "% n"
             for c in data
         ]
         x_data = [
@@ -34,8 +37,8 @@ def get_data_explorer_page(data):
         legend = ["Predicted as {}".format(class_0)]
 
         png_base64 = cc.get_bar_plot(
-            y_data,
-            x_data,
+            list(reversed(y_data)),
+            list(reversed(x_data)),
             legend=legend,
             tickvals=tickvals,
             ticktext=ticktext,
@@ -46,12 +49,22 @@ def get_data_explorer_page(data):
             _class="image_div",
         )
 
-    for c in data:
+    de_sections = []
+
+    def get_de_containers(c):
+        feature_list = ul()
+        for d in c["data"]:
+            feature_list.append(li("{}: {}".format(d["short_label"], d["label"])))
+
+        left_container = div(h3(c["feature_name"]), feature_list, _class="left")
+        de_main_elems = []
+
         de_main_elems.append(h3(c["feature_name"]))
+
         for i in c["data"]:
             de_main_elems.append(
                 p(
-                    '"{}" have {}% {}'.format(
+                    'Cohort "{}" has {}% {}'.format(
                         i["label"],
                         round(i[c["primary_metric"]] * 100, 1),
                         c["primary_metric"],
@@ -61,48 +74,92 @@ def get_data_explorer_page(data):
         de_main_elems.append(
             div(
                 p(
-                    "Predicted classification output of the different subgroups are as follows:"
+                    "Predicted classification output of the different cohorts are as follows:"
                 ),
                 get_de_bar_plot(c["data"]),
                 _class="nobreak_div",
             )
         )
 
-    de_main_container = div(de_main_elems, _class="main")
+        main_container = div(de_main_elems, _class="main")
+
+        return div(left_container, main_container, _class="container")
+
+    for c in data:
+        de_containers.append(get_de_containers(c))
+
+    # de_main_container = div(de_main_elems, _class="main")
+
 
     return str(
         div(
             cc.get_page_divider("Data Explorer"),
-            de_heading_left_container,
-            de_main_container,
-            _class="container",
+            de_containers
         )
     )
 
 
 def _get_model_performance_explanation_text(metric, data):
+    score_value = str(int(100 * data["metrics"][metric]))
+    pos_label = data["pos_label"]
+    neg_label = data["neg_label"]
+    y_test_size = len(data["y_test"])
     if metric == "accuracy_score":
+        tp = data["confusion_matrix"]["tp"]
+        tn = data["confusion_matrix"]["tn"]
+        total = len(data["y_pred"])
         return div(
-            h3(
-                "{}% Accuracy".format(str(int(100 * data["metrics"]["accuracy_score"])))
-            ),
+            h3("Accuracy"),
             p(
                 "{}% of data points have the correct prediction.<br>".format(
-                    str(int(100 * data["metrics"]["accuracy_score"]))
+                    score_value
                 )
             ),
             p(
                 "Accuracy = correct predictions / all predictions<br>"
-                "= ({} + {}) / {}".format(
-                    data["confusion_matrix"]["tp"],
-                    data["confusion_matrix"]["tn"],
-                    data["confusion_matrix"]["tp"]
-                    + data["confusion_matrix"]["tn"]
-                    + data["confusion_matrix"]["fp"]
-                    + data["confusion_matrix"]["fn"],
+                "= ({} + {}) / {}".format(tp, tn, total)
+            ),
+        )
+    elif metric == "recall_score":
+        return div(
+            h3("{}% Recall".format(score_value)),
+            p(
+                '{}% of data points that are actually "{}" are likely to be predicted as "{}"'.format(
+                    score_value, pos_label, pos_label
                 )
             ),
         )
+    elif metric == "precision_score":
+        return div(
+            h3("{}% Precision".format(score_value)),
+            p(
+                '{}% of data points predicted as "{}", are likely to actually be "{}"'.format(
+                    score_value, pos_label, neg_label
+                )
+            ),
+        )
+    elif metric == "false_negative":
+        adjusted_score = int(round(100*data["metrics"][metric]/y_test_size))
+        return div(
+            h3("{}% False Negative".format(adjusted_score)),
+            p(
+                '{}% of data points that are predicted as "{}" should have been predicted as "{}"'.format(
+                    adjusted_score, neg_label, pos_label
+                )
+            ),
+        )
+    elif metric == "false_positive":
+        adjusted_score = int(round(100*data["metrics"][metric]/y_test_size))
+        return div(
+            h3("{}% False Positive".format(adjusted_score)),
+            p(
+                '{}% of data points that are predicted as "{}" should have been predicted as "{}"'.format(
+                    adjusted_score, pos_label, neg_label
+                )
+            ),
+        )
+    else:
+        return div()
 
 
 def _get_confusion_matrix_grid(data):
@@ -112,8 +169,8 @@ def _get_confusion_matrix_grid(data):
     return table(
         tr(
             th(_class="header_cell"),
-            th('Acutal<br>"{}"'.format(positive), _class="header_cell"),
-            th('Acutal<br>"{}"'.format(negative), _class="header_cell"),
+            th('Actual<br>"{}"'.format(positive), _class="header_cell"),
+            th('Actual<br>"{}"'.format(negative), _class="header_cell"),
         ),
         tr(
             th('Predicted<br>"{}"'.format(positive), _class="header_cell"),
@@ -209,7 +266,7 @@ def get_model_performance_page(data):
 
     for m in data["metrics"]:
         left_metric_elems.append(_get_model_performance_explanation_text(m, data))
-        main_elems.append(get_metric_bar_plot(m, data))
+        # main_elems.append(get_metric_bar_plot(m, data))
 
     left_container = div(left_metric_elems, _class="left")
     main_container = div(main_elems, _class="main")
@@ -236,16 +293,21 @@ def get_causal_page(data):
 
 
 def get_fairlearn_page(data):
-    left_elems = [
-        div(
+    heading = div(
             p(
                 "Understand your model’s fairness issues "
                 "using group-fairness metrics across sensitive features and cohorts. "
-                "Pay particular attention to the subgroups who receive worse treatments "
+                "Pay particular attention to the cohorts who receive worse treatments "
                 "(predictions) by your model."
-            )
+            ),
+            _class="left"
         )
-    ]
+
+    left_elems = []
+    left_containers = []
+    main_containers = []
+
+    print(data)
 
     for f in data:
         left_elems.append(h3('Feature "{}"'.format(f)))
@@ -303,7 +365,7 @@ def get_fairlearn_page(data):
 
     def get_fairness_bar_plot(data):
         y_data = [
-            str(c) + "<br>" + str(int(100 * data[c]["population"])) + "%" for c in data
+            str(c) + "<br>" + str(int(100 * data[c]["population"])) + "% n" for c in data
         ]
         x_data = [
             100 * (get_metric("selection_rate", data[c]["y_test"], data[c]["y_pred"]))
@@ -377,7 +439,7 @@ def get_fairlearn_page(data):
 
     return str(
         div(
-            cc.get_page_divider("Fairness"),
+            cc.get_page_divider("Fairness Assessment"),
             left_container,
             main_container,
             _class="container nobreak_div",

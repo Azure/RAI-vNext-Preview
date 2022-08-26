@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import os
 import pandas as pd
 import json
@@ -37,7 +40,17 @@ def get_metric(metric, y_test, y_pred, **kwargs):
 
 
 def fairness_metric_wrapper(y_test, y_pred, **kwargs):
-    get_metric(kwargs["metric"], y_test, y_pred, **kwargs)
+    params = {
+        'metric': kwargs.pop("metric")[0]
+    }
+
+    if "pos_label" in kwargs:
+        params["pos_label"] = kwargs.pop("pos_label")[0]
+
+    if "labels" in kwargs:
+        params["labels"] = kwargs.pop("labels")[0]
+
+    return get_metric(params.pop("metric"), y_test, y_pred, **params)
 
 
 metric_func_map = metric_to_func
@@ -257,13 +270,15 @@ class PdfDataGen:
         )
 
         self.is_multiclass = False
+        self.classes = None
+        self.pos_label = None
+        self.other_class = "other"
 
         if self.tasktype == "classification":
             self.is_multiclass = len(np.unique(self.data.get_y_test())) > 2
+            self.classes = self.data.get_raiinsight()._classes
+            self.pos_label = self.classes[1]
 
-        self.classes = self.data.get_raiinsight()._classes
-        self.pos_label = self.classes[1]
-        self.other_class = "other"
         if self.is_multiclass:
             self.pos_label = str(self.data._classes[0])
             self.classes = [self.other_class, self.pos_label]
@@ -367,14 +382,19 @@ class PdfDataGen:
 
             data = {"feature_name": f, "primary_metric": primary_metric, "data": []}
 
+            short_labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+            sl_index = 0
             for label in label_list:
                 index_filter = [True if x == label else False for x in new_labels]
 
                 f_data = {
                     "label": label,
+                    "short_label": short_labels[sl_index],
                     "population": counts[label] / total,
                     "prediction": y_predict[index_filter],
                 }
+
+                sl_index = sl_index + 1
 
                 if primary_metric:
                     f_data[primary_metric] = get_metric(
@@ -409,7 +429,6 @@ class PdfDataGen:
             t[0]: {"value": t[1], "short_label": short_labels[index]}
             for index, t in enumerate(sorted_tuple)
         }
-
         return OrderedDict(sorted_dict)
 
     def get_causal_data(self):
@@ -418,16 +437,19 @@ class PdfDataGen:
     def get_fairlearn_data(self):
         fair_con = self.config["Fairness"]
         fm = {}
+        dataset = self.data.get_test()
+        dataset_len = len(dataset)
 
         for f in fair_con["sensitive_features"]:
             fm[f] = {}
             fm[f]["metrics"] = {}
             fm[f]["statistics"] = {}
+            topnlabels = dataset[f].value_counts().nlargest(20).index.to_list()
             for m in fair_con["metric"]:
                 m_sample_params = {
-                    "metric": m,
-                    "pos_label": self.pos_label,
-                    "labels": self.classes,
+                    "metric": [m]*dataset_len,
+                    "pos_label": [self.pos_label]*dataset_len,
+                    "labels": [self.classes]*dataset_len,
                 }
                 gm = self.data.get_fairlearn_grouped_metric(f, m_sample_params)
 
@@ -436,8 +458,11 @@ class PdfDataGen:
                     "ratio": gm.ratio(),
                 }
 
+                gmd = gm.by_group.to_dict()
+                gmd = {k:gmd[k] for k in topnlabels}
+
                 sorted_group_metric = sorted(
-                    gm.by_group.to_dict().items(), key=lambda x: x[1]
+                    gmd.items(), key=lambda x: x[1]
                 )
 
                 fm[f]["metrics"][m] = {
@@ -449,9 +474,19 @@ class PdfDataGen:
                 }
 
             feature_statistics = dict(self.data.get_feature_statistics(f))
+            short_labels = [
+            "A", "B", "C", "D", "E",
+            "F", "G", "H", "I", "J",
+            "K", "L", "M", "N", "O",
+            "P", "Q", "R", "S", "T"]
+
+            si_index = 0
             for k, v in feature_statistics.items():
                 filtermap = self.data.get_test()[f] == k
-                fm[f]["statistics"][k] = self.data.get_cohort_data(filtermap)
+                cohort_data = self.data.get_cohort_data(filtermap)
+                cohort_data["short_label"] = short_labels[si_index]
+                si_index += 1
+                fm[f]["statistics"][k] = cohort_data
 
         return fm
 
@@ -464,6 +499,17 @@ class PdfDataGen:
 
         if self.tasktype == "regression":
             return_data["y_error"] = list(map(lambda x, y: x - y, y_pred, y_test))
+            report_metrics = [
+                "mean_absolute_error",
+                "mean_squared_error",
+                "r2_score"
+            ]
+
+            for m in report_metrics:
+                return_data["metrics"][m] = get_metric(
+                    m, y_test, y_pred, **self.get_metric_kwargs()
+                )
+
 
         if self.tasktype == "classification":
             tn, fp, fn, tp = skm.confusion_matrix(
@@ -473,7 +519,7 @@ class PdfDataGen:
             return_data["classes"] = self.classes
             return_data["pos_label"] = self.pos_label
             return_data["neg_label"] = next(
-                iter(set(self.classes) - set(self.pos_label))
+                iter(set(self.classes) - set([self.pos_label]))
             )
             report_metrics = [
                 "accuracy_score",
@@ -483,10 +529,10 @@ class PdfDataGen:
                 "false_positive",
             ]
 
-        for m in report_metrics:
-            return_data["metrics"][m] = get_metric(
-                m, y_test, y_pred, **self.get_metric_kwargs()
-            )
+            for m in report_metrics:
+                return_data["metrics"][m] = get_metric(
+                    m, y_test, y_pred, **self.get_metric_kwargs()
+                )
 
         return_data["user_requested_metrics"] = self.config["Metrics"]
         return return_data

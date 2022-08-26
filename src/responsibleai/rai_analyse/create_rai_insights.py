@@ -89,6 +89,14 @@ def create_constructor_arg_dict(args):
 
 
 def copy_input_data(component_input_path: str, output_path: str):
+    # asset id
+    if component_input_path.lower().startswith("azureml://"):
+        output_file = os.path.join(output_path, "assetid")
+        os.makedirs(output_path, exist_ok=True)
+        with open(output_file, "w") as of:
+            of.write(component_input_path)
+        return
+    
     if os.path.isdir(component_input_path):
         src_path = component_input_path
     else:
@@ -156,6 +164,12 @@ def main(args):
 
 # run script
 if __name__ == "__main__":
+    import os
+    import json
+
+    ed = {k:os.environ[k] for k in os.environ}
+
+    print(json.dumps(ed, indent=2, separators=(',', ': ')))
     # add space in logs
     print("*" * 60)
     print("\n\n")
