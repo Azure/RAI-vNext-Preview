@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import argparse
 import json
 import logging
@@ -29,7 +32,7 @@ _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
 
-def parse_args():
+def get_parser():
     # setup arg parser
     parser = argparse.ArgumentParser()
 
@@ -51,7 +54,7 @@ def parse_args():
         "--wkhtml2pdfpath", type=str, help="path to wkhtml2pdf", required=False
     )
 
-    return parser.parse_args()
+    return parser
 
 
 def parse_threshold(threshold):
@@ -116,7 +119,14 @@ def add_properties_to_gather_run(dashboard_info, rai_info):
     _logger.info("Properties added to score card run")
 
 
-def validate_and_correct_config(config):
+def validate_and_correct_config(config, insight_data):
+    i_data = insight_data.get_raiinsight()
+    if "Fairness" in config.keys():
+        fc = config["Fairness"]
+        cat_features = [f for f in fc["sensitive_features"] if f in i_data.categorical_features]
+        dropped_features = [f for f in fc["sensitive_features"] if f not in i_data.categorical_features]
+        _logger.warning("Non categorical features in fairness dropped: {}".format(dropped_features))
+        fc["sensitive_features"] = cat_features
     return config
 
 
@@ -136,7 +146,7 @@ def main(args):
             }
             config["cohorts_definition"] = cohorts_map
 
-    config = validate_and_correct_config(config)
+    config = validate_and_correct_config(config, insight_data)
 
     for k, v in config["Metrics"].items():
         if "threshold" in v.keys():
@@ -153,10 +163,12 @@ def main(args):
             "startTimeUtc": run.get_details()["startTimeUtc"],
         }
 
-    if config["Model"]["ModelType"] == "Regression":
-        wf = Workflow(insight_data, config, args, RegressionComponents)
-    else:
+    if config["Model"]["ModelType"].lower() == "regression":	
+        wf = Workflow(insight_data, config, args, RegressionComponents)	
+    elif config["Model"]["ModelType"].lower() in ("classification", "multiclass"):
         wf = Workflow(insight_data, config, args, ClassificationComponents)
+    else:
+        raise ValueError("Model type {} cannot be matched to a score card generation workflow".format(config["Model"]["ModelType"]))
 
     wf.generate_pdf()
 
@@ -164,6 +176,7 @@ def main(args):
         add_properties_to_gather_run(
             dashboard_info, {"ScoreCardTitle": config["Model"]["ModelName"]}
         )
+        run.upload_folder("scorecard", args.pdf_output_path)
 
 
 class Workflow:
@@ -187,8 +200,8 @@ class Workflow:
             or len(self.raiinsight.list()["error_analysis"]["reports"]) > 0,
             "feature_importance": "FeatureImportance" in self.config
             and self.raiinsight.list()["explainer"]["is_computed"],
-            "fairness": "Fairness" in self.config,
-            "causal": len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
+            "fairness": "Fairness" in self.config and len(self.config["Fairness"]["sensitive_features"]) > 0,
+            "causal": "Causal" in self.config and len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
         }
 
     def generate_pdf(self):
@@ -248,7 +261,7 @@ if __name__ == "__main__":
     print("\n\n")
 
     # run main function
-    main(parse_args())
+    main(get_parser().parse_args())
 
     # add space in logs
     print("*" * 60)

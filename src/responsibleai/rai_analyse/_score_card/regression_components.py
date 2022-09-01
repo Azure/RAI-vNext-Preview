@@ -1,14 +1,18 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import plotly.graph_objects as go
 import plotly.io as pio
 import base64
 
 from statistics import mean
-from domonic.html import div, h3, h2, h1, p, img, table, td, th, tr, thead, tbody
+from domonic.html import div, h3, h2, p, img, table, ul, li, td, th, tr, thead, tbody
 from . import common_components as cc
 
 metric_name_lookup = {
     "mean_squared_error": "Mean squared error",
     "mean_absolute_error": "Mean absolute error",
+    "r2_score": "R2 score"
 }
 
 
@@ -27,54 +31,74 @@ def get_bar_plot_explanation_image():
 
 def get_data_explorer_page(data):
     de_heading_left_elms = p(
-        "Evaluate your dataset to assess representation of identified subgroups:"
+        "Evaluate your dataset to assess representation of identified cohorts:"
     )
 
     de_heading_left_elms.append(get_bar_plot_explanation_image())
 
     de_heading_left_container = div(de_heading_left_elms, _class="left")
 
-    de_main_elems = []
+    # heading_container = div(de_heading_left_container, _class="container")
+
+    containers = []
 
     for c in data:
-        de_main_elems.append(h3(c["feature_name"]))
+        left_elems = []
+        main_elems = []
+        main_elems.append(h3(c["feature_name"]))
+        left_elems = [h3(c["feature_name"])]
+        feature_list = ul()
         for i in c["data"]:
-            de_main_elems.append(
+            feature_list.append(li("{}: {}".format(i["short_label"], i["label"])))
+            main_elems.append(
                 p(
-                    "For {} datapoints, {} is the average of the {} between the actual value and the predicted value".format(
+                    'For cohort: {} {}, {} is the {} between the actual and predicted values.'.format(
+                        c["feature_name"],
                         i["label"],
                         round(i[c["primary_metric"]], 1),
                         c["primary_metric"],
                     )
                 )
             )
-        de_main_elems.append(
+        main_elems.append(
             div(
                 p(
-                    "The distribution of prediction value for the different sets of data points are as follows:"
+                    "Histogram of your model errors (difference between the actual and predicted values)"
                 ),
                 cc.get_de_box_plot_image(c),
                 _class="nobreak_div",
             )
         )
 
-    de_main_container = div(de_main_elems, _class="main")
+        left_elems.append(feature_list)
+        containers.append(
+            str(div(div(left_elems, _class="left"), div(main_elems, _class="main"), _class="container"))
+        )
 
     return str(
         div(
             cc.get_page_divider("Data Explorer"),
             de_heading_left_container,
-            de_main_container,
             _class="container",
         )
-    )
+    ) + "".join(containers)
 
 
 def get_metric_explanation_text(mname, mvalue):
     text_lookup = {
-        "mean_squared_error": "{} is the average of the squared difference between the actual values and the predicted values.",
-        "mean_absolute_error": "{} is the average of the absolute error values.",
+        "mean_squared_error": "{} is the average of the squared difference between "
+        "actual values and predicted values.",
+        "median_squared_error": "{} is the median of the squared difference between "
+        "actual values and predicted values.",
+        "mean_absolute_error": "{} is the average of the absolute difference between "
+        "actual values and predicted values.",
+        "median_absolute_error": "{} is the median of the absolute difference between "
+        "actual values and predicted values.",
+        "r2_score": "{} is amount of variation in the predicted values that can be explained by the model inputs.",
     }
+
+    if mname not in text_lookup.keys():
+        return "{}: {}".format(mname, round(mvalue, 2))
     return text_lookup[mname].format(round(mvalue, 2))
 
 
@@ -112,7 +136,7 @@ def get_mp_error_histogram_plot(data):
 
 
 def get_model_performance_page(data):
-    left_metric_elems = []
+    left_metric_elems = [p("Observe evidence of your model performance here:")]
     for m in data["metrics"]:
         left_metric_elems.append(h3(metric_name_lookup[m]))
         left_metric_elems.append(p(get_metric_explanation_text(m, data["metrics"][m])))
@@ -127,7 +151,7 @@ def get_model_performance_page(data):
     main_histogram = div(
         h3(
             "Histogram of your residuals values "
-            "(distance between a predicted value and the observed actual value)"
+            "(distance between actual values and predicted values):"
         ),
         get_mp_error_histogram_plot(data),
         _class="nobreak_div",
@@ -157,22 +181,35 @@ def get_causal_page(data):
 
 
 def get_fairlearn_page(data):
-    left_elems = [
-        div(
+    heading = div(
             p(
                 "Understand your model’s fairness issues "
                 "using group-fairness metrics across sensitive features and cohorts. "
-                "Pay particular attention to the subgroups who receive worse treatments "
+                "Pay particular attention to the cohorts who receive worse treatments "
                 "(predictions) by your model."
-            )
+            ),
+            _class="left"
         )
-    ]
 
+    left_containers = []
+    main_containers = []
+    
     for f in data:
-        left_elems.append(h3('Feature "{}"'.format(f)))
-        metric_section = []
+        section = [h2('Feature "{}"'.format(f))]
+        feature_list = ul()
+        for i in data[f]["statistics"]:
+            feature_list.append(li("{}: {}".format(
+                data[f]["statistics"][i]["short_label"],
+                i)))
+        section.append(h3("Legends:"))
+        section.append(feature_list)
         for metric_key, metric_details in data[f]["metrics"].items():
-            left_elems.append(
+            section.append(
+                h3(
+                    "{}:".format(metric_key)
+                )
+            )
+            section.append(
                 p(
                     '"{}" has the highest {}: {}'.format(
                         metric_details["group_max"][0],
@@ -181,7 +218,7 @@ def get_fairlearn_page(data):
                     )
                 )
             )
-            left_elems.append(
+            section.append(
                 p(
                     '"{}" has the lowest {}: {}'.format(
                         metric_details["group_min"][0],
@@ -191,9 +228,9 @@ def get_fairlearn_page(data):
                 )
             )
             if metric_details["kind"] == "difference":
-                metric_section.append(
+                section.append(
                     p(
-                        "Maximum difference in {} is {}".format(
+                        "&#8658; Maximum difference in {} is {}".format(
                             metric_key,
                             round(
                                 metric_details["group_max"][1]
@@ -204,9 +241,9 @@ def get_fairlearn_page(data):
                     )
                 )
             elif metric_details["kind"] == "ratio":
-                metric_section.append(
+                section.append(
                     p(
-                        "Minimum ratio of {} is {}".format(
+                        "&#8658; Minimum ratio of {} is {}".format(
                             metric_key,
                             round(
                                 metric_details["group_min"][1]
@@ -216,19 +253,22 @@ def get_fairlearn_page(data):
                         )
                     )
                 )
-        left_elems.append(div(metric_section, _class="nobreak_div"))
+        left_containers.append(div(section, _class="nobreak_div"))
+        # left_elems.append(div(metric_section, _class="nobreak_div"))
 
-    left_container = div(left_elems, _class="left")
+    # left_container = div(left_elems, _class="left")
 
     def get_fairness_box_plot(data):
         box_plot_data = {"data": []}
         for c in data:
             box_plot_data["data"].append(
                 {
-                    "label": c + "<br>" + str(int(100 * data[c]["population"])) + "%",
+                    "label": data[c]["short_label"] + "<br>" + str(int(100 * data[c]["population"])) + "% n",
                     "datapoints": data[c]["y_pred"],
                 }
             )
+
+        box_plot_data["data"] = list(reversed(box_plot_data["data"]))
 
         png_base64 = cc.get_box_plot(box_plot_data)
 
@@ -251,7 +291,7 @@ def get_fairlearn_page(data):
         horizontal_headings = [
             "Average<br>Prediction",
             "Average<br>Groundtruth",
-        ] + [d.replace("_", "<br>") for d in metric_list]
+        ] + [d.replace("_", " ").title().replace(" ", "<br>") for d in metric_list]
         vertical_headings = list(data["statistics"].keys())
 
         headings_td = [td(_class="header_cell")] + [
@@ -273,33 +313,38 @@ def get_fairlearn_page(data):
 
         return table(headings, body, _class="table")
 
-    main_elems = []
     # prediction distribution
     for f in data:
-        main_elems.append(
-            div(
+        distribution = div(
                 h2('Feature "{}"'.format(f)),
                 h3("Prediction distribution chart"),
                 get_fairness_box_plot(data[f]["statistics"]),
                 _class="nobreak_div",
             )
-        )
 
-        main_elems.append(
-            div(
+        ctable = div(
                 h3("Analysis across cohorts"),
                 get_table(data[f]),
                 _class="nobreak_div",
             )
-        )
 
-    main_container = div(main_elems, _class="main")
+        main_containers.append(str(distribution) + str(ctable))
+
+    containers = []
+
+    for i in range(len(left_containers)):
+        containers.append(
+            str(div(
+                div(left_containers[i], _class="left"),
+                div(main_containers[i], _class="main"),
+                _class="container"
+            ))
+        )
 
     return str(
         div(
-            cc.get_page_divider("Fairness"),
-            left_container,
-            main_container,
+            cc.get_page_divider("Fairness Assessment"),
+            heading,
             _class="container nobreak_div",
         )
-    )
+    ) + "".join(containers)
