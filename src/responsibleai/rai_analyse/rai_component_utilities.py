@@ -9,6 +9,7 @@ import pathlib
 import shutil
 import tempfile
 import uuid
+import re
 
 from typing import Any, Dict, Optional
 from zipfile import Path
@@ -23,6 +24,10 @@ from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 
+
+assetid_re = re.compile(
+    r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"
+)
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -60,7 +65,11 @@ def fetch_model_id(model_info_path: str):
     return model_info[DashboardInfo.MODEL_ID_KEY]
 
 
-def load_mlflow_model(workspace: Workspace, model_id: Optional[str] = None, model_path: Optional[str] = None) -> Any:
+def load_mlflow_model(
+    workspace: Workspace,
+    model_id: Optional[str] = None,
+    model_path: Optional[str] = None,
+) -> Any:
     model_uri = model_path
     if model_id:
         model = Model._get(workspace, id=model_id)
@@ -72,16 +81,18 @@ def load_mlflow_model(workspace: Workspace, model_id: Optional[str] = None, mode
 
 def load_mltable(mltable_path: str) -> pd.DataFrame:
     import pip
-    pip.main(['install', '--no-deps', 'mltable==0.1.0b3'])
+
+    pip.main(["install", "--no-deps", "mltable==0.1.0b3"])
 
     import mltable
+
     _logger.info("Loading MLTable: {0}".format(mltable_path))
     df: pd.DataFrame = None
     try:
         assetid_path = os.path.join(mltable_path, "assetid")
         if os.path.exists(assetid_path):
             mltable_path = assetid_path
-        
+
         tbl = mltable.load(mltable_path)
         df: pd.DataFrame = tbl.to_pandas_dataframe()
     except Exception as e:
@@ -239,6 +250,12 @@ def add_properties_to_gather_run(
         PropertyKeyValues.RAI_INSIGHTS_MODEL_ID_KEY: dashboard_info[
             DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY
         ],
+        PropertyKeyValues.RAI_INSIGHTS_TEST_DATASET_ID_KEY: dashboard_info[
+            DashboardInfo.RAI_INSIGHTS_TEST_DATASET_ID_KEY
+        ],
+        PropertyKeyValues.RAI_INSIGHTS_TRAIN_DATASET_ID_KEY: dashboard_info[
+            DashboardInfo.RAI_INSIGHTS_TRAIN_DATASET_ID_KEY
+        ],
     }
 
     _logger.info("Appending tool present information")
@@ -272,3 +289,27 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
         model=model_estimator, train=df_train, test=df_test, **constructor_args
     )
     return rai_i
+
+
+def get_run_input_assets(run):
+    return run.get_details()["runDefinition"]["inputAssets"]
+
+
+def get_asset_information(assetid):
+    match = assetid_re.match(assetid)
+
+    return match.groupdict()
+
+
+def get_train_dataset_id(run):
+    return get_dataset_name_version(run, "train_dataset")
+
+
+def get_test_dataset_id(run):
+    get_dataset_name_version(run, "test_dataset")
+
+
+def get_dataset_name_version(run, dataset_input_name):
+    aid = get_run_input_assets(run)[dataset_input_name]["asset"]["assetId"]
+    ainfo = get_asset_information(aid)
+    return f'{ainfo["assetname"]}:{ainfo["assetversion"]}'

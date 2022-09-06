@@ -15,7 +15,7 @@ from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
 from arg_helpers import get_from_args, json_empty_is_none_parser
-from rai_component_utilities import load_dataset, fetch_model_id, load_mlflow_model
+from rai_component_utilities import load_dataset, fetch_model_id, load_mlflow_model, get_train_dataset_id, get_test_dataset_id
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -144,6 +144,8 @@ def main(args):
         DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),
         DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: model_id,
         DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
+        DashboardInfo.RAI_INSIGHTS_TRAIN_DATASET_ID_KEY: get_train_dataset_id(my_run),
+        DashboardInfo.RAI_INSIGHTS_TEST_DATASET_ID_KEY: get_test_dataset_id(my_run),
     }
     output_file = os.path.join(
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
