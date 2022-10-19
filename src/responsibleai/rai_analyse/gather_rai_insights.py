@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
+import os
 import argparse
 import json
 import logging
@@ -118,8 +119,15 @@ def main(args):
         _logger.info("Object loaded")
 
         rai_i.save(args.dashboard)
-        # Copy dashboard info file
-        copy_dashboard_info_file(args.constructor, args.dashboard)
+
+        # update dashboard info with gather job run id and write
+        dashboard_info[DashboardInfo.RAI_INSIGHTS_GATHER_RUN_ID_KEY] = str(my_run.id)
+        output_file = os.path.join(
+            args.dashboard, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
+        )
+        with open(output_file, "w") as of:
+            json.dump(dashboard_info, of)
+
         _logger.info("Saved dashboard to oputput")
 
         rai_data = rai_i.get_data()

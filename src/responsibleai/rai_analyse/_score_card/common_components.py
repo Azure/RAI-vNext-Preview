@@ -5,7 +5,22 @@ import plotly.graph_objects as go
 import base64
 import plotly.io as pio
 import pdfkit
-from domonic.html import div, h3, h1, p, img, table, td, tr, thead, tbody, span, ul, li
+from domonic.html import (
+    a,
+    div,
+    h3,
+    h1,
+    p,
+    img,
+    table,
+    td,
+    tr,
+    thead,
+    tbody,
+    span,
+    ul,
+    li,
+)
 
 
 def get_full_html(htmlbody):
@@ -193,8 +208,9 @@ def get_feature_importance_page(data):
     heading_main = div(
         h3("Feature Importance"),
         p("Shown below is the mean of SHAP value of the most important features:"),
-        get_fi_image(data), 
-        _class="main")
+        get_fi_image(data),
+        _class="main",
+    )
     return div(
         get_page_divider("Feature Importance (Explainability)"),
         fi_left_container,
@@ -214,17 +230,26 @@ def get_fi_bar_plot(data):
     # ticktext = [0.0, 0.25, 0.5, 0.75, 1.0]
     tickappend = ""
 
-    if any((i>=10000 or i <= 0.01 for i in [x for sublist in x_data for x in sublist])):
-        text_formatter = lambda x: "{:.2e}".format(x)
+    def scientific_formatter(x):
+        return "{:.2e}".format(x)
+
+    def rounding_formatter(x):
+        return str(round(x, 1))
+
+    if any(
+        (i >= 10000 or i <= 0.01 for i in [x for sublist in x_data for x in sublist])
+    ):
+        text_formatter = scientific_formatter
     else:
-        text_formatter = lambda x: str(round(x, 1))
+        text_formatter = rounding_formatter
 
     return get_bar_plot(
         list(reversed(y_data)),
-        list(reversed(x_data)), 
+        list(reversed(x_data)),
         tickappend=tickappend,
         xrange=x_range,
-        anno_text_formatter=text_formatter)
+        anno_text_formatter=text_formatter,
+    )
 
 
 def get_binary_cp_bar_plot(data, m):
@@ -321,7 +346,7 @@ def get_bar_plot(
     xrange=None,
     tickappend="",
     xtitle=None,
-    anno_text_formatter=lambda x: str(round(x, 1))
+    anno_text_formatter=lambda x: str(round(x, 1)),
 ):
     fig = go.Figure()
     series = 0
@@ -407,7 +432,7 @@ def get_bar_plot(
                 showarrow=False,
             )
         )
-    
+
     # if xtitle:
     #     annotations.append(dict(
     #         xanchor="left",
@@ -472,7 +497,10 @@ def get_de_box_plot_image(data):
     processed_label = data
     for c in processed_label["data"]:
         c["label"] = (
-            c["short_label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "% n"
+            c["short_label"]
+            + "<br>"
+            + str(int(100 * round(c["population"], 3)))
+            + "% n"
         )
         c["datapoints"] = c["prediction"]
 
@@ -531,7 +559,9 @@ def get_model_overview(data):
             )
         )
     else:
-        model_left_items.append(div(p("This is a {} model.".format(data["ModelType"].lower()))))
+        model_left_items.append(
+            div(p("This is a {} model.".format(data["ModelType"].lower())))
+        )
 
     model_left_items.append(
         div(
@@ -579,6 +609,16 @@ def get_model_overview(data):
                 )
             )
         )
+        heading.append(
+            p(
+                "Source RAI dashboard: ",
+                a(
+                    data["runinfo"]["dashboard_title"],
+                    _href=data["runinfo"]["dashboard_link"],
+                ),
+            )
+        )
+        heading.append(p(f"Model id: {data['runinfo']['model_id']}"))
 
     model_overview_container = div(
         div(heading, _class="header"),
@@ -629,7 +669,8 @@ def get_cohorts_page(data, metric_config):
                 list(reversed(y_data)),
                 list(reversed(x_data)),
                 legend=legend,
-                threshold=threshold)
+                threshold=threshold,
+            )
 
         message_lookup = {
             "cohorts": {
@@ -680,7 +721,7 @@ def get_causal_page(data):
     left_elem = [
         div(
             p(
-                "ausal analysis answers real-world what-if questions " 
+                "ausal analysis answers real-world what-if questions "
                 "about how changing specific treatments would impact outcomes."
             )
         )
@@ -750,14 +791,20 @@ def get_causal_page(data):
             )
         )
 
+        ct = p["Current treatment"]
+        et = p["Effect of treatment"]
+
+        ct = round(ct, 2) if isinstance(ct, (int, float)) else ct
+        et = round(et, 2) if isinstance(et, (int, float)) else et
+
         main_elems.append(
             get_table(
                 [
                     [
                         p["index"],
-                        round(p["Current treatment"], 2),
+                        ct,
                         p["Treatment"],
-                        round(p["Effect of treatment"], 2),
+                        et,
                     ]
                     for p in data["top_local_policies"][f["feature"]]
                 ]
