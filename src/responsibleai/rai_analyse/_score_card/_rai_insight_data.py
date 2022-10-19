@@ -24,8 +24,10 @@ def false_negative(y_test, y_pred, labels):
     tn, fp, fn, tp = skm.confusion_matrix(y_test, y_pred, labels=labels).ravel()
     return fn
 
+
 pos_label_metrics = ["selection_rate", "f1_score", "recall_score", "precision_score"]
 ordered_label_metrics = ["confusion_matrix", "false_positive", "false_negative"]
+
 
 def get_metric(metric, y_test, y_pred, **kwargs):
     func = metric_func_map[metric]
@@ -40,9 +42,7 @@ def get_metric(metric, y_test, y_pred, **kwargs):
 
 
 def fairness_metric_wrapper(y_test, y_pred, **kwargs):
-    params = {
-        'metric': kwargs.pop("metric")[0]
-    }
+    params = {"metric": kwargs.pop("metric")[0]}
 
     if "pos_label" in kwargs:
         params["pos_label"] = kwargs.pop("pos_label")[0]
@@ -128,7 +128,7 @@ class RaiInsightData:
 
     def get_filtered_dataset(self, cohort):
         filtered_dataset = self.filter_from_cohort(cohort)
-        model = self.raiinsight.error_analysis._analyzer.model
+        model = self.raiinsight.model
         features = self.raiinsight.error_analysis._analyzer.feature_names
         return {
             "filtered_dataset": filtered_dataset,
@@ -154,7 +154,7 @@ class RaiInsightData:
             y_true=self.get_y_test(),
             y_pred=self.get_y_pred(),
             sensitive_features=self.raiinsight.test[sensitive_feature].to_numpy(),
-            sample_params=sample_params
+            sample_params=sample_params,
         )
 
         return grouped_metric
@@ -423,7 +423,7 @@ class PdfDataGen:
         sorted_tuple = sorted(
             [(f, importances[index]) for index, f in enumerate(features)],
             key=lambda x: x[1],
-            reverse=True
+            reverse=True,
         )[-top_n:]
         sorted_dict = {
             t[0]: {"value": t[1], "short_label": short_labels[index]}
@@ -447,9 +447,9 @@ class PdfDataGen:
             topnlabels = dataset[f].value_counts().nlargest(20).index.to_list()
             for m in fair_con["metric"]:
                 m_sample_params = {
-                    "metric": [m]*dataset_len,
-                    "pos_label": [self.pos_label]*dataset_len,
-                    "labels": [self.classes]*dataset_len,
+                    "metric": [m] * dataset_len,
+                    "pos_label": [self.pos_label] * dataset_len,
+                    "labels": [self.classes] * dataset_len,
                 }
                 gm = self.data.get_fairlearn_grouped_metric(f, m_sample_params)
 
@@ -459,11 +459,9 @@ class PdfDataGen:
                 }
 
                 gmd = gm.by_group.to_dict()
-                gmd = {k:gmd[k] for k in topnlabels}
+                gmd = {k: gmd[k] for k in topnlabels}
 
-                sorted_group_metric = sorted(
-                    gmd.items(), key=lambda x: x[1]
-                )
+                sorted_group_metric = sorted(gmd.items(), key=lambda x: x[1])
 
                 fm[f]["metrics"][m] = {
                     "kind": fair_con["fairness_evaluation_kind"],
@@ -475,10 +473,27 @@ class PdfDataGen:
 
             feature_statistics = dict(self.data.get_feature_statistics(f))
             short_labels = [
-            "A", "B", "C", "D", "E",
-            "F", "G", "H", "I", "J",
-            "K", "L", "M", "N", "O",
-            "P", "Q", "R", "S", "T"]
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "I",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "O",
+                "P",
+                "Q",
+                "R",
+                "S",
+                "T",
+            ]
 
             si_index = 0
             for k, v in feature_statistics.items():
@@ -499,17 +514,12 @@ class PdfDataGen:
 
         if self.tasktype == "regression":
             return_data["y_error"] = list(map(lambda x, y: x - y, y_pred, y_test))
-            report_metrics = [
-                "mean_absolute_error",
-                "mean_squared_error",
-                "r2_score"
-            ]
+            report_metrics = ["mean_absolute_error", "mean_squared_error", "r2_score"]
 
             for m in report_metrics:
                 return_data["metrics"][m] = get_metric(
                     m, y_test, y_pred, **self.get_metric_kwargs()
                 )
-
 
         if self.tasktype == "classification":
             tn, fp, fn, tp = skm.confusion_matrix(
@@ -592,13 +602,19 @@ class PdfDataGen:
                                 / len(self.data.get_y_test()),
                             }
                             if "threshold" in self.config["Metrics"][m]:
-                                cd["threshold"] = self.config["Metrics"][m]["threshold"][1]
+                                cd["threshold"] = self.config["Metrics"][m][
+                                    "threshold"
+                                ][1]
 
                             ret.append(cd)
                         return ret
 
-                    cohorts_data["error_analysis_min"].extend(get_cohorts_data(min_nodes))
-                    cohorts_data["error_analysis_max"].extend(get_cohorts_data(max_nodes))
+                    cohorts_data["error_analysis_min"].extend(
+                        get_cohorts_data(min_nodes)
+                    )
+                    cohorts_data["error_analysis_max"].extend(
+                        get_cohorts_data(max_nodes)
+                    )
             except Exception as ex:
                 print("Error in getting error analysis metrics: {}, skipping", ex)
 

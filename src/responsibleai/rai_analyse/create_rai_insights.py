@@ -15,7 +15,13 @@ from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues
 from arg_helpers import get_from_args, json_empty_is_none_parser
-from rai_component_utilities import load_dataset, fetch_model_id, load_mlflow_model, get_train_dataset_id, get_test_dataset_id
+from rai_component_utilities import (
+    load_dataset,
+    fetch_model_id,
+    load_mlflow_model,
+    get_train_dataset_id,
+    get_test_dataset_id,
+)
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
@@ -41,17 +47,11 @@ def parse_args():
         "--categorical_column_names", type=str, help="Optional[List[str]]"
     )
 
-    parser.add_argument(
-        "--model_info_path", type=str, help="name:version"
-    )
+    parser.add_argument("--model_info_path", type=str, help="name:version")
 
-    parser.add_argument(
-        "--model_input", type=str, help="model local path on remote"
-    )
+    parser.add_argument("--model_input", type=str, help="model local path on remote")
 
-    parser.add_argument(
-        "--model_info", type=str, help="name:version"
-    )
+    parser.add_argument("--model_info", type=str, help="name:version")
 
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
 
@@ -96,7 +96,7 @@ def copy_input_data(component_input_path: str, output_path: str):
         with open(output_file, "w") as of:
             of.write(component_input_path)
         return
-    
+
     if os.path.isdir(component_input_path):
         src_path = component_input_path
     else:
@@ -117,7 +117,9 @@ def main(args):
     _logger.info("Dealing with evaluation dataset")
     test_df = load_dataset(args.test_dataset)
 
-    if args.model_info_path is None and (args.model_input is None or args.model_info is None):
+    if args.model_info_path is None and (
+        args.model_input is None or args.model_info is None
+    ):
         raise ValueError("Either model info or model input needs to be supplied.")
 
     model_estimator = None
@@ -125,11 +127,15 @@ def main(args):
     if args.model_info_path:
         model_id = fetch_model_id(args.model_info_path)
         _logger.info("Loading model: {0}".format(model_id))
-        model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id=model_id)
+        model_estimator = load_mlflow_model(
+            my_run.experiment.workspace, model_id=model_id
+        )
     elif args.model_input and args.model_info:
         model_id = args.model_info
         _logger.info("Loading model: {0}".format(model_id))
-        model_estimator = load_mlflow_model(my_run.experiment.workspace, model_path=args.model_input)
+        model_estimator = load_mlflow_model(
+            my_run.experiment.workspace, model_path=args.model_input
+        )
 
     constructor_args = create_constructor_arg_dict(args)
 
@@ -170,9 +176,9 @@ if __name__ == "__main__":
     import os
     import json
 
-    ed = {k:os.environ[k] for k in os.environ}
+    ed = {k: os.environ[k] for k in os.environ}
 
-    print(json.dumps(ed, indent=2, separators=(',', ': ')))
+    print(json.dumps(ed, indent=2, separators=(",", ": ")))
     # add space in logs
     print("*" * 60)
     print("\n\n")
