@@ -12,7 +12,7 @@ from . import common_components as cc
 metric_name_lookup = {
     "mean_squared_error": "Mean squared error",
     "mean_absolute_error": "Mean absolute error",
-    "r2_score": "R2 score"
+    "r2_score": "R2 score",
 }
 
 
@@ -52,7 +52,7 @@ def get_data_explorer_page(data):
             feature_list.append(li("{}: {}".format(i["short_label"], i["label"])))
             main_elems.append(
                 p(
-                    'For cohort: {} {}, {} is the {} between the actual and predicted values.'.format(
+                    "For cohort: {} {}, {} is the {} between the actual and predicted values.".format(
                         c["feature_name"],
                         i["label"],
                         round(i[c["primary_metric"]], 1),
@@ -72,7 +72,13 @@ def get_data_explorer_page(data):
 
         left_elems.append(feature_list)
         containers.append(
-            str(div(div(left_elems, _class="left"), div(main_elems, _class="main"), _class="container"))
+            str(
+                div(
+                    div(left_elems, _class="left"),
+                    div(main_elems, _class="main"),
+                    _class="container",
+                )
+            )
         )
 
     return str(
@@ -182,33 +188,29 @@ def get_causal_page(data):
 
 def get_fairlearn_page(data):
     heading = div(
-            p(
-                "Understand your model’s fairness issues "
-                "using group-fairness metrics across sensitive features and cohorts. "
-                "Pay particular attention to the cohorts who receive worse treatments "
-                "(predictions) by your model."
-            ),
-            _class="left"
-        )
+        p(
+            "Understand your model's fairness issues "
+            "using group-fairness metrics across sensitive features and cohorts. "
+            "Pay particular attention to the cohorts who receive worse treatments "
+            "(predictions) by your model."
+        ),
+        _class="left",
+    )
 
     left_containers = []
     main_containers = []
-    
+
     for f in data:
         section = [h2('Feature "{}"'.format(f))]
         feature_list = ul()
         for i in data[f]["statistics"]:
-            feature_list.append(li("{}: {}".format(
-                data[f]["statistics"][i]["short_label"],
-                i)))
+            feature_list.append(
+                li("{}: {}".format(data[f]["statistics"][i]["short_label"], i))
+            )
         section.append(h3("Legends:"))
         section.append(feature_list)
         for metric_key, metric_details in data[f]["metrics"].items():
-            section.append(
-                h3(
-                    "{}:".format(metric_key)
-                )
-            )
+            section.append(h3("{}:".format(metric_key)))
             section.append(
                 p(
                     '"{}" has the highest {}: {}'.format(
@@ -263,7 +265,10 @@ def get_fairlearn_page(data):
         for c in data:
             box_plot_data["data"].append(
                 {
-                    "label": data[c]["short_label"] + "<br>" + str(int(100 * data[c]["population"])) + "% n",
+                    "label": data[c]["short_label"]
+                    + "<br>"
+                    + str(int(100 * data[c]["population"]))
+                    + "% n",
                     "datapoints": data[c]["y_pred"],
                 }
             )
@@ -316,17 +321,17 @@ def get_fairlearn_page(data):
     # prediction distribution
     for f in data:
         distribution = div(
-                h2('Feature "{}"'.format(f)),
-                h3("Prediction distribution chart"),
-                get_fairness_box_plot(data[f]["statistics"]),
-                _class="nobreak_div",
-            )
+            h2('Feature "{}"'.format(f)),
+            h3("Prediction distribution chart"),
+            get_fairness_box_plot(data[f]["statistics"]),
+            _class="nobreak_div",
+        )
 
         ctable = div(
-                h3("Analysis across cohorts"),
-                get_table(data[f]),
-                _class="nobreak_div",
-            )
+            h3("Analysis across cohorts"),
+            get_table(data[f]),
+            _class="nobreak_div",
+        )
 
         main_containers.append(str(distribution) + str(ctable))
 
@@ -334,11 +339,13 @@ def get_fairlearn_page(data):
 
     for i in range(len(left_containers)):
         containers.append(
-            str(div(
-                div(left_containers[i], _class="left"),
-                div(main_containers[i], _class="main"),
-                _class="container"
-            ))
+            str(
+                div(
+                    div(left_containers[i], _class="left"),
+                    div(main_containers[i], _class="main"),
+                    _class="container",
+                )
+            )
         )
 
     return str(

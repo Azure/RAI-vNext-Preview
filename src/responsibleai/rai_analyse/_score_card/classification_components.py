@@ -49,8 +49,6 @@ def get_data_explorer_page(data):
             _class="image_div",
         )
 
-    de_sections = []
-
     def get_de_containers(c):
         feature_list = ul()
         for d in c["data"]:
@@ -88,15 +86,7 @@ def get_data_explorer_page(data):
     for c in data:
         de_containers.append(get_de_containers(c))
 
-    # de_main_container = div(de_main_elems, _class="main")
-
-
-    return str(
-        div(
-            cc.get_page_divider("Data Explorer"),
-            de_containers
-        )
-    )
+    return str(div(cc.get_page_divider("Data Explorer"), de_containers))
 
 
 def _get_model_performance_explanation_text(metric, data):
@@ -139,7 +129,7 @@ def _get_model_performance_explanation_text(metric, data):
             ),
         )
     elif metric == "false_negative":
-        adjusted_score = int(round(100*data["metrics"][metric]/y_test_size))
+        adjusted_score = int(round(100 * data["metrics"][metric] / y_test_size))
         return div(
             h3("{}% False Negative".format(adjusted_score)),
             p(
@@ -149,7 +139,7 @@ def _get_model_performance_explanation_text(metric, data):
             ),
         )
     elif metric == "false_positive":
-        adjusted_score = int(round(100*data["metrics"][metric]/y_test_size))
+        adjusted_score = int(round(100 * data["metrics"][metric] / y_test_size))
         return div(
             h3("{}% False Positive".format(adjusted_score)),
             p(
@@ -225,16 +215,18 @@ def get_model_performance_page(data):
             True if i == data["classes"][1] else False for i in data["y_test"]
         ]
         class_0_metric = get_metric(
-            mname, data["y_test"][y_0_filtermap],
+            mname,
+            data["y_test"][y_0_filtermap],
             data["y_pred"][y_0_filtermap],
             pos_label=data["classes"][0],
-            labels=data["classes"]
+            labels=data["classes"],
         )
         class_1_metric = get_metric(
-            mname, data["y_test"][y_1_filtermap],
+            mname,
+            data["y_test"][y_1_filtermap],
             data["y_pred"][y_1_filtermap],
             pos_label=data["classes"][1],
-            labels=data["classes"]
+            labels=data["classes"],
         )
 
         y_data = [
@@ -266,7 +258,6 @@ def get_model_performance_page(data):
 
     for m in data["metrics"]:
         left_metric_elems.append(_get_model_performance_explanation_text(m, data))
-        # main_elems.append(get_metric_bar_plot(m, data))
 
     left_container = div(left_metric_elems, _class="left")
     main_container = div(main_elems, _class="main")
@@ -294,20 +285,16 @@ def get_causal_page(data):
 
 def get_fairlearn_page(data):
     heading = div(
-            p(
-                "Understand your model’s fairness issues "
-                "using group-fairness metrics across sensitive features and cohorts. "
-                "Pay particular attention to the cohorts who receive worse treatments "
-                "(predictions) by your model."
-            ),
-            _class="left"
-        )
+        p(
+            "Understand your model's fairness issues "
+            "using group-fairness metrics across sensitive features and cohorts. "
+            "Pay particular attention to the cohorts who receive worse treatments "
+            "(predictions) by your model."
+        ),
+        _class="left",
+    )
 
     left_elems = []
-    left_containers = []
-    main_containers = []
-
-    print(data)
 
     for f in data:
         left_elems.append(h3('Feature "{}"'.format(f)))
@@ -365,7 +352,8 @@ def get_fairlearn_page(data):
 
     def get_fairness_bar_plot(data):
         y_data = [
-            str(c) + "<br>" + str(int(100 * data[c]["population"])) + "% n" for c in data
+            str(c) + "<br>" + str(int(100 * data[c]["population"])) + "% n"
+            for c in data
         ]
         x_data = [
             100 * (get_metric("selection_rate", data[c]["y_test"], data[c]["y_pred"]))
@@ -394,8 +382,6 @@ def get_fairlearn_page(data):
 
     def get_table(data):
         metric_list = [d for d in data["metrics"]]
-        # metric_list = [m for sublist in metric_list for m in sublist]
-
         horizontal_headings = [d.replace("_", "<br>") for d in metric_list]
         vertical_headings = list(data["statistics"].keys())
 
@@ -440,8 +426,8 @@ def get_fairlearn_page(data):
     return str(
         div(
             cc.get_page_divider("Fairness Assessment"),
-            left_container,
-            main_container,
+            div(heading, _class="container"),
+            div(left_container, main_container, _class="container"),
             _class="container nobreak_div",
         )
     )

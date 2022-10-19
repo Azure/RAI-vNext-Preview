@@ -6,6 +6,7 @@ import base64
 from azureml.core import Run
 from create_score_card import get_parser as scorecard_argparser, main as score_card_main
 
+
 def parse_args():
     # setup arg parser
     parser = argparse.ArgumentParser()
@@ -19,6 +20,7 @@ def parse_args():
     )
 
     return parser.parse_args()
+
 
 def download_rai_insights_dashboard(insight_path, local_path):
     run = Run.get_context()
@@ -43,20 +45,30 @@ def main(args):
     output_folder = "./scorecard"
     os.makedirs(dashboard_folder, exist_ok=True)
     os.makedirs(output_folder, exist_ok=True)
-    dashboard_path = os.path.join(dashboard_folder, args.rai_insights_dashboard_path.lstrip("/"))
+    dashboard_path = os.path.join(
+        dashboard_folder, args.rai_insights_dashboard_path.lstrip("/")
+    )
     json_path = "./score_card_config.json"
 
-    download_rai_insights_dashboard(args.rai_insights_dashboard_path.lstrip("/"), dashboard_folder)
+    download_rai_insights_dashboard(
+        args.rai_insights_dashboard_path.lstrip("/"), dashboard_folder
+    )
     write_base64_to_json(args.encoded_json, json_path)
 
     ap = scorecard_argparser()
-    scorecard_args = ap.parse_args([
-        '--rai_insights_dashboard', dashboard_path,
-        '--pdf_output_path', output_folder,
-        '--pdf_generation_config', json_path
-        ])
+    scorecard_args = ap.parse_args(
+        [
+            "--rai_insights_dashboard",
+            dashboard_path,
+            "--pdf_output_path",
+            output_folder,
+            "--pdf_generation_config",
+            json_path,
+        ]
+    )
 
     score_card_main(scorecard_args)
+
 
 if __name__ == "__main__":
     # add space in logs

@@ -12,13 +12,6 @@ from responsibleai import __version__ as responsibleai_version
 
 from _score_card._rai_insight_data import RaiInsightData, PdfDataGen
 
-# from _score_card.generate_pdf import (
-#     RegressionComponents,
-#     ClassificationComponents,
-#     to_pdf,
-#     get_full_html,
-# )
-
 from _score_card.common_components import to_pdf, get_full_html
 import _score_card.regression_components as RegressionComponents
 import _score_card.classification_components as ClassificationComponents
@@ -123,9 +116,15 @@ def validate_and_correct_config(config, insight_data):
     i_data = insight_data.get_raiinsight()
     if "Fairness" in config.keys():
         fc = config["Fairness"]
-        cat_features = [f for f in fc["sensitive_features"] if f in i_data.categorical_features]
-        dropped_features = [f for f in fc["sensitive_features"] if f not in i_data.categorical_features]
-        _logger.warning("Non categorical features in fairness dropped: {}".format(dropped_features))
+        cat_features = [
+            f for f in fc["sensitive_features"] if f in i_data.categorical_features
+        ]
+        dropped_features = [
+            f for f in fc["sensitive_features"] if f not in i_data.categorical_features
+        ]
+        _logger.warning(
+            "Non categorical features in fairness dropped: {}".format(dropped_features)
+        )
         fc["sensitive_features"] = cat_features
     return config
 
@@ -158,17 +157,35 @@ def main(args):
 
     if not args.local:
         run = Run.get_context()
+        run_details = run.get_details()
+        ws = run.experiment.workspace
+        wsid = f"/subscriptions/{ws.subscription_id}/resourceGroups/{ws.resource_group}/providers/Microsoft.MachineLearningServices/workspaces/{ws.name}"
+        dashboard_link = "https://ml.azure.com/model/analysis/{}/{}/?wsid={}".format(
+            dashboard_info[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY],
+            dashboard_info[DashboardInfo.RAI_INSIGHTS_GATHER_RUN_ID_KEY],
+            wsid,
+        )
+
         config["runinfo"] = {
-            "submittedBy": run.get_details()["submittedBy"],
-            "startTimeUtc": run.get_details()["startTimeUtc"],
+            "submittedBy": run_details["submittedBy"],
+            "startTimeUtc": run_details["startTimeUtc"],
+            "dashboard_link": dashboard_link,
+            "model_id": dashboard_info[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY],
+            "dashboard_title": dashboard_info[
+                DashboardInfo.RAI_INSIGHTS_DASHBOARD_TITLE_KEY
+            ],
         }
 
-    if config["Model"]["ModelType"].lower() == "regression":	
-        wf = Workflow(insight_data, config, args, RegressionComponents)	
+    if config["Model"]["ModelType"].lower() == "regression":
+        wf = Workflow(insight_data, config, args, RegressionComponents)
     elif config["Model"]["ModelType"].lower() in ("classification", "multiclass"):
         wf = Workflow(insight_data, config, args, ClassificationComponents)
     else:
-        raise ValueError("Model type {} cannot be matched to a score card generation workflow".format(config["Model"]["ModelType"]))
+        raise ValueError(
+            "Model type {} cannot be matched to a score card generation workflow".format(
+                config["Model"]["ModelType"]
+            )
+        )
 
     wf.generate_pdf()
 
@@ -200,8 +217,10 @@ class Workflow:
             or len(self.raiinsight.list()["error_analysis"]["reports"]) > 0,
             "feature_importance": "FeatureImportance" in self.config
             and self.raiinsight.list()["explainer"]["is_computed"],
-            "fairness": "Fairness" in self.config and len(self.config["Fairness"]["sensitive_features"]) > 0,
-            "causal": "Causal" in self.config and len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
+            "fairness": "Fairness" in self.config
+            and len(self.config["Fairness"]["sensitive_features"]) > 0,
+            "causal": "Causal" in self.config
+            and len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
         }
 
     def generate_pdf(self):
