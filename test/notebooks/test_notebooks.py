@@ -47,18 +47,22 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
 
     current_file_directory = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(
-        os.path.join(current_file_directory, "../..", "examples/notebooks/data")
+        os.path.join(current_file_directory, "../..", "examples/notebooks")
     )
-    input_data_filename = "apartments-train.csv"
+    train_path = 'data-housing-classification/train/'
+    test_path = 'data-housing-classification/test/'
 
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
-        "rai_housing_example_version_string = '4'"
+        "rai_housing_example_version_string = '1'"
     ] = f"rai_housing_example_version_string = '{train_version_string}'"
     replacements[
-        "data_path = 'data/apartments-train.csv'"
-    ] = f'data_path = r"{os.path.join(data_dir, input_data_filename)}"'
+        f"train_data_path = '{train_path}'"
+    ] = f'train_data_path = r"{os.path.join(data_dir, train_path)}"'
+    replacements[
+        f"test_data_path = '{test_path}'"
+    ] = f'test_data_path = r"{os.path.join(data_dir, test_path)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
 
@@ -71,9 +75,10 @@ def test_responsibleaidashboard_housing_improvement(
 
     current_file_directory = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(
-        os.path.join(current_file_directory, "../..", "examples/notebooks/data")
+        os.path.join(current_file_directory, "../..", "examples/notebooks")
     )
-    input_data_filename = "apartments-train.csv"
+    train_path = 'data-housing-regression/train/'
+    test_path = 'data-housing-regression/test/'
 
     version_string = component_config["version"]
     train_version_string = int(time.time())
@@ -81,11 +86,14 @@ def test_responsibleaidashboard_housing_improvement(
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
-        "rai_house_improvement_version_string = '16'"
+        "rai_house_improvement_version_string = '1'"
     ] = f"rai_house_improvement_version_string = '{train_version_string}'"
     replacements[
-        "data_path = 'data/apartments-train.csv'"
-    ] = f'data_path = r"{os.path.join(data_dir, input_data_filename)}"'
+        f"train_data_path = '{train_path}'"
+    ] = f'train_data_path = r"{os.path.join(data_dir, train_path)}"'
+    replacements[
+        f"test_data_path = '{test_path}'"
+    ] = f'test_data_path = r"{os.path.join(data_dir, test_path)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
 
@@ -109,7 +117,7 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
-        "rai_programmer_example_version_string = '5'"
+        "rai_programmer_example_version_string = '1'"
     ] = f"rai_programmer_example_version_string = '{train_version_string}'"
     replacements[
         f"train_data_path = '{train_path}'"
@@ -130,11 +138,24 @@ def test_responsibleaidashboard_diabetes_regression_model_debugging(
     version_string = component_config["version"]
     train_version_string = int(time.time())
 
+    current_file_directory = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(
+        os.path.join(current_file_directory, "../..", "examples/notebooks")
+    )
+    train_path = 'data-diabetes-regression/train/'
+    test_path = 'data-diabetes-regression/test/'
+
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
-        "rai_diabetes_regression_example_version_string = '6'"
+        "rai_diabetes_regression_example_version_string = '1'"
     ] = f"rai_diabetes_regression_example_version_string = '{train_version_string}'"
+    replacements[
+        f"train_data_path = '{train_path}'"
+    ] = f'train_data_path = r"{os.path.join(data_dir, train_path)}"'
+    replacements[
+        f"test_data_path = '{test_path}'"
+    ] = f'test_data_path = r"{os.path.join(data_dir, test_path)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
 
@@ -148,10 +169,23 @@ def test_responsibleaidashboard_diabetes_decision_making(
     version_string = component_config["version"]
     train_version_string = int(time.time())
 
+    current_file_directory = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(
+        os.path.join(current_file_directory, "../..", "examples/notebooks")
+    )
+    train_path = 'data-diabetes-regression/train/'
+    test_path = 'data-diabetes-regression/test/'
+
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
     replacements[
-        "rai_diabetes_decision_making_example_version_string = '8'"
+        "rai_diabetes_decision_making_example_version_string = '1'"
     ] = f"rai_diabetes_decision_making_example_version_string = '{train_version_string}'"
+    replacements[
+        f"train_data_path = '{train_path}'"
+    ] = f'train_data_path = r"{os.path.join(data_dir, train_path)}"'
+    replacements[
+        f"test_data_path = '{test_path}'"
+    ] = f'test_data_path = r"{os.path.join(data_dir, test_path)}"'
 
     assay_one_notebook(nb_name, dict(), replacements)
