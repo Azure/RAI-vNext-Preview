@@ -116,7 +116,13 @@ function Create-EpochWorkspace(
 function Create-ConfigJson(
     $workspace
 ) {
-    $parts = $workspace.storage_account.split('/')
+    if (Get-Member -inputobject $workspace -name "storageAccount" -Membertype Properties) {
+        $parts = $workspace.storageAccount.split('/')
+    }
+    else {
+        $parts = $workspace.storage_account.split('/')
+    }
+
     $sub_id = $parts[2]
     $rg_name = $parts[4]
     Write-Host "Extracted subscription: $sub_id"

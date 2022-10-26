@@ -27,7 +27,7 @@ class TestRAISmoke:
         replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
         process_file(pipeline_file, pipeline_processed_file, replacements)
 
-        pipeline_job = load_job(path=pipeline_processed_file)
+        pipeline_job = load_job(source=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)
 
@@ -39,7 +39,7 @@ class TestRAISmoke:
         replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
         process_file(pipeline_file, pipeline_processed_file, replacements)
 
-        pipeline_job = load_job(path=pipeline_processed_file)
+        pipeline_job = load_job(source=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)
 
@@ -56,7 +56,7 @@ class TestRAISmoke:
         }
         process_file(pipeline_file, pipeline_processed_file, replacements)
 
-        pipeline_job = load_job(path=pipeline_processed_file)
+        pipeline_job = load_job(source=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)
 
