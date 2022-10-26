@@ -1,7 +1,7 @@
 name: cpucluster
 type: amlcompute
 
-size: Standard_DS2_v2
+size: Standard_D2_v2
 
 min_instances: 0
 max_instances: 8
