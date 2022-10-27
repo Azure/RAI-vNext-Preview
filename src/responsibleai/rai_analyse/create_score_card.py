@@ -11,18 +11,29 @@ from azureml.core import Run
 from responsibleai import __version__ as responsibleai_version
 
 from _score_card._rai_insight_data import RaiInsightData, PdfDataGen
-
 from _score_card.common_components import to_pdf, get_full_html
 import _score_card.regression_components as RegressionComponents
 import _score_card.classification_components as ClassificationComponents
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from rai_component_utilities import load_dashboard_info_file
+from _telemetry._loggerfactory import _LoggerFactory, track
 
 threshold_reg = re.compile(r"([<>=]{1,2})([0-9.]+)")
 
+
 _logger = logging.getLogger(__file__)
-logging.basicConfig(level=logging.INFO)
+_ai_logger = None
+
+
+def _get_logger():
+    global _ai_logger
+    if _ai_logger is None:
+        _ai_logger = _LoggerFactory.get_logger(__file__)
+    return _ai_logger
+
+
+_get_logger()
 
 
 def get_parser():
@@ -129,6 +140,7 @@ def validate_and_correct_config(config, insight_data):
     return config
 
 
+@track(_get_logger)
 def main(args):
     dashboard_info = load_dashboard_info_file(args.rai_insights_dashboard)
     _logger.info("Constructor info: {0}".format(dashboard_info))

@@ -500,6 +500,7 @@ class PdfDataGen:
                 filtermap = self.data.get_test()[f] == k
                 cohort_data = self.data.get_cohort_data(filtermap)
                 cohort_data["short_label"] = short_labels[si_index]
+                cohort_data["pos_label"] = self.pos_label
                 si_index += 1
                 fm[f]["statistics"][k] = cohort_data
 

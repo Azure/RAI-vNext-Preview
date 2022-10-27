@@ -1,19 +1,17 @@
-# ---------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# ---------------------------------------------------------
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 import argparse
 import json
 import logging
 import os
 import shutil
-from typing import Any
 
 from azureml.core import Run
 
-from responsibleai import RAIInsights, __version__ as responsibleai_version
+from responsibleai import RAIInsights
 
-from constants import DashboardInfo, PropertyKeyValues
+from constants import DashboardInfo
 from arg_helpers import get_from_args, json_empty_is_none_parser
 from rai_component_utilities import (
     load_dataset,
@@ -23,8 +21,20 @@ from rai_component_utilities import (
     get_test_dataset_id,
 )
 
+from _telemetry._loggerfactory import _LoggerFactory, track
+
 _logger = logging.getLogger(__file__)
-logging.basicConfig(level=logging.INFO)
+_ai_logger = None
+
+
+def _get_logger():
+    global _ai_logger
+    if _ai_logger is None:
+        _ai_logger = _LoggerFactory.get_logger(__file__)
+    return _ai_logger
+
+
+_get_logger()
 
 
 def parse_args():
@@ -43,6 +53,7 @@ def parse_args():
     parser.add_argument("--target_column_name", type=str, required=True)
 
     parser.add_argument("--maximum_rows_for_test_dataset", type=int, default=5000)
+
     parser.add_argument(
         "--categorical_column_names", type=str, help="Optional[List[str]]"
     )
@@ -107,8 +118,8 @@ def copy_input_data(component_input_path: str, output_path: str):
     shutil.copytree(src=src_path, dst=output_path)
 
 
+@track(_get_logger)
 def main(args):
-
     my_run = Run.get_context()
 
     _logger.info("Dealing with initialization dataset")
@@ -173,12 +184,6 @@ def main(args):
 
 # run script
 if __name__ == "__main__":
-    import os
-    import json
-
-    ed = {k: os.environ[k] for k in os.environ}
-
-    print(json.dumps(ed, indent=2, separators=(",", ": ")))
     # add space in logs
     print("*" * 60)
     print("\n\n")
