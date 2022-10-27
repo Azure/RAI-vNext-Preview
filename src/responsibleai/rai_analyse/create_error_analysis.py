@@ -1,6 +1,5 @@
-# ---------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# ---------------------------------------------------------
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 import argparse
 import json
@@ -17,8 +16,20 @@ from rai_component_utilities import (
     copy_dashboard_info_file,
 )
 
+from _telemetry._loggerfactory import _LoggerFactory, track
+
 _logger = logging.getLogger(__file__)
-logging.basicConfig(level=logging.INFO)
+_ai_logger = None
+
+
+def _get_logger():
+    global _ai_logger
+    if _ai_logger is None:
+        _ai_logger = _LoggerFactory.get_logger(__file__)
+    return _ai_logger
+
+
+_get_logger()
 
 
 def parse_args():
@@ -43,6 +54,7 @@ def parse_args():
     return args
 
 
+@track(_get_logger)
 def main(args):
     my_run = Run.get_context()
     # Load the RAI Insights object

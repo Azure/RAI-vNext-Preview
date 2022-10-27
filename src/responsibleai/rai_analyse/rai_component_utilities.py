@@ -1,6 +1,5 @@
-# ---------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# ---------------------------------------------------------
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 import json
 import logging
@@ -16,14 +15,12 @@ import mltable
 import pandas as pd
 
 from typing import Any, Dict, Optional
-from zipfile import Path
 
 from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
-
 
 assetid_re = re.compile(
     r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"
@@ -75,19 +72,17 @@ def load_mlflow_model(
         model = Model._get(workspace, id=model_id)
         mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
         model_uri = "models:/{}/{}".format(model.name, model.version)
-
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
 def load_mltable(mltable_path: str) -> pd.DataFrame:
-    import mltable
-
     _logger.info("Loading MLTable: {0}".format(mltable_path))
     df: pd.DataFrame = None
     try:
         assetid_path = os.path.join(mltable_path, "assetid")
         if os.path.exists(assetid_path):
-            mltable_path = assetid_path
+            with open(assetid_path, "r") as assetid_file:
+                mltable_path = assetid_file.read()
 
         tbl = mltable.load(mltable_path)
         df: pd.DataFrame = tbl.to_pandas_dataframe()
@@ -305,7 +300,7 @@ def get_train_dataset_id(run):
 
 
 def get_test_dataset_id(run):
-    get_dataset_name_version(run, "test_dataset")
+    return get_dataset_name_version(run, "test_dataset")
 
 
 def get_dataset_name_version(run, dataset_input_name):
