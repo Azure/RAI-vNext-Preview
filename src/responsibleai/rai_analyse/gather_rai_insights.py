@@ -23,7 +23,6 @@ from rai_component_utilities import (
     load_dashboard_info_file,
     add_properties_to_gather_run,
     print_dir_tree,
-    copy_dashboard_info_file,
 )
 
 from _telemetry._loggerfactory import _LoggerFactory, track
