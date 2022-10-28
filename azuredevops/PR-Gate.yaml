@@ -18,7 +18,7 @@ parameters:
 - name: workspaceWindowSeconds
   displayName: Workspace Active Window (seconds)
   type: number
-  default: 86000 # Just less than one day
+  default: 432000 # Just less than one day
   # Specifies whether to remove workspaces
   # older than 2*worksapceWindowSeconds
 - name: oldWorkspaceHandling
