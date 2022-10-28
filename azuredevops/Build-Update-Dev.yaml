@@ -18,7 +18,7 @@ parameters:
 - name: workspaceWindowSeconds
   displayName: Workspace Active Window (seconds)
   type: number
-  default: 86000 # Just less than one day
+  default: 432000 # 5 days for trobleshooting
   # Specifies whether to remove workspaces
   # older than 2*worksapceWindowSeconds
 - name: oldWorkspaceHandling
@@ -65,7 +65,7 @@ variables:
   value: WorkspaceConfiguration
 
 pr:
-  - main
+  - current_release
 
 trigger: none # No CI build
 
