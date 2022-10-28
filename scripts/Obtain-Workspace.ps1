@@ -107,8 +107,9 @@ function Create-EpochWorkspace(
 
     ConvertTo-Yaml $ws_data | Out-File -FilePath $workspaceYAML -Encoding ascii
 
-    az group create --location $target_location --name $rg_name --tags "$createdTag=$epoch_secs" --debug
+    $rg = az group create --location $target_location --name $rg_name --tags "$createdTag=$epoch_secs" --debug
     Write-Host "Resource group created"
+    Write-Host $rg
     $ws = az ml workspace create --resource-group $rg_name --file $workspaceYAML | ConvertFrom-Json
     return $ws
 }
@@ -117,9 +118,11 @@ function Create-ConfigJson(
     $workspace
 ) {
     if (Get-Member -inputobject $workspace -name "storageAccount" -Membertype Properties) {
+        Write-Host "Getting storage account via storageAccount."
         $parts = $workspace.storageAccount.split('/')
     }
     else {
+        Write-Host "Getting storage account via storage_account."
         $parts = $workspace.storage_account.split('/')
     }
 
@@ -173,21 +176,21 @@ Write-Host "Creating workspace if one not found"
 Write-Host
 
 $rg_list = Get-RecentResourceGroups -min_epoch ($epoch_secs - $window_seconds) -target_location $location
-if ($rg_list.count -gt 0) {
-    Write-Host "Found $($rg_list.count) suitable resource groups"
-    $target_rg = $rg_list[0].name
+if ($rg_list.count -eq 0) {
+    Write-Host "No recent workspace, creating new one"
+    $_ = Create-EpochWorkspace -epoch_secs $epoch_secs -target_location $location
+}
 
-    $workspace = Get-WorkspaceFromResourceGroup($target_rg)
-}
-else {
-    Write-Host "No recent workspace"
-    $workspace = Create-EpochWorkspace -epoch_secs $epoch_secs -target_location $location
-}
+$rg_list = Get-RecentResourceGroups -min_epoch ($epoch_secs - $window_seconds) -target_location $location
+Write-Host "Found $($rg_list.count) suitable resource groups"
+$target_rg = $rg_list[0].name
+$workspace = Get-WorkspaceFromResourceGroup($target_rg)
+
 
 Write-Host
 Write-Host "Workspace information"
 Write-Host
-Write-Host $workspace
+Write-Host ($workspace | ConvertTo-Json)
 Write-Host
 
 Write-Host
