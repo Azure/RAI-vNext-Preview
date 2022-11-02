@@ -357,11 +357,11 @@ def get_fairlearn_page(data):
         ]
         x_data = [
             100 * (get_metric(
-                "selection_rate",
-                data[c]["y_test"],
-                data[c]["y_pred"]),
-                data[c]["pos_label"]
-            )
+                metric="selection_rate",
+                y_test=data[c]["y_test"],
+                y_pred=data[c]["y_pred"],
+                pos_label=data[c]["pos_label"]
+            ))
             for c in data
         ]
         x_data = [[x, 100 - x] for x in x_data]
