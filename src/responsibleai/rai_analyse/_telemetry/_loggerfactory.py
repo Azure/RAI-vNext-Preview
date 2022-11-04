@@ -19,7 +19,7 @@ from azureml.telemetry.activity import (
 from azureml.telemetry.logging_handler import AppInsightsLoggingHandler
 
 COMPONENT_NAME = "azureml.rai.tabular"
-instrumentation_key = "d4221f27-5e6b-4fb6-95e4-5452f0182a2c"
+instrumentation_key = "8a122f06-112a-4c18-8c2f-711c7fb5780f"
 default_custom_dimensions = {"app_name": "azureml.rai.tabular"}
 
 DEFAULT_ACTIVITY_TYPE = ActivityType.INTERNALCALL
