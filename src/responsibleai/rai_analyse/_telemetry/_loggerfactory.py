@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+import sys
 import logging
 import logging.handlers
 import traceback
@@ -141,7 +142,9 @@ def track(
                             raise
                         al.activity_info["exception_type"] = str(type(e))
                         al.activity_info["stacktrace"] = "\n".join(
-                            _extract_and_filter_stack(e, traceback.extract_stack())
+                            _extract_and_filter_stack(
+                                e, traceback.extract_tb(sys.exc_info()[2])
+                            )
                         )
                         raise
             except Exception:
@@ -164,7 +167,7 @@ def track(
 def _extract_and_filter_stack(e, traces):
     ret = [str(type(e))]
 
-    for trace in traces[:-1]:
+    for trace in traces:
         ret.append(f'File "{trace.filename}", line {trace.lineno} in {trace.name}')
         ret.append(f"  {trace.line}")
     return ret
