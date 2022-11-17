@@ -26,7 +26,7 @@ default_custom_dimensions = {"app_name": "azureml.rai.tabular"}
 
 DEFAULT_ACTIVITY_TYPE = ActivityType.INTERNALCALL
 
-telemetry_enabled = True
+telemetry_enabled = False
 run = Run.get_context()
 
 
@@ -54,7 +54,7 @@ class _LoggerFactory:
     @staticmethod
     def track_python_environment(logger):
         payload = {d.project_name: d.version for d in pkg_resources.working_set}
-        activity_logger = ActivityLoggerAdapter(logger, payload)
+        activity_logger = ActivityLoggerAdapter(logger, {"python_environment": payload})
         activity_logger.info("Logging python environment.")
 
     @staticmethod
