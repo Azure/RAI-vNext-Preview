@@ -9,6 +9,7 @@ import shutil
 import tempfile
 import uuid
 import re
+import subprocess
 
 import mlflow
 import mltable
@@ -64,6 +65,7 @@ def fetch_model_id(model_info_path: str):
 
 def load_mlflow_model(
     workspace: Workspace,
+    use_model_dependency: bool = False,
     model_id: Optional[str] = None,
     model_path: Optional[str] = None,
 ) -> Any:
@@ -72,6 +74,13 @@ def load_mlflow_model(
         model = Model._get(workspace, id=model_id)
         mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
         model_uri = "models:/{}/{}".format(model.name, model.version)
+
+    if use_model_dependency:
+        pip_file = mlflow.pyfunc.get_model_dependencies(model_uri)
+        subprocess.check_call([sys.executable, "-m", "pip",
+                                "install", "-r", pip_file])
+        _logger.info("Successfully installed model dependencies")
+
     return mlflow.pyfunc.load_model(model_uri)._model_impl
 
 
@@ -265,6 +274,8 @@ def add_properties_to_gather_run(
 def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsights:
     _logger.info("Creating RAIInsights from constructor component output")
 
+
+
     _logger.info("Loading data files")
     df_train = load_dataset(os.path.join(port_path, DashboardInfo.TRAIN_FILES_DIR))
     df_test = load_dataset(os.path.join(port_path, DashboardInfo.TEST_FILES_DIR))
@@ -272,11 +283,16 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     _logger.info("Loading config file")
     config = load_dashboard_info_file(port_path)
     constructor_args = config[DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY]
+    _logger.info(f"Constuctor args: {constructor_args}")
 
     _logger.info("Loading model")
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
-    model_estimator = load_mlflow_model(my_run.experiment.workspace, model_id)
+    
+    model_estimator = load_mlflow_model(
+        workspace=my_run.experiment.workspace,
+        use_model_dependency=constructor_args["use_model_dependency"],
+        model_id=model_id)
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
