@@ -97,7 +97,6 @@ def create_constructor_arg_dict(args):
     result["categorical_features"] = cat_col_names
     result["classes"] = class_names
     result["maximum_rows_for_test"] = args.maximum_rows_for_test_dataset
-    result["use_model_dependency"] = args.use_model_dependency
 
     return result
 
@@ -171,6 +170,7 @@ def main(args):
         DashboardInfo.RAI_INSIGHTS_TRAIN_DATASET_ID_KEY: get_train_dataset_id(my_run),
         DashboardInfo.RAI_INSIGHTS_TEST_DATASET_ID_KEY: get_test_dataset_id(my_run),
         DashboardInfo.RAI_INSIGHTS_DASHBOARD_TITLE_KEY: args.title,
+        DashboardInfo.RAI_INSIGHTS_INPUT_ARGS_KEY: vars(args)
     }
     output_file = os.path.join(
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME

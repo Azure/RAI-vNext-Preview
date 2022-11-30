@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+import sys
 import json
 import logging
 import os
@@ -274,8 +275,6 @@ def add_properties_to_gather_run(
 def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsights:
     _logger.info("Creating RAIInsights from constructor component output")
 
-
-
     _logger.info("Loading data files")
     df_train = load_dataset(os.path.join(port_path, DashboardInfo.TRAIN_FILES_DIR))
     df_test = load_dataset(os.path.join(port_path, DashboardInfo.TEST_FILES_DIR))
@@ -286,12 +285,14 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     _logger.info(f"Constuctor args: {constructor_args}")
 
     _logger.info("Loading model")
+    input_args = config[DashboardInfo.RAI_INSIGHTS_INPUT_ARGS_KEY]
+    use_model_dependency = input_args["use_model_dependency"]
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
     
     model_estimator = load_mlflow_model(
         workspace=my_run.experiment.workspace,
-        use_model_dependency=constructor_args["use_model_dependency"],
+        use_model_dependency=use_model_dependency,
         model_id=model_id)
 
     _logger.info("Creating RAIInsights object")
