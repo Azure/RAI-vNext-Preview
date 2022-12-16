@@ -71,9 +71,10 @@ def load_mlflow_model(
     model_path: Optional[str] = None,
 ) -> Any:
     model_uri = model_path
+    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
+
     if model_id:
         model = Model._get(workspace, id=model_id)
-        mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
         model_uri = "models:/{}/{}".format(model.name, model.version)
 
     if use_model_dependency:
