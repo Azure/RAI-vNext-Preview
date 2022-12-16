@@ -16,10 +16,10 @@ RUN pip install 'responsibleai~=0.23.0' \
                 'raiwidgets~=0.23.0' \
                 'pyarrow' \
                 'mlflow' \
-                'azureml-core~=1.47.0' \
-                'azureml-dataset-runtime~=1.47.0' \
-                'azureml-mlflow~=1.47.0' \
-                'azureml-telemetry~=1.47.0' \
+                'azureml-core~=1.48.0' \
+                'azureml-dataset-runtime~=1.48.0' \
+                'azureml-mlflow~=1.48.0' \
+                'azureml-telemetry~=1.48.0' \
                 'pdfkit==1.0.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
