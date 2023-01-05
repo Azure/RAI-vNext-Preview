@@ -9,3 +9,4 @@ scikit-learn<1.1 # See PR #1429 in responsible-ai-toolbox repo
 shap
 responsibleai~=0.23.0
 raiwidgets~=0.23.0
+numpy<1.24.0

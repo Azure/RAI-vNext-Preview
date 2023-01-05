@@ -24,6 +24,7 @@ RUN pip install 'responsibleai~=0.23.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
                 'protobuf<4' \
+                'numpy<1.24.0' \
                 'mltable' \
                 'azureml_dataprep' \
                 'azureml_dataprep_rslex'
