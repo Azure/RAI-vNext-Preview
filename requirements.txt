@@ -9,3 +9,4 @@ jupyter
 pandas
 pyarrow
 shap
+numpy<1.24.0
