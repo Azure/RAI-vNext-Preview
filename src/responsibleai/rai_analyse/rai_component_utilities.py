@@ -40,6 +40,9 @@ _tool_directory_mapping: Dict[str, str] = {
     RAIToolType.EXPLANATION: "explainer",
 }
 
+class UserConfigError(Exception):
+    pass
+
 
 def print_dir_tree(base_dir):
     print("\nBEGIN DIRTREE")
