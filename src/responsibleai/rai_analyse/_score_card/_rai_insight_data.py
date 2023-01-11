@@ -66,6 +66,8 @@ metric_task_map["false_positive"] = "classification"
 metric_func_map["false_negative"] = false_negative
 metric_task_map["false_negative"] = "classification"
 
+metric_func_map["accuracy_score"] = "classification"
+
 
 class ExplainerFiles:
     GLOBAL_IMPORTANCE = "global_importance_values.json"
@@ -293,7 +295,7 @@ class PdfDataGen:
 
     def validate_valid_metric_for_task_type(self):
         for m in self.metrics:
-            if metric_task_map[m].lower() != self.tasktype:
+            if m in metric_task_map and metric_task_map[m].lower() != self.tasktype:
                 raise ValueError(f"Metric {m} is not compatible with specified task type {self.tasktype}")
 
     def get_metric_kwargs(self):
