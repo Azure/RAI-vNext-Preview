@@ -11,7 +11,7 @@ import time
 from azureml.core import Run
 
 import mlflow
-import mlflow.sklearn
+import mlflow.fastai
 
 # Based on example:
 # https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli
@@ -50,7 +50,7 @@ def main(args):
     mlflow.set_experiment(current_experiment.name)
 
     print("Loading model")
-    mlflow_model = mlflow.sklearn.load_model(args.model_input_path)
+    mlflow_model = mlflow.fastai.load_model(args.model_input_path)
 
     if args.model_name_suffix < 0:
         suffix = int(time.time())
@@ -60,8 +60,8 @@ def main(args):
     print(f"Registering model as {registered_name}")
 
     print("Registering via MLFlow")
-    mlflow.sklearn.log_model(
-        sk_model=mlflow_model,
+    mlflow.fastai.log_model(
+        mlflow_model,
         registered_model_name=registered_name,
         artifact_path=registered_name,
     )

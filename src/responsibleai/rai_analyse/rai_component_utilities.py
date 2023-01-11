@@ -118,7 +118,7 @@ def load_mlflow_model(
         _logger.info("Successfully installed model dependencies")
 
     try:
-        model = mlflow.pyfunc.load_model(model_uri)._model_impl
+        model = mlflow.fastai.load_model(model_uri)
         return model
     except Exception as e:
         raise ValueError(

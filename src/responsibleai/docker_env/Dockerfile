@@ -12,7 +12,7 @@ RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
 ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
 
 # Install pip dependencies
-RUN pip install 'responsibleai~=0.24.1' \
+RUN pip install 'https://publictestdatasets.blob.core.windows.net/packages/pypi/responsibleai/responsibleai-0.24.1-py3-none-any.whl' \
                 'raiwidgets~=0.24.1' \
                 'pyarrow' \
                 'mlflow' \
@@ -27,7 +27,10 @@ RUN pip install 'responsibleai~=0.24.1' \
                 'numpy<1.24.0' \
                 'mltable' \
                 'azureml_dataprep' \
-                'azureml_dataprep_rslex'
+                'azureml_dataprep_rslex' \
+                'fastai'
+
+RUN pip install --force-reinstall --no-deps 'https://publictestdatasets.blob.core.windows.net/packages/pypi/ml-wrappers/ml_wrappers-0.4.3-py3-none-any.whl'
 
 RUN pip install --pre azure-ai-ml
 
