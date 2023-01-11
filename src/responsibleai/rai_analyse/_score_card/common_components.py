@@ -32,7 +32,7 @@ def get_full_html(htmlbody):
 def get_css():
     return """<style>
         * {
-          font-family: Segoe UI;
+          font-family: Ubuntu;
         }
 
         .header {
