@@ -66,7 +66,7 @@ metric_task_map["false_positive"] = "classification"
 metric_func_map["false_negative"] = false_negative
 metric_task_map["false_negative"] = "classification"
 
-metric_func_map["accuracy_score"] = "classification"
+metric_task_map["accuracy_score"] = "classification"
 
 
 class ExplainerFiles:
