@@ -12,7 +12,7 @@ from azureml.core import Run
 from responsibleai import RAIInsights
 
 from constants import DashboardInfo
-from arg_helpers import get_from_args, json_empty_is_none_parser
+from arg_helpers import boolean_parser, get_from_args, json_empty_is_none_parser
 from rai_component_utilities import (
     load_dataset,
     fetch_model_id,
@@ -67,7 +67,7 @@ def parse_args():
 
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
 
-    parser.add_argument("--use_model_dependency", type=bool, help="Use model dependency")
+    parser.add_argument("--use_model_dependency", type=boolean_parser, help="Use model dependency")
 
     parser.add_argument("--output_path", type=str, help="Path to output JSON")
 
