@@ -67,6 +67,8 @@ def parse_args():
 
     parser.add_argument("--classes", type=str, help="Optional[List[str]]")
 
+    parser.add_argument("--feature_metadata", type=str, help="identity_feature_name:Optional[str], dropped_features:Optional[List[str]]")
+
     parser.add_argument("--use_model_dependency", type=boolean_parser, help="Use model dependency")
 
     parser.add_argument("--output_path", type=str, help="Path to output JSON")
@@ -89,6 +91,9 @@ def create_constructor_arg_dict(args):
     cat_col_names = get_from_args(
         args, "categorical_column_names", custom_parser=json.loads, allow_none=True
     )
+    feature_metadata = get_from_args(
+        args, "feature_metadata", custom_parser=json.loads, allow_none=True
+    )
     class_names = get_from_args(
         args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
     )
@@ -97,6 +102,7 @@ def create_constructor_arg_dict(args):
     result["task_type"] = args.task_type
     result["categorical_features"] = cat_col_names
     result["classes"] = class_names
+    result["feature_metadata"] = feature_metadata
     result["maximum_rows_for_test"] = args.maximum_rows_for_test_dataset
 
     return result
