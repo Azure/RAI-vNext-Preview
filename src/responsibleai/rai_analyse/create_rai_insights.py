@@ -106,7 +106,7 @@ def create_constructor_arg_dict(args):
     result["task_type"] = args.task_type
     result["categorical_features"] = cat_col_names
     result["classes"] = class_names
-    result["feature_metadata"] = feature_metadata
+    result["feature_metadata"] = feature_metadata.__dict__
     result["maximum_rows_for_test"] = args.maximum_rows_for_test_dataset
 
     return result
