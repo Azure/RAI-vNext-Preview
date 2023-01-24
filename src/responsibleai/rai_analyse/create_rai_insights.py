@@ -10,6 +10,7 @@ import shutil
 from azureml.core import Run
 
 from responsibleai import RAIInsights
+from responsibleai.feature_metadata import FeatureMetadata
 
 from constants import DashboardInfo
 from arg_helpers import boolean_parser, get_from_args, json_empty_is_none_parser
@@ -91,12 +92,15 @@ def create_constructor_arg_dict(args):
     cat_col_names = get_from_args(
         args, "categorical_column_names", custom_parser=json.loads, allow_none=True
     )
-    feature_metadata = get_from_args(
-        args, "feature_metadata", custom_parser=json.loads, allow_none=True
-    )
     class_names = get_from_args(
         args, "classes", custom_parser=json_empty_is_none_parser, allow_none=True
     )
+    feature_metadata_dict = get_from_args(
+        args, "feature_metadata", custom_parser=json.loads, allow_none=True
+    )
+    feature_metadata = FeatureMetadata()
+    if 'dropped_features' in feature_metadata_dict.keys():
+        feature_metadata.dropped_features=feature_metadata_dict['dropped_features']
 
     result["target_column"] = args.target_column_name
     result["task_type"] = args.task_type
