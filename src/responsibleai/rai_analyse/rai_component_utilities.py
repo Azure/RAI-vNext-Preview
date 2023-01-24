@@ -328,3 +328,21 @@ def get_dataset_name_version(run, dataset_input_name):
     aid = get_run_input_assets(run)[dataset_input_name]["asset"]["assetId"]
     ainfo = get_asset_information(aid)
     return f'{ainfo["assetname"]}:{ainfo["assetversion"]}'
+
+
+def feature_metadata_to_dict(feature_metadata):
+    if  isinstance(feature_metadata, FeatureMetadata): 
+        ret = feature_metadata.__dict__
+        type_name = type(feature_metadata).__name__
+        ret[data_type] = type_name
+        return ret
+    else:
+        return
+
+
+def dict_to_feature_metadata(dict):
+    if data_type in dict and dict[data_type] == FeatureMetadata.__name__:
+        del dict[data_type]
+        return FeatureMetadata(**dict)
+    else:
+        return dict
