@@ -21,12 +21,14 @@ from typing import Any, Dict, Optional
 from azureml.core import Model, Run, Workspace
 
 from responsibleai import RAIInsights, __version__ as responsibleai_version
+from responsibleai.feature_metadata import FeatureMetadata
 
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 
 assetid_re = re.compile(
     r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"
 )
+data_type = "data_type"
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
