@@ -11,7 +11,6 @@ from azureml.core import Run
 
 from responsibleai import RAIInsights
 from responsibleai.feature_metadata import FeatureMetadata
-from responsibleai.serialization_utilities import serialize_json_safe
 
 from constants import DashboardInfo
 from arg_helpers import boolean_parser, get_from_args, json_empty_is_none_parser
