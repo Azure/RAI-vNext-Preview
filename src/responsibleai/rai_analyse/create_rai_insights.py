@@ -17,6 +17,7 @@ from constants import DashboardInfo
 from arg_helpers import boolean_parser, get_from_args, json_empty_is_none_parser
 from rai_component_utilities import (
     load_dataset,
+    feature_metadata_to_dict,
     fetch_model_id,
     load_mlflow_model,
     get_train_dataset_id,
@@ -188,7 +189,7 @@ def main(args):
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
     )
     with open(output_file, "w") as of:
-        json.dump(serialize_json_safe(output_dict), of)
+        json.dump(output_dict, of, default=feature_metadata_to_dict)
 
     _logger.info("Copying train data files")
     copy_input_data(
