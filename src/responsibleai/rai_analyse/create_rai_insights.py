@@ -188,7 +188,7 @@ def main(args):
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
     )
     with open(output_file, "w") as of:
-        json.dump(output_dict, of)
+        json.dump(serialize_json_safe(output_dict), of)
 
     _logger.info("Copying train data files")
     copy_input_data(
