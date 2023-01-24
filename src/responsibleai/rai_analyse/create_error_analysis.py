@@ -14,6 +14,8 @@ from rai_component_utilities import (
     create_rai_insights_from_port_path,
     save_to_output_port,
     copy_dashboard_info_file,
+    feature_metadata_to_dict,
+    dict_to_feature_metadata,
 )
 
 from _telemetry._loggerfactory import _LoggerFactory, track
@@ -57,9 +59,13 @@ def parse_args():
 @track(_get_logger)
 def main(args):
     my_run = Run.get_context()
+    # Load rai insights dashboard data
+    rai_dashboard_data_dict = json.dumps(args.rai_insights_dashboard, default=feature_metadata_to_dict)
+    rai_dashboard_data = json.loads(rai_dashboard_data_dict, object_hook=dict_to_feature_metadata)
+
     # Load the RAI Insights object
     rai_i: RAIInsights = create_rai_insights_from_port_path(
-        my_run, args.rai_insights_dashboard
+        my_run, rai_dashboard_data
     )
 
     # Add the error analysis
