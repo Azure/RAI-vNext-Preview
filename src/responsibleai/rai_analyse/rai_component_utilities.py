@@ -131,7 +131,7 @@ def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
         input_port_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
     )
     with open(rai_insights_dashboard_file, "r") as si:
-        dashboard_info = json.load(si)
+        dashboard_info = json.loads(si, object_hook=dict_to_feature_metadata)
     _logger.info("rai_insights_parent info: {0}".format(dashboard_info))
     return dashboard_info
 
