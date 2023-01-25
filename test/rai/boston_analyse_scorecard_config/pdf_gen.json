@@ -21,6 +21,7 @@
       "DIS"
     ]
   },
+  "Causal": {},
   "Cohorts": [
     "High Tax",
     "Low Tax"
