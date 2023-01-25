@@ -47,6 +47,7 @@ jobs:
       test_dataset: ${{parent.inputs.my_test_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
       categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+      feature_metadata: '{\"dropped_features\":[\"education-num\"]}'
 
   explain_01:
     type: command
