@@ -157,7 +157,7 @@ def load_dashboard_info_file(input_port_path: str) -> Dict[str, str]:
         input_port_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
     )
     with open(rai_insights_dashboard_file, "r") as si:
-        dashboard_info = json.load(si, object_hook=dict_to_feature_metadata)
+        dashboard_info = json.load(si, object_hook=default_object_hook)
     _logger.info("rai_insights_parent info: {0}".format(dashboard_info))
     return dashboard_info
 
@@ -358,16 +358,16 @@ def get_dataset_name_version(run, dataset_input_name):
     return f'{ainfo["assetname"]}:{ainfo["assetversion"]}'
 
 
-def feature_metadata_to_dict(feature_metadata):
-    if  isinstance(feature_metadata, FeatureMetadata): 
-        meta_dict = feature_metadata.__dict__
-        type_name = type(feature_metadata).__name__
+def default_json_handler(data):
+    if  isinstance(data, FeatureMetadata): 
+        meta_dict = data.__dict__
+        type_name = type(data).__name__
         meta_dict[data_type] = type_name
         return meta_dict
     return None
 
 
-def dict_to_feature_metadata(dict):
+def default_object_hook(dict):
     if data_type in dict and dict[data_type] == FeatureMetadata.__name__:
         del dict[data_type]
         return FeatureMetadata(**dict)
