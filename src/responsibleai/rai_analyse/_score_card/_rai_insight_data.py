@@ -93,7 +93,7 @@ class RaiInsightData:
         if self.raiinsight._feature_metadata is not None\
                 and self.raiinsight._feature_metadata.dropped_features is not None:
             test_data = self.raiinsight.test.drop(
-                columns=self.raiinsight._feature_metadata.dropped_features)
+                self.raiinsight._feature_metadata.dropped_features, axis=1)
         self.y_pred = self.raiinsight.model.predict(test_data)
 
     def _set_component_paths_prefix(self):
