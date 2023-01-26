@@ -791,23 +791,23 @@ def get_causal_page(data):
             )
         )
 
-        ct = p["Current treatment"]
-        et = p["Effect of treatment"]
+        def causal_policies_map_to_table(p):
+            ct = p["Current treatment"]
+            et = p["Effect of treatment"]
 
-        ct = round(ct, 2) if isinstance(ct, (int, float)) else ct
-        et = round(et, 2) if isinstance(et, (int, float)) else et
+            ct = round(ct, 2) if isinstance(ct, (int, float)) else ct
+            et = round(et, 2) if isinstance(et, (int, float)) else et
+
+            return [
+                p["index"],
+                ct,
+                p["Treatment"],
+                et,
+            ]
 
         main_elems.append(
             get_table(
-                [
-                    [
-                        p["index"],
-                        ct,
-                        p["Treatment"],
-                        et,
-                    ]
-                    for p in data["top_local_policies"][f["feature"]]
-                ]
+                list(map(causal_policies_map_to_table, data["top_local_policies"][f["feature"]]))
             )
         )
 
