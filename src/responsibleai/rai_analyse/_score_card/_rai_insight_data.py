@@ -92,7 +92,7 @@ class RaiInsightData:
         test_data = self.raiinsight.test.drop(columns=self.raiinsight.target_column)
         if self.raiinsight._feature_metadata is not None\
                 and self.raiinsight._feature_metadata.dropped_features is not None:
-            test_data = self.raiinsight.test.drop(
+            test_data = test_data.drop(
                 self.raiinsight._feature_metadata.dropped_features, axis=1)
         self.y_pred = self.raiinsight.model.predict(test_data)
 
