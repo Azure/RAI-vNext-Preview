@@ -34,7 +34,7 @@ inputs:
     type: string # Optional[List[str]]
     default: '[]'
   feature_metadata:
-    type: string
+    type: string # Optional[Dict[str, Union[str | List[str]]]]
     default: '{}'
   use_model_dependency:
     type: boolean
