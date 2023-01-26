@@ -16,7 +16,7 @@ from constants import DashboardInfo
 from arg_helpers import boolean_parser, get_from_args, json_empty_is_none_parser
 from rai_component_utilities import (
     load_dataset,
-    feature_metadata_to_dict,
+    default_json_handler,
     fetch_model_id,
     load_mlflow_model,
     get_train_dataset_id,
@@ -102,6 +102,8 @@ def create_constructor_arg_dict(args):
     feature_metadata = FeatureMetadata()
     if 'dropped_features' in feature_metadata_dict.keys():
         feature_metadata.dropped_features=feature_metadata_dict['dropped_features']
+    if 'identity_feature_name' in feature_metadata_dict.keys():
+        feature_metadata.identity_feature_name=feature_metadata_dict['identity_feature_name']
 
     result["target_column"] = args.target_column_name
     result["task_type"] = args.task_type
@@ -188,7 +190,7 @@ def main(args):
         args.output_path, DashboardInfo.RAI_INSIGHTS_PARENT_FILENAME
     )
     with open(output_file, "w") as of:
-        json.dump(output_dict, of, default=feature_metadata_to_dict)
+        json.dump(output_dict, of, default=default_json_handler)
 
     _logger.info("Copying train data files")
     copy_input_data(
