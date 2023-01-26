@@ -33,6 +33,9 @@ inputs:
   classes:
     type: string # Optional[List[str]]
     default: '[]'
+  feature_metadata:
+    type: string # Optional[Dict[str, Union[str | List[str]]]]
+    default: '{}'
   use_model_dependency:
     type: boolean
     default: False
@@ -54,5 +57,6 @@ command: >-
   --maximum_rows_for_test_dataset ${{inputs.maximum_rows_for_test_dataset}}
   --categorical_column_names '${{inputs.categorical_column_names}}'
   --classes '${{inputs.classes}}'
+  --feature_metadata '${{inputs.feature_metadata}}'
   --use_model_dependency ${{inputs.use_model_dependency}}
   --output_path ${{outputs.rai_insights_dashboard}}

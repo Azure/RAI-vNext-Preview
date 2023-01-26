@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20221010.v1
 
 RUN apt-get -y update && apt-get -y install wkhtmltopdf
 
-ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/responsibleai-0.23
+ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/responsibleai-0.24
 
 # Create conda environment
 RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
@@ -12,8 +12,8 @@ RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
 ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
 
 # Install pip dependencies
-RUN pip install 'responsibleai~=0.23.0' \
-                'raiwidgets~=0.23.0' \
+RUN pip install 'responsibleai~=0.24.1' \
+                'raiwidgets~=0.24.1' \
                 'pyarrow' \
                 'mlflow' \
                 'azureml-core~=1.48.0' \
