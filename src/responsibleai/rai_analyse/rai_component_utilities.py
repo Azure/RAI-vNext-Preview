@@ -42,6 +42,7 @@ _tool_directory_mapping: Dict[str, str] = {
     RAIToolType.EXPLANATION: "explainer",
 }
 
+
 class UserConfigError(Exception):
     pass
 
@@ -82,23 +83,37 @@ def load_mlflow_model(
         try:
             model = Model._get(workspace, id=model_id)
         except Exception as e:
-            raise UserConfigError("Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(model_id, workspace.name, e))
+            raise UserConfigError(
+                "Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(
+                    model_id, workspace.name, e
+                )
+            )
         model_uri = "models:/{}/{}".format(model.name, model.version)
 
     if use_model_dependency:
         try:
             pip_file = mlflow.pyfunc.get_model_dependencies(model_uri)
         except Exception as e:
-            raise ValueError("Failed to get model dependency from given model {}, error:\n{}".format(model_uri, e))
+            raise ValueError(
+                "Failed to get model dependency from given model {}, error:\n{}".format(
+                    model_uri, e
+                )
+            )
         try:
-            subprocess.check_output([sys.executable, "-m", "pip",
-                                    "install", "-r", pip_file])
+            subprocess.check_output(
+                [sys.executable, "-m", "pip", "install", "-r", pip_file]
+            )
         except subprocess.CalledProcessError as e:
-            _logger.error("Installing dependency using requriments.txt from mlflow model failed: {}".format(e.output))
+            _logger.error(
+                "Installing dependency using requriments.txt from mlflow model failed: {}".format(
+                    e.output
+                )
+            )
             _classify_and_log_pip_install_error(e.output)
-            raise UserConfigError("Installing dependency using requirments.txt from mlflow model failed. "
-            "This behavior can be turned off with setting use_model_dependency to False in job spec. "
-            "You may also check error log above to manually resolve package conflict error"
+            raise UserConfigError(
+                "Installing dependency using requirments.txt from mlflow model failed. "
+                "This behavior can be turned off with setting use_model_dependency to False in job spec. "
+                "You may also check error log above to manually resolve package conflict error"
             )
         _logger.info("Successfully installed model dependencies")
 
@@ -106,7 +121,11 @@ def load_mlflow_model(
         model = mlflow.pyfunc.load_model(model_uri)._model_impl
         return model
     except Exception as e:
-        raise ValueError("Unable to load mlflow model from {} in current environment due to error:\n{}".format(model_uri, e))
+        raise ValueError(
+            "Unable to load mlflow model from {} in current environment due to error:\n{}".format(
+                model_uri, e
+            )
+        )
 
 
 def _classify_and_log_pip_install_error(elog):
@@ -152,8 +171,10 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
         df = load_mltable(dataset_path)
         isLoadSuccessful = True
     except Exception as e:
-        new_e = UserConfigError(f"Input dataset {dataset_path} cannot be read as mltable."
-        f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}")
+        new_e = UserConfigError(
+            f"Input dataset {dataset_path} cannot be read as mltable."
+            f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}"
+        )
         exceptions.append(new_e)
 
     if not isLoadSuccessful:
@@ -161,13 +182,17 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
             df = load_parquet(dataset_path)
             isLoadSuccessful = True
         except Exception as e:
-            new_e = UserConfigError(f"Input dataset {dataset_path} cannot be read as parquet."
-            f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}")
+            new_e = UserConfigError(
+                f"Input dataset {dataset_path} cannot be read as parquet."
+                f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}"
+            )
             exceptions.append(new_e)
 
     if not isLoadSuccessful:
-        raise UserConfigError(f"Input dataset {dataset_path} cannot be read as MLTable or Parquet dataset."
-        f"Please check that input dataset is valid. Exceptions encountered during reading: {exceptions}")
+        raise UserConfigError(
+            f"Input dataset {dataset_path} cannot be read as MLTable or Parquet dataset."
+            f"Please check that input dataset is valid. Exceptions encountered during reading: {exceptions}"
+        )
 
     print(df.dtypes)
     print(df.head(10))
@@ -344,11 +369,12 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     use_model_dependency = input_args["use_model_dependency"]
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
-    
+
     model_estimator = load_mlflow_model(
         workspace=my_run.experiment.workspace,
         use_model_dependency=use_model_dependency,
-        model_id=model_id)
+        model_id=model_id,
+    )
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
@@ -382,7 +408,7 @@ def get_dataset_name_version(run, dataset_input_name):
 
 
 def default_json_handler(data):
-    if  isinstance(data, FeatureMetadata): 
+    if isinstance(data, FeatureMetadata):
         meta_dict = data.__dict__
         type_name = type(data).__name__
         meta_dict[data_type] = type_name
