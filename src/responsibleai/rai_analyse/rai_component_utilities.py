@@ -118,8 +118,7 @@ def _classify_and_log_pip_install_error(elog):
 
 
 def load_mltable(mltable_path: str) -> pd.DataFrame:
-    _logger.info("Loading MLTable: {0}".format(mltable_path))
-    df: pd.DataFrame = None
+    _logger.info(f"Attempting to load {mltable_path} as MLTable")
     try:
         assetid_path = os.path.join(mltable_path, "assetid")
         if os.path.exists(assetid_path):
@@ -129,22 +128,46 @@ def load_mltable(mltable_path: str) -> pd.DataFrame:
         tbl = mltable.load(mltable_path)
         df: pd.DataFrame = tbl.to_pandas_dataframe()
     except Exception as e:
-        _logger.info("Failed to load MLTable")
-        _logger.info(e)
+        _logger.info(f"Failed to load {mltable_path} as MLTable. ")
+        raise e
     return df
 
 
 def load_parquet(parquet_path: str) -> pd.DataFrame:
-    _logger.info("Loading parquet file: {0}".format(parquet_path))
-    df = pd.read_parquet(parquet_path)
+    _logger.info(f"Attempting to load {parquet_path} as parquet dataset")
+    try:
+        df = pd.read_parquet(parquet_path)
+    except Exception as e:
+        _logger.info(f"Failed to load {mltable_path} as MLTable. ")
+        raise e
     return df
 
 
 def load_dataset(dataset_path: str) -> pd.DataFrame:
     _logger.info(f"Attempting to load: {dataset_path}")
-    df = load_mltable(dataset_path)
-    if df is None:
-        df = load_parquet(dataset_path)
+    exceptions = []
+    isLoadSuccessful = False
+
+    try:
+        df = load_mltable(dataset_path)
+        isLoadSuccessful = True
+    except Exception as e:
+        new_e = UserConfigError(f"Input dataset {dataset_path} cannot be read as mltable."
+        f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}")
+        exceptions.append(new_e)
+
+    if not isLoadSuccessful:
+        try:
+            df = load_parquet(dataset_path)
+            isLoadSuccessful = True
+        except Exception as e:
+            new_e = UserConfigError(f"Input dataset {dataset_path} cannot be read as parquet."
+            f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}")
+            exceptions.append(new_e)
+
+    if not isLoadSuccessful:
+        raise UserConfigError(f"Input dataset {dataset_path} cannot be read as MLTable or Parquet dataset."
+        f"Please check that input dataset is valid. Exceptions encountered during reading: {exceptions}")
 
     print(df.dtypes)
     print(df.head(10))
