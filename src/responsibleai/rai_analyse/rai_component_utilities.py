@@ -25,6 +25,8 @@ from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
+from ml_wrappers import wrap_model
+
 
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
@@ -91,6 +93,8 @@ def fetch_model_id(model_info_path: str):
 
 def load_mlflow_model(
     workspace: Workspace,
+    dataset_samples: Dataset,
+    task: str,
     use_model_dependency: bool = False,
     model_id: Optional[str] = None,
     model_path: Optional[str] = None,
@@ -108,6 +112,11 @@ def load_mlflow_model(
                 ), e
             )
         model_uri = "models:/{}/{}".format(model.name, model.version)
+
+    if model_uri is None:
+        raise UserConfigError(
+            "Model input is None because neither model id nor model path is provided."
+        )
 
     if use_model_dependency:
         try:
@@ -156,7 +165,8 @@ def load_mlflow_model(
 
     try:
         model = mlflow.pyfunc.load_model(model_uri)._model_impl
-        return model
+        wrapped_model = wrap_model(model, dataset_samples, task)
+        return wrapped_model
     except Exception as e:
         raise UserConfigError(
             "Unable to load mlflow model from {} in current environment due to error:\n{}".format(

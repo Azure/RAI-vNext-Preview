@@ -21,6 +21,8 @@ RUN pip install 'responsibleai~=0.29.0' \
                 'itsdangerous==2.0.1' \
                 'mlflow' \
                 'scikit-learn<1.1' \
+                'tensorflow' \
+                'torch' \
                 'pdfkit==1.0.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
@@ -28,6 +30,7 @@ RUN pip install 'responsibleai~=0.29.0' \
                 'mltable==1.4.1' \
                 'responsibleai-tabular-automl==0.6.0' \
                 'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.5.0-py3-none-any.whl'
+
 
 RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
 
