@@ -42,6 +42,19 @@ class TestRAISmoke:
         pipeline_job = load_job(source=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)
+    
+    def test_wrong_features_boston_pipeline_from_yaml(self, ml_client, component_config):
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = current_dir / "pipeline_wrong_features_boston_analyse.yaml"
+        pipeline_processed_file = "pipeline_warong_features_boston_analyse.processed.yaml"
+
+        replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
+        process_file(pipeline_file, pipeline_processed_file, replacements)
+
+        pipeline_job = load_job(source=pipeline_processed_file)
+
+        job = submit_and_wait(ml_client, pipeline_job, expected_state="Failed")
+        print(job.properties.error)
 
     def test_cli_example_sample_yaml(self, ml_client, component_config):
         current_dir = pathlib.Path(__file__).parent.absolute()

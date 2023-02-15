@@ -1,0 +1,18 @@
+{
+  "Model": {
+    "ModelName": "Boston Analyze",
+    "ModelType": "Regression",
+    "ModelSummary": "This is a regression model for boston analyze"
+  },
+  "Metrics": {
+    "mean_squared_error": {}
+  },
+  "DataExplorer": {
+    "features": [
+      "TAX",
+      "AGE_WRONG",
+      "CRIM",
+      "DIS"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+experiment_name: AML_RAI_Boston_VERSION_REPLACEMENT_STRING
+type: pipeline
+
+inputs:
+  target_column_name: 'y'
+  my_training_data:
+    type: uri_file
+    path: azureml:boston_train_pq:VERSION_REPLACEMENT_STRING
+    mode: download
+  my_test_data:
+    type: uri_file
+    path: azureml:boston_test_pq:VERSION_REPLACEMENT_STRING
+    mode: download
+
+compute: azureml:cpucluster
+
+jobs:
+  train_model_job:
+    type: command
+    component: azureml:train_boston_for_rai:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      training_data: ${{parent.inputs.my_training_data}}
+      target_column_name: ${{parent.inputs.target_column_name}}
+      categorical_features: '[]'
+      continuous_features: '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]'
+
+  register_model_job:
+    type: command
+    component: azureml:register_model:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      model_input_path: ${{parent.jobs.train_model_job.outputs.model_output}}
+      model_base_name: component_registered_boston_01
+
+  create_rai_job:
+    type: command
+    component: azureml:rai_insights_constructor:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      title: Boston Housing Analysis
+      task_type: regression
+      model_info_path: ${{parent.jobs.register_model_job.outputs.model_info_output_path}}
+      train_dataset: ${{parent.inputs.my_training_data}}
+      test_dataset: ${{parent.inputs.my_test_data}}
+      target_column_name: ${{parent.inputs.target_column_name}}
+      categorical_column_names: '[]'
+  
+  gather_01:
+    type: command
+    component: azureml:rai_insights_gather:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      constructor: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+
+  scorecard_01:
+     type: command
+     component: azureml:rai_score_card:VERSION_REPLACEMENT_STRING
+     inputs:
+       dashboard: ${{parent.jobs.gather_01.outputs.dashboard}}
+       pdf_generation_config:
+         type: uri_file
+         path: ./test/rai/boston_analyse_scorecard_config/wrong_features_pdf_gen.json
+         mode: download
