@@ -1,0 +1,16 @@
+{
+  "Model": {
+    "ModelName": "Adult Analyze",
+    "ModelType": "Classification",
+    "ModelSummary": "This is a classification model for adult analyze"
+  },
+  "Metrics": {
+    "accuracy_score": {}
+  },
+  "DataExplorer": {
+    "features": [
+      "Occupation",
+      "Country"
+    ]
+  }
+}
