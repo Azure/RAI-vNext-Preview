@@ -2,7 +2,6 @@
 # Licensed under the MIT License.
 
 import os
-from ..rai_component_utilities import UserConfigError
 import pandas as pd
 import json
 import sklearn.metrics as skm
@@ -14,6 +13,10 @@ from erroranalysis._internal.cohort_filter import filter_from_cohort
 from fairlearn.metrics import selection_rate, MetricFrame
 from responsibleai import RAIInsights
 from datetime import datetime
+
+
+class UserConfigError(Exception):
+    pass
 
 
 def false_positive(y_test, y_pred, labels):
@@ -412,7 +415,7 @@ class PdfDataGen:
 
         for feature in self.config["DataExplorer"]["features"]:
 
-            if feature not in self.data.get_raiinsight().feature_names:
+            if feature not in self.data.get_raiinsight().error_analysis._analyzer.feature_names:
                 raise UserConfigError(
                     f"Feature {feature} not found in the dataset. "
                     "Please check the feature names specified for 'DataExplorer'."

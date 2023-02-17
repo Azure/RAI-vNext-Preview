@@ -365,6 +365,8 @@ MigrationBackup/
 # processed files
 **/*.processed
 **/*.processed.yaml
+**/*.output.ipynb
+**/*.processed.ipynb
 
 # parquet data files
 **/*.parquet
