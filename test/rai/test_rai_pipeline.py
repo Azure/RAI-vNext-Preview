@@ -65,6 +65,7 @@ class TestRAISmoke:
                     f"Feature AGE_WRONG not found in the dataset. "
                     "Please check the feature names specified for 'DataExplorer'."
                     ) in log_msg
+                break
         else:
             # scorecard_01 child run not found
             pytest.xfail("scorecard_01 child run not found (but should be present).")
