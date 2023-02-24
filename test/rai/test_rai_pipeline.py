@@ -4,6 +4,7 @@
 
 import logging
 import pathlib
+import pytest
 import tempfile
 import uuid
 
@@ -42,6 +43,32 @@ class TestRAISmoke:
         pipeline_job = load_job(source=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)
+    
+    def test_wrong_features_boston_pipeline_from_yaml(self, ml_client, component_config):
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = current_dir / "pipeline_wrong_features_boston_analyse.yaml"
+        pipeline_processed_file = "pipeline_warong_features_boston_analyse.processed.yaml"
+
+        replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
+        process_file(pipeline_file, pipeline_processed_file, replacements)
+        
+        pipeline_job = load_job(source=pipeline_processed_file)
+
+        job = submit_and_wait(ml_client, pipeline_job, expected_state="Failed")
+
+        for child_run in ml_client.jobs.list(parent_job_name=job.name):
+            if child_run.display_name == "scorecard_01":
+                ml_client.jobs.download(child_run.name, all=True)
+                with open('artifacts/user_logs/std_log.txt', 'r') as f:
+                    log_msg = f.read()
+                assert (
+                    f"Feature AGE_WRONG not found in the dataset. "
+                    "Please check the feature names specified for 'DataExplorer'."
+                    ) in log_msg
+                break
+        else:
+            # scorecard_01 child run not found
+            pytest.xfail("scorecard_01 child run not found (but should be present).")
 
     def test_cli_example_sample_yaml(self, ml_client, component_config):
         current_dir = pathlib.Path(__file__).parent.absolute()
