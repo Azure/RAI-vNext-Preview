@@ -144,7 +144,7 @@ class RaiInsightData:
     def get_filtered_dataset(self, cohort):
         filtered_dataset = self.filter_from_cohort(cohort)
         model = self.raiinsight.model
-        features = self._get_feature_names()
+        features = self.raiinsight.error_analysis._analyzer.feature_names
         return {
             "filtered_dataset": filtered_dataset,
             "y_pred": model.predict(filtered_dataset[features]),
