@@ -13,10 +13,7 @@ from erroranalysis._internal.cohort_filter import filter_from_cohort
 from fairlearn.metrics import selection_rate, MetricFrame
 from responsibleai import RAIInsights
 from datetime import datetime
-
-
-class UserConfigError(Exception):
-    pass
+from raiutils.exceptions import UserConfigValidationException
 
 
 def false_positive(y_test, y_pred, labels):
@@ -147,7 +144,7 @@ class RaiInsightData:
     def get_filtered_dataset(self, cohort):
         filtered_dataset = self.filter_from_cohort(cohort)
         model = self.raiinsight.model
-        features = self.raiinsight.error_analysis._analyzer.feature_names
+        features = self._get_feature_names()
         return {
             "filtered_dataset": filtered_dataset,
             "y_pred": model.predict(filtered_dataset[features]),
@@ -310,6 +307,10 @@ class PdfDataGen:
         if self.is_multiclass:
             self.pos_label = str(self.data._classes[0])
             self.classes = [self.other_class, self.pos_label]
+    
+    def _get_feature_names(self):
+        return [f for f in self.data.get_raiinsight().test.columns
+                if f not in [self.data.get_raiinsight().target_column]]
 
     def validate_valid_metric_for_task_type(self):
         for metric in self.metrics:
@@ -412,11 +413,10 @@ class PdfDataGen:
         y_test = self.data.get_y_test()
         y_predict = self.data.get_y_pred()
 
-
         for feature in self.config["DataExplorer"]["features"]:
 
-            if feature not in self.data.get_raiinsight().error_analysis._analyzer.feature_names:
-                raise UserConfigError(
+            if feature not in self._get_feature_names():
+                raise UserConfigValidationException(
                     f"Feature {feature} not found in the dataset. "
                     "Please check the feature names specified for 'DataExplorer'."
                 )
