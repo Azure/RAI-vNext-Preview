@@ -176,7 +176,7 @@ class RaiInsightData:
         # them to the metric function directly rather than passing them into
         # the MetricFrame constructor via sample_params.
         def metric_func(y_test, y_pred):
-            return get_metric(metric_name)(y_test, y_pred, **params)
+            return get_metric(metric_name, y_test, y_pred, **params)
         grouped_metric = MetricFrame(
             metrics=metric_func,
             y_true=self.get_y_test(),
