@@ -361,3 +361,12 @@ MigrationBackup/
 
 # VS Code ignore
 .vscode/settings.json
+
+# processed files
+**/*.processed
+**/*.processed.yaml
+**/*.output.ipynb
+**/*.processed.ipynb
+
+# parquet data files
+**/*.parquet
