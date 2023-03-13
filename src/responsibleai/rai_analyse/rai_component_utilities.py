@@ -20,6 +20,7 @@ from typing import Any, Dict, Optional
 
 from azureml.core import Model, Run, Workspace
 
+from raiutils.exceptions import UserConfigValidationException
 from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.feature_metadata import FeatureMetadata
 
@@ -83,7 +84,7 @@ def load_mlflow_model(
         try:
             model = Model._get(workspace, id=model_id)
         except Exception as e:
-            raise UserConfigError(
+            raise UserConfigValidationException(
                 "Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(
                     model_id, workspace.name, e
                 )
@@ -110,7 +111,7 @@ def load_mlflow_model(
                 )
             )
             _classify_and_log_pip_install_error(e.output)
-            raise UserConfigError(
+            raise UserConfigValidationException(
                 "Installing dependency using requirments.txt from mlflow model failed. "
                 "This behavior can be turned off with setting use_model_dependency to False in job spec. "
                 "You may also check error log above to manually resolve package conflict error"
@@ -171,7 +172,7 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
         df = load_mltable(dataset_path)
         isLoadSuccessful = True
     except Exception as e:
-        new_e = UserConfigError(
+        new_e = UserConfigValidationException(
             f"Input dataset {dataset_path} cannot be read as mltable."
             f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}"
         )
@@ -182,14 +183,14 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
             df = load_parquet(dataset_path)
             isLoadSuccessful = True
         except Exception as e:
-            new_e = UserConfigError(
+            new_e = UserConfigValidationException(
                 f"Input dataset {dataset_path} cannot be read as parquet."
                 f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}"
             )
             exceptions.append(new_e)
 
     if not isLoadSuccessful:
-        raise UserConfigError(
+        raise UserConfigValidationException(
             f"Input dataset {dataset_path} cannot be read as MLTable or Parquet dataset."
             f"Please check that input dataset is valid. Exceptions encountered during reading: {exceptions}"
         )
