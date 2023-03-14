@@ -315,7 +315,7 @@ class PdfDataGen:
     def validate_valid_metric_for_task_type(self):
         for metric in self.metrics:
             if metric in metric_task_map and metric_task_map[metric].lower() != self.tasktype:
-                raise ValueError(
+                raise UserConfigValidationException(
                     f"Metric {metric} is not compatible with specified task type {self.tasktype}"
                 )
 
