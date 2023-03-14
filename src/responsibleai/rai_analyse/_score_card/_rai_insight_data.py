@@ -91,10 +91,8 @@ class RaiInsightData:
         self._set_json_paths()
 
         test_data = self.raiinsight.test.drop(columns=self.raiinsight.target_column)
-        if (
-            self.raiinsight._feature_metadata is not None
-            and self.raiinsight._feature_metadata.dropped_features is not None
-        ):
+        if self.raiinsight._feature_metadata is not None and \
+                self.raiinsight._feature_metadata.dropped_features is not None:
             test_data = test_data.drop(
                 self.raiinsight._feature_metadata.dropped_features, axis=1
             )
@@ -307,7 +305,7 @@ class PdfDataGen:
         if self.is_multiclass:
             self.pos_label = str(self.data._classes[0])
             self.classes = [self.other_class, self.pos_label]
-    
+
     def _get_feature_names(self):
         return [f for f in self.data.get_raiinsight().test.columns
                 if f not in [self.data.get_raiinsight().target_column]]
@@ -484,7 +482,6 @@ class PdfDataGen:
         fairness_config = self.config["Fairness"]
         fm = {}
         dataset = self.data.get_test()
-        dataset_len = len(dataset)
 
         for sensitive_feature in fairness_config["sensitive_features"]:
             fm[sensitive_feature] = {}
@@ -538,7 +535,7 @@ class PdfDataGen:
             ]
 
             si_index = 0
-            for k, v in feature_statistics.items():
+            for k, _ in feature_statistics.items():
                 filtermap = self.data.get_test()[sensitive_feature] == k
                 cohort_data = self.data.get_cohort_data(filtermap)
                 cohort_data["short_label"] = short_labels[si_index]
@@ -613,8 +610,7 @@ class PdfDataGen:
                                 filtered_dataset["y_pred"],
                                 **self.get_metric_kwargs(),
                             ),
-                            "population": len(filtered_dataset["y_pred"])
-                            / len(self.data.get_y_test()),
+                            "population": len(filtered_dataset["y_pred"]) / len(self.data.get_y_test()),
                         }
                         if "threshold" in self.config["Metrics"][metric]:
                             cd["threshold"] = self.config["Metrics"][metric]["threshold"][1]
@@ -641,8 +637,7 @@ class PdfDataGen:
                                 else "All Data",
                                 "short_label": short_labels[index],
                                 metric: treemap[node["id"]]["metricValue"],
-                                "population": treemap[node["id"]]["size"]
-                                / len(self.data.get_y_test()),
+                                "population": treemap[node["id"]]["size"] / len(self.data.get_y_test()),
                             }
                             if "threshold" in self.config["Metrics"][metric]:
                                 cd["threshold"] = self.config["Metrics"][metric][

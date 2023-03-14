@@ -104,10 +104,7 @@ class _LoggerFactory:
 
     @staticmethod
     def _try_get_version_info():
-        if (
-            _LoggerFactory._module_name is not None
-            and _LoggerFactory._module_version is not None
-        ):
+        if _LoggerFactory._module_name is not None and _LoggerFactory._module_version is not None:
             return
 
         _LoggerFactory._module_name = run.properties["azureml.moduleName"]

@@ -43,7 +43,7 @@ class TestRAISmoke:
         pipeline_job = load_job(source=pipeline_processed_file)
 
         submit_and_wait(ml_client, pipeline_job)
-    
+
     def test_wrong_features_boston_pipeline_from_yaml(self, ml_client, component_config):
         current_dir = pathlib.Path(__file__).parent.absolute()
         pipeline_file = current_dir / "pipeline_wrong_features_boston_analyse.yaml"
@@ -51,7 +51,7 @@ class TestRAISmoke:
 
         replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
         process_file(pipeline_file, pipeline_processed_file, replacements)
-        
+
         pipeline_job = load_job(source=pipeline_processed_file)
 
         job = submit_and_wait(ml_client, pipeline_job, expected_state="Failed")
@@ -61,10 +61,8 @@ class TestRAISmoke:
                 ml_client.jobs.download(child_run.name, all=True)
                 with open('artifacts/user_logs/std_log.txt', 'r') as f:
                     log_msg = f.read()
-                assert (
-                    f"Feature AGE_WRONG not found in the dataset. "
-                    "Please check the feature names specified for 'DataExplorer'."
-                    ) in log_msg
+                assert "Feature AGE_WRONG not found in the dataset. " +\
+                    "Please check the feature names specified for 'DataExplorer'." in log_msg
                 break
         else:
             # scorecard_01 child run not found

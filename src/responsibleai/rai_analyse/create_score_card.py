@@ -171,7 +171,8 @@ def main(args):
         run = Run.get_context()
         run_details = run.get_details()
         ws = run.experiment.workspace
-        wsid = f"/subscriptions/{ws.subscription_id}/resourceGroups/{ws.resource_group}/providers/Microsoft.MachineLearningServices/workspaces/{ws.name}"
+        wsid = f"/subscriptions/{ws.subscription_id}/resourceGroups/{ws.resource_group}/\
+        providers/Microsoft.MachineLearningServices/workspaces/{ws.name}"
         dashboard_link = "https://ml.azure.com/model/analysis/{}/{}/?wsid={}".format(
             dashboard_info[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY],
             dashboard_info[DashboardInfo.RAI_INSIGHTS_GATHER_RUN_ID_KEY],
@@ -225,14 +226,11 @@ class Workflow:
             "model_overview": True,
             "model_performance": True,
             "data_explorer": "DataExplorer" in self.config,
-            "cohorts": "Cohorts" in self.config
-            or len(self.raiinsight.list()["error_analysis"]["reports"]) > 0,
-            "feature_importance": "FeatureImportance" in self.config
-            and self.raiinsight.list()["explainer"]["is_computed"],
-            "fairness": "Fairness" in self.config
-            and len(self.config["Fairness"]["sensitive_features"]) > 0,
-            "causal": "Causal" in self.config
-            and len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
+            "cohorts": "Cohorts" in self.config or len(self.raiinsight.list()["error_analysis"]["reports"]) > 0,
+            "feature_importance": "FeatureImportance" in self.config and
+                                  self.raiinsight.list()["explainer"]["is_computed"],
+            "fairness": "Fairness" in self.config and len(self.config["Fairness"]["sensitive_features"]) > 0,
+            "causal": "Causal" in self.config and len(self.raiinsight.list()["causal"]["causal_effects"]) > 0,
         }
 
     def generate_pdf(self):
