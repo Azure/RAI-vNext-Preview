@@ -9,6 +9,7 @@ import shutil
 
 from azureml.core import Run
 
+from raiutils.exceptions import UserConfigValidationException
 from responsibleai import RAIInsights
 from responsibleai.feature_metadata import FeatureMetadata
 
@@ -20,8 +21,7 @@ from rai_component_utilities import (
     fetch_model_id,
     load_mlflow_model,
     get_train_dataset_id,
-    get_test_dataset_id,
-    UserConfigError,
+    get_test_dataset_id
 )
 
 from _telemetry._loggerfactory import _LoggerFactory, track
@@ -155,7 +155,7 @@ def main(args):
     if args.model_info_path is None and (
         args.model_input is None or args.model_info is None
     ):
-        raise UserConfigError("Either model info or model input needs to be supplied.")
+        raise UserConfigValidationException("Either model info or model input needs to be supplied.")
 
     model_estimator = None
     model_id = None
