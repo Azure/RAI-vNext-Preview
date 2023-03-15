@@ -21,8 +21,7 @@ from rai_component_utilities import (
     fetch_model_id,
     load_mlflow_model,
     get_train_dataset_id,
-    get_test_dataset_id,
-    UserConfigError,
+    get_test_dataset_id
 )
 
 from _telemetry._loggerfactory import _LoggerFactory, track
