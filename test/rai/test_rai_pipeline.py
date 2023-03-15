@@ -4,16 +4,15 @@
 
 import logging
 import pathlib
-import pytest
 import tempfile
 import uuid
-
-from azure.ai.ml import MLClient, dsl, Input, Output
-from azure.ai.ml import load_job
-from responsibleai import RAIInsights
-
 from test.constants_for_test import Timeouts
-from test.utilities_for_test import submit_and_wait, process_file
+from test.utilities_for_test import process_file, submit_and_wait
+
+import pytest
+from azure.ai.ml import Input, MLClient, Output, dsl, load_job
+
+from responsibleai import RAIInsights
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)

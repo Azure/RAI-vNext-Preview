@@ -3,9 +3,9 @@
 # ---------------------------------------------------------
 import sys
 import traceback
-from src.responsibleai.rai_analyse._telemetry._loggerfactory import (
-    _extract_and_filter_stack,
-)
+
+from src.responsibleai.rai_analyse._telemetry._loggerfactory import \
+    _extract_and_filter_stack
 
 
 class TestStackTraceExtraction:

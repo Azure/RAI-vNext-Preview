@@ -7,15 +7,12 @@ import json
 import logging
 import os
 import subprocess
-
 from pathlib import Path
 from typing import Any
 
-from azure.identity import DefaultAzureCredential
-
 from azure.ai.ml import MLClient, load_component, load_data, load_environment
 from azure.ai.ml.entities import Data, Environment
-
+from azure.identity import DefaultAzureCredential
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)

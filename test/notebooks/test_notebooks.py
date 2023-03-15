@@ -2,13 +2,13 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
 
-import nbformat as nbf
 import os
+import time
+from typing import Dict
+
+import nbformat as nbf
 import papermill as pm
 import pytest
-import time
-
-from typing import Dict
 
 
 def update_cells(input_nb_path, output_nb_path, replacement_strings: Dict[str, str]):

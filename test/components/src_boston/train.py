@@ -8,17 +8,14 @@ import os
 import shutil
 import tempfile
 
-import pandas as pd
-
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-
 import mlflow
 import mlflow.sklearn
-
+import pandas as pd
 from azureml.core.run import Run
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
 def parse_args():

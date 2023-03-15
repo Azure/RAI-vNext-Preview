@@ -1,21 +1,20 @@
 # ---------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
-import os
 import argparse
 import json
 import logging
-
+import os
 from typing import Any, Dict, List, Union
 
 import mlflow
 import numpy as np
 import pandas as pd
-
 from azureml.core import Dataset, Model, Run, Workspace
-
-from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.serialization_utilities import serialize_json_safe
+
+from responsibleai import RAIInsights
+from responsibleai import __version__ as responsibleai_version
 
 
 class DashboardInfo:

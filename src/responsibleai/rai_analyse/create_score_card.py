@@ -7,17 +7,16 @@ import logging
 import os
 import re
 
-from azureml.core import Run
-from responsibleai import __version__ as responsibleai_version
-
-from _score_card._rai_insight_data import RaiInsightData, PdfDataGen
-from _score_card.common_components import to_pdf, get_full_html
-import _score_card.regression_components as RegressionComponents
 import _score_card.classification_components as ClassificationComponents
-
+import _score_card.regression_components as RegressionComponents
+from _score_card._rai_insight_data import PdfDataGen, RaiInsightData
+from _score_card.common_components import get_full_html, to_pdf
+from _telemetry._loggerfactory import _LoggerFactory, track
+from azureml.core import Run
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from rai_component_utilities import load_dashboard_info_file
-from _telemetry._loggerfactory import _LoggerFactory, track
+
+from responsibleai import __version__ as responsibleai_version
 
 threshold_reg = re.compile(r"([<>=]{1,2})([0-9.]+)")
 
