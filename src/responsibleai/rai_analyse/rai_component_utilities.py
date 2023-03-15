@@ -27,7 +27,7 @@ from responsibleai.feature_metadata import FeatureMetadata
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 
 assetid_re = re.compile(
-    r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"
+    r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"  # noqa: E501
 )
 data_type = "data_type"
 
@@ -131,10 +131,10 @@ def load_mlflow_model(
 
 def _classify_and_log_pip_install_error(elog):
     if "Could not find a version that satisfies the requirement" in elog:
-        _logger.warn("Detected unsatisfiable version requirment.")
+        _logger.warning("Detected unsatisfiable version requirment.")
 
     if "package versions have conflicting dependencies" in elog:
-        _logger.warn("Detected dependency conflict error.")
+        _logger.warning("Detected dependency conflict error.")
 
 
 def load_mltable(mltable_path: str) -> pd.DataFrame:
@@ -158,7 +158,7 @@ def load_parquet(parquet_path: str) -> pd.DataFrame:
     try:
         df = pd.read_parquet(parquet_path)
     except Exception as e:
-        _logger.info(f"Failed to load {mltable_path} as MLTable. ")
+        _logger.info(f"Failed to load {parquet_path} as MLTable. ")
         raise e
     return df
 

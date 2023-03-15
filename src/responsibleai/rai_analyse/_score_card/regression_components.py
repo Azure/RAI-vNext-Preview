@@ -235,8 +235,7 @@ def get_fairlearn_page(data):
                         "&#8658; Maximum difference in {} is {}".format(
                             metric_key,
                             round(
-                                metric_details["group_max"][1]
-                                - metric_details["group_min"][1],
+                                metric_details["group_max"][1] - metric_details["group_min"][1],
                                 2,
                             ),
                         )
@@ -248,8 +247,7 @@ def get_fairlearn_page(data):
                         "&#8658; Minimum ratio of {} is {}".format(
                             metric_key,
                             round(
-                                metric_details["group_min"][1]
-                                / metric_details["group_max"][1],
+                                metric_details["group_min"][1] / metric_details["group_max"][1],
                                 2,
                             ),
                         )
@@ -265,10 +263,7 @@ def get_fairlearn_page(data):
         for c in data:
             box_plot_data["data"].append(
                 {
-                    "label": data[c]["short_label"]
-                    + "<br>"
-                    + str(int(100 * data[c]["population"]))
-                    + "% n",
+                    "label": data[c]["short_label"] + "<br>" + str(int(100 * data[c]["population"])) + "% n",
                     "datapoints": data[c]["y_pred"],
                 }
             )

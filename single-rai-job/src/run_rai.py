@@ -1,12 +1,11 @@
 # ---------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
-
+import os
 import argparse
 import json
 import logging
 
-from pathlib import Path
 from typing import Any, Dict, List, Union
 
 import mlflow
@@ -407,7 +406,7 @@ def main(args):
         DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: args.model_id,
         DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
     }
-    
+
     _logger.info("Doing local save and upload")
     binary_dir = "./responsibleai"
     rai_i.save(binary_dir)
