@@ -106,10 +106,11 @@ def create_constructor_arg_dict(args):
         feature_metadata.identity_feature_name = feature_metadata_dict[
             "identity_feature_name"
         ]
+    if cat_col_names:
+        feature_metadata.categorical_features = cat_col_names
 
     result["target_column"] = args.target_column_name
     result["task_type"] = args.task_type
-    result["categorical_features"] = cat_col_names
     result["classes"] = class_names
     result["feature_metadata"] = feature_metadata
     result["maximum_rows_for_test"] = args.maximum_rows_for_test_dataset
