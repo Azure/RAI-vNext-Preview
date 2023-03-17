@@ -3,11 +3,10 @@
 # ---------------------------------------------------------
 
 import logging
-
-from azure.ai.ml import MLClient, dsl, Input
-
 from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait
+
+from azure.ai.ml import Input, MLClient, dsl
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)

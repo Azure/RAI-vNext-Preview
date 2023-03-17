@@ -1,19 +1,20 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import os
-import pandas as pd
 import json
-import sklearn.metrics as skm
-import numpy as np
-
+import os
 from collections import OrderedDict
-from erroranalysis._internal.metrics import metric_to_func, metric_to_task
-from erroranalysis._internal.cohort_filter import filter_from_cohort
-from fairlearn.metrics import selection_rate, MetricFrame
-from responsibleai import RAIInsights
 from datetime import datetime
+
+import numpy as np
+import pandas as pd
+import sklearn.metrics as skm
+from erroranalysis._internal.cohort_filter import filter_from_cohort
+from erroranalysis._internal.metrics import metric_to_func, metric_to_task
+from fairlearn.metrics import MetricFrame, selection_rate
 from raiutils.exceptions import UserConfigValidationException
+
+from responsibleai import RAIInsights
 
 
 def false_positive(y_test, y_pred, labels):

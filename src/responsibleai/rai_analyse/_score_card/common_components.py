@@ -1,26 +1,13 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import plotly.graph_objects as go
 import base64
-import plotly.io as pio
+
 import pdfkit
-from domonic.html import (
-    a,
-    div,
-    h3,
-    h1,
-    p,
-    img,
-    table,
-    td,
-    tr,
-    thead,
-    tbody,
-    span,
-    ul,
-    li,
-)
+import plotly.graph_objects as go
+import plotly.io as pio
+from domonic.html import (a, div, h1, h3, img, li, p, span, table, tbody, td,
+                          thead, tr, ul)
 
 
 def get_full_html(htmlbody):

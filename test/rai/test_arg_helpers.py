@@ -5,17 +5,11 @@
 import json
 
 import numpy as np
-
 import pytest
 
 from src.responsibleai.rai_analyse.arg_helpers import (
-    boolean_parser,
-    float_or_json_parser,
-    str_or_int_parser,
-    str_or_list_parser,
-    int_or_none_parser,
-    json_empty_is_none_parser,
-)
+    boolean_parser, float_or_json_parser, int_or_none_parser,
+    json_empty_is_none_parser, str_or_int_parser, str_or_list_parser)
 
 
 class TestBooleanParser:

@@ -7,11 +7,9 @@ import json
 import os
 import time
 
-
-from azureml.core import Run
-
 import mlflow
 import mlflow.sklearn
+from azureml.core import Run
 
 # Based on example:
 # https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli
