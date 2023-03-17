@@ -24,3 +24,6 @@ jobs:
       - name: flake8
         run: flake8
 
+      - name: Check sorted python imports using isort
+        run: |
+          isort . -c

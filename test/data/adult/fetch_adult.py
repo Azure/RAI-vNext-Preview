@@ -1,7 +1,6 @@
 import shap
 from sklearn.model_selection import train_test_split
 
-
 X, y = shap.datasets.adult()
 print("Data fetched")
 target_feature = "income"

@@ -1,12 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+import base64
+from statistics import mean
+
 import plotly.graph_objects as go
 import plotly.io as pio
-import base64
+from domonic.html import (div, h2, h3, img, li, p, table, tbody, td, th, thead,
+                          tr, ul)
 
-from statistics import mean
-from domonic.html import div, h3, h2, p, img, table, ul, li, td, th, tr, thead, tbody
 from . import common_components as cc
 
 metric_name_lookup = {

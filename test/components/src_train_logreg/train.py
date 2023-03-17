@@ -7,14 +7,10 @@ import os
 import shutil
 import tempfile
 
-
-from azureml.core import Run
-
 import mlflow
 import mlflow.sklearn
-
 import mltable
-
+from azureml.core import Run
 from sklearn.linear_model import LogisticRegression
 
 # Based on example:

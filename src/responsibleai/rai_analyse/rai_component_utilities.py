@@ -1,30 +1,28 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import sys
 import json
 import logging
 import os
 import pathlib
+import re
 import shutil
+import subprocess
+import sys
 import tempfile
 import uuid
-import re
-import subprocess
+from typing import Any, Dict, Optional
 
 import mlflow
 import mltable
 import pandas as pd
-
-from typing import Any, Dict, Optional
-
 from azureml.core import Model, Run, Workspace
-
+from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from raiutils.exceptions import UserConfigValidationException
-from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.feature_metadata import FeatureMetadata
 
-from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from responsibleai import RAIInsights
+from responsibleai import __version__ as responsibleai_version
 
 assetid_re = re.compile(
     r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"  # noqa: E501

@@ -3,15 +3,13 @@
 # ---------------------------------------------------------
 
 import json
-import pytest
 import time
-
-from azure.identity import DefaultAzureCredential
-
-from azure.ai.ml import MLClient, dsl, Input
-
-from test.utilities_for_test import submit_and_wait
 from test.constants_for_test import Timeouts
+from test.utilities_for_test import submit_and_wait
+
+import pytest
+from azure.ai.ml import Input, MLClient, dsl
+from azure.identity import DefaultAzureCredential
 
 
 class Components:

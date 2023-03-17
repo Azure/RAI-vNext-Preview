@@ -7,7 +7,6 @@ import logging
 import pathlib
 
 import pandas as pd
-
 from azureml.core import Dataset, Run
 
 _logger = logging.getLogger(__file__)
