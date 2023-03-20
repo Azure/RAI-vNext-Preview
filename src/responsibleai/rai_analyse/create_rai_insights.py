@@ -11,7 +11,7 @@ from _telemetry._loggerfactory import _LoggerFactory, track
 from arg_helpers import (boolean_parser, get_from_args,
                          json_empty_is_none_parser)
 from azureml.core import Run
-from constants import DashboardInfo
+from constants import DashboardInfo, PropertyKeyValues
 from rai_component_utilities import (default_json_handler, fetch_model_id,
                                      get_test_dataset_id, get_train_dataset_id,
                                      load_dataset, load_mlflow_model)
@@ -100,12 +100,18 @@ def create_constructor_arg_dict(args):
         args, "feature_metadata", custom_parser=json.loads, allow_none=True
     )
     feature_metadata = FeatureMetadata()
-    if "dropped_features" in feature_metadata_dict.keys():
-        feature_metadata.dropped_features = feature_metadata_dict["dropped_features"]
-    if "identity_feature_name" in feature_metadata_dict.keys():
-        feature_metadata.identity_feature_name = feature_metadata_dict[
-            "identity_feature_name"
-        ]
+    try:
+        if PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY in feature_metadata_dict.keys():
+            feature_metadata.dropped_features = feature_metadata_dict[
+                PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY
+            ]
+        if PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY in feature_metadata_dict.keys():
+            feature_metadata.identity_feature_name = feature_metadata_dict[
+                PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY
+            ]
+    except AttributeError as e:
+        raise UserConfigValidationException(f"Feature metadata should be parsed to a dictionary. {e}")
+
     if cat_col_names:
         feature_metadata.categorical_features = cat_col_names
 
