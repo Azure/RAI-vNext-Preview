@@ -100,12 +100,16 @@ def create_constructor_arg_dict(args):
         args, "feature_metadata", custom_parser=json.loads, allow_none=True
     )
     feature_metadata = FeatureMetadata()
-    if "dropped_features" in feature_metadata_dict.keys():
-        feature_metadata.dropped_features = feature_metadata_dict["dropped_features"]
-    if "identity_feature_name" in feature_metadata_dict.keys():
-        feature_metadata.identity_feature_name = feature_metadata_dict[
-            "identity_feature_name"
-        ]
+    try:
+        if "dropped_features" in feature_metadata_dict.keys():
+            feature_metadata.dropped_features = feature_metadata_dict["dropped_features"]
+        if "identity_feature_name" in feature_metadata_dict.keys():
+            feature_metadata.identity_feature_name = feature_metadata_dict[
+                "identity_feature_name"
+            ]
+    except AttributeError as e:
+        raise UserConfigValidationException(f"Feature metadata should be parsed to a dictionary. {e}")
+
     if cat_col_names:
         feature_metadata.categorical_features = cat_col_names
 
