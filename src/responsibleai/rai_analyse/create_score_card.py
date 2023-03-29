@@ -2,11 +2,11 @@
 # Licensed under the MIT License.
 
 import argparse
-from datetime import datetime
 import json
 import logging
 import os
 import re
+from datetime import datetime
 
 import _score_card.classification_components as ClassificationComponents
 import _score_card.regression_components as RegressionComponents
