@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import re
+from datetime import datetime
 
 import _score_card.classification_components as ClassificationComponents
 import _score_card.regression_components as RegressionComponents
@@ -178,9 +179,15 @@ def main(args):
             wsid,
         )
 
+        if "startTimeUtc" not in run_details:
+            # Get UTC from python datetime module if this is not available from run details
+            startTimeUtc = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        else:
+            startTimeUtc = run_details["startTimeUtc"]
+
         config["runinfo"] = {
             "submittedBy": run_details["submittedBy"],
-            "startTimeUtc": run_details["startTimeUtc"],
+            "startTimeUtc": startTimeUtc,
             "dashboard_link": dashboard_link,
             "model_id": dashboard_info[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY],
             "dashboard_title": dashboard_info[
