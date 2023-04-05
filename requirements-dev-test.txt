@@ -7,6 +7,6 @@ pandas
 pyarrow
 scikit-learn<1.1 # See PR #1429 in responsible-ai-toolbox repo
 shap
-responsibleai~=0.25.0
-raiwidgets~=0.25.0
+responsibleai~=0.26.0
+raiwidgets~=0.26.0
 numpy<1.24.0
