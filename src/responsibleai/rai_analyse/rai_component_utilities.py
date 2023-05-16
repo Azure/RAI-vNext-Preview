@@ -21,6 +21,8 @@ from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
 
+from arg_helpers import get_from_args
+
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
 
@@ -421,3 +423,12 @@ def default_object_hook(dict):
         del dict[data_type]
         return FeatureMetadata(**dict)
     return dict
+
+
+def get_arg(args, arg_name: str, custom_parser, allow_none: bool) -> Any:
+    try:
+        return get_from_args(args, arg_name, custom_parser, allow_none)
+    except ValueError as e:
+        raise UserConfigError(f"Unable to parse {arg_name} from {args}. Please check that {extracted} is valid input and that {arg_name} exists."
+            "For example, a json string with unquoted string value or key can cause this error."
+            f"Raw parsing error: {e}")
