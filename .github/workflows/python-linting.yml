@@ -24,6 +24,10 @@ jobs:
       - name: flake8
         run: flake8
 
+      - name: isort print diff
+        run: |
+          isort . --diff
+
       - name: Check sorted python imports using isort
         run: |
           isort . -c
