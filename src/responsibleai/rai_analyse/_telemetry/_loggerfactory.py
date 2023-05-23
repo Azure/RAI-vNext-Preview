@@ -1,24 +1,19 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import sys
+import json
 import logging
 import logging.handlers
-import traceback
+import sys
 import time
-import json
-import pkg_resources
-
+import traceback
 from contextlib import contextmanager
 from functools import wraps
 
+import pkg_resources
 from azureml.core import Run
-
 from azureml.telemetry import get_telemetry_log_handler
-from azureml.telemetry.activity import (
-    log_activity as _log_activity,
-    ActivityType,
-    ActivityLoggerAdapter
-)
+from azureml.telemetry.activity import ActivityLoggerAdapter, ActivityType
+from azureml.telemetry.activity import log_activity as _log_activity
 from azureml.telemetry.logging_handler import AppInsightsLoggingHandler
 
 COMPONENT_NAME = "azureml.rai.tabular"
@@ -55,7 +50,9 @@ class _LoggerFactory:
     @staticmethod
     def track_python_environment(logger):
         payload = {d.project_name: d.version for d in pkg_resources.working_set}
-        activity_logger = ActivityLoggerAdapter(logger, {"python_environment": json.dumps(payload)})
+        activity_logger = ActivityLoggerAdapter(
+            logger, {"python_environment": json.dumps(payload)}
+        )
         activity_logger.info("Logging python environment.")
 
     @staticmethod
@@ -102,10 +99,7 @@ class _LoggerFactory:
 
     @staticmethod
     def _try_get_version_info():
-        if (
-            _LoggerFactory._module_name is not None
-            and _LoggerFactory._module_version is not None
-        ):
+        if _LoggerFactory._module_name is not None and _LoggerFactory._module_version is not None:
             return
 
         _LoggerFactory._module_name = run.properties["azureml.moduleName"]
@@ -114,8 +108,8 @@ class _LoggerFactory:
     @staticmethod
     def _try_get_run_info():
         try:
-            import re
             import os
+            import re
 
             location = os.environ.get("AZUREML_SERVICE_ENDPOINT")
             location = re.compile("//(.*?)\\.").search(location).group(1)

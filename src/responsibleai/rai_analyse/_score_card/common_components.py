@@ -1,26 +1,13 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import plotly.graph_objects as go
 import base64
-import plotly.io as pio
+
 import pdfkit
-from domonic.html import (
-    a,
-    div,
-    h3,
-    h1,
-    p,
-    img,
-    table,
-    td,
-    tr,
-    thead,
-    tbody,
-    span,
-    ul,
-    li,
-)
+import plotly.graph_objects as go
+import plotly.io as pio
+from domonic.html import (a, div, h1, h3, img, li, p, span, table, tbody, td,
+                          thead, tr, ul)
 
 
 def get_full_html(htmlbody):
@@ -497,10 +484,7 @@ def get_de_box_plot_image(data):
     processed_label = data
     for c in processed_label["data"]:
         c["label"] = (
-            c["short_label"]
-            + "<br>"
-            + str(int(100 * round(c["population"], 3)))
-            + "% n"
+            c["short_label"] + "<br>" + str(int(100 * round(c["population"], 3))) + "% n"
         )
         c["datapoints"] = c["prediction"]
 
@@ -791,23 +775,28 @@ def get_causal_page(data):
             )
         )
 
-        def causal_policies_map_to_table(p):
-            ct = p["Current treatment"]
-            et = p["Effect of treatment"]
+        def causal_policies_map_to_table(policy):
+            ct = policy["Current treatment"]
+            et = policy["Effect of treatment"]
 
             ct = round(ct, 2) if isinstance(ct, (int, float)) else ct
             et = round(et, 2) if isinstance(et, (int, float)) else et
 
             return [
-                p["index"],
+                policy["index"],
                 ct,
-                p["Treatment"],
+                policy["Treatment"],
                 et,
             ]
 
         main_elems.append(
             get_table(
-                list(map(causal_policies_map_to_table, data["top_local_policies"][f["feature"]]))
+                list(
+                    map(
+                        causal_policies_map_to_table,
+                        data["top_local_policies"][f["feature"]],
+                    )
+                )
             )
         )
 

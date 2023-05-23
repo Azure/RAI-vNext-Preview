@@ -1,32 +1,32 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import sys
 import json
 import logging
 import os
 import pathlib
+import re
 import shutil
+import subprocess
+import sys
 import tempfile
 import uuid
-import re
-import subprocess
+from typing import Any, Dict, Optional
 
 import mlflow
 import mltable
 import pandas as pd
-
-from typing import Any, Dict, Optional
-
+from arg_helpers import get_from_args
 from azureml.core import Model, Run, Workspace
-
-from responsibleai import RAIInsights, __version__ as responsibleai_version
+from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
 
-from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from responsibleai import RAIInsights
+from responsibleai import __version__ as responsibleai_version
 
 assetid_re = re.compile(
-    r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"
+    r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"  # noqa: E501
 )
 data_type = "data_type"
 
@@ -41,6 +41,7 @@ _tool_directory_mapping: Dict[str, str] = {
     RAIToolType.ERROR_ANALYSIS: "error_analysis",
     RAIToolType.EXPLANATION: "explainer",
 }
+
 
 class UserConfigError(Exception):
     pass
@@ -85,23 +86,37 @@ def load_mlflow_model(
         try:
             model = Model._get(workspace, id=model_id)
         except Exception as e:
-            raise UserConfigError("Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(model_id, workspace.name, e))
+            raise UserConfigValidationException(
+                "Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(
+                    model_id, workspace.name, e
+                )
+            )
         model_uri = "models:/{}/{}".format(model.name, model.version)
 
     if use_model_dependency:
         try:
             pip_file = mlflow.pyfunc.get_model_dependencies(model_uri)
         except Exception as e:
-            raise ValueError("Failed to get model dependency from given model {}, error:\n{}".format(model_uri, e))
+            raise ValueError(
+                "Failed to get model dependency from given model {}, error:\n{}".format(
+                    model_uri, e
+                )
+            )
         try:
-            subprocess.check_output([sys.executable, "-m", "pip",
-                                    "install", "-r", pip_file])
+            subprocess.check_output(
+                [sys.executable, "-m", "pip", "install", "-r", pip_file]
+            )
         except subprocess.CalledProcessError as e:
-            _logger.error("Installing dependency using requriments.txt from mlflow model failed: {}".format(e.output))
+            _logger.error(
+                "Installing dependency using requriments.txt from mlflow model failed: {}".format(
+                    e.output
+                )
+            )
             _classify_and_log_pip_install_error(e.output)
-            raise UserConfigError("Installing dependency using requirments.txt from mlflow model failed. "
-            "This behavior can be turned off with setting use_model_dependency to False in job spec. "
-            "You may also check error log above to manually resolve package conflict error"
+            raise UserConfigValidationException(
+                "Installing dependency using requirments.txt from mlflow model failed. "
+                "This behavior can be turned off with setting use_model_dependency to False in job spec. "
+                "You may also check error log above to manually resolve package conflict error"
             )
         _logger.info("Successfully installed model dependencies")
 
@@ -109,20 +124,24 @@ def load_mlflow_model(
         model = mlflow.pyfunc.load_model(model_uri)._model_impl
         return model
     except Exception as e:
-        raise ValueError("Unable to load mlflow model from {} in current environment due to error:\n{}".format(model_uri, e))
+        raise ValueError(
+            "Unable to load mlflow model from {} in current environment due to error:\n{}".format(
+                model_uri, e
+            )
+        )
 
 
 def _classify_and_log_pip_install_error(elog):
-    if "Could not find a version that satisfies the requirement" in elog:
-        _logger.warn("Detected unsatisfiable version requirment.")
+    if elog is not None:
+        if b"Could not find a version that satisfies the requirement" in elog:
+            _logger.warning("Detected unsatisfiable version requirment.")
 
-    if "package versions have conflicting dependencies" in elog:
-        _logger.warn("Detected dependency conflict error.")
+        if b"package versions have conflicting dependencies" in elog:
+            _logger.warning("Detected dependency conflict error.")
 
 
 def load_mltable(mltable_path: str) -> pd.DataFrame:
-    _logger.info("Loading MLTable: {0}".format(mltable_path))
-    df: pd.DataFrame = None
+    _logger.info(f"Attempting to load {mltable_path} as MLTable")
     try:
         assetid_path = os.path.join(mltable_path, "assetid")
         if os.path.exists(assetid_path):
@@ -132,22 +151,52 @@ def load_mltable(mltable_path: str) -> pd.DataFrame:
         tbl = mltable.load(mltable_path)
         df: pd.DataFrame = tbl.to_pandas_dataframe()
     except Exception as e:
-        _logger.info("Failed to load MLTable")
-        _logger.info(e)
+        _logger.info(f"Failed to load {mltable_path} as MLTable. ")
+        raise e
     return df
 
 
 def load_parquet(parquet_path: str) -> pd.DataFrame:
-    _logger.info("Loading parquet file: {0}".format(parquet_path))
-    df = pd.read_parquet(parquet_path)
+    _logger.info(f"Attempting to load {parquet_path} as parquet dataset")
+    try:
+        df = pd.read_parquet(parquet_path)
+    except Exception as e:
+        _logger.info(f"Failed to load {parquet_path} as MLTable. ")
+        raise e
     return df
 
 
 def load_dataset(dataset_path: str) -> pd.DataFrame:
     _logger.info(f"Attempting to load: {dataset_path}")
-    df = load_mltable(dataset_path)
-    if df is None:
-        df = load_parquet(dataset_path)
+    exceptions = []
+    isLoadSuccessful = False
+
+    try:
+        df = load_mltable(dataset_path)
+        isLoadSuccessful = True
+    except Exception as e:
+        new_e = UserConfigValidationException(
+            f"Input dataset {dataset_path} cannot be read as mltable."
+            f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}"
+        )
+        exceptions.append(new_e)
+
+    if not isLoadSuccessful:
+        try:
+            df = load_parquet(dataset_path)
+            isLoadSuccessful = True
+        except Exception as e:
+            new_e = UserConfigValidationException(
+                f"Input dataset {dataset_path} cannot be read as parquet."
+                f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}"
+            )
+            exceptions.append(new_e)
+
+    if not isLoadSuccessful:
+        raise UserConfigValidationException(
+            f"Input dataset {dataset_path} cannot be read as MLTable or Parquet dataset."
+            f"Please check that input dataset is valid. Exceptions encountered during reading: {exceptions}"
+        )
 
     print(df.dtypes)
     print(df.head(10))
@@ -324,11 +373,12 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     use_model_dependency = input_args["use_model_dependency"]
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
-    
+
     model_estimator = load_mlflow_model(
         workspace=my_run.experiment.workspace,
         use_model_dependency=use_model_dependency,
-        model_id=model_id)
+        model_id=model_id,
+    )
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
@@ -362,7 +412,7 @@ def get_dataset_name_version(run, dataset_input_name):
 
 
 def default_json_handler(data):
-    if  isinstance(data, FeatureMetadata): 
+    if isinstance(data, FeatureMetadata):
         meta_dict = data.__dict__
         type_name = type(data).__name__
         meta_dict[data_type] = type_name
@@ -375,3 +425,15 @@ def default_object_hook(dict):
         del dict[data_type]
         return FeatureMetadata(**dict)
     return dict
+
+
+def get_arg(args, arg_name: str, custom_parser, allow_none: bool) -> Any:
+    try:
+        return get_from_args(args, arg_name, custom_parser, allow_none)
+    except ValueError as e:
+        raise UserConfigError(
+            f"Unable to parse {arg_name} from {args}."
+            f"Please check that {args} is valid input and that {arg_name} exists."
+            "For example, a json string with unquoted string value or key can cause this error."
+            f"Raw parsing error: {e}"
+        )

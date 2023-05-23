@@ -1,22 +1,20 @@
 # ---------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # ---------------------------------------------------------
-
 import argparse
 import json
 import logging
-
-from pathlib import Path
+import os
 from typing import Any, Dict, List, Union
 
 import mlflow
 import numpy as np
 import pandas as pd
-
 from azureml.core import Dataset, Model, Run, Workspace
-
-from responsibleai import RAIInsights, __version__ as responsibleai_version
 from responsibleai.serialization_utilities import serialize_json_safe
+
+from responsibleai import RAIInsights
+from responsibleai import __version__ as responsibleai_version
 
 
 class DashboardInfo:
@@ -407,7 +405,7 @@ def main(args):
         DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY: args.model_id,
         DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY: constructor_args,
     }
-    
+
     _logger.info("Doing local save and upload")
     binary_dir = "./responsibleai"
     rai_i.save(binary_dir)

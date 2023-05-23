@@ -5,15 +5,17 @@ RUN apt-get -y update && apt-get -y install wkhtmltopdf
 ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/responsibleai-0.24
 
 # Create conda environment
+# Note libffi is pinned as it causes scorecard component to fail
+# when using the wkhtmltopdf package with libgobject error
 RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
-    python=3.8 pip=21.3.1 -c anaconda -c conda-forge
+    python=3.8 pip=21.3.1 libffi=3.3 -c anaconda -c conda-forge
 
 # Prepend path to AzureML conda environment
 ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
 
 # Install pip dependencies
-RUN pip install 'responsibleai~=0.24.1' \
-                'raiwidgets~=0.24.1' \
+RUN pip install 'responsibleai~=0.26.0' \
+                'raiwidgets~=0.26.0' \
                 'pyarrow' \
                 'mlflow' \
                 'azureml-core~=1.48.0' \

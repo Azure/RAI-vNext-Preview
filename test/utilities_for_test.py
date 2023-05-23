@@ -8,7 +8,6 @@ import time
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import PipelineJob
 
-
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 

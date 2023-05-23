@@ -3,15 +3,13 @@
 # ---------------------------------------------------------
 
 import json
-import pytest
 import time
-
-from azure.identity import DefaultAzureCredential
-
-from azure.ai.ml import MLClient, dsl, Input
-
-from test.utilities_for_test import submit_and_wait
 from test.constants_for_test import Timeouts
+from test.utilities_for_test import submit_and_wait
+
+import pytest
+from azure.ai.ml import Input, MLClient, dsl
+from azure.identity import DefaultAzureCredential
 
 
 class Components:
@@ -173,7 +171,8 @@ def registered_boston_model_id(ml_client, component_config):
             target_column_name=target_column_name,
             training_data=training_data,
             categorical_features="[]",
-            continuous_features='["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
+            continuous_features='["CRIM", "ZN", "INDUS", "CHAS", "NOX", ' +
+                                '"RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
         )
         trained_model.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 

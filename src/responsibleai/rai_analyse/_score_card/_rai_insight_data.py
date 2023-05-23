@@ -1,18 +1,20 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import os
-import pandas as pd
 import json
-import sklearn.metrics as skm
-import numpy as np
-
+import os
 from collections import OrderedDict
-from erroranalysis._internal.metrics import metric_to_func, metric_to_task
-from erroranalysis._internal.cohort_filter import filter_from_cohort
-from fairlearn.metrics import selection_rate, MetricFrame
-from responsibleai import RAIInsights
 from datetime import datetime
+
+import numpy as np
+import pandas as pd
+import sklearn.metrics as skm
+from erroranalysis._internal.cohort_filter import filter_from_cohort
+from erroranalysis._internal.metrics import metric_to_func, metric_to_task
+from fairlearn.metrics import MetricFrame, selection_rate
+from raiutils.exceptions import UserConfigValidationException
+
+from responsibleai import RAIInsights
 
 
 def false_positive(y_test, y_pred, labels):
@@ -90,10 +92,11 @@ class RaiInsightData:
         self._set_json_paths()
 
         test_data = self.raiinsight.test.drop(columns=self.raiinsight.target_column)
-        if self.raiinsight._feature_metadata is not None\
-                and self.raiinsight._feature_metadata.dropped_features is not None:
+        if self.raiinsight._feature_metadata is not None and \
+                self.raiinsight._feature_metadata.dropped_features is not None:
             test_data = test_data.drop(
-                self.raiinsight._feature_metadata.dropped_features, axis=1)
+                self.raiinsight._feature_metadata.dropped_features, axis=1
+            )
         self.y_pred = self.raiinsight.model.predict(test_data)
 
     def _set_component_paths_prefix(self):
@@ -159,14 +162,22 @@ class RaiInsightData:
     def get_test(self):
         return self.raiinsight.test
 
-    def get_fairlearn_grouped_metric(self, sensitive_feature, sample_params):
+    def get_fairlearn_grouped_metric(self, metric_name, sensitive_feature, pos_label, labels):
+        params = {
+            "pos_label": pos_label,
+            "labels": labels
+        }
+
+        # pos_label and labels are not per-row parameters, so we need to pass
+        # them to the metric function directly rather than passing them into
+        # the MetricFrame constructor via sample_params.
+        def metric_func(y_test, y_pred):
+            return get_metric(metric_name, y_test, y_pred, **params)
         grouped_metric = MetricFrame(
-            metrics=fairness_metric_wrapper,
+            metrics=metric_func,
             y_true=self.get_y_test(),
             y_pred=self.get_y_pred(),
-            sensitive_features=self.raiinsight.test[sensitive_feature].to_numpy(),
-            sample_params=sample_params,
-        )
+            sensitive_features=self.raiinsight.test[sensitive_feature].to_numpy())
 
         return grouped_metric
 
@@ -296,10 +307,16 @@ class PdfDataGen:
             self.pos_label = str(self.data._classes[0])
             self.classes = [self.other_class, self.pos_label]
 
+    def _get_feature_names(self):
+        return [f for f in self.data.get_raiinsight().test.columns
+                if f not in [self.data.get_raiinsight().target_column]]
+
     def validate_valid_metric_for_task_type(self):
-        for m in self.metrics:
-            if m in metric_task_map and metric_task_map[m].lower() != self.tasktype:
-                raise ValueError(f"Metric {m} is not compatible with specified task type {self.tasktype}")
+        for metric in self.metrics:
+            if metric in metric_task_map and metric_task_map[metric].lower() != self.tasktype:
+                raise UserConfigValidationException(
+                    f"Metric {metric} is not compatible with specified task type {self.tasktype}"
+                )
 
     def get_metric_kwargs(self):
         return {"pos_label": self.pos_label, "labels": self.classes}
@@ -327,10 +344,10 @@ class PdfDataGen:
 
     def get_metrics_targets(self):
         metric_targets = []
-        for k, v in self.config["Metrics"].items():
+        for metric, v in self.config["Metrics"].items():
             if "threshold" in v.keys():
                 metric_targets.append(
-                    "{}: {} {}".format(k, v["threshold"][0], v["threshold"][1])
+                    "{}: {} {}".format(metric, v["threshold"][0], v["threshold"][1])
                 )
             else:
                 # no threshold specified, skip in metric targets
@@ -344,17 +361,19 @@ class PdfDataGen:
             )
 
         if "Fairness" in self.config.keys():
-            fc = self.config["Fairness"]
-            for m in fc["metric"]:
-                if "threshold" in fc.keys():
+            fairness_config = self.config["Fairness"]
+            for metric in fairness_config["metric"]:
+                if "threshold" in fairness_config.keys():
                     metric_targets.append(
                         "Fairness {} in {}: {}".format(
-                            fc["fairness_evaluation_kind"], m, fc["threshold"]
+                            fairness_config["fairness_evaluation_kind"],
+                            metric,
+                            fairness_config["threshold"]
                         )
                     )
                 else:
                     metric_targets.append(
-                        "Fairness {} in {}".format(fc["fairness_evaluation_kind"], m)
+                        "Fairness {} in {}".format(fairness_config["fairness_evaluation_kind"], metric)
                     )
 
         return metric_targets
@@ -392,13 +411,21 @@ class PdfDataGen:
         de_data = []
         y_test = self.data.get_y_test()
         y_predict = self.data.get_y_pred()
-        for f in self.config["DataExplorer"]["features"]:
-            label_list, new_labels = self.get_binning_information(f)
+
+        for feature in self.config["DataExplorer"]["features"]:
+
+            if feature not in self._get_feature_names():
+                raise UserConfigValidationException(
+                    f"Feature {feature} not found in the dataset. "
+                    "Please check the feature names specified for 'DataExplorer'."
+                )
+
+            label_list, new_labels = self.get_binning_information(feature)
             counts = new_labels.value_counts()
             total = len(new_labels)
             primary_metric = self.primary_metric
 
-            data = {"feature_name": f, "primary_metric": primary_metric, "data": []}
+            data = {"feature_name": feature, "primary_metric": primary_metric, "data": []}
 
             short_labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
             sl_index = 0
@@ -419,7 +446,7 @@ class PdfDataGen:
                         primary_metric,
                         y_predict[index_filter],
                         y_test[index_filter],
-                        **self.get_metric_kwargs()
+                        **self.get_metric_kwargs(),
                     )
 
                 data["data"].append(f_data)
@@ -453,23 +480,18 @@ class PdfDataGen:
         return self.data.get_causal_data()
 
     def get_fairlearn_data(self):
-        fair_con = self.config["Fairness"]
+        fairness_config = self.config["Fairness"]
         fm = {}
         dataset = self.data.get_test()
-        dataset_len = len(dataset)
 
-        for f in fair_con["sensitive_features"]:
-            fm[f] = {}
-            fm[f]["metrics"] = {}
-            fm[f]["statistics"] = {}
-            topnlabels = dataset[f].value_counts().nlargest(20).index.to_list()
-            for m in fair_con["metric"]:
-                m_sample_params = {
-                    "metric": [m] * dataset_len,
-                    "pos_label": [self.pos_label] * dataset_len,
-                    "labels": [self.classes] * dataset_len,
-                }
-                gm = self.data.get_fairlearn_grouped_metric(f, m_sample_params)
+        for sensitive_feature in fairness_config["sensitive_features"]:
+            fm[sensitive_feature] = {}
+            fm[sensitive_feature]["metrics"] = {}
+            fm[sensitive_feature]["statistics"] = {}
+            topnlabels = dataset[sensitive_feature].value_counts().nlargest(20).index.to_list()
+            for metric in fairness_config["metric"]:
+                gm = self.data.get_fairlearn_grouped_metric(
+                    metric, sensitive_feature, self.pos_label, self.classes)
 
                 fm_lookup = {
                     "difference": gm.difference(method="between_groups"),
@@ -481,15 +503,15 @@ class PdfDataGen:
 
                 sorted_group_metric = sorted(gmd.items(), key=lambda x: x[1])
 
-                fm[f]["metrics"][m] = {
-                    "kind": fair_con["fairness_evaluation_kind"],
-                    "value": fm_lookup[fair_con["fairness_evaluation_kind"]],
+                fm[sensitive_feature]["metrics"][metric] = {
+                    "kind": fairness_config["fairness_evaluation_kind"],
+                    "value": fm_lookup[fairness_config["fairness_evaluation_kind"]],
                     "group_metric": OrderedDict(sorted_group_metric),
                     "group_max": next(iter(sorted_group_metric[-1:]), None),
                     "group_min": next(iter(sorted_group_metric[:1]), None),
                 }
 
-            feature_statistics = dict(self.data.get_feature_statistics(f))
+            feature_statistics = dict(self.data.get_feature_statistics(sensitive_feature))
             short_labels = [
                 "A",
                 "B",
@@ -514,13 +536,13 @@ class PdfDataGen:
             ]
 
             si_index = 0
-            for k, v in feature_statistics.items():
-                filtermap = self.data.get_test()[f] == k
+            for k, _ in feature_statistics.items():
+                filtermap = self.data.get_test()[sensitive_feature] == k
                 cohort_data = self.data.get_cohort_data(filtermap)
                 cohort_data["short_label"] = short_labels[si_index]
                 cohort_data["pos_label"] = self.pos_label
                 si_index += 1
-                fm[f]["statistics"][k] = cohort_data
+                fm[sensitive_feature]["statistics"][k] = cohort_data
 
         return fm
 
@@ -535,9 +557,9 @@ class PdfDataGen:
             return_data["y_error"] = list(map(lambda x, y: x - y, y_pred, y_test))
             report_metrics = ["mean_absolute_error", "mean_squared_error", "r2_score"]
 
-            for m in report_metrics:
-                return_data["metrics"][m] = get_metric(
-                    m, y_test, y_pred, **self.get_metric_kwargs()
+            for metric in report_metrics:
+                return_data["metrics"][metric] = get_metric(
+                    metric, y_test, y_pred, **self.get_metric_kwargs()
                 )
 
         if self.tasktype == "classification":
@@ -558,9 +580,9 @@ class PdfDataGen:
                 "false_positive",
             ]
 
-            for m in report_metrics:
-                return_data["metrics"][m] = get_metric(
-                    m, y_test, y_pred, **self.get_metric_kwargs()
+            for metric in report_metrics:
+                return_data["metrics"][metric] = get_metric(
+                    metric, y_test, y_pred, **self.get_metric_kwargs()
                 )
 
         return_data["user_requested_metrics"] = self.config["Metrics"]
@@ -573,7 +595,7 @@ class PdfDataGen:
             "cohorts": [],
         }
         short_labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
-        for m in self.config["Metrics"]:
+        for metric in self.config["Metrics"]:
             if "Cohorts" in self.config:
                 for index, c in enumerate(self.config["Cohorts"]):
                     if c in self.config["cohorts_definition"].keys():
@@ -583,23 +605,22 @@ class PdfDataGen:
                         cd = {
                             "label": c,
                             "short_label": short_labels[index],
-                            m: get_metric(
-                                m,
+                            metric: get_metric(
+                                metric,
                                 filtered_dataset["y_test"],
                                 filtered_dataset["y_pred"],
-                                **self.get_metric_kwargs()
+                                **self.get_metric_kwargs(),
                             ),
-                            "population": len(filtered_dataset["y_pred"])
-                            / len(self.data.get_y_test()),
+                            "population": len(filtered_dataset["y_pred"]) / len(self.data.get_y_test()),
                         }
-                        if "threshold" in self.config["Metrics"][m]:
-                            cd["threshold"] = self.config["Metrics"][m]["threshold"][1]
+                        if "threshold" in self.config["Metrics"][metric]:
+                            cd["threshold"] = self.config["Metrics"][metric]["threshold"][1]
 
                         cohorts_data["cohorts"].append(cd)
 
             try:
                 if "error_analysis" in self.data.component_path_prefix:
-                    ea_data = self.data.get_error_analysis_data(m)[0]
+                    ea_data = self.data.get_error_analysis_data(metric)[0]
 
                     tree = ea_data.tree
                     treemap = self.data.to_tree_map(tree)
@@ -616,12 +637,11 @@ class PdfDataGen:
                                 if len(filter_conditions) > 0
                                 else "All Data",
                                 "short_label": short_labels[index],
-                                m: treemap[node["id"]]["metricValue"],
-                                "population": treemap[node["id"]]["size"]
-                                / len(self.data.get_y_test()),
+                                metric: treemap[node["id"]]["metricValue"],
+                                "population": treemap[node["id"]]["size"] / len(self.data.get_y_test()),
                             }
-                            if "threshold" in self.config["Metrics"][m]:
-                                cd["threshold"] = self.config["Metrics"][m][
+                            if "threshold" in self.config["Metrics"][metric]:
+                                cd["threshold"] = self.config["Metrics"][metric][
                                     "threshold"
                                 ][1]
 

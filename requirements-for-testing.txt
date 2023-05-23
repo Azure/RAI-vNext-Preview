@@ -1,7 +1,7 @@
 azureml-telemetry
 azureml-core
-raiwidgets~=0.24.1
-responsibleai~=0.24.1
+raiwidgets~=0.26.0
+responsibleai~=0.26.0
 nbformat
 nbval
 nteract-scrapbook
