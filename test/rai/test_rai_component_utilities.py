@@ -26,6 +26,5 @@ class TestFetchModelId:
         with open(model_info_path, "w") as json_file:
             json.dump(model_info, json_file)
         with pytest.raises(UserConfigValidationException,
-            match= f"Invalid input, expecting key {DashboardInfo.MODEL_ID_KEY} to exist in the input json"
-        ):
+                           match=f"Invalid input, expecting key {DashboardInfo.MODEL_ID_KEY} to exist in the input json"):
             fetch_model_id(model_info_path)
