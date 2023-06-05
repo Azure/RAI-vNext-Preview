@@ -12,5 +12,10 @@
       "Occupation",
       "Country"
     ]
+  },
+  "Fairness": {
+    "metric": ["accuracy_score"],
+    "sensitive_features": ["Race"],
+    "fairness_evaluation_kind": "ratio"
   }
 }
