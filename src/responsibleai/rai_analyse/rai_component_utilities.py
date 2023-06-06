@@ -67,7 +67,12 @@ def fetch_model_id(model_info_path: str):
     model_info_path = os.path.join(model_info_path, DashboardInfo.MODEL_INFO_FILENAME)
     with open(model_info_path, "r") as json_file:
         model_info = json.load(json_file)
-    return model_info[DashboardInfo.MODEL_ID_KEY]
+    if DashboardInfo.MODEL_ID_KEY not in model_info:
+        raise UserConfigValidationException(
+            f"Invalid input, expecting key {DashboardInfo.MODEL_ID_KEY} to exist in the input json"
+        )
+    else:
+        return model_info[DashboardInfo.MODEL_ID_KEY]
 
 
 def load_mlflow_model(
