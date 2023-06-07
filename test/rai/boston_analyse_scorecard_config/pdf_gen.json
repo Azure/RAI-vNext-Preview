@@ -25,5 +25,10 @@
   "Cohorts": [
     "High Tax",
     "Low Tax"
-  ]
+  ],
+  "Fairness": {
+    "metric": ["mean_absolute_error"],
+    "sensitive_features": ["CRIM"],
+    "fairness_evaluation_kind": "ratio"
+  }
 }
