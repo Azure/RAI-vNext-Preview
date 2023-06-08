@@ -6,8 +6,6 @@ from raiutils.exceptions import UserConfigValidationException
 
 
 class TestFetchModelId:
-
-    @pytest.mark.skip(reason="Skipping this test for now due to import issues, will enable once fixed")
     @pytest.mark.parametrize("model_info_path, model_info, expected_model_id", [("", {"id": "abc"}, "abc")])
     def test_fetch_model_id(self, model_info_path, model_info, expected_model_id):
         from src.responsibleai.rai_analyse.constants import DashboardInfo
@@ -18,7 +16,6 @@ class TestFetchModelId:
             json.dump(model_info, json_file)
         assert fetch_model_id(model_info_path) == expected_model_id
 
-    @pytest.mark.skip(reason="Skipping this test for now due to import issues, will enable once fixed")
     @pytest.mark.parametrize("model_info_path, model_info", [("", {"otherKeys": "abc"})])
     def test_fetch_model_id_invalid_input(self, model_info_path, model_info):
         from src.responsibleai.rai_analyse.constants import DashboardInfo
