@@ -5,7 +5,7 @@ import pytest
 from raiutils.exceptions import UserConfigValidationException
 from src.responsibleai.rai_analyse.constants import DashboardInfo
 from src.responsibleai.rai_analyse.rai_component_utilities import \
-            fetch_model_id
+    fetch_model_id
 
 
 @pytest.fixture
@@ -13,22 +13,23 @@ def temp_dir(tmpdir):
     # Create a temporary directory for testing
     return str(tmpdir)
 
+
 class TestFetchModelId:
-   @pytest.mark.parametrize(
-      "model_info",[
+    @pytest.mark.parametrize(
+        "model_info", [
             ({"id": "abc123"}),  # Valid input case
             ({"id": 123}),  # Valid input case with integer model ID
             ({"id": None})  # Valid input case with None model ID
-            ]
-        )
-   def test_fetch_model_id(self, temp_dir, model_info):       
+        ]
+    )
+    def test_fetch_model_id(self, temp_dir, model_info):
         model_info_path = os.path.join(temp_dir, DashboardInfo.MODEL_INFO_FILENAME)
         with open(model_info_path, "w") as json_file:
             json.dump(model_info, json_file)
         assert fetch_model_id(temp_dir) == model_info["id"]
 
-   @pytest.mark.parametrize("model_info", [({"otherKeys": "abc"})])
-   def test_fetch_model_id_invalid_input(self, temp_dir, model_info):
+    @pytest.mark.parametrize("model_info", [({"otherKeys": "abc"})])
+    def test_fetch_model_id_invalid_input(self, temp_dir, model_info):
         model_info_path = os.path.join(temp_dir, DashboardInfo.MODEL_INFO_FILENAME)
         with open(model_info_path, "w") as json_file:
             json.dump(model_info, json_file)
