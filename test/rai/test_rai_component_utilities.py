@@ -3,6 +3,7 @@ import os
 
 import pytest
 from raiutils.exceptions import UserConfigValidationException
+
 from src.responsibleai.rai_analyse.constants import DashboardInfo
 from src.responsibleai.rai_analyse.rai_component_utilities import \
     fetch_model_id
