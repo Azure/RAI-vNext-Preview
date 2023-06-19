@@ -125,6 +125,19 @@ def add_properties_to_gather_run(dashboard_info, rai_info):
 
 def validate_and_correct_config(config, insight_data):
     i_data = insight_data.get_raiinsight()
+    try:
+        top_n = config["FeatureImportance"]["top_n"]
+        if top_n > 10:
+            _logger.warning(
+                "Feature importance is limited to "
+                "top 10 most important feature"
+                f", but top_n={top_n} was specificed."
+                "Setting top_n to 10 automatically."
+            )
+        config["FeatureImportance"]["top_n"] = 10
+    except KeyError:
+        pass
+
     if "Fairness" in config.keys():
         fc = config["Fairness"]
         cat_features = [
