@@ -27,7 +27,7 @@ RUN pip install 'responsibleai~=0.28.0' \
                 'protobuf<4' \
                 'mltable==1.0.0' \
                 'responsibleai-tabular-automl==0.4.0' \
-                'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.4.0-py3-none-any.whl' \
+                'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.4.0-py3-none-any.whl'
 
 RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
 
