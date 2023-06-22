@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20221010.v1
 
 RUN apt-get -y update && apt-get -y install wkhtmltopdf
 
-ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/responsibleai-0.24
+ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/responsibleai
 
 # Create conda environment
 # Note libffi is pinned as it causes scorecard component to fail
@@ -14,24 +14,22 @@ RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
 ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
 
 # Install pip dependencies
-RUN pip install 'responsibleai~=0.26.0' \
-                'raiwidgets~=0.26.0' \
+RUN pip install 'responsibleai~=0.28.0' \
+                'raiwidgets~=0.28.0' \
                 'pyarrow' \
+                'markupsafe<=2.0.1' \
+                'itsdangerous==2.0.1' \
                 'mlflow' \
-                'azureml-core~=1.48.0' \
-                'azureml-dataset-runtime~=1.48.0' \
-                'azureml-mlflow~=1.48.0' \
-                'azureml-telemetry~=1.48.0' \
+                'scikit-learn<1.1' \
                 'pdfkit==1.0.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
                 'protobuf<4' \
-                'numpy<1.24.0' \
-                'mltable' \
-                'azureml_dataprep' \
-                'azureml_dataprep_rslex'
+                'mltable==1.0.0' \
+                'responsibleai-tabular-automl==0.4.0' \
+                'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.4.0-py3-none-any.whl'
 
-RUN pip install --pre azure-ai-ml
+RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
 
 # no-deps install for domonic due to unresolable dependencies requirment on urllib3 and requests. 
 RUN pip install --no-deps 'charset-normalizer==2.0.12' \
@@ -40,6 +38,17 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
                           'html5lib==1.1' \
                           'webencodings==0.5.1' \
                           'domonic==0.9.10'
+
+# Install azureml packages
+RUN pip install 'azureml-dataset-runtime==1.51.0' \
+                'azureml-core==1.51.0' \
+                'azureml-mlflow==1.51.0' \
+                'azureml-telemetry==1.51.0'
+
+# To resolve vulnerability issue
+RUN pip install 'Werkzeug==2.2.3'
+
+RUN pip freeze
 
 # This is needed for mpi to locate libpython
 ENV LD_LIBRARY_PATH $AZUREML_CONDA_ENVIRONMENT_PATH/lib:$LD_LIBRARY_PATH
