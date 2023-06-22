@@ -147,10 +147,19 @@ def track(
                             raise
                         al.activity_info["exception_type"] = str(type(e))
                         al.activity_info["stacktrace"] = "\n".join(
-                            _extract_and_filter_stack(
+                            extract_and_filter_stack(
                                 e, traceback.extract_tb(sys.exc_info()[2])
                             )
                         )
+
+                        if hasattr(e, 'tb') and hasattr(e, 'cause'):
+                            st = "\n".join(
+                                extract_and_filter_stack(
+                                    e.cause, traceback.extract_tb(e.tb)
+                                )
+                            )
+                            al.activity_info["stacktrace"] = al.activity_info["stacktrace"] + f"\n Caused by {st}"
+
                         raise
             except Exception:
                 raise
@@ -169,7 +178,7 @@ def track(
     return monitor
 
 
-def _extract_and_filter_stack(e, traces):
+def extract_and_filter_stack(e, traces):
     ret = [str(type(e))]
 
     for trace in traces:

@@ -10,12 +10,14 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import traceback
 import uuid
 from typing import Any, Dict, Optional
 
 import mlflow
 import mltable
 import pandas as pd
+from _telemetry._loggerfactory import extract_and_filter_stack
 from arg_helpers import get_from_args
 from azureml.core import Model, Run, Workspace
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
@@ -44,7 +46,11 @@ _tool_directory_mapping: Dict[str, str] = {
 
 
 class UserConfigError(Exception):
-    pass
+    def __init__(self, message, cause=None):
+        if cause:
+            self.tb = extract_and_filter_stack(cause, traceback.extract_tb(sys.exc_info()[2]))
+            self.cause = cause
+        super().__init__(message)
 
 
 def print_dir_tree(base_dir):
@@ -88,10 +94,10 @@ def load_mlflow_model(
         try:
             model = Model._get(workspace, id=model_id)
         except Exception as e:
-            raise UserConfigValidationException(
+            raise UserConfigError(
                 "Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(
                     model_id, workspace.name, e
-                )
+                ), e
             )
         model_uri = "models:/{}/{}".format(model.name, model.version)
 
@@ -99,10 +105,10 @@ def load_mlflow_model(
         try:
             pip_file = mlflow.pyfunc.get_model_dependencies(model_uri)
         except Exception as e:
-            raise ValueError(
+            raise UserConfigError(
                 "Failed to get model dependency from given model {}, error:\n{}".format(
                     model_uri, e
-                )
+                ), e
             )
         try:
             subprocess.check_output(
@@ -126,20 +132,28 @@ def load_mlflow_model(
         model = mlflow.pyfunc.load_model(model_uri)._model_impl
         return model
     except Exception as e:
-        raise ValueError(
+        raise UserConfigError(
             "Unable to load mlflow model from {} in current environment due to error:\n{}".format(
                 model_uri, e
-            )
+            ), e
         )
 
 
 def _classify_and_log_pip_install_error(elog):
-    if elog is not None:
-        if b"Could not find a version that satisfies the requirement" in elog:
-            _logger.warning("Detected unsatisfiable version requirment.")
+    ret_message = []
+    if elog is None:
+        return ret_message
 
-        if b"package versions have conflicting dependencies" in elog:
-            _logger.warning("Detected dependency conflict error.")
+    if b"Could not find a version that satisfies the requirement" in elog:
+        ret_message.append("Detected unsatisfiable version requirment.")
+
+    if b"package versions have conflicting dependencies" in elog:
+        ret_message.append("Detected dependency conflict error.")
+
+    for m in ret_message:
+        _logger.warning(m)
+
+    return ret_message
 
 
 def load_mltable(mltable_path: str) -> pd.DataFrame:
@@ -177,9 +191,10 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
         df = load_mltable(dataset_path)
         isLoadSuccessful = True
     except Exception as e:
-        new_e = UserConfigValidationException(
+        new_e = UserConfigError(
             f"Input dataset {dataset_path} cannot be read as mltable."
-            f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}"
+            f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}",
+            e
         )
         exceptions.append(new_e)
 
@@ -188,14 +203,15 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
             df = load_parquet(dataset_path)
             isLoadSuccessful = True
         except Exception as e:
-            new_e = UserConfigValidationException(
+            new_e = UserConfigError(
                 f"Input dataset {dataset_path} cannot be read as parquet."
-                f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}"
+                f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}",
+                e
             )
             exceptions.append(new_e)
 
     if not isLoadSuccessful:
-        raise UserConfigValidationException(
+        raise UserConfigError(
             f"Input dataset {dataset_path} cannot be read as MLTable or Parquet dataset."
             f"Please check that input dataset is valid. Exceptions encountered during reading: {exceptions}"
         )
