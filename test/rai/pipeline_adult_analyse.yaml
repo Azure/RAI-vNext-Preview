@@ -25,6 +25,7 @@ jobs:
     inputs:
       training_data: ${{parent.inputs.my_training_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
+      dropped_features: 'Race'
 
 
   register_model_job:
@@ -47,6 +48,7 @@ jobs:
       test_dataset: ${{parent.inputs.my_test_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
       categorical_column_names: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
+      feature_metadata: '{"dropped_features": ["Race"]}'
 
   explain_01:
     type: command
