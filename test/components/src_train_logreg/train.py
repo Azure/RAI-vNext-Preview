@@ -26,6 +26,7 @@ def parse_args():
     # add arguments
     parser.add_argument("--training_data", type=str, help="Path to training data")
     parser.add_argument("--target_column_name", type=str, help="Name of target column")
+    parser.add_argument("--dropped_features", type=str, help="Comma-separated list of features to drop")
     parser.add_argument("--model_output", type=str, help="Path of output model")
 
     # parse args
@@ -51,6 +52,10 @@ def main(args):
     print("all_data cols: {0}".format(all_data.columns))
     y_train = all_data[args.target_column_name]
     X_train = all_data.drop(labels=args.target_column_name, axis="columns")
+    if args.dropped_features and len(args.dropped_features) > 0:
+        dropped_features = [f.strip() for f in args.dropped_features.split(",")]
+        if len(dropped_features) > 0:
+            X_train.drop(columns=dropped_features, inplace=True)
     print("X_train cols: {0}".format(X_train.columns))
 
     print("Training model")
