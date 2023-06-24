@@ -52,7 +52,7 @@ def main(args):
     print("all_data cols: {0}".format(all_data.columns))
     y_train = all_data[args.target_column_name]
     X_train = all_data.drop(labels=args.target_column_name, axis="columns")
-    if len(args.dropped_features) > 0:
+    if args.dropped_features and len(args.dropped_features) > 0:
         dropped_features = [f.strip() for f in args.dropped_features.split(",")]
         if len(dropped_features) > 0:
             X_train.drop(columns=dropped_features, inplace=True)
