@@ -32,7 +32,12 @@ ordered_label_metrics = ["confusion_matrix", "false_positive", "false_negative"]
 
 
 def get_metric(metric, y_test, y_pred, **kwargs):
-    func = metric_func_map[metric]
+    if metric not in metric_func_map:
+        raise UserConfigValidationException(
+            f"Invalid metric, metric {metric} is not supported."
+        )
+    else:
+        func = metric_func_map[metric]
 
     if metric in pos_label_metrics:
         return func(y_test, y_pred, pos_label=kwargs["pos_label"])
