@@ -8,7 +8,6 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from domonic.html import (a, div, h1, h3, img, li, p, span, table, tbody, td,
                           thead, tr, ul)
-
 from raiutils.exceptions import UserConfigValidationException
 
 
