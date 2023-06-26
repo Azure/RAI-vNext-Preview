@@ -11,6 +11,7 @@ from domonic.html import (a, div, h1, h3, img, li, p, span, table, tbody, td,
 
 from raiutils.exceptions import UserConfigValidationException
 
+
 def get_full_html(htmlbody):
     return "<!DOCTYPE html><html><body><head>{}</head>{}</body></html>".format(
         get_css(), htmlbody
@@ -533,7 +534,7 @@ def get_model_overview(data):
 
     if "ModelSummary" not in data:
         raise UserConfigValidationException(
-            f"Invalid model config data, expecting key ModelSummary to exist in the model config data."
+            "Invalid model config data, expecting key ModelSummary to exist in the model config data."
         )
     else:
         model_left_items.append(div(h3("Purpose"), p(data["ModelSummary"])))
