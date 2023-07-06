@@ -5,7 +5,9 @@ import sys
 import traceback
 
 from src.responsibleai.rai_analyse._telemetry._loggerfactory import \
-    _extract_and_filter_stack
+    extract_and_filter_stack
+from src.responsibleai.rai_analyse.rai_component_utilities import \
+    UserConfigError
 
 
 class TestStackTraceExtraction:
@@ -20,12 +22,25 @@ class TestStackTraceExtraction:
     def level_2(self):
         raise ValueError(f"{self.secret_string}")
 
+    def test_traceback_with_cause_exception(self):
+        ex = None
+        try:
+            raise ValueError("This is some error message 764823.")
+        except Exception as e:
+            ex = UserConfigError(
+                "user error message",
+                e
+            )
+
+        assert ex is not None
+        assert "764823" in " ".join(ex.tb)
+
     def test_expect_full_stack_trace_do_not_contain_secret_value(self):
         extracted_stack = None
         try:
             self.level_0()
         except Exception as e:
-            extracted_stack = _extract_and_filter_stack(
+            extracted_stack = extract_and_filter_stack(
                 e, traceback.extract_tb(sys.exc_info()[2])
             )
 

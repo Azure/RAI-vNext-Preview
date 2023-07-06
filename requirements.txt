@@ -3,8 +3,8 @@ azure-ai-ml~=1.0.0
 mltable~=1.0.0
 azureml_dataprep
 azureml_dataprep_rslex
-responsibleai~=0.26.0
-raiwidgets~=0.26.0
+responsibleai~=0.28.0
+raiwidgets~=0.28.0
 jupyter
 pandas
 pyarrow

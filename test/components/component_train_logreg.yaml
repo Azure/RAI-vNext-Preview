@@ -8,6 +8,10 @@ inputs:
     type: path
   target_column_name:
     type: string
+  dropped_features:
+    type: string
+    optional: true
+    default: ""
 outputs:
   model_output:
     type: path
@@ -17,4 +21,5 @@ command: >-
   python train.py
   --training_data ${{inputs.training_data}}
   --target_column_name ${{inputs.target_column_name}}
+  $[[--dropped_features ${{inputs.dropped_features}}]]
   --model_output ${{outputs.model_output}}
