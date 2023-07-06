@@ -49,6 +49,7 @@ jobs:
       test_dataset: ${{parent.inputs.my_test_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
       categorical_column_names: '[]'
+      use_model_dependency: True
 
   explain_01:
     type: command

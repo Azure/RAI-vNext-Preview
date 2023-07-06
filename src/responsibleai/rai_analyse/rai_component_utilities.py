@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import uuid
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import mlflow
@@ -97,7 +98,7 @@ def load_mlflow_model(
 
     if use_model_dependency:
         try:
-            pip_file = mlflow.pyfunc.get_model_dependencies(model_uri)
+            conda_file = mlflow.pyfunc.get_model_dependencies(model_uri, format="conda")
         except Exception as e:
             raise ValueError(
                 "Failed to get model dependency from given model {}, error:\n{}".format(
@@ -105,8 +106,26 @@ def load_mlflow_model(
                 )
             )
         try:
-            subprocess.check_output(
-                [sys.executable, "-m", "pip", "install", "-r", pip_file]
+            # mlflow model input mount as read only. Conda need write access.
+            local_conda_dep = "./conda_dep.yaml"
+            shutil.copyfile(conda_file, local_conda_dep)
+            conda_prefix = str(Path(sys.executable).parents[1])
+            
+            install_log = subprocess.check_output(
+                [
+                    "conda",
+                    "env",
+                    "update",
+                    "--prefix",
+                    conda_prefix,
+                    "-f",
+                    local_conda_dep,
+                ]
+            )
+            _logger.info(
+                "Dependency installation successful, logs: {}".format(
+                    install_log.decode("ascii")
+                )
             )
         except subprocess.CalledProcessError as e:
             _logger.error(
@@ -116,7 +135,7 @@ def load_mlflow_model(
             )
             _classify_and_log_pip_install_error(e.output)
             raise UserConfigValidationException(
-                "Installing dependency using requirments.txt from mlflow model failed. "
+                "Installing dependency using conda environment spec from mlflow model failed. "
                 "This behavior can be turned off with setting use_model_dependency to False in job spec. "
                 "You may also check error log above to manually resolve package conflict error"
             )
