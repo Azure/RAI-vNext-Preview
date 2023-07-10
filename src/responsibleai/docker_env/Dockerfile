@@ -25,7 +25,7 @@ RUN pip install 'responsibleai~=0.28.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
                 'protobuf<4' \
-                'mltable==1.0.0' \
+                'mltable==1.4.1' \
                 'responsibleai-tabular-automl==0.4.0' \
                 'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.4.0-py3-none-any.whl'
 
