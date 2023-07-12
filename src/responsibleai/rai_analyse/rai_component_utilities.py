@@ -12,7 +12,8 @@ import sys
 import tempfile
 import traceback
 import uuid
-from pathlib import Path
+import importlib
+
 from typing import Any, Dict, Optional
 
 import mlflow
@@ -110,7 +111,13 @@ def load_mlflow_model(
                     model_id, workspace.name, e
                 ), e
             )
-        model_uri = "models:/{}/{}".format(model.name, model.version)
+        muri = "models:/{}/{}".format(model.name, model.version)
+        try:
+            model_uri = mlflow.artifacts.download_artifacts(muri)
+        except Exception as e:
+            raise ValueError(
+                f"Unable to download model artifacts from model uri {muri}, error:\n{e}"
+            )
 
     if model_uri is None:
         raise UserConfigError(
@@ -130,7 +137,7 @@ def load_mlflow_model(
             # mlflow model input mount as read only. Conda need write access.
             local_conda_dep = "./conda_dep.yaml"
             shutil.copyfile(conda_file, local_conda_dep)
-            conda_prefix = str(Path(sys.executable).parents[1])
+            conda_prefix = str(pathlib.Path(sys.executable).parents[1])
 
             install_log = subprocess.check_output(
                 [
@@ -163,8 +170,14 @@ def load_mlflow_model(
         _logger.info("Successfully installed model dependencies")
 
     try:
-        model = mlflow.pyfunc.load_model(model_uri)._model_impl
-        wrapped_model = wrap_model(model, dataset_samples, task)
+        model_meta = mlflow.models.Model.load(os.path.join(model_uri, "MLmodel"))
+        loader_module = model_meta.flavors.get("python_function").get("loader_module")
+
+        _logger.info(f"Detected loader module {loader_module} from mlflow metadata.")
+        
+        extracted_model = importlib.import_module(loader_module).load_model(model_path)
+        wrapped_model = wrap_model(extracted_model, dataset_samples, task) 
+
         return wrapped_model
     except Exception as e:
         raise UserConfigError(

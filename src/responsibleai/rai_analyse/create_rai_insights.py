@@ -167,6 +167,8 @@ def main(args):
             workspace=my_run.experiment.workspace,
             use_model_dependency=args.use_model_dependency,
             model_id=model_id,
+            dataset_sample=train_df.head(2),
+            task=args.task_type,
         )
     elif args.model_input and args.model_info:
         model_id = args.model_info
@@ -175,6 +177,8 @@ def main(args):
             workspace=my_run.experiment.workspace,
             use_model_dependency=args.use_model_dependency,
             model_path=args.model_input,
+            dataset_samples=train_df.head(2),
+            task=args.task_type,
         )
 
     constructor_args = create_constructor_arg_dict(args)
