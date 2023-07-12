@@ -23,6 +23,7 @@ RUN pip install 'responsibleai~=0.29.0' \
                 'scikit-learn<1.1' \
                 'tensorflow' \
                 'torch' \
+                'ml-wrappers' \
                 'pdfkit==1.0.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
