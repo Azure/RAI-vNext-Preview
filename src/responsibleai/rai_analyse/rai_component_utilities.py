@@ -130,7 +130,7 @@ def load_mlflow_model(
             )
             _logger.info(
                 "Dependency installation successful, logs: {}".format(
-                    install_log.decode("ascii")
+                    install_log
                 )
             )
         except subprocess.CalledProcessError as e:
