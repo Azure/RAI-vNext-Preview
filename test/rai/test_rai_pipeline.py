@@ -43,6 +43,30 @@ class TestRAISmoke:
 
         submit_and_wait(ml_client, pipeline_job)
 
+    def test_boston_tensorflow_pipeline_from_yaml(self, ml_client, component_config):
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = current_dir / "pipeline_boston_tensorflow_analyse.yaml"
+        pipeline_processed_file = "pipeline_boston_tensorflow_analyse.processed.yaml"
+
+        replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
+        process_file(pipeline_file, pipeline_processed_file, replacements)
+
+        pipeline_job = load_job(source=pipeline_processed_file)
+
+        submit_and_wait(ml_client, pipeline_job)
+
+    def test_boston_pytorch_pipeline_from_yaml(self, ml_client, component_config):
+        current_dir = pathlib.Path(__file__).parent.absolute()
+        pipeline_file = current_dir / "pipeline_boston_pytorch_analyse.yaml"
+        pipeline_processed_file = "pipeline_boston_pytorch_analyse.processed.yaml"
+
+        replacements = {"VERSION_REPLACEMENT_STRING": str(component_config["version"])}
+        process_file(pipeline_file, pipeline_processed_file, replacements)
+
+        pipeline_job = load_job(source=pipeline_processed_file)
+
+        submit_and_wait(ml_client, pipeline_job)
+
     def test_wrong_features_boston_pipeline_from_yaml(self, ml_client, component_config):
         current_dir = pathlib.Path(__file__).parent.absolute()
         pipeline_file = current_dir / "pipeline_wrong_features_boston_analyse.yaml"
