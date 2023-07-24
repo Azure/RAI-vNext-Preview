@@ -72,8 +72,15 @@ def print_dir_tree(base_dir):
 
 def fetch_model_id(model_info_path: str):
     model_info_path = os.path.join(model_info_path, DashboardInfo.MODEL_INFO_FILENAME)
-    with open(model_info_path, "r") as json_file:
-        model_info = json.load(json_file)
+    try:
+        json_file = open(model_info_path, "r")
+    except Exception as ex:
+        raise UserConfigValidationException(
+            f"Failed to open {model_info_path}. Please ensure the model path is correct.",
+            ex
+        )
+    model_info = json.load(json_file)
+    json_file.close()
     if DashboardInfo.MODEL_ID_KEY not in model_info:
         raise UserConfigValidationException(
             f"Invalid input, expecting key {DashboardInfo.MODEL_ID_KEY} to exist in the input json"
