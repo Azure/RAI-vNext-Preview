@@ -74,10 +74,9 @@ def fetch_model_id(model_info_path: str):
     model_info_path = os.path.join(model_info_path, DashboardInfo.MODEL_INFO_FILENAME)
     try:
         json_file = open(model_info_path, "r")
-    except Exception as ex:
+    except Exception:
         raise UserConfigValidationException(
-            f"Failed to open {model_info_path}. Please ensure the model path is correct.",
-            ex
+            f"Failed to open {model_info_path}. Please ensure the model path is correct."
         )
     model_info = json.load(json_file)
     json_file.close()
