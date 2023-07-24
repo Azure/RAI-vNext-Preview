@@ -38,3 +38,11 @@ class TestFetchModelId:
             UserConfigValidationException,
                 match=f"Invalid input, expecting key {DashboardInfo.MODEL_ID_KEY} to exist in the input json"):
             fetch_model_id(temp_dir)
+            
+    @pytest.mark.parametrize("model_info_")
+    def test_fetch_model_id_invalid_model_path(self, temp_dir):
+        model_info_path = os.path.join(temp_dir, DashboardInfo.MODEL_INFO_FILENAME)
+        with pytest.raises(
+            UserConfigValidationException,
+                match=f"Failed to open {model_info_path}. Please ensure the model path is correct."):
+            fetch_model_id("model_info_")
