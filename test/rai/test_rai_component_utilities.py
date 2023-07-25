@@ -41,8 +41,8 @@ class TestFetchModelId:
             fetch_model_id(temp_dir)
 
     def test_fetch_model_id_invalid_model_path(self):
-        model_info_path = os.path.join("invalid_dir", DashboardInfo.MODEL_INFO_FILENAME)
+        model_info_path = os.path.join("invalid_model_path", DashboardInfo.MODEL_INFO_FILENAME)
         with pytest.raises(
             UserConfigValidationException,
                 match=re.escape(f'Failed to open {model_info_path}. Please ensure the model path is correct.')):
-            fetch_model_id("invalid_dir")
+            fetch_model_id("invalid_model_path")
