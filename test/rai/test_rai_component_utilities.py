@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 import pytest
 from raiutils.exceptions import UserConfigValidationException
@@ -40,7 +41,8 @@ class TestFetchModelId:
             fetch_model_id(temp_dir)
 
     def test_fetch_model_id_invalid_model_path(self):
+        model_info_path = os.path.join("invalid_dir", DashboardInfo.MODEL_INFO_FILENAME)
         with pytest.raises(
             UserConfigValidationException,
-                match=r"Failed to open invalid_dir\\model_info.json. Please ensure the model path is correct."):
+                match=re.escape(f'Failed to open {model_info_path}. Please ensure the model path is correct.')):
             fetch_model_id("invalid_dir")
