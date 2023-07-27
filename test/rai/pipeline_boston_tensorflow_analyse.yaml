@@ -1,0 +1,99 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+experiment_name: AML_RAI_Boston_Tensorflow_VERSION_REPLACEMENT_STRING
+type: pipeline
+
+inputs:
+  target_column_name: 'y'
+  my_training_data:
+    type: uri_file
+    path: azureml:boston_train_pq:VERSION_REPLACEMENT_STRING
+    mode: download
+  my_test_data:
+    type: uri_file
+    path: azureml:boston_test_pq:VERSION_REPLACEMENT_STRING
+    mode: download
+
+compute: azureml:cpucluster
+
+jobs:
+  train_and_register_model_job:
+    type: command
+    component: azureml:train_boston_tensorflow_for_rai:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      training_data: ${{parent.inputs.my_training_data}}
+      target_column_name: ${{parent.inputs.target_column_name}}
+      features: '["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]'
+      model_base_name: component_registered_boston_tensorflow_01
+
+  create_rai_job:
+    type: command
+    component: azureml:rai_insights_constructor:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      title: Boston Housing Analysis with tensorflow
+      task_type: regression
+      model_info_path: ${{parent.jobs.train_and_register_model_job.outputs.model_info_output_path}}
+      train_dataset: ${{parent.inputs.my_training_data}}
+      test_dataset: ${{parent.inputs.my_test_data}}
+      target_column_name: ${{parent.inputs.target_column_name}}
+      categorical_column_names: '[]'
+      use_model_dependency: True
+
+  explain_01:
+    type: command
+    component: azureml:rai_insights_explanation:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      comment: Some random string
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+
+  causal_01:
+    type: command
+    component: azureml:rai_insights_causal:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      treatment_features: '["ZN", "NOX"]'
+      heterogeneity_features: '[]'
+      nuisance_model: linear
+      skip_cat_limit_checks: True
+
+  error_analysis_01:
+    limits:
+      timeout: 120
+    type: command
+    component: azureml:rai_insights_erroranalysis:VERSION_REPLACEMENT_STRING
+    inputs:
+      rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      max_depth: 3
+      filter_features: '[]'
+
+  gather_01:
+    type: command
+    component: azureml:rai_insights_gather:VERSION_REPLACEMENT_STRING
+    limits:
+      timeout: 120
+    inputs:
+      constructor: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
+      insight_1: ${{parent.jobs.causal_01.outputs.causal}}
+      insight_2: ${{parent.jobs.error_analysis_01.outputs.error_analysis}}
+      insight_3: ${{parent.jobs.explain_01.outputs.explanation}}
+
+  scorecard_01:
+     type: command
+     component: azureml:rai_score_card:VERSION_REPLACEMENT_STRING
+     inputs:
+       dashboard: ${{parent.jobs.gather_01.outputs.dashboard}}
+       pdf_generation_config:
+         type: uri_file
+         path: ./test/rai/boston_analyse_scorecard_config/pdf_gen.json
+         mode: download
+       predefined_cohorts_json:
+         type: uri_file
+         path: ./test/rai/boston_analyse_scorecard_config/cohorts.json
+         mode: download

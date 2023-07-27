@@ -1,10 +1,13 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+import copy
+import importlib
 import json
 import logging
 import os
 import pathlib
+import pickle
 import re
 import shutil
 import subprocess
@@ -12,8 +15,6 @@ import sys
 import tempfile
 import traceback
 import uuid
-import importlib
-
 from typing import Any, Dict, Optional
 
 import mlflow
@@ -24,10 +25,9 @@ from azureml.core import Model, Run, Workspace
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from ml_wrappers import wrap_model
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
-from ml_wrappers import wrap_model
-
 
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
@@ -39,7 +39,6 @@ data_type = "data_type"
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
-
 
 # Directory names saved by RAIInsights might not match tool names
 _tool_directory_mapping: Dict[str, str] = {
@@ -56,6 +55,46 @@ class UserConfigError(Exception):
             self.tb = _extract_and_filter_stack(cause, traceback.extract_tb(sys.exc_info()[2]))
             self.cause = cause
         super().__init__(message)
+
+
+class AmlMlflowModelSerializer:
+    def __init__(
+        self,
+        dataset_samples: pd.DataFrame,
+        task: str,
+        model_id: str,
+        use_model_dependency: bool = False,
+    ) -> None:
+        self.dataset_samples = dataset_samples
+        self.task = task
+        self.use_model_dependency = use_model_dependency
+        self.model_id = model_id
+
+    def __getstate__(self):
+        state = copy.deepcopy(self.__dict__)
+        state["dataset_samples"] = pickle.dumps(self.dataset_samples)
+
+        return state
+
+    def __setstate__(self, d):
+        self.task = d["task"]
+        self.use_model_dependency = d["use_model_dependency"]
+        self.model_id = d["model_id"]
+        self.dataset_samples = pickle.loads(d["dataset_samples"])
+
+    def save(self, model, model_dir):
+        pass
+
+    def load(self, model_dir):
+        wrapped_mlflow_model, _ = load_mlflow_model(
+            workspace=Run.get_context().experiment.workspace,
+            use_model_dependency=self.use_model_dependency,
+            model_id=self.model_id,
+            dataset_samples=self.dataset_samples,
+            task=self.task,
+        )
+
+        return wrapped_mlflow_model
 
 
 def print_dir_tree(base_dir):
@@ -94,7 +133,7 @@ def fetch_model_id(model_info_path: str):
 
 def load_mlflow_model(
     workspace: Workspace,
-    dataset_samples: Dataset,
+    dataset_samples: pd.DataFrame,
     task: str,
     use_model_dependency: bool = False,
     model_id: Optional[str] = None,
@@ -110,7 +149,8 @@ def load_mlflow_model(
             raise UserConfigError(
                 "Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(
                     model_id, workspace.name, e
-                ), e
+                ),
+                e,
             )
         muri = "models:/{}/{}".format(model.name, model.version)
         try:
@@ -132,7 +172,8 @@ def load_mlflow_model(
             raise UserConfigError(
                 "Failed to get model dependency from given model {}, error:\n{}".format(
                     model_uri, e
-                ), e
+                ),
+                e,
             )
         try:
             # mlflow model input mount as read only. Conda need write access.
@@ -152,9 +193,7 @@ def load_mlflow_model(
                 ]
             )
             _logger.info(
-                "Dependency installation successful, logs: {}".format(
-                    install_log
-                )
+                "Dependency installation successful, logs: {}".format(install_log)
             )
         except subprocess.CalledProcessError as e:
             _logger.error(
@@ -175,16 +214,24 @@ def load_mlflow_model(
         loader_module = model_meta.flavors.get("python_function").get("loader_module")
 
         _logger.info(f"Detected loader module {loader_module} from mlflow metadata.")
-        
-        extracted_model = importlib.import_module(loader_module).load_model(model_path)
-        wrapped_model = wrap_model(extracted_model, dataset_samples, task) 
 
-        return wrapped_model
+        extracted_model = importlib.import_module(loader_module).load_model(model_uri)
+        wrapped_model = wrap_model(extracted_model, dataset_samples, task)
+
+        serializer = AmlMlflowModelSerializer(
+            dataset_samples=dataset_samples,
+            task=task,
+            model_id=model_id,
+            use_model_dependency=use_model_dependency
+        )
+
+        return wrapped_model, serializer
     except Exception as e:
         raise UserConfigError(
             "Unable to load mlflow model from {} in current environment due to error:\n{}".format(
                 model_uri, e
-            ), e
+            ),
+            e,
         )
 
 
@@ -243,7 +290,7 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
         new_e = UserConfigError(
             f"Input dataset {dataset_path} cannot be read as mltable."
             f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}",
-            e
+            e,
         )
         exceptions.append(new_e)
 
@@ -255,7 +302,7 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
             new_e = UserConfigError(
                 f"Input dataset {dataset_path} cannot be read as parquet."
                 f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}",
-                e
+                e,
             )
             exceptions.append(new_e)
 
@@ -441,10 +488,18 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
 
-    model_estimator = load_mlflow_model(
+    dataset_samples = get_dataset_samples(
+        dataset=df_train,
+        target_column=constructor_args["target_column"],
+        feature_metadata=constructor_args["feature_metadata"],
+    )
+
+    model_estimator, serializer = load_mlflow_model(
         workspace=my_run.experiment.workspace,
         use_model_dependency=use_model_dependency,
         model_id=model_id,
+        task=constructor_args["task_type"],
+        dataset_samples=dataset_samples,
     )
 
     # unwrap the model if it's an sklearn wrapper
@@ -453,7 +508,11 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
-        model=model_estimator, train=df_train, test=df_test, **constructor_args
+        model=model_estimator,
+        train=df_train,
+        test=df_test,
+        serializer=serializer,
+        **constructor_args,
     )
     return rai_i
 
@@ -508,3 +567,20 @@ def get_arg(args, arg_name: str, custom_parser, allow_none: bool) -> Any:
             "For example, a json string with unquoted string value or key can cause this error."
             f"Raw parsing error: {e}"
         )
+
+
+def get_dataset_samples(
+    dataset: pd.DataFrame,
+    target_column: str,
+    feature_metadata: Optional[FeatureMetadata] = None,
+) -> pd.DataFrame:
+    if len(dataset.index) < 1:
+        raise UserConfigError("Input dataset is empty.")
+
+    filter_cols = [target_column]
+
+    if feature_metadata and feature_metadata.dropped_features:
+        filter_cols.extend(feature_metadata.dropped_features)
+
+    cols = [col for col in dataset.columns if col not in filter_cols]
+    return dataset[cols].head(1)
