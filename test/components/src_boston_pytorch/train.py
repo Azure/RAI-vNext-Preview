@@ -5,16 +5,15 @@
 import argparse
 import json
 import os
-import shutil
-import tempfile
+import time
 
 import mlflow
 import pandas as pd
-from azureml.core.run import Run
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from azureml.core.run import Run
+
 
 def parse_args():
     # setup arg parser
@@ -39,6 +38,7 @@ def parse_args():
 
     # return args
     return args
+
 
 def _common_pytorch_generator(numCols, num_classes=None):
     class Net(nn.Module):
@@ -65,7 +65,9 @@ def _common_pytorch_generator(numCols, num_classes=None):
             X = self.fc2(X)
             X = self.fc3(X)
             return self.output(X)
+
     return Net()
+
 
 def _train_pytorch_model(epochs, criterion, optimizer, net, torch_X, torch_y):
     for epoch in range(epochs):
@@ -74,8 +76,9 @@ def _train_pytorch_model(epochs, criterion, optimizer, net, torch_X, torch_y):
         loss = criterion(out, torch_y)
         loss.backward()
         optimizer.step()
-        print('epoch: ', epoch, ' loss: ', loss.data.item())
+        print("epoch: ", epoch, " loss: ", loss.data.item())
     return net
+
 
 def create_pytorch_regressor(X, y):
     # create simple (dummy) Pytorch DNN model for regression
@@ -91,6 +94,7 @@ def create_pytorch_regressor(X, y):
     optimizer = torch.optim.SGD(net.parameters(), lr=0.0001)
     return _train_pytorch_model(epochs, criterion, optimizer, net, torch_X, torch_y)
 
+
 def main(args):
     current_experiment = Run.get_context().experiment
     tracking_uri = current_experiment.workspace.get_mlflow_tracking_uri()
@@ -104,9 +108,7 @@ def main(args):
 
     # Drop the labeled column to get the training set.
     y_train = train_dataset[args.target_column_name]
-    X_train = train_dataset.drop(columns=[args.target_column_name])
-
-    features = args.features
+    X_train = train_dataset[args.features]
 
     model = create_pytorch_regressor(X_train, y_train)
 
@@ -119,7 +121,7 @@ def main(args):
 
     print("Registering via MLFlow")
     mlflow.pytorch.log_model(
-        pytorch_model=mlflow_model,
+        pytorch_model=model,
         registered_model_name=registered_name,
         artifact_path=registered_name,
     )
@@ -129,6 +131,7 @@ def main(args):
     output_path = os.path.join(args.model_info_output_path, "model_info.json")
     with open(output_path, "w") as of:
         json.dump(dict, fp=of)
+
 
 # run script
 if __name__ == "__main__":

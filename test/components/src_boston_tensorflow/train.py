@@ -5,16 +5,15 @@
 import argparse
 import json
 import os
-import shutil
-import tempfile
+import time
 
 import mlflow
 import pandas as pd
 from azureml.core.run import Run
-
-from tensorflow.keras.models import Sequential
 from tensorflow import keras
-from tensorflow.keras.layers import Activation, Dense, Dropout, concatenate
+from tensorflow.keras.layers import Activation, Dense, Dropout
+from tensorflow.keras.models import Sequential
+
 
 def parse_args():
     # setup arg parser
@@ -40,29 +39,32 @@ def parse_args():
     # return args
     return args
 
+
 def _common_model_generator(feature_number, output_length=1):
     model = Sequential()
-    model.add(Dense(32, activation='relu', input_shape=(feature_number,)))
+    model.add(Dense(32, activation="relu", input_shape=(feature_number,)))
     model.add(Dropout(0.25))
-    model.add(Dense(output_length, activation='relu', input_shape=(32,)))
+    model.add(Dense(output_length, activation="relu", input_shape=(32,)))
     model.add(Dropout(0.5))
     return model
+
 
 def create_keras_regressor(X, y):
     # create simple (dummy) Keras DNN model for regression
     batch_size = 128
     epochs = 12
     model = _common_model_generator(X.shape[1])
-    model.add(Activation('linear'))
-    model.compile(loss=keras.losses.mean_squared_error,
-                  optimizer=keras.optimizers.Adadelta(),
-                  metrics=['accuracy'])
-    model.fit(X, y,
-              batch_size=batch_size,
-              epochs=epochs,
-              verbose=1,
-              validation_data=(X, y))
+    model.add(Activation("linear"))
+    model.compile(
+        loss=keras.losses.mean_squared_error,
+        optimizer=keras.optimizers.Adadelta(),
+        metrics=["accuracy"],
+    )
+    model.fit(
+        X, y, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(X, y)
+    )
     return model
+
 
 def main(args):
     current_experiment = Run.get_context().experiment
@@ -77,9 +79,7 @@ def main(args):
 
     # Drop the labeled column to get the training set.
     y_train = train_dataset[args.target_column_name]
-    X_train = train_dataset.drop(columns=[args.target_column_name])
-
-    features = args.features
+    X_train = train_dataset[args.features]
 
     model = create_keras_regressor(X_train, y_train)
 
@@ -92,7 +92,7 @@ def main(args):
 
     print("Registering via MLFlow")
     mlflow.tensorflow.log_model(
-        tensorflow=mlflow_model,
+        model=model,
         registered_model_name=registered_name,
         artifact_path=registered_name,
     )
@@ -102,6 +102,7 @@ def main(args):
     output_path = os.path.join(args.model_info_output_path, "model_info.json")
     with open(output_path, "w") as of:
         json.dump(dict, fp=of)
+
 
 # run script
 if __name__ == "__main__":
