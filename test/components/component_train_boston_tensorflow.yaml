@@ -19,7 +19,7 @@ outputs:
   model_info_output_path:
     type: path
 code: ./src_boston_tensorflow/
-environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
+environment: azureml:tensorflow-2.12-cuda11:6
 command: >-
   python train.py
   --training_data ${{inputs.training_data}}

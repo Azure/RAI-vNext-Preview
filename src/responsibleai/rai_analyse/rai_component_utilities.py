@@ -166,50 +166,6 @@ def load_mlflow_model(
             "Model input is None because neither model id nor model path is provided."
         )
 
-    if use_model_dependency:
-        try:
-            conda_file = mlflow.pyfunc.get_model_dependencies(model_uri, format="conda")
-        except Exception as e:
-            raise UserConfigError(
-                "Failed to get model dependency from given model {}, error:\n{}".format(
-                    model_uri, e
-                ),
-                e,
-            )
-        try:
-            # mlflow model input mount as read only. Conda need write access.
-            local_conda_dep = "./conda_dep.yaml"
-            shutil.copyfile(conda_file, local_conda_dep)
-            conda_prefix = str(pathlib.Path(sys.executable).parents[1])
-
-            install_log = subprocess.check_output(
-                [
-                    "conda",
-                    "env",
-                    "update",
-                    "--prefix",
-                    conda_prefix,
-                    "-f",
-                    local_conda_dep,
-                ]
-            )
-            _logger.info(
-                "Dependency installation successful, logs: {}".format(install_log)
-            )
-        except subprocess.CalledProcessError as e:
-            _logger.error(
-                "Installing dependency using requriments.txt from mlflow model failed: {}".format(
-                    e.output
-                )
-            )
-            _classify_and_log_pip_install_error(e.output)
-            raise UserConfigValidationException(
-                "Installing dependency using conda environment spec from mlflow model failed. "
-                "This behavior can be turned off with setting use_model_dependency to False in job spec. "
-                "You may also check error log above to manually resolve package conflict error"
-            )
-        _logger.info("Successfully installed model dependencies")
-
     try:
         model_meta = mlflow.models.Model.load(os.path.join(model_uri, "MLmodel"))
         loader_module = model_meta.flavors.get("python_function").get("loader_module")
@@ -222,8 +178,7 @@ def load_mlflow_model(
         serializer = AmlMlflowModelSerializer(
             dataset_samples=dataset_samples,
             task=task,
-            model_id=model_id,
-            use_model_dependency=use_model_dependency
+            model_id=model_id
         )
 
         return wrapped_model, serializer
@@ -497,7 +452,6 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
 
     model_estimator, serializer = load_mlflow_model(
         workspace=my_run.experiment.workspace,
-        use_model_dependency=use_model_dependency,
         model_id=model_id,
         task=constructor_args["task_type"],
         dataset_samples=dataset_samples,

@@ -44,7 +44,14 @@ outputs:
     type: path
 code: ./rai_analyse/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
-command: >-
+command: 
+>-
+  python install_model_dependency.py
+  $[[--model_info_path '${{inputs.model_info_path}}']]
+  $[[--model_input '${{inputs.model_input}}']]
+  $[[--model_info '${{inputs.model_info}}']]
+  --use_model_dependency ${{inputs.use_model_dependency}}
+
   python create_rai_insights.py
   --title '${{inputs.title}}'
   --task_type ${{inputs.task_type}}
@@ -58,5 +65,5 @@ command: >-
   --categorical_column_names '${{inputs.categorical_column_names}}'
   --classes '${{inputs.classes}}'
   --feature_metadata '${{inputs.feature_metadata}}'
-  --use_model_dependency ${{inputs.use_model_dependency}}
   --output_path ${{outputs.rai_insights_dashboard}}
+  --use_model_dependency ${{inputs.use_model_dependency}}
