@@ -196,7 +196,6 @@ def main(args):
     _logger.info("Loading model: {0}".format(model_id))
     model_estimator, serializer = load_mlflow_model(
         workspace=my_run.experiment.workspace,
-        use_model_dependency=args.use_model_dependency,
         model_id=model_id,
         dataset_samples=dataset_samples,
         task=args.task_type,
