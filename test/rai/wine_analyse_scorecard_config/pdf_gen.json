@@ -1,0 +1,16 @@
+{
+  "Model": {
+    "ModelName": "Wine Analyze",
+    "ModelType": "Classification",
+    "ModelSummary": "This is a multiclass classification model for wine analyze"
+  },
+  "Metrics": {
+    "accuracy_score": {}
+  },
+  "DataExplorer": {
+    "features": [
+      "alcohol",
+      "hue"
+    ]
+  }
+}

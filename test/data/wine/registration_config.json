@@ -1,0 +1,14 @@
+{
+    "environments": [],
+    "components": [],
+    "data": [
+        {
+            "script" : "fetch_wine.py",
+            "data_yamls": [
+                "data_wine_test.yaml",
+                "data_wine_train.yaml"
+            ]
+        }
+    ],
+    "nested_directories": []
+}
