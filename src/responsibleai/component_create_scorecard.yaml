@@ -21,6 +21,9 @@ environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 code: ./rai_analyse/
 
 command: >-
+  python install_model_dependency.py
+  --rai_insights_dashboard ${{inputs.dashboard}}
+
   python create_score_card.py
   --rai_insights_dashboard ${{inputs.dashboard}}
   --pdf_generation_config ${{inputs.pdf_generation_config}}

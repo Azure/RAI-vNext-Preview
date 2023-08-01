@@ -17,9 +17,9 @@ from rai_component_utilities import (default_json_handler, fetch_model_id,
                                      get_test_dataset_id, get_train_dataset_id,
                                      load_dataset, load_mlflow_model)
 from raiutils.exceptions import UserConfigValidationException
-from responsibleai.feature_metadata import FeatureMetadata
 
 from responsibleai import RAIInsights
+from responsibleai.feature_metadata import FeatureMetadata
 
 _logger = logging.getLogger(__file__)
 _ai_logger = None

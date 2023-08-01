@@ -11,10 +11,10 @@ import mlflow
 import numpy as np
 import pandas as pd
 from azureml.core import Dataset, Model, Run, Workspace
-from responsibleai.serialization_utilities import serialize_json_safe
 
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
+from responsibleai.serialization_utilities import serialize_json_safe
 
 
 class DashboardInfo:

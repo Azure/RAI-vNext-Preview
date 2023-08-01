@@ -18,9 +18,9 @@ from rai_component_utilities import (add_properties_to_gather_run,
                                      create_rai_tool_directories,
                                      default_json_handler,
                                      load_dashboard_info_file, print_dir_tree)
-from responsibleai.serialization_utilities import serialize_json_safe
 
 from responsibleai import RAIInsights
+from responsibleai.serialization_utilities import serialize_json_safe
 
 _DASHBOARD_CONSTRUCTOR_MISMATCH = (
     "Insight {0} was not " "computed from the constructor specified"
