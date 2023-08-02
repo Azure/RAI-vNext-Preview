@@ -30,6 +30,9 @@ environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 code: ./rai_analyse/
 
 command: >-
+  python install_model_dependency.py
+  --rai_insights_dashboard ${{inputs.constructor}}
+
   python gather_rai_insights.py
   --constructor ${{inputs.constructor}}
   $[[--insight_1 '${{inputs.insight_1}}']]

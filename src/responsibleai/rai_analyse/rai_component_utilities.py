@@ -10,7 +10,6 @@ import pathlib
 import pickle
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
 import traceback
@@ -26,10 +25,10 @@ from azureml.core import Model, Run, Workspace
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from ml_wrappers import wrap_model
 from raiutils.exceptions import UserConfigValidationException
-from responsibleai.feature_metadata import FeatureMetadata
 
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
+from responsibleai.feature_metadata import FeatureMetadata
 
 assetid_re = re.compile(
     r"azureml://locations/(?P<location>.*)/workspaces/(?P<workspaceid>.*)/(?P<assettype>.*)/(?P<assetname>.*)/versions/(?P<assetversion>.*)"  # noqa: E501
@@ -63,12 +62,10 @@ class AmlMlflowModelSerializer:
         self,
         dataset_samples: pd.DataFrame,
         task: str,
-        model_id: str,
-        use_model_dependency: bool = False,
+        model_id: str
     ) -> None:
         self.dataset_samples = dataset_samples
         self.task = task
-        self.use_model_dependency = use_model_dependency
         self.model_id = model_id
 
     def __getstate__(self):
@@ -79,7 +76,6 @@ class AmlMlflowModelSerializer:
 
     def __setstate__(self, d):
         self.task = d["task"]
-        self.use_model_dependency = d["use_model_dependency"]
         self.model_id = d["model_id"]
         self.dataset_samples = pickle.loads(d["dataset_samples"])
 
@@ -89,7 +85,6 @@ class AmlMlflowModelSerializer:
     def load(self, model_dir):
         wrapped_mlflow_model, _ = load_mlflow_model(
             workspace=Run.get_context().experiment.workspace,
-            use_model_dependency=self.use_model_dependency,
             model_id=self.model_id,
             dataset_samples=self.dataset_samples,
             task=self.task,
@@ -438,9 +433,6 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     constructor_args = config[DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY]
     _logger.info(f"Constuctor args: {constructor_args}")
 
-    _logger.info("Loading model")
-    input_args = config[DashboardInfo.RAI_INSIGHTS_INPUT_ARGS_KEY]
-    use_model_dependency = input_args["use_model_dependency"]
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
 
