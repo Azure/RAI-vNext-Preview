@@ -14,8 +14,8 @@ RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
 ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
 
 # Install pip dependencies
-RUN pip install 'responsibleai~=0.28.0' \
-                'raiwidgets~=0.28.0' \
+RUN pip install 'responsibleai~=0.29.0' \
+                'raiwidgets~=0.29.0' \
                 'pyarrow' \
                 'markupsafe<=2.0.1' \
                 'itsdangerous==2.0.1' \
