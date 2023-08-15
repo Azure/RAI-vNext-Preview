@@ -128,6 +128,7 @@ class RaiInsightData:
                 self.raiinsight._feature_metadata.dropped_features, axis=1
             )
         self.y_pred = self.raiinsight.model.predict(test_data)
+        self.y_test = self.raiinsight.test[self.raiinsight.target_column].to_numpy()
 
     def _set_component_paths_prefix(self):
         for c in self.components:
@@ -186,8 +187,14 @@ class RaiInsightData:
     def get_y_pred(self):
         return self.y_pred
 
+    def set_y_pred(self, y_pred):
+        self.y_pred = y_pred
+
     def get_y_test(self):
-        return self.raiinsight.test[self.raiinsight.target_column].to_numpy()
+        return self.y_test
+
+    def set_y_test(self, y_test):
+        self.y_test = y_test
 
     def get_test(self):
         return self.raiinsight.test
@@ -335,8 +342,20 @@ class PdfDataGen:
             self.pos_label = self.classes[1]
 
         if self.is_multiclass:
-            self.pos_label = str(self.data._classes[0])
+            self.pos_label = str(self.classes[0])
             self.classes = [self.other_class, self.pos_label]
+            y_pred = self.data.get_y_pred()
+            y_test = self.data.get_y_test()
+            updated_y_pred = PdfDataGen._replace_labels(y_pred, self.pos_label, self.other_class)
+            updated_y_test = PdfDataGen._replace_labels(y_test, self.pos_label, self.other_class)
+            self.data.set_y_pred(updated_y_pred)
+            self.data.set_y_test(updated_y_test)
+
+    @staticmethod()
+    def _replace_labels(y, primary_label, other_label):
+        # for multi class scenario, replacing all labels with other_label except for primary_label.
+        y[y != primary_label] = other_label
+        return y
 
     def _get_feature_names(self):
         return [
