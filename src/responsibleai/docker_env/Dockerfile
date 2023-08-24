@@ -43,7 +43,8 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
 RUN pip install 'azureml-dataset-runtime==1.51.0' \
                 'azureml-core==1.51.0' \
                 'azureml-mlflow==1.51.0' \
-                'azureml-telemetry==1.51.0'
+                'azureml-telemetry==1.51.0' \
+                'azureml-rai-utils==0.0.5'
 
 # To resolve vulnerability issue
 RUN pip install 'Werkzeug==2.2.3'

@@ -10,3 +10,4 @@ pytest
 pytest-xdist
 numpy<1.24.0
 mlflow
+azureml-rai-utils==0.0.5
