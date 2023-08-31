@@ -6,8 +6,6 @@ jupyter
 pandas
 pyarrow
 scikit-learn<1.1 # See PR #1429 in responsible-ai-toolbox repo
-torch
-tensorflow
 shap
 responsibleai~=0.29.0
 raiwidgets~=0.29.0

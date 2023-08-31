@@ -1,31 +1,26 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import copy
-import importlib
 import json
 import logging
 import os
 import pathlib
-import pickle
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
 import traceback
 import uuid
 from typing import Any, Dict, Optional
 
-import mlflow
 import mltable
 import pandas as pd
 from arg_helpers import get_from_args
-from azureml.core import Model, Run, Workspace
+from azureml.core import Run, Workspace
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
+from azureml.rai.utils import AmlMlflowModelSerializer
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
-from ml_wrappers import wrap_model
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
 
@@ -55,46 +50,6 @@ class UserConfigError(Exception):
             self.tb = _extract_and_filter_stack(cause, traceback.extract_tb(sys.exc_info()[2]))
             self.cause = cause
         super().__init__(message)
-
-
-class AmlMlflowModelSerializer:
-    def __init__(
-        self,
-        dataset_samples: pd.DataFrame,
-        task: str,
-        model_id: str,
-        use_model_dependency: bool = False,
-    ) -> None:
-        self.dataset_samples = dataset_samples
-        self.task = task
-        self.use_model_dependency = use_model_dependency
-        self.model_id = model_id
-
-    def __getstate__(self):
-        state = copy.deepcopy(self.__dict__)
-        state["dataset_samples"] = pickle.dumps(self.dataset_samples)
-
-        return state
-
-    def __setstate__(self, d):
-        self.task = d["task"]
-        self.use_model_dependency = d["use_model_dependency"]
-        self.model_id = d["model_id"]
-        self.dataset_samples = pickle.loads(d["dataset_samples"])
-
-    def save(self, model, model_dir):
-        pass
-
-    def load(self, model_dir):
-        wrapped_mlflow_model, _ = load_mlflow_model(
-            workspace=Run.get_context().experiment.workspace,
-            use_model_dependency=self.use_model_dependency,
-            model_id=self.model_id,
-            dataset_samples=self.dataset_samples,
-            task=self.task,
-        )
-
-        return wrapped_mlflow_model
 
 
 def print_dir_tree(base_dir):
@@ -135,50 +90,23 @@ def load_mlflow_model(
     workspace: Workspace,
     dataset_samples: pd.DataFrame,
     task: str,
-    use_model_dependency: bool = False,
-    model_id: Optional[str] = None,
-    model_path: Optional[str] = None,
+    model_id: str,
 ) -> Any:
-    model_uri = model_path
-    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
-
-    if model_id:
-        try:
-            model = Model._get(workspace, id=model_id)
-        except Exception as e:
-            raise UserConfigError(
-                "Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(
-                    model_id, workspace.name, e
-                ),
-                e,
-            )
-        muri = "models:/{}/{}".format(model.name, model.version)
-        try:
-            model_uri = mlflow.artifacts.download_artifacts(muri)
-        except Exception as e:
-            raise ValueError(
-                f"Unable to download model artifacts from model uri {muri}, error:\n{e}"
-            )
-
-    if model_uri is None:
-        raise UserConfigError(
-            "Model input is None because neither model id nor model path is provided."
-        )
+    tracking_url = workspace.get_mlflow_tracking_uri()
+    model_id = model_id
+    model_split = model_id.rsplit(":", 1)
+    model_uri = "models:/{}/{}".format(model_split[0], model_split[1])
+    serializer = AmlMlflowModelSerializer(
+        dataset_samples=dataset_samples,
+        task=task,
+        model_id=model_id,
+        model_uri=model_uri,
+        tracking_url=tracking_url,
+    )
 
     try:
-        model_meta = mlflow.models.Model.load(os.path.join(model_uri, "MLmodel"))
-        loader_module = model_meta.flavors.get("python_function").get("loader_module")
-
-        _logger.info(f"Detected loader module {loader_module} from mlflow metadata.")
-
-        extracted_model = importlib.import_module(loader_module).load_model(model_uri)
-        wrapped_model = wrap_model(extracted_model, dataset_samples, task)
-
-        serializer = AmlMlflowModelSerializer(
-            dataset_samples=dataset_samples,
-            task=task,
-            model_id=model_id
-        )
+        # serializer uses model_id and tracking url to retrieve model.
+        wrapped_model = serializer.load(model_dir=None)
 
         return wrapped_model, serializer
     except Exception as e:
@@ -437,9 +365,6 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     constructor_args = config[DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY]
     _logger.info(f"Constuctor args: {constructor_args}")
 
-    _logger.info("Loading model")
-    input_args = config[DashboardInfo.RAI_INSIGHTS_INPUT_ARGS_KEY]
-    use_model_dependency = input_args["use_model_dependency"]
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
 

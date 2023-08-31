@@ -215,6 +215,16 @@ def main(args):
         rai_i.save(temp_dir)
         RAIInsights.load(temp_dir)
 
+        # copy model_requirements.txt
+        shutil.copyfile(
+            src=os.path.join(
+                temp_dir,
+                DashboardInfo.MODEL_REQUIREMENTS_FILENAME),
+            dst=os.path.join(
+                args.output_path,
+                DashboardInfo.MODEL_REQUIREMENTS_FILENAME)
+        )
+
     _logger.info("Saving JSON for tool components")
     output_dict = {
         DashboardInfo.RAI_INSIGHTS_RUN_ID_KEY: str(my_run.id),

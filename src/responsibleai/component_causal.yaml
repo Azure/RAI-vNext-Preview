@@ -64,6 +64,9 @@ environment_variables:
    AZUREML_COMPUTE_USE_COMMON_RUNTIME: true
 
 command: >-
+  python install_model_dependency.py
+  --rai_insights_dashboard ${{inputs.rai_insights_dashboard}}
+
   python create_causal.py
   --rai_insights_dashboard ${{inputs.rai_insights_dashboard}}
   --treatment_features '${{inputs.treatment_features}}'

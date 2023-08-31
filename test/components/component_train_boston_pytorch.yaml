@@ -19,7 +19,8 @@ outputs:
   model_info_output_path:
     type: path
 code: ./src_boston_pytorch/
-environment: azureml:AzureML-ACPT-pytorch-1.13-py38-cuda11.7-gpu:7
+
+environment: azureml://registries/azureml/environments/acpt-pytorch-1.13-cuda11.7/versions/12
 command: >-
   python train.py
   --training_data ${{inputs.training_data}}

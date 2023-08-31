@@ -29,6 +29,9 @@ code: ./rai_analyse/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 
 command: >-
+  python install_model_dependency.py
+  --rai_insights_dashboard ${{inputs.rai_insights_dashboard}}
+
   python create_error_analysis.py
   --rai_insights_dashboard ${{inputs.rai_insights_dashboard}}
   --max_depth ${{inputs.max_depth}}

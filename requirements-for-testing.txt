@@ -10,4 +10,4 @@ pytest
 pytest-xdist
 numpy<1.24.0
 mlflow
-azureml-rai-utils==0.0.5
+https://kichawus238999360667.blob.core.windows.net/packages/azureml_rai_utils-0.0.5-py3-none-any.whl
