@@ -6,15 +6,17 @@ import json
 import logging
 import os
 import shutil
+import tempfile
 
 from arg_helpers import boolean_parser, json_empty_is_none_parser
 from azureml.core import Run
 from azureml.rai.utils.telemetry import LoggerFactory, track
 from constants import COMPONENT_NAME, DashboardInfo, PropertyKeyValues
 from rai_component_utilities import (default_json_handler, fetch_model_id,
-                                     get_arg, get_test_dataset_id,
-                                     get_train_dataset_id, load_dataset,
-                                     load_mlflow_model)
+                                     get_arg, get_dataset_samples,
+                                     get_mlflow_model_conda_dependency_path,
+                                     get_test_dataset_id, get_train_dataset_id,
+                                     load_dataset, load_mlflow_model)
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
 
@@ -105,16 +107,24 @@ def create_constructor_arg_dict(args):
     )
     feature_metadata = FeatureMetadata()
     try:
-        if PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY in feature_metadata_dict.keys():
+        if (
+            PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY
+            in feature_metadata_dict.keys()
+        ):
             feature_metadata.dropped_features = feature_metadata_dict[
                 PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY
             ]
-        if PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY in feature_metadata_dict.keys():
+        if (
+            PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY
+            in feature_metadata_dict.keys()
+        ):
             feature_metadata.identity_feature_name = feature_metadata_dict[
                 PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY
             ]
     except AttributeError as e:
-        raise UserConfigValidationException(f"Feature metadata should be parsed to a dictionary. {e}")
+        raise UserConfigValidationException(
+            f"Feature metadata should be parsed to a dictionary. {e}"
+        )
 
     if cat_col_names:
         feature_metadata.categorical_features = cat_col_names
@@ -160,38 +170,59 @@ def main(args):
     if args.model_info_path is None and (
         args.model_input is None or args.model_info is None
     ):
-        raise UserConfigValidationException("Either model info or model input needs to be supplied.")
+        raise UserConfigValidationException(
+            "Either model info or model input needs to be supplied."
+        )
 
     model_estimator = None
     model_id = None
+
+    constructor_args = create_constructor_arg_dict(args)
+
+    dataset_samples = get_dataset_samples(
+        dataset=train_df,
+        target_column=args.target_column_name,
+        feature_metadata=constructor_args["feature_metadata"],
+    )
+
     if args.model_info_path:
         model_id = fetch_model_id(args.model_info_path)
-        _logger.info("Loading model: {0}".format(model_id))
-        model_estimator = load_mlflow_model(
-            workspace=my_run.experiment.workspace,
-            use_model_dependency=args.use_model_dependency,
-            model_id=model_id,
-        )
     elif args.model_input and args.model_info:
         model_id = args.model_info
-        _logger.info("Loading model: {0}".format(model_id))
-        model_estimator = load_mlflow_model(
-            workspace=my_run.experiment.workspace,
-            use_model_dependency=args.use_model_dependency,
-            model_path=args.model_input,
-        )
+
+    _logger.info("Loading model: {0}".format(model_id))
+    model_estimator, serializer = load_mlflow_model(
+        workspace=my_run.experiment.workspace,
+        model_id=model_id,
+        dataset_samples=dataset_samples,
+        task=args.task_type,
+    )
 
     # unwrap the model if it's an sklearn wrapper
     if model_estimator.__class__.__name__ == "_SklearnModelWrapper":
         model_estimator = model_estimator.sklearn_model
 
-    constructor_args = create_constructor_arg_dict(args)
-
     # Make sure that it actually loads
     _logger.info("Creating RAIInsights object")
-    _ = RAIInsights(
-        model=model_estimator, train=train_df, test=test_df, **constructor_args
+    rai_i = RAIInsights(
+        model=model_estimator,
+        train=train_df,
+        test=test_df,
+        serializer=serializer,
+        **constructor_args,
     )
+    # Make sure rai insight object is also serializable and deserializable
+    with tempfile.TemporaryDirectory() as temp_dir:
+        rai_i.save(temp_dir)
+        RAIInsights.load(temp_dir)
+
+        # copy conda dependency of model
+        shutil.copyfile(
+            src=get_mlflow_model_conda_dependency_path(model_id),
+            dst=os.path.join(
+                args.output_path,
+                DashboardInfo.MODEL_CONDA_ENV_FILENAME)
+        )
 
     _logger.info("Saving JSON for tool components")
     output_dict = {

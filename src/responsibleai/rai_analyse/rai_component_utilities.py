@@ -7,12 +7,10 @@ import os
 import pathlib
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
 import traceback
 import uuid
-from pathlib import Path
 from typing import Any, Dict, Optional
 
 import mlflow
@@ -20,6 +18,7 @@ import mltable
 import pandas as pd
 from arg_helpers import get_from_args
 from azureml.core import Model, Run, Workspace
+from azureml.rai.utils import AmlMlflowModelSerializer
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
@@ -36,7 +35,6 @@ data_type = "data_type"
 
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
-
 
 # Directory names saved by RAIInsights might not match tool names
 _tool_directory_mapping: Dict[str, str] = {
@@ -91,78 +89,45 @@ def fetch_model_id(model_info_path: str):
 
 def load_mlflow_model(
     workspace: Workspace,
-    use_model_dependency: bool = False,
-    model_id: Optional[str] = None,
-    model_path: Optional[str] = None,
+    dataset_samples: pd.DataFrame,
+    task: str,
+    model_id: str,
 ) -> Any:
-    model_uri = model_path
-    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
-
-    if model_id:
-        try:
-            model = Model._get(workspace, id=model_id)
-        except Exception as e:
-            raise UserConfigError(
-                "Unable to retrieve model by model id {} in workspace {}, error:\n{}".format(
-                    model_id, workspace.name, e
-                ), e
-            )
-        model_uri = "models:/{}/{}".format(model.name, model.version)
-
-    if use_model_dependency:
-        try:
-            conda_file = mlflow.pyfunc.get_model_dependencies(model_uri, format="conda")
-        except Exception as e:
-            raise UserConfigError(
-                "Failed to get model dependency from given model {}, error:\n{}".format(
-                    model_uri, e
-                ), e
-            )
-        try:
-            # mlflow model input mount as read only. Conda need write access.
-            local_conda_dep = "./conda_dep.yaml"
-            shutil.copyfile(conda_file, local_conda_dep)
-            conda_prefix = str(Path(sys.executable).parents[1])
-
-            install_log = subprocess.check_output(
-                [
-                    "conda",
-                    "env",
-                    "update",
-                    "--prefix",
-                    conda_prefix,
-                    "-f",
-                    local_conda_dep,
-                ]
-            )
-            _logger.info(
-                "Dependency installation successful, logs: {}".format(
-                    install_log
-                )
-            )
-        except subprocess.CalledProcessError as e:
-            _logger.error(
-                "Installing dependency using requriments.txt from mlflow model failed: {}".format(
-                    e.output
-                )
-            )
-            _classify_and_log_pip_install_error(e.output)
-            raise UserConfigValidationException(
-                "Installing dependency using conda environment spec from mlflow model failed. "
-                "This behavior can be turned off with setting use_model_dependency to False in job spec. "
-                "You may also check error log above to manually resolve package conflict error"
-            )
-        _logger.info("Successfully installed model dependencies")
+    tracking_url = workspace.get_mlflow_tracking_uri()
+    model_id = model_id
+    model_split = model_id.rsplit(":", 1)
+    model_uri = "models:/{}/{}".format(model_split[0], model_split[1])
+    serializer = AmlMlflowModelSerializer(
+        dataset_samples=dataset_samples,
+        task=task,
+        model_id=model_id,
+        model_uri=model_uri,
+        tracking_url=tracking_url,
+    )
 
     try:
-        model = mlflow.pyfunc.load_model(model_uri)._model_impl
-        return model
+        # serializer uses model_id and tracking url to retrieve model.
+        wrapped_model = serializer.load(model_dir=None)
+
+        return wrapped_model, serializer
     except Exception as e:
         raise UserConfigError(
             "Unable to load mlflow model from {} in current environment due to error:\n{}".format(
                 model_uri, e
-            ), e
+            ),
+            e,
         )
+
+
+def get_mlflow_model_conda_dependency_path(model_id):
+    my_run = Run.get_context()
+    workspace = my_run.experiment.workspace
+
+    model = Model._get(workspace, id=model_id)
+    muri = "models:/{}/{}".format(model.name, model.version)
+    model_local_path = mlflow.artifacts.download_artifacts(muri)
+
+    return mlflow.pyfunc.get_model_dependencies(model_local_path, format="conda")
 
 
 def _classify_and_log_pip_install_error(elog):
@@ -220,7 +185,7 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
         new_e = UserConfigError(
             f"Input dataset {dataset_path} cannot be read as mltable."
             f"You may disregard this error if dataset input is intended to be parquet dataset. Exception: {e}",
-            e
+            e,
         )
         exceptions.append(new_e)
 
@@ -232,7 +197,7 @@ def load_dataset(dataset_path: str) -> pd.DataFrame:
             new_e = UserConfigError(
                 f"Input dataset {dataset_path} cannot be read as parquet."
                 f"You may disregard this error if dataset input is intended to be mltable. Exception: {e}",
-                e
+                e,
             )
             exceptions.append(new_e)
 
@@ -412,16 +377,20 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     constructor_args = config[DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY]
     _logger.info(f"Constuctor args: {constructor_args}")
 
-    _logger.info("Loading model")
-    input_args = config[DashboardInfo.RAI_INSIGHTS_INPUT_ARGS_KEY]
-    use_model_dependency = input_args["use_model_dependency"]
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
 
-    model_estimator = load_mlflow_model(
+    dataset_samples = get_dataset_samples(
+        dataset=df_train,
+        target_column=constructor_args["target_column"],
+        feature_metadata=constructor_args["feature_metadata"],
+    )
+
+    model_estimator, serializer = load_mlflow_model(
         workspace=my_run.experiment.workspace,
-        use_model_dependency=use_model_dependency,
         model_id=model_id,
+        task=constructor_args["task_type"],
+        dataset_samples=dataset_samples,
     )
 
     # unwrap the model if it's an sklearn wrapper
@@ -430,7 +399,11 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
-        model=model_estimator, train=df_train, test=df_test, **constructor_args
+        model=model_estimator,
+        train=df_train,
+        test=df_test,
+        serializer=serializer,
+        **constructor_args,
     )
     return rai_i
 
@@ -485,3 +458,20 @@ def get_arg(args, arg_name: str, custom_parser, allow_none: bool) -> Any:
             "For example, a json string with unquoted string value or key can cause this error."
             f"Raw parsing error: {e}"
         )
+
+
+def get_dataset_samples(
+    dataset: pd.DataFrame,
+    target_column: str,
+    feature_metadata: Optional[FeatureMetadata] = None,
+) -> pd.DataFrame:
+    if len(dataset.index) < 1:
+        raise UserConfigError("Input dataset is empty.")
+
+    filter_cols = [target_column]
+
+    if feature_metadata and feature_metadata.dropped_features:
+        filter_cols.extend(feature_metadata.dropped_features)
+
+    cols = [col for col in dataset.columns if col not in filter_cols]
+    return dataset[cols].head(1)

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20221010.v1
+FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20230727.v1
 
 RUN apt-get -y update && apt-get -y install wkhtmltopdf
 
@@ -27,7 +27,9 @@ RUN pip install 'responsibleai~=0.29.0' \
                 'protobuf<4' \
                 'mltable==1.4.1' \
                 'responsibleai-tabular-automl==0.6.0' \
-                'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.5.0-py3-none-any.whl'
+                'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.5.0-py3-none-any.whl' \
+                # adding comments to force rebuild 5
+                'https://kichawus238999360667.blob.core.windows.net/packages/azureml_rai_utils-0.0.5-py3-none-any.whl'
 
 RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
 
