@@ -14,6 +14,7 @@ from azureml.rai.utils.telemetry import LoggerFactory, track
 from constants import COMPONENT_NAME, DashboardInfo, PropertyKeyValues
 from rai_component_utilities import (default_json_handler, fetch_model_id,
                                      get_arg, get_dataset_samples,
+                                     get_mlflow_model_conda_dependency_path,
                                      get_test_dataset_id, get_train_dataset_id,
                                      load_dataset, load_mlflow_model)
 from raiutils.exceptions import UserConfigValidationException
@@ -176,10 +177,6 @@ def main(args):
     model_estimator = None
     model_id = None
 
-    # unwrap the model if it's an sklearn wrapper
-    if model_estimator.__class__.__name__ == "_SklearnModelWrapper":
-        model_estimator = model_estimator.sklearn_model
-
     constructor_args = create_constructor_arg_dict(args)
 
     dataset_samples = get_dataset_samples(
@@ -201,6 +198,10 @@ def main(args):
         task=args.task_type,
     )
 
+    # unwrap the model if it's an sklearn wrapper
+    if model_estimator.__class__.__name__ == "_SklearnModelWrapper":
+        model_estimator = model_estimator.sklearn_model
+
     # Make sure that it actually loads
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(
@@ -215,14 +216,12 @@ def main(args):
         rai_i.save(temp_dir)
         RAIInsights.load(temp_dir)
 
-        # copy model_requirements.txt
+        # copy conda dependency of model
         shutil.copyfile(
-            src=os.path.join(
-                temp_dir,
-                DashboardInfo.MODEL_REQUIREMENTS_FILENAME),
+            src=get_mlflow_model_conda_dependency_path(model_id),
             dst=os.path.join(
                 args.output_path,
-                DashboardInfo.MODEL_REQUIREMENTS_FILENAME)
+                DashboardInfo.MODEL_CONDA_ENV_FILENAME)
         )
 
     _logger.info("Saving JSON for tool components")

@@ -8,13 +8,13 @@ import platform
 import subprocess
 import sys
 
-import mlflow
 import yaml
 from _telemetry._loggerfactory import _LoggerFactory, track
 from arg_helpers import boolean_parser
-from azureml.core import Model, Run
 from constants import DashboardInfo
-from rai_component_utilities import fetch_model_id, load_dashboard_info_file
+from rai_component_utilities import (fetch_model_id,
+                                     get_mlflow_model_conda_dependency_path,
+                                     load_dashboard_info_file)
 
 _logger = logging.getLogger(__file__)
 _ai_logger = None
@@ -99,14 +99,7 @@ def main(args):
         model_info=args.model_info
     )
 
-    my_run = Run.get_context()
-    workspace = my_run.experiment.workspace
-
-    model = Model._get(workspace, id=model_id)
-    muri = "models:/{}/{}".format(model.name, model.version)
-    model_uri = mlflow.artifacts.download_artifacts(muri)
-
-    conda_file = mlflow.pyfunc.get_model_dependencies(model_uri, format="conda")
+    conda_file = get_mlflow_model_conda_dependency_path(model_id)
 
     local_conda_dep = "./conda_dep.yaml"
     update_conda_env(conda_file, local_conda_dep)

@@ -13,10 +13,11 @@ import traceback
 import uuid
 from typing import Any, Dict, Optional
 
+import mlflow
 import mltable
 import pandas as pd
 from arg_helpers import get_from_args
-from azureml.core import Run, Workspace
+from azureml.core import Model, Run, Workspace
 from azureml.rai.utils import AmlMlflowModelSerializer
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
@@ -116,6 +117,17 @@ def load_mlflow_model(
             ),
             e,
         )
+
+
+def get_mlflow_model_conda_dependency_path(model_id):
+    my_run = Run.get_context()
+    workspace = my_run.experiment.workspace
+
+    model = Model._get(workspace, id=model_id)
+    muri = "models:/{}/{}".format(model.name, model.version)
+    model_local_path = mlflow.artifacts.download_artifacts(muri)
+
+    return mlflow.pyfunc.get_model_dependencies(model_local_path, format="conda")
 
 
 def _classify_and_log_pip_install_error(elog):

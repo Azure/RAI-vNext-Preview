@@ -10,7 +10,7 @@ class DashboardInfo:
     MODEL_INFO_FILENAME = "model_info.json"
     TRAIN_FILES_DIR = "train"
     TEST_FILES_DIR = "test"
-    MODEL_REQUIREMENTS_FILENAME = "model_requirments.txt"
+    MODEL_CONDA_ENV_FILENAME = "conda.yaml"
 
     RAI_INSIGHTS_MODEL_ID_KEY = "model_id"
     RAI_INSIGHTS_RUN_ID_KEY = "rai_insights_parent_run_id"
