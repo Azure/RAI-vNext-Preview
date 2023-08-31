@@ -7,7 +7,6 @@ import pathlib
 import platform
 import subprocess
 import sys
-import os
 
 import mlflow
 import yaml

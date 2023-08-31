@@ -17,9 +17,9 @@ import mltable
 import pandas as pd
 from arg_helpers import get_from_args
 from azureml.core import Run, Workspace
+from azureml.rai.utils import AmlMlflowModelSerializer
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
-from azureml.rai.utils import AmlMlflowModelSerializer
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
