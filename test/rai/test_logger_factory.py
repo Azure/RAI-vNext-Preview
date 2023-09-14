@@ -4,8 +4,9 @@
 import sys
 import traceback
 
-from src.responsibleai.rai_analyse._telemetry._loggerfactory import \
-    extract_and_filter_stack
+# TODO: seems this method needs to be made public
+from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
+
 from src.responsibleai.rai_analyse.rai_component_utilities import \
     UserConfigError
 
@@ -40,7 +41,7 @@ class TestStackTraceExtraction:
         try:
             self.level_0()
         except Exception as e:
-            extracted_stack = extract_and_filter_stack(
+            extracted_stack = _extract_and_filter_stack(
                 e, traceback.extract_tb(sys.exc_info()[2])
             )
 

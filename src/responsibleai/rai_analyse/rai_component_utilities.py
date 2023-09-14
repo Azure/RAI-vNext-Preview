@@ -18,9 +18,10 @@ from typing import Any, Dict, Optional
 import mlflow
 import mltable
 import pandas as pd
-from _telemetry._loggerfactory import extract_and_filter_stack
 from arg_helpers import get_from_args
 from azureml.core import Model, Run, Workspace
+# TODO: seems this method needs to be made public
+from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
@@ -49,7 +50,7 @@ _tool_directory_mapping: Dict[str, str] = {
 class UserConfigError(Exception):
     def __init__(self, message, cause=None):
         if cause:
-            self.tb = extract_and_filter_stack(cause, traceback.extract_tb(sys.exc_info()[2]))
+            self.tb = _extract_and_filter_stack(cause, traceback.extract_tb(sys.exc_info()[2]))
             self.cause = cause
         super().__init__(message)
 
@@ -422,6 +423,10 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
         use_model_dependency=use_model_dependency,
         model_id=model_id,
     )
+
+    # unwrap the model if it's an sklearn wrapper
+    if model_estimator.__class__.__name__ == "_SklearnModelWrapper":
+        model_estimator = model_estimator.sklearn_model
 
     _logger.info("Creating RAIInsights object")
     rai_i = RAIInsights(

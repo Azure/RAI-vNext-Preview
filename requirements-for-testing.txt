@@ -1,7 +1,7 @@
 azureml-telemetry
 azureml-core
-raiwidgets~=0.28.0
-responsibleai~=0.28.0
+raiwidgets~=0.29.0
+responsibleai~=0.29.0
 nbformat
 nbval
 nteract-scrapbook
@@ -10,3 +10,4 @@ pytest
 pytest-xdist
 numpy<1.24.0
 mlflow
+azureml-rai-utils==0.0.5
