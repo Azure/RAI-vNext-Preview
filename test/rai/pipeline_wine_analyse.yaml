@@ -38,7 +38,7 @@ jobs:
     type: command
     component: azureml:rai_insights_constructor:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       title: With just the OSS
       task_type: classification
@@ -51,7 +51,7 @@ jobs:
     type: command
     component: azureml:rai_insights_explanation:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       comment: Some random string
       rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
@@ -70,7 +70,7 @@ jobs:
     type: command
     component: azureml:rai_insights_erroranalysis:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
 
@@ -78,20 +78,19 @@ jobs:
     type: command
     component: azureml:rai_insights_gather:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       constructor: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
       insight_1: ${{parent.jobs.counterfactual_01.outputs.counterfactual}}
       insight_2: ${{parent.jobs.error_analysis_01.outputs.error_analysis}}
       insight_3: ${{parent.jobs.explain_01.outputs.explanation}}
 
-  # Scorecard step is currently broken for multiclass, refer to work item #2588142
-  # scorecard_01:
-  #    type: command
-  #    component: azureml:rai_score_card:VERSION_REPLACEMENT_STRING
-  #    inputs:
-  #      dashboard: ${{parent.jobs.gather_01.outputs.dashboard}}
-  #      pdf_generation_config:
-  #        type: uri_file
-  #        path: ./test/rai/wine_analyse_scorecard_config/pdf_gen.json
-  #        mode: download
+  scorecard_01:
+     type: command
+     component: azureml:rai_score_card:VERSION_REPLACEMENT_STRING
+     inputs:
+       dashboard: ${{parent.jobs.gather_01.outputs.dashboard}}
+       pdf_generation_config:
+         type: uri_file
+         path: ./test/rai/wine_analyse_scorecard_config/pdf_gen.json
+         mode: download

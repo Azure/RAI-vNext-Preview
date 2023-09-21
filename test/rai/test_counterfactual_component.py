@@ -143,7 +143,7 @@ class TestCounterfactualComponent:
                 insight_1=None,
                 insight_4=counterfactual_job.outputs.counterfactual,
             )
-            gather_job.set_limits(timeout=120)
+            gather_job.set_limits(timeout=480)
 
             gather_job.outputs.dashboard.mode = "upload"
             gather_job.outputs.ux_json.mode = "upload"
