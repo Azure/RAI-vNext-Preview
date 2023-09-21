@@ -39,7 +39,7 @@ jobs:
     type: command
     component: azureml:rai_insights_constructor:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       title: With just the OSS
       task_type: classification
@@ -54,7 +54,7 @@ jobs:
     type: command
     component: azureml:rai_insights_explanation:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       comment: Some random string
       rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
@@ -63,7 +63,7 @@ jobs:
     type: command
     component: azureml:rai_insights_causal:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
       treatment_features: '["Age", "Sex"]'
@@ -83,7 +83,7 @@ jobs:
     type: command
     component: azureml:rai_insights_erroranalysis:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       rai_insights_dashboard: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
       filter_features: '["Race", "Sex", "Workclass", "Marital Status", "Country", "Occupation"]'
@@ -92,7 +92,7 @@ jobs:
     type: command
     component: azureml:rai_insights_gather:VERSION_REPLACEMENT_STRING
     limits:
-      timeout: 120
+      timeout: 480
     inputs:
       constructor: ${{parent.jobs.create_rai_job.outputs.rai_insights_dashboard}}
       insight_1: ${{parent.jobs.causal_01.outputs.causal}}

@@ -342,18 +342,30 @@ class PdfDataGen:
             self.pos_label = self.classes[1]
 
         if self.is_multiclass:
+            is_numeric_label = False
             self.pos_label = str(self.classes[0])
+            if type(self.pos_label) not in [int, str]:
+                raise UserConfigValidationException("Multiclass label are expected to be integers or strings.")
+            if isinstance(self.pos_label, int):
+                self.pos_label = str(self.pos_label)
+                is_numeric_label = True
             self.classes = [self.other_class, self.pos_label]
             y_pred = self.data.get_y_pred()
             y_test = self.data.get_y_test()
-            updated_y_pred = PdfDataGen._replace_labels(y_pred, self.pos_label, self.other_class)
-            updated_y_test = PdfDataGen._replace_labels(y_test, self.pos_label, self.other_class)
+            updated_y_pred = PdfDataGen._replace_labels(y_pred, self.pos_label, self.other_class, is_numeric_label)
+            updated_y_test = PdfDataGen._replace_labels(y_test, self.pos_label, self.other_class, is_numeric_label)
             self.data.set_y_pred(updated_y_pred)
             self.data.set_y_test(updated_y_test)
 
-    @staticmethod()
-    def _replace_labels(y, primary_label, other_label):
+    @staticmethod
+    def _replace_labels(y, primary_label, other_label, is_numeric_label):
         # for multi class scenario, replacing all labels with other_label except for primary_label.
+        if is_numeric_label:
+            y = y.astype('U')
+
+        if y.dtype.itemsize / 4 < len(other_label):
+            y = y.astype(f"U{len(other_label)}")
+
         y[y != primary_label] = other_label
         return y
 

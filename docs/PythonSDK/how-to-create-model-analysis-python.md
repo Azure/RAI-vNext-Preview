@@ -171,14 +171,14 @@ def rai_decision_pipeline(
             test_dataset=test_data,
             target_column_name=target_column_name,
         )
-        create_rai_job.set_limits(timeout=120)
+        create_rai_job.set_limits(timeout=480)
 
         # Add causal analysis
         causal_job = rai_causal_component(
             rai_insights_dashboard=create_rai_job.outputs.rai_insights_dashboard,
             treatment_features=treatment_feature_names
         )
-        causal_job.set_limits(timeout=120)
+        causal_job.set_limits(timeout=480)
         
         # Add counterfactual analysis
         counterfactual_job = rai_counterfactual_component(
@@ -194,7 +194,7 @@ def rai_decision_pipeline(
             insight_2=causal_job.outputs.causal,
             insight_3=counterfactual_job.outputs.counterfactual,
         )
-        rai_gather_job.set_limits(timeout=120)
+        rai_gather_job.set_limits(timeout=480)
 
         rai_gather_job.outputs.dashboard.mode = "upload"
         rai_gather_job.outputs.ux_json.mode = "upload"
