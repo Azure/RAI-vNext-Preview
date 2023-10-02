@@ -1,6 +1,6 @@
 Param(
-      [Parameter(Mandatory, HelpMessage="Please provide a valid conda env name.")]
-      $EnvName,
+#      [Parameter(Mandatory, HelpMessage="Please provide a valid conda env name.")]
+#      $EnvName,
       [Parameter(Mandatory, HelpMessage="Please provide your Azure subcription id")]
       $SubId,
       [Parameter(Mandatory, HelpMessage="Please provide your Azure resource group name")]
@@ -31,9 +31,9 @@ function Create-ComponentConfigJson(
 }
 
 
-Write-Host "=-= Creating conda environment '$EnvName' with python v3.8"
-conda create -y -n $EnvName python=3.8
-conda activate $EnvName
+# Write-Host "=-= Creating conda environment '$EnvName' with python v3.8"
+# conda create -y -n $EnvName python=3.8
+# conda activate $EnvName
 
 Write-Host "=-= Installing nbconda"
 conda install nbconda

@@ -1,0 +1,14 @@
+{
+    "environments": [],
+    "components": [],
+    "data": [
+        {
+            "script" : "fetch_electro.py",
+            "data_yamls": [
+                "data_electro_test.yaml",
+                "data_electro_train.yaml"
+            ]
+        }
+    ],
+    "nested_directories": []
+}

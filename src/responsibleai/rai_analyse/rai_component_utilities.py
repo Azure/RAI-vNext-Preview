@@ -6,10 +6,12 @@ import logging
 import os
 import pathlib
 import re
+import requests
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import traceback
 import uuid
 from pathlib import Path
@@ -25,6 +27,7 @@ from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai.feature_metadata import FeatureMetadata
+from responsibleai._internal._served_model_wrapper import ServedModelWrapper
 
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
@@ -111,38 +114,25 @@ def load_mlflow_model(
 
     if use_model_dependency:
         try:
-            conda_file = mlflow.pyfunc.get_model_dependencies(model_uri, format="conda")
-        except Exception as e:
-            raise UserConfigError(
-                "Failed to get model dependency from given model {}, error:\n{}".format(
-                    model_uri, e
-                ), e
-            )
-        try:
-            # mlflow model input mount as read only. Conda need write access.
-            local_conda_dep = "./conda_dep.yaml"
-            shutil.copyfile(conda_file, local_conda_dep)
-            conda_prefix = str(Path(sys.executable).parents[1])
-
             install_log = subprocess.check_output(
                 [
-                    "conda",
-                    "env",
-                    "update",
-                    "--prefix",
-                    conda_prefix,
-                    "-f",
-                    local_conda_dep,
-                ]
+                    "mlflow",
+                    "models",
+                    "prepare-env",
+                    "-m",
+                    model_uri,
+                    "--env-manager",
+                    "conda"
+                ],
             )
             _logger.info(
-                "Dependency installation successful, logs: {}".format(
+                "Conda dependency installation successful, logs: {}".format(
                     install_log
                 )
             )
         except subprocess.CalledProcessError as e:
             _logger.error(
-                "Installing dependency using requriments.txt from mlflow model failed: {}".format(
+                "Installing dependency using conda.yaml from mlflow model failed: {}".format(
                     e.output
                 )
             )
@@ -153,9 +143,78 @@ def load_mlflow_model(
                 "You may also check error log above to manually resolve package conflict error"
             )
         _logger.info("Successfully installed model dependencies")
-
+        
+    mlflow_models_serve_logfile_name = "mlflow_models_serve.log"
     try:
-        model = mlflow.pyfunc.load_model(model_uri)._model_impl
+        try:
+            # run mlflow model server in background
+            with open(mlflow_models_serve_logfile_name, "w") as logfile:
+                model_serving_log = subprocess.Popen(
+                    [
+                        "mlflow",
+                        "models",
+                        "serve",
+                        "-m",
+                        model_uri,
+                        "--env-manager",
+                        "conda",
+                        "-p",
+                        "5001"
+                    ],
+                    close_fds=True,
+                    stdout=logfile,
+                    stderr=logfile
+                )
+            _logger.info("Started mlflow model server process in the background")
+        except subprocess.CalledProcessError as e:
+            _logger.error(
+                f"Running mlflow models serve in the background failed: {e.output}"
+            )
+            _classify_and_log_pip_install_error(e.output)
+            raise RuntimeError(
+                "Starting the mlflow model server failed."
+            )
+        
+        # If the server started successfully then the logfile should contain a line
+        # saying "Listening at: http"
+        # If not, it could either take more time to start or it failed to start.
+        # We can check if the process ended by calling poll() on it.
+        # Otherwise, we wait a predefined time and check again.
+        for i in range(10):
+            with open(mlflow_models_serve_logfile_name, "r") as logfile:
+                logs = logfile.read()
+                print("--- debug --- TODO remove ---")
+                print(logs)
+                print("--- end debug --- TODO remove ---")
+                if not "Listening at: http" in logs:
+                    if model_serving_log.poll() is not None:
+                        # process ended
+                        raise RuntimeError(
+                            f"Unable to start mlflow model server: {logs}"
+                        )
+                    # process still running, wait and try again...
+                else:
+                    try:
+                        # attempt to contact mlflow model server
+                        # if the response is a 500 (due to missing body) then the server is up
+                        # if it's a 404 then the server is just starting up and we need to wait
+                        test_response = requests.post("http://localhost:5001/invocations")
+                        if test_response == 500:
+                            break
+                        
+                    except Exception as e:
+                        _logger.info(
+                            "Waiting for mlflow model server to start, error: {}".format(
+                                e
+                            )
+                        )
+            time.sleep(5)
+        else:
+            raise RuntimeError(
+                "Unable to start mlflow model server."
+            )
+        _logger.info("Successfully started mlflow model server.")
+        model = ServedModelWrapper(port=5001)
         return model
     except Exception as e:
         raise UserConfigError(

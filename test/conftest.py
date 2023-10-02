@@ -8,7 +8,9 @@ from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait
 
 import pytest
-from azure.ai.ml import Input, MLClient, dsl
+from azure.ai.ml import automl, Input, MLClient, dsl, Output
+from azure.ai.ml.entities import Model
+from azure.ai.ml.constants import AssetTypes
 from azure.identity import DefaultAzureCredential
 
 
@@ -189,6 +191,83 @@ def registered_boston_model_id(ml_client, component_config):
 
     training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
     assert training_pipeline_job is not None
+
+    expected_model_id = f"{model_name}_{model_name_suffix}:1"
+    return expected_model_id
+
+
+@pytest.fixture(scope="session")
+def registered_electro_model_id(ml_client, component_config):
+    # registry_client = MLClient(
+    #     credential=DefaultAzureCredential(),
+    #     registry_name="azureml",
+    # )
+    # automl_forecasting_component = registry_client.components.get(
+    #     name="automl_forecasting",
+    #     label="latest"
+    # )
+
+    version_string = component_config["version"]
+
+    model_name_suffix = int(time.time())
+    model_name = "common_fetch_model_electro"
+
+    # electro_train = Input(
+    #     type="mltable", path=f"electro_train:{version_string}", mode="download"
+    # )
+
+    # @dsl.pipeline(
+    #     compute="cpucluster",
+    #     description="Register Common Model for Electro",
+    #     experiment_name="Fixture_Common_Electro_Model",
+    # )
+    # def my_training_pipeline():
+
+        # training_job = automl.forecasting(
+        #     training_data=electro_train,
+        #     target_column_name="usage",
+        #     primary_metric="normalized_root_mean_squared_error",
+        #     outputs={"best_model": Output(type=AssetTypes.CUSTOM_MODEL)},
+        #     n_cross_validations=3,
+        # )
+        # training_job.set_forecast_settings(
+        #     forecast_horizon=24,
+        #     time_column_name="datetime",
+        #     time_series_id_column_names=["group_id", "customer_id"],
+        # )
+        # training_job.set_training(
+        #     enable_dnn_training=False,
+        #     training_mode=None,
+        #     enable_model_explainability=True,
+        #     allowed_training_algorithms=["LightGBM"],
+        # )
+        # training_job.set_limits(
+        #     timeout_minutes=30,
+        #     max_trials=5,
+        #     max_concurrent_trials=3,
+        #     max_nodes=3,
+        # )
+        # submit_and_wait(ml_client, training_job)
+
+
+    model = Model(
+        path = "./test/models/automl_forecasting_model",
+        type=AssetTypes.MLFLOW_MODEL,
+        name=model_name + "_" + str(model_name_suffix),
+    )
+    ml_client.models.create_or_update(model)
+
+    # register_component = ml_client.components.get(
+    #     name="register_model", version=version_string
+    # )
+    # register_job = register_component(
+    #     model_input_path=,
+    #     model_base_name=model_name,
+    #     model_name_suffix=model_name_suffix,
+    # )
+    # register_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
+
+    #assert submit_and_wait(ml_client, register_job) is not None
 
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
     return expected_model_id

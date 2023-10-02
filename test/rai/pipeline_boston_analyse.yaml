@@ -13,7 +13,7 @@ inputs:
     path: azureml:boston_test_pq:VERSION_REPLACEMENT_STRING
     mode: download
 
-compute: azureml:cpucluster
+compute: azureml:cpu-cluster
 
 jobs:
   train_model_job:

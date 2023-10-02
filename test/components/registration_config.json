@@ -4,7 +4,8 @@
         "component_train_decision_tree.yaml",
         "component_train_logreg.yaml",
         "component_train_boston.yaml",
-        "component_register_tabular.yaml"],
+        "component_register_tabular.yaml"
+    ],
     "data": [],
     "nested_directories": []
 }

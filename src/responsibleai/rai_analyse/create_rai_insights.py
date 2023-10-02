@@ -45,7 +45,7 @@ def parse_args():
     parser.add_argument("--title", type=str, required=True)
 
     parser.add_argument(
-        "--task_type", type=str, required=True, choices=["classification", "regression"]
+        "--task_type", type=str, required=True, choices=["classification", "regression", "forecasting"]
     )
 
     parser.add_argument("--train_dataset", type=str, required=True)
@@ -70,7 +70,7 @@ def parse_args():
     parser.add_argument(
         "--feature_metadata",
         type=str,
-        help="identity_feature_name:Optional[str], dropped_features:Optional[List[str]]",
+        help="identity_feature_name:Optional[str], dropped_features:Optional[List[str]], datetime_features:Optional[List[str]]",
     )
 
     parser.add_argument(
@@ -190,7 +190,7 @@ def main(args):
     # Make sure that it actually loads
     _logger.info("Creating RAIInsights object")
     _ = RAIInsights(
-        model=model_estimator, train=train_df, test=test_df, **constructor_args
+        model=model_estimator, train=train_df, test=test_df, forecasting_enabled=True, **constructor_args
     )
 
     _logger.info("Saving JSON for tool components")

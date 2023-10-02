@@ -5,6 +5,7 @@
     "nested_directories": [
         "adult",
         "boston",
+        "electro",
         "wine"
     ]
 }

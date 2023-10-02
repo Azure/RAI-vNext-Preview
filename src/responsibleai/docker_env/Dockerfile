@@ -14,8 +14,7 @@ RUN conda create -p $AZUREML_CONDA_ENVIRONMENT_PATH \
 ENV PATH $AZUREML_CONDA_ENVIRONMENT_PATH/bin:$PATH
 
 # Install pip dependencies
-RUN pip install 'responsibleai~=0.30.0' \
-                'raiwidgets~=0.30.0' \
+RUN pip install 'https://publictestdatasets.blob.core.windows.net/testing/responsibleai-0.0.0-py3-none-any.whl' \
                 'pyarrow' \
                 'markupsafe<=2.0.1' \
                 'itsdangerous==2.0.1' \
@@ -25,9 +24,10 @@ RUN pip install 'responsibleai~=0.30.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
                 'protobuf<4' \
-                'mltable==1.4.1' \
-                'responsibleai-tabular-automl==0.7.0' \
-                'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.6.0-py3-none-any.whl'
+                'mltable==1.4.1'
+# 'responsibleai-tabular-automl==0.6.0' \
+# 'raiwidgets~=0.29.0' \
+# 'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.5.0-py3-none-any.whl'
 
 RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
 
