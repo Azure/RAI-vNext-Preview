@@ -145,6 +145,7 @@ def load_mlflow_model(
         _logger.info("Successfully installed model dependencies")
         
     mlflow_models_serve_logfile_name = "mlflow_models_serve.log"
+    mlflow_model_server_port = 5432
     try:
         try:
             # run mlflow model server in background
@@ -159,7 +160,7 @@ def load_mlflow_model(
                         "--env-manager",
                         "conda",
                         "-p",
-                        "5001"
+                        str(mlflow_model_server_port)
                     ],
                     close_fds=True,
                     stdout=logfile,
@@ -198,8 +199,8 @@ def load_mlflow_model(
                         # attempt to contact mlflow model server
                         # if the response is a 500 (due to missing body) then the server is up
                         # if it's a 404 then the server is just starting up and we need to wait
-                        test_response = requests.post("http://localhost:5001/invocations")
-                        if test_response == 500:
+                        test_response = requests.post(f"http://localhost:{mlflow_model_server_port}/invocations")
+                        if test_response.status_code == 500:
                             break
                         
                     except Exception as e:
@@ -214,7 +215,7 @@ def load_mlflow_model(
                 "Unable to start mlflow model server."
             )
         _logger.info("Successfully started mlflow model server.")
-        model = ServedModelWrapper(port=5001)
+        model = ServedModelWrapper(port=mlflow_model_server_port)
         return model
     except Exception as e:
         raise UserConfigError(

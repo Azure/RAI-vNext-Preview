@@ -105,14 +105,13 @@ def create_constructor_arg_dict(args):
     )
     feature_metadata = FeatureMetadata()
     try:
-        if PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY in feature_metadata_dict.keys():
-            feature_metadata.dropped_features = feature_metadata_dict[
-                PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY
-            ]
-        if PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY in feature_metadata_dict.keys():
-            feature_metadata.identity_feature_name = feature_metadata_dict[
-                PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY
-            ]
+        for key in [
+                PropertyKeyValues.RAI_INSIGHTS_DROPPED_FEATURE_KEY,
+                PropertyKeyValues.RAI_INSIGHTS_IDENTITY_FEATURE_KEY,
+                PropertyKeyValues.RAI_INSIGHTS_DATETIME_FEATURES_KEY,
+                PropertyKeyValues.RAI_INSIGHTS_TIME_SERIES_ID_FEATURES_KEY]:
+            if key in feature_metadata_dict.keys():
+                setattr(feature_metadata, key, feature_metadata_dict[key])
     except AttributeError as e:
         raise UserConfigValidationException(f"Feature metadata should be parsed to a dictionary. {e}")
 

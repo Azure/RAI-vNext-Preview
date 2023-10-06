@@ -354,13 +354,13 @@ class TestRAISmoke:
                 train_dataset=train_data,
                 test_dataset=test_data,
                 target_column_name="usage",
-                feature_metadata='{"datetime_features": ["datetime"]}',
+                feature_metadata='{"datetime_features": ["datetime"], "time_series_id_features": ["group_id", "customer_id"]}',
                 categorical_column_names='["group_id", "customer_id"]',
                 maximum_rows_for_test_dataset=5000,
                 classes="[]",  # Should be default value
                 use_model_dependency=True
             )
-            construct_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
+            construct_job.set_limits(timeout=3600)
 
         insights_pipeline_job = fetch_analyse_registered_model(
             model_id=registered_electro_model_id,
