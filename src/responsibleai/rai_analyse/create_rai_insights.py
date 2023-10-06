@@ -70,7 +70,10 @@ def parse_args():
     parser.add_argument(
         "--feature_metadata",
         type=str,
-        help="identity_feature_name:Optional[str], dropped_features:Optional[List[str]], datetime_features:Optional[List[str]]",
+        help="identity_feature_name:Optional[str], "
+             "dropped_features:Optional[List[str]], "
+             "datetime_features:Optional[List[str]], "
+             "time_series_id_features:Optional[List[str]]",
     )
 
     parser.add_argument(
@@ -163,12 +166,16 @@ def main(args):
 
     model_estimator = None
     model_id = None
+    # For now, the separate conda env will only be used for forecasting.
+    # At a later point, we might enable this for all task types.
+    use_separate_conda_env = args.task_type == "forecasting"
     if args.model_info_path:
         model_id = fetch_model_id(args.model_info_path)
         _logger.info("Loading model: {0}".format(model_id))
         model_estimator = load_mlflow_model(
             workspace=my_run.experiment.workspace,
             use_model_dependency=args.use_model_dependency,
+            use_separate_conda_env=use_separate_conda_env,
             model_id=model_id,
         )
     elif args.model_input and args.model_info:
@@ -177,6 +184,7 @@ def main(args):
         model_estimator = load_mlflow_model(
             workspace=my_run.experiment.workspace,
             use_model_dependency=args.use_model_dependency,
+            use_separate_conda_env=use_separate_conda_env,
             model_path=args.model_input,
         )
 

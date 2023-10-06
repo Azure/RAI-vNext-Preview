@@ -95,6 +95,7 @@ def fetch_model_id(model_info_path: str):
 def load_mlflow_model(
     workspace: Workspace,
     use_model_dependency: bool = False,
+    use_separate_conda_env: bool = False,
     model_id: Optional[str] = None,
     model_path: Optional[str] = None,
 ) -> Any:
@@ -113,18 +114,30 @@ def load_mlflow_model(
         model_uri = "models:/{}/{}".format(model.name, model.version)
 
     if use_model_dependency:
+        if not use_separate_conda_env:
+            try:
+                conda_file = mlflow.pyfunc.get_model_dependencies(model_uri, format="conda")
+            except Exception as e:
+                raise UserConfigError(
+                    "Failed to get model dependency from given model {}, error:\n{}".format(
+                        model_uri, e
+                    ), e
+                )
         try:
-            install_log = subprocess.check_output(
-                [
-                    "mlflow",
-                    "models",
-                    "prepare-env",
-                    "-m",
-                    model_uri,
-                    "--env-manager",
-                    "conda"
-                ],
-            )
+            if use_separate_conda_env:
+                conda_install_command = ["mlflow", "models", "prepare-env",
+                                         "-m", model_uri,
+                                         "--env-manager", "conda"],
+            else:
+                # mlflow model input mount as read only. Conda need write access.
+                local_conda_dep = "./conda_dep.yaml"
+                shutil.copyfile(conda_file, local_conda_dep)
+                conda_prefix = str(Path(sys.executable).parents[1])
+                conda_install_command = ["conda", "env", "update",
+                                         "--prefix", conda_prefix,
+                                         "-f", local_conda_dep]
+
+            install_log = subprocess.check_output(conda_install_command)                
             _logger.info(
                 "Conda dependency installation successful, logs: {}".format(
                     install_log
@@ -143,10 +156,15 @@ def load_mlflow_model(
                 "You may also check error log above to manually resolve package conflict error"
             )
         _logger.info("Successfully installed model dependencies")
-        
-    mlflow_models_serve_logfile_name = "mlflow_models_serve.log"
-    mlflow_model_server_port = 5432
+
     try:
+        if not use_separate_conda_env:
+            model = mlflow.pyfunc.load_model(model_uri)._model_impl
+            return model
+        
+        # Serve model from separate conda env using mlflow
+        mlflow_models_serve_logfile_name = "mlflow_models_serve.log"
+        mlflow_model_server_port = 5432
         try:
             # run mlflow model server in background
             with open(mlflow_models_serve_logfile_name, "w") as logfile:
@@ -184,9 +202,6 @@ def load_mlflow_model(
         for i in range(10):
             with open(mlflow_models_serve_logfile_name, "r") as logfile:
                 logs = logfile.read()
-                print("--- debug --- TODO remove ---")
-                print(logs)
-                print("--- end debug --- TODO remove ---")
                 if not "Listening at: http" in logs:
                     if model_serving_log.poll() is not None:
                         # process ended
@@ -478,9 +493,16 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     model_id = config[DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY]
     _logger.info("Loading model: {0}".format(model_id))
 
+    # For now, the separate conda env will only be used for forecasting.
+    # At a later point, we might enable this for all task types.
+    use_separate_conda_env = False
+    if "task_type" in constructor_args:
+        use_separate_conda_env = constructor_args["task_type"] == "forecasting"
+
     model_estimator = load_mlflow_model(
         workspace=my_run.experiment.workspace,
         use_model_dependency=use_model_dependency,
+        use_separate_conda_env=use_separate_conda_env,
         model_id=model_id,
     )
 
