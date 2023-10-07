@@ -142,6 +142,8 @@ def registered_adult_model_id(ml_client, component_config):
     training_pipeline_job = submit_and_wait(ml_client, training_pipeline)
     assert training_pipeline_job is not None
 
+    # download best model and then register from local?
+
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
     return expected_model_id
 
@@ -207,74 +209,50 @@ def registered_electro_model_id(ml_client, component_config):
         type="mltable", path=f"electro_train:{version_string}", mode="download"
     )
 
-    # register_component = ml_client.components.get(
-    #     name="register_model", version=version_string
-    # )
-
-    @dsl.pipeline(
-        compute="cpucluster",
-        description="Register Common Model for Electro",
-        experiment_name="Fixture_Common_Electro_Model",
-    )
-    def training_pipeline_factory(
-        training_data,
-        target_column_name
-    ):
-        training_job = automl.forecasting(
-            training_data=training_data,
-            target_column_name=target_column_name,
-            outputs={"best_model": Output(type=AssetTypes.CUSTOM_MODEL)},
-            n_cross_validations=5,
-        )
-        training_job.set_forecast_settings(
-            forecast_horizon=24,
-            time_column_name="datetime",
-            time_series_id_column_names=["group_id", "customer_id"],
-        )
-        training_job.set_training(
-            enable_dnn_training=False,
-            training_mode=None,
-            enable_model_explainability=True,
-            allowed_training_algorithms=["LightGBM"],
-        )
-        training_job.set_limits(
-            timeout_minutes=30,
-            max_trials=5,
-            max_concurrent_trials=3,
-            max_nodes=3,
-        )
-        # register_job = register_component(
-        #     model_input_path=training_job.outputs.best_model,
-        #     model_base_name=model_name,
-        #     model_name_suffix=model_name_suffix,
-        # )
-        # register_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
-
-        return {}
-
-
-    # model = Model(
-    #     path = "./test/models/automl_forecasting_model",
-    #     type=AssetTypes.MLFLOW_MODEL,
-    #     name=model_name + "_" + str(model_name_suffix),
-    # )
-    # ml_client.models.create_or_update(model)
-
-    training_pipeline = training_pipeline_factory(
+    experiment_name = f"Fixture_Common_Electro_Model_{version_string}"
+    job_name = f"Train_Electro_Forecasting_Model_{model_name_suffix}"
+    training_job = automl.forecasting(
         training_data=electro_train,
         target_column_name="usage",
+        outputs={"best_model": Output(type=AssetTypes.CUSTOM_MODEL)},
+        primary_metric="normalized_root_mean_squared_error",
+        n_cross_validations='auto',
+        experiment_name=experiment_name,
+        name=job_name,
     )
-    training_pipeline.compute = "cpucluster"
-    assert submit_and_wait(ml_client, training_pipeline) is not None
+    training_job.set_forecast_settings(
+        forecast_horizon=24,
+        time_column_name="datetime",
+        time_series_id_column_names=["group_id", "customer_id"],
+    )
+    training_job.set_training(
+        enable_dnn_training=False,
+        training_mode=None,
+        enable_model_explainability=True,
+        allowed_training_algorithms=["LightGBM"],
+    )
+    training_job.set_limits(
+        timeout_minutes=30,
+        max_trials=5,
+        max_concurrent_trials=3,
+        max_nodes=3,
+    )
+
+    training_job.compute = "cpucluster"
+    assert submit_and_wait(ml_client, training_job) is not None
 
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
-    # run_model = Model(
-    #     path="runs:/<run-id>/model/"
-    #     name=expected_model_id,
-    #     description="Model created from run.",
-    #     type=AssetTypes.MLFLOW_MODEL
-    # )
 
-    ml_client.models.create_or_update(run_model) 
+    ml_client.jobs.download(
+        name=job_name,
+        download_path="test-outputs/",
+        all=True
+    )
+    model = Model(
+        path = "./test-outputs/named-outputs/best_model",
+        type=AssetTypes.MLFLOW_MODEL,
+        name=model_name + "_" + str(model_name_suffix),
+    )
+    ml_client.models.create_or_update(model)
 
     return expected_model_id

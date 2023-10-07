@@ -371,3 +371,6 @@ MigrationBackup/
 
 # parquet data files
 **/*.parquet
+
+# downloaded test outputs
+test-outputs/*

@@ -127,7 +127,7 @@ def load_mlflow_model(
             if use_separate_conda_env:
                 conda_install_command = ["mlflow", "models", "prepare-env",
                                          "-m", model_uri,
-                                         "--env-manager", "conda"],
+                                         "--env-manager", "conda"]
             else:
                 # mlflow model input mount as read only. Conda need write access.
                 local_conda_dep = "./conda_dep.yaml"
@@ -137,7 +137,8 @@ def load_mlflow_model(
                                          "--prefix", conda_prefix,
                                          "-f", local_conda_dep]
 
-            install_log = subprocess.check_output(conda_install_command)                
+            print("conda_install_command: {}".format(conda_install_command))
+            install_log = subprocess.check_output(conda_install_command)
             _logger.info(
                 "Conda dependency installation successful, logs: {}".format(
                     install_log

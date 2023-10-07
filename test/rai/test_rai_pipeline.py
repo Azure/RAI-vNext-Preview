@@ -360,7 +360,12 @@ class TestRAISmoke:
                 classes="[]",  # Should be default value
                 use_model_dependency=True
             )
-            construct_job.set_limits(timeout=3600)
+            construct_job.set_limits(timeout=1800)
+
+            rai_gather_job = rai_gather_component(
+                constructor=construct_job.outputs.rai_insights_dashboard,
+            )
+            rai_gather_job.set_limits(timeout=1800)
 
         insights_pipeline_job = fetch_analyse_registered_model(
             model_id=registered_electro_model_id,
