@@ -8,9 +8,9 @@ from test.constants_for_test import Timeouts
 from test.utilities_for_test import submit_and_wait
 
 import pytest
-from azure.ai.ml import automl, Input, MLClient, dsl, Output
-from azure.ai.ml.entities import Model
+from azure.ai.ml import Input, MLClient, Output, automl, dsl
 from azure.ai.ml.constants import AssetTypes
+from azure.ai.ml.entities import Model
 from azure.identity import DefaultAzureCredential
 
 

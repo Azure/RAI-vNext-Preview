@@ -6,7 +6,6 @@ import logging
 import os
 import pathlib
 import re
-import requests
 import shutil
 import subprocess
 import sys
@@ -20,14 +19,15 @@ from typing import Any, Dict, Optional
 import mlflow
 import mltable
 import pandas as pd
+import requests
 from arg_helpers import get_from_args
 from azureml.core import Model, Run, Workspace
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
 from constants import DashboardInfo, PropertyKeyValues, RAIToolType
 from raiutils.exceptions import UserConfigValidationException
-from responsibleai.feature_metadata import FeatureMetadata
 from responsibleai._internal._served_model_wrapper import ServedModelWrapper
+from responsibleai.feature_metadata import FeatureMetadata
 
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
