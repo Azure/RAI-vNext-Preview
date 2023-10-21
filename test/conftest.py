@@ -227,7 +227,6 @@ def registered_electro_model_id(ml_client, component_config):
     )
     training_job.set_training(
         enable_dnn_training=False,
-        training_mode=None,
         enable_model_explainability=True,
         allowed_training_algorithms=["LightGBM"],
     )

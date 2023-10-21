@@ -1,8 +1,8 @@
 import pandas as pd
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 
-data = load_boston()
+data = fetch_openml(data_id=531)
 target_feature = "y"
 continuous_features = data.feature_names
 data_df = pd.DataFrame(data.data, columns=data.feature_names)
