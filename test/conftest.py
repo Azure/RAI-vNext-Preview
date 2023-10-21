@@ -248,7 +248,7 @@ def registered_electro_model_id(ml_client, component_config):
         all=True
     )
     model = Model(
-        path = "./test-outputs/named-outputs/best_model",
+        path="./test-outputs/named-outputs/best_model",
         type=AssetTypes.MLFLOW_MODEL,
         name=model_name + "_" + str(model_name_suffix),
     )

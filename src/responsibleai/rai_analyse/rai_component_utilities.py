@@ -162,7 +162,7 @@ def load_mlflow_model(
         if not use_separate_conda_env:
             model = mlflow.pyfunc.load_model(model_uri)._model_impl
             return model
-        
+
         # Serve model from separate conda env using mlflow
         mlflow_models_serve_logfile_name = "mlflow_models_serve.log"
         mlflow_model_server_port = 5432
@@ -194,16 +194,16 @@ def load_mlflow_model(
             raise RuntimeError(
                 "Starting the mlflow model server failed."
             )
-        
+
         # If the server started successfully then the logfile should contain a line
         # saying "Listening at: http"
         # If not, it could either take more time to start or it failed to start.
         # We can check if the process ended by calling poll() on it.
         # Otherwise, we wait a predefined time and check again.
-        for i in range(10):
+        for _ in range(10):
             with open(mlflow_models_serve_logfile_name, "r") as logfile:
                 logs = logfile.read()
-                if not "Listening at: http" in logs:
+                if "Listening at: http" not in logs:
                     if model_serving_log.poll() is not None:
                         # process ended
                         raise RuntimeError(
@@ -218,7 +218,7 @@ def load_mlflow_model(
                         test_response = requests.post(f"http://localhost:{mlflow_model_server_port}/invocations")
                         if test_response.status_code == 500:
                             break
-                        
+
                     except Exception as e:
                         _logger.info(
                             "Waiting for mlflow model server to start, error: {}".format(
