@@ -1,12 +1,11 @@
 azure-common
 --extra-index-url https://azuremlsdktestpypi.azureedge.net/test-sdk-cli-v2
-azure-ml
 colorama # Pending update
 jupyter
 pandas
 pyarrow
 scikit-learn<1.1 # See PR #1429 in responsible-ai-toolbox repo
 shap
-responsibleai~=0.29.0
-raiwidgets~=0.29.0
+responsibleai~=0.31.0
+raiwidgets~=0.31.0
 numpy<1.24.0
