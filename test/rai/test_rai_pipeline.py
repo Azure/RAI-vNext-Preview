@@ -358,9 +358,8 @@ class TestRAISmoke:
                 train_dataset=train_data,
                 test_dataset=test_data,
                 target_column_name="usage",
-                feature_metadata=\
-                    '{"datetime_features": ["datetime"], '
-                    '"time_series_id_features": ["group_id", "customer_id"]}',
+                feature_metadata='{"datetime_features": ["datetime"], '
+                                 '"time_series_id_features": ["group_id", "customer_id"]}',
                 categorical_column_names='["group_id", "customer_id"]',
                 maximum_rows_for_test_dataset=5000,
                 classes="[]",  # Should be default value
