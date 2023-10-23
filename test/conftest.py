@@ -234,7 +234,6 @@ def registered_electro_model_id(ml_client, component_config):
         timeout_minutes=30,
         max_trials=5,
         max_concurrent_trials=3,
-        max_nodes=3,
     )
 
     training_job.compute = "cpucluster"
