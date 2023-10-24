@@ -19,7 +19,7 @@ RUN pip install 'responsibleai~=0.31.0' \
                 'markupsafe<=2.0.1' \
                 'itsdangerous==2.0.1' \
                 'mlflow' \
-                'scikit-learn<1.1' \
+                'scikit-learn~=1.2' \
                 'pdfkit==1.0.0' \
                 'plotly==5.6.0' \
                 'kaleido==0.2.1' \
