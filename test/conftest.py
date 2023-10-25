@@ -174,9 +174,9 @@ def registered_boston_model_id(ml_client, component_config):
         trained_model = train_component(
             target_column_name=target_column_name,
             training_data=training_data,
-            categorical_features="[]",
-            continuous_features='["CRIM", "ZN", "INDUS", "CHAS", "NOX", ' +
-                                '"RM", "AGE","DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]',
+            categorical_features='["CHAS", "RAD"]',
+            continuous_features='["CRIM", "ZN", "INDUS", "NOX", ' +
+                                '"RM", "AGE","DIS", "TAX", "PTRATIO", "B", "LSTAT"]',
         )
         trained_model.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
 
