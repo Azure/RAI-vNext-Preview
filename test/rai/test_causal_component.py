@@ -130,7 +130,7 @@ class TestCausalComponent:
                 train_dataset=train_data,
                 test_dataset=test_data,
                 target_column_name=target_column_name,
-                categorical_column_names="[]",
+                categorical_column_names='["CHAS", "RAD"]',
                 maximum_rows_for_test_dataset=5000,  # Should be default
                 classes="[]",  # Should be default
             )
@@ -170,16 +170,16 @@ class TestCausalComponent:
                 "ux_json": gather_job.outputs.ux_json,
             }
 
-        adult_train_pq = Input(
+        boston_train_pq = Input(
             type="uri_file", path=f"boston_train_pq:{version_string}", mode="download"
         )
-        adult_test_pq = Input(
+        boston_test_pq = Input(
             type="uri_file", path=f"boston_test_pq:{version_string}", mode="download"
         )
         rai_pipeline = test_causal_regression(
             target_column_name="y",
-            train_data=adult_train_pq,
-            test_data=adult_test_pq,
+            train_data=boston_train_pq,
+            test_data=boston_test_pq,
         )
 
         rai_pipeline_job = submit_and_wait(ml_client, rai_pipeline)
