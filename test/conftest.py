@@ -232,6 +232,7 @@ def registered_electro_model_id(ml_client, component_config):
     )
     training_job.set_limits(
         timeout_minutes=20,
+        trial_timeout_minutes=5,
         max_trials=5,
         max_concurrent_trials=3,
     )
