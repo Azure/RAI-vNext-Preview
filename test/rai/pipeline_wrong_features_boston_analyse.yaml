@@ -48,7 +48,7 @@ jobs:
       train_dataset: ${{parent.inputs.my_training_data}}
       test_dataset: ${{parent.inputs.my_test_data}}
       target_column_name: ${{parent.inputs.target_column_name}}
-      categorical_column_names: '[]'
+      categorical_column_names: '["CHAS", "RAD"]'
   
   gather_01:
     type: command
