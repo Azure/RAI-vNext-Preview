@@ -24,7 +24,8 @@ from arg_helpers import get_from_args
 from azureml.core import Model, Run, Workspace
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
-from constants import DashboardInfo, PropertyKeyValues, RAIToolType, MLFLOW_MODEL_SERVER_PORT
+from constants import (MLFLOW_MODEL_SERVER_PORT, DashboardInfo,
+                       PropertyKeyValues, RAIToolType)
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai._internal._served_model_wrapper import ServedModelWrapper
 from responsibleai.feature_metadata import FeatureMetadata
