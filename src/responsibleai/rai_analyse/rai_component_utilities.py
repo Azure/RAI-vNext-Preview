@@ -24,7 +24,7 @@ from arg_helpers import get_from_args
 from azureml.core import Model, Run, Workspace
 # TODO: seems this method needs to be made public
 from azureml.rai.utils.telemetry.loggerfactory import _extract_and_filter_stack
-from constants import DashboardInfo, PropertyKeyValues, RAIToolType
+from constants import DashboardInfo, PropertyKeyValues, RAIToolType, MLFLOW_MODEL_SERVER_PORT
 from raiutils.exceptions import UserConfigValidationException
 from responsibleai._internal._served_model_wrapper import ServedModelWrapper
 from responsibleai.feature_metadata import FeatureMetadata
@@ -137,7 +137,6 @@ def load_mlflow_model(
                                          "--prefix", conda_prefix,
                                          "-f", local_conda_dep]
 
-            print("conda_install_command: {}".format(conda_install_command))
             install_log = subprocess.check_output(conda_install_command)
             _logger.info(
                 "Conda dependency installation successful, logs: {}".format(
@@ -165,7 +164,6 @@ def load_mlflow_model(
 
         # Serve model from separate conda env using mlflow
         mlflow_models_serve_logfile_name = "mlflow_models_serve.log"
-        mlflow_model_server_port = 5432
         try:
             # run mlflow model server in background
             with open(mlflow_models_serve_logfile_name, "w") as logfile:
@@ -179,7 +177,7 @@ def load_mlflow_model(
                         "--env-manager",
                         "conda",
                         "-p",
-                        str(mlflow_model_server_port)
+                        str(MLFLOW_MODEL_SERVER_PORT)
                     ],
                     close_fds=True,
                     stdout=logfile,
@@ -215,7 +213,7 @@ def load_mlflow_model(
                         # attempt to contact mlflow model server
                         # if the response is a 500 (due to missing body) then the server is up
                         # if it's a 404 then the server is just starting up and we need to wait
-                        test_response = requests.post(f"http://localhost:{mlflow_model_server_port}/invocations")
+                        test_response = requests.post(f"http://localhost:{MLFLOW_MODEL_SERVER_PORT}/invocations")
                         if test_response.status_code == 500:
                             break
 
@@ -231,7 +229,7 @@ def load_mlflow_model(
                 "Unable to start mlflow model server."
             )
         _logger.info("Successfully started mlflow model server.")
-        model = ServedModelWrapper(port=mlflow_model_server_port)
+        model = ServedModelWrapper(port=MLFLOW_MODEL_SERVER_PORT)
         return model
     except Exception as e:
         raise UserConfigError(
