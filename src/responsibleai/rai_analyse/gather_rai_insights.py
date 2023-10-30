@@ -4,15 +4,16 @@
 import argparse
 import json
 import logging
-import numpy as np
 import os
 import tempfile
 from pathlib import Path
 from typing import Dict
 
+import numpy as np
 from azureml.core import Run
 from azureml.rai.utils.telemetry import LoggerFactory, track
-from constants import COMPONENT_NAME, DashboardInfo, RAIToolType, MLFLOW_MODEL_SERVER_PORT
+from constants import (COMPONENT_NAME, MLFLOW_MODEL_SERVER_PORT, DashboardInfo,
+                       RAIToolType)
 from rai_component_utilities import (add_properties_to_gather_run,
                                      copy_insight_to_raiinsights,
                                      create_rai_insights_from_port_path,
