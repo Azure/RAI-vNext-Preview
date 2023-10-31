@@ -46,6 +46,7 @@ parameters:
 
 jobs:
   - job:
+    timeoutInMinutes: 120
     displayName: "Run ${{parameters.testRunType}} tests"
     
     pool:

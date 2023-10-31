@@ -272,7 +272,7 @@ class TestRAISmoke:
             rai_i = RAIInsights.load(expected_path)
             assert rai_i is not None
 
-    def test_fetch_registered_model_component(
+    def test_fetch_registered_classification_model_component(
         self, ml_client, component_config, registered_adult_model_id
     ):
         version_string = component_config["version"]
@@ -317,6 +317,72 @@ class TestRAISmoke:
             ),
             test_data=Input(
                 type="mltable", path=f"adult_test:{version_string}", mode="download"
+            ),
+        )
+
+        # Send it
+        insights_pipeline_job = submit_and_wait(ml_client, insights_pipeline_job)
+        assert insights_pipeline_job is not None
+
+    def test_fetch_registered_forecasting_model_component(
+        self, ml_client, component_config, registered_electro_model_id
+    ):
+        version_string = component_config["version"]
+
+        fetch_model_component = ml_client.components.get(
+            name="fetch_registered_model", version=version_string
+        )
+
+        rai_constructor_component = ml_client.components.get(
+            name="rai_insights_constructor", version=version_string
+        )
+
+        rai_gather_component = ml_client.components.get(
+            name="rai_insights_gather", version=version_string
+        )
+
+        # Pipeline skips on analysis; relies on the constructor component verifying the model works
+        @dsl.pipeline(
+            compute="cpucluster",
+            description="Test of Fetch Model component",
+            experiment_name=f"test_fetch_registered_model_component_{version_string}",
+        )
+        def fetch_analyse_registered_model(model_id, train_data, test_data):
+            fetch_model_job = fetch_model_component(model_id=model_id)
+            fetch_model_job.set_limits(timeout=Timeouts.DEFAULT_TIMEOUT)
+
+            construct_job = rai_constructor_component(
+                title="Run built from DSL",
+                task_type="forecasting",
+                model_info_path=fetch_model_job.outputs.model_info_output_path,
+                train_dataset=train_data,
+                test_dataset=test_data,
+                target_column_name="usage",
+                feature_metadata='{"datetime_features": ["datetime"], '
+                                 '"time_series_id_features": ["group_id", "customer_id"]}',
+                categorical_column_names='["group_id", "customer_id"]',
+                maximum_rows_for_test_dataset=5000,
+                classes="[]",  # Should be default value
+                use_model_dependency=True
+            )
+            construct_job.set_limits(timeout=1800)
+
+            rai_gather_job = rai_gather_component(
+                constructor=construct_job.outputs.rai_insights_dashboard,
+            )
+            rai_gather_job.set_limits(timeout=1800)
+
+        insights_pipeline_job = fetch_analyse_registered_model(
+            model_id=registered_electro_model_id,
+            train_data=Input(
+                type="mltable",
+                path=f"electro_train:{version_string}",
+                mode="download",
+            ),
+            test_data=Input(
+                type="mltable",
+                path=f"electro_test:{version_string}",
+                mode="download"
             ),
         )
 

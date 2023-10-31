@@ -371,3 +371,8 @@ MigrationBackup/
 
 # parquet data files
 **/*.parquet
+!test/data/electro/test/uci_electro_small_test.parquet
+!test/data/electro/train/uci_electro_small_train.parquet
+
+# downloaded test outputs
+test-outputs/*
