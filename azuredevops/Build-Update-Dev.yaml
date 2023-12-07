@@ -60,7 +60,7 @@ parameters:
 
 variables:
 - name: SubscriptionName
-  value: "Project Vienna INT (589c7ae9-223e-45e3-a191-98433e0821a9) - RAI"
+  value: "Interpretability - Automation (a75ae43f-9f72-4699-ba66-d3a173cfe082) - RAI"
 - name: ConfigFileArtifact
   value: WorkspaceConfiguration
 
