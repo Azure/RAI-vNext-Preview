@@ -13,7 +13,6 @@ import tempfile
 import time
 import traceback
 import uuid
-from pathlib import Path
 from typing import Any, Dict, Optional
 
 import mlflow
@@ -126,6 +125,23 @@ def load_mlflow_model(
                 )
         try:
             if use_separate_conda_env:
+                tmp_model_path = "./mlflow_model"
+                if (not model_path and model_id):
+                    model_path = Model.get_model_path(model_name=model.name, version=model.version)
+                shutil.copytree(model_path, tmp_model_path)
+                model_uri = tmp_model_path
+
+                _logger.info("MODEL URI: {}".format(
+                    model_uri
+                ))
+
+                for root, _, files in os.walk(model_uri):
+                    for f in files:
+                        full_path = os.path.join(root, f)
+                        _logger.info("FILE: {}".format(
+                            full_path
+                        ))
+
                 conda_install_command = ["mlflow", "models", "prepare-env",
                                          "-m", model_uri,
                                          "--env-manager", "conda"]
@@ -133,7 +149,7 @@ def load_mlflow_model(
                 # mlflow model input mount as read only. Conda need write access.
                 local_conda_dep = "./conda_dep.yaml"
                 shutil.copyfile(conda_file, local_conda_dep)
-                conda_prefix = str(Path(sys.executable).parents[1])
+                conda_prefix = str(pathlib.Path(sys.executable).parents[1])
                 conda_install_command = ["conda", "env", "update",
                                          "--prefix", conda_prefix,
                                          "-f", local_conda_dep]
@@ -164,7 +180,7 @@ def load_mlflow_model(
             return model
 
         # Serve model from separate conda env using mlflow
-        mlflow_models_serve_logfile_name = "mlflow_models_serve.log"
+        mlflow_models_serve_logfile_name = "./logs/azureml/mlflow_models_serve.log"
         try:
             # run mlflow model server in background
             with open(mlflow_models_serve_logfile_name, "w") as logfile:
@@ -231,6 +247,7 @@ def load_mlflow_model(
             )
         _logger.info("Successfully started mlflow model server.")
         model = ServedModelWrapper(port=MLFLOW_MODEL_SERVER_PORT)
+        _logger.info("Successfully loaded model.")
         return model
     except Exception as e:
         raise UserConfigError(
