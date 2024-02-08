@@ -16,6 +16,8 @@ from responsibleai.serialization_utilities import serialize_json_safe
 from responsibleai import RAIInsights
 from responsibleai import __version__ as responsibleai_version
 
+FORECASTING_DATA_TYPE = "forecasting"
+
 
 class DashboardInfo:
     MODEL_ID_KEY = "id"  # To match Model schema
@@ -133,9 +135,12 @@ class PropertyKeyValues:
     # Property format to indicate presence of a tool
     RAI_INSIGHTS_TOOL_KEY_FORMAT = "_azureml.responsibleai.rai_insights.has_{0}"
 
+    # Property to track the data type
+    RAI_INSIGHTS_DATA_TYPE_KEY = "_azureml.responsibleai.rai_insights.data_type"
+
 
 def add_properties_to_gather_run(
-    dashboard_info: Dict[str, str], tool_present_dict: Dict[str, str]
+    dashboard_info: Dict[str, str], tool_present_dict: Dict[str, str], task_type: str
 ):
     _logger.info("Adding properties to the gather run")
     gather_run = Run.get_context()
@@ -147,6 +152,9 @@ def add_properties_to_gather_run(
             DashboardInfo.RAI_INSIGHTS_MODEL_ID_KEY
         ],
     }
+
+    if (task_type == FORECASTING_DATA_TYPE):
+        run_properties[PropertyKeyValues.RAI_INSIGHTS_DATA_TYPE_KEY] = FORECASTING_DATA_TYPE
 
     _logger.info("Appending tool present information")
     for k, v in tool_present_dict.items():
@@ -186,7 +194,7 @@ def parse_args():
     # Constructor arguments
     parser.add_argument("--title", type=str, required=True)
     parser.add_argument(
-        "--task_type", type=str, required=True, choices=["classification", "regression"]
+        "--task_type", type=str, required=True, choices=["classification", "regression", "forecasting"]
     )
     parser.add_argument("--model_id", type=str, help="name:version", required=True)
     parser.add_argument("--train_dataset_id", type=str, required=True)
@@ -428,7 +436,7 @@ def main(args):
 
     _logger.info("Adding properties to run")
 
-    add_properties_to_gather_run(dashboard_info, included_tools)
+    add_properties_to_gather_run(dashboard_info, included_tools, args.task_type)
     _logger.info("Processing completed")
 
 
