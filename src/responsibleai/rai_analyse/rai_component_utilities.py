@@ -37,6 +37,8 @@ assetid_re = re.compile(
 )
 data_type = "data_type"
 
+FORECASTING = "forecasting"
+
 _logger = logging.getLogger(__file__)
 logging.basicConfig(level=logging.INFO)
 
@@ -482,6 +484,11 @@ def add_properties_to_gather_run(
         ],
     }
 
+    constructor_args = dashboard_info[DashboardInfo.RAI_INSIGHTS_CONSTRUCTOR_ARGS_KEY]
+    if "task_type" in constructor_args:
+        if constructor_args["task_type"] == FORECASTING:
+            run_properties[PropertyKeyValues.RAI_INSIGHTS_DATA_TYPE_KEY] = FORECASTING
+
     _logger.info("Appending tool present information")
     for k, v in tool_present_dict.items():
         key = PropertyKeyValues.RAI_INSIGHTS_TOOL_KEY_FORMAT.format(k)
@@ -514,7 +521,7 @@ def create_rai_insights_from_port_path(my_run: Run, port_path: str) -> RAIInsigh
     # At a later point, we might enable this for all task types.
     use_separate_conda_env = False
     if "task_type" in constructor_args:
-        is_forecasting_task = constructor_args["task_type"] == "forecasting"
+        is_forecasting_task = constructor_args["task_type"] == FORECASTING
         use_separate_conda_env = is_forecasting_task
         constructor_args["forecasting_enabled"] = is_forecasting_task
 
