@@ -5,7 +5,7 @@ version: VERSION_REPLACEMENT_STRING
 type: command
 inputs:
   training_data:
-    type: path
+    type: mltable
   target_column_name:
     type: string
   continuous_features:
@@ -14,7 +14,7 @@ inputs:
     type: string
 outputs:
   model_output:
-    type: path
+    type: mlflow_model
 code: ./src_boston/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-

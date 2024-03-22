@@ -6,7 +6,7 @@ type: command
 
 inputs:
   rai_insights_dashboard:
-    type: path
+    type: uri_folder
   treatment_features:
     type: string # JSON encoded list
   heterogeneity_features:
@@ -53,7 +53,7 @@ inputs:
 
 outputs:
   causal:
-    type: path
+    type: uri_folder
 
 code: ./rai_analyse/
 

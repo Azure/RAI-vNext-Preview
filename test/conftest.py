@@ -210,7 +210,6 @@ def registered_electro_model_id(ml_client, component_config):
     )
 
     experiment_name = f"Fixture_Common_Electro_Model_{version_string}"
-    job_name = f"Train_Electro_Forecasting_Model_{model_name_suffix}"
     training_job = automl.forecasting(
         training_data=electro_train,
         target_column_name="usage",
@@ -218,7 +217,6 @@ def registered_electro_model_id(ml_client, component_config):
         primary_metric="normalized_root_mean_squared_error",
         n_cross_validations='auto',
         experiment_name=experiment_name,
-        name=job_name,
     )
     training_job.set_forecast_settings(
         forecast_horizon=24,
@@ -238,12 +236,13 @@ def registered_electro_model_id(ml_client, component_config):
     )
 
     training_job.compute = "cpucluster"
-    assert submit_and_wait(ml_client, training_job) is not None
+    created_job = submit_and_wait(ml_client, training_job)
+    assert created_job is not None
 
     expected_model_id = f"{model_name}_{model_name_suffix}:1"
 
     ml_client.jobs.download(
-        name=job_name,
+        name=created_job.name,
         download_path="test-outputs/",
         all=True
     )

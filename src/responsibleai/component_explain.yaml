@@ -8,11 +8,11 @@ inputs:
   comment:
     type: string
   rai_insights_dashboard:
-    type: path
+    type: uri_folder
 
 outputs:
   explanation:
-    type: path
+    type: uri_folder
 
 code: ./rai_analyse/
 

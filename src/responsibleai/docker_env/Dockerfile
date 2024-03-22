@@ -29,7 +29,7 @@ RUN pip install 'responsibleai~=0.31.0' \
                 'raiwidgets~=0.31.0' \
                 'https://publictestdatasets.blob.core.windows.net/packages/pypi/raiwidgets_big_data/raiwidgets_big_data-0.7.0-py3-none-any.whl'
 
-RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
+RUN pip install --pre 'azure-ai-ml~=1.14.0' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
 
 # no-deps install for domonic due to unresolable dependencies requirment on urllib3 and requests. 
 RUN pip install --no-deps 'charset-normalizer==2.0.12' \

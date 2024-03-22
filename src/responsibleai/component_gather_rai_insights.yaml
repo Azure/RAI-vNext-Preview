@@ -6,24 +6,24 @@ type: command
 
 inputs:
   constructor:
-    type: path
+    type: uri_folder
   insight_1:
-    type: path
+    type: uri_folder
     optional: true
   insight_2:
-    type: path
+    type: uri_folder
     optional: true
   insight_3:
-    type: path
+    type: uri_folder
     optional: true
   insight_4:
-    type: path
+    type: uri_folder
     optional: true
 outputs:
   dashboard:
-    type: path
+    type: uri_folder
   ux_json:
-    type: path
+    type: uri_folder
 
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 

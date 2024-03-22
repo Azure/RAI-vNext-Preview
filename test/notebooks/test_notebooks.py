@@ -3,6 +3,8 @@
 # ---------------------------------------------------------
 
 import os
+import random
+import string
 import time
 from typing import Dict
 
@@ -36,6 +38,14 @@ def assay_one_notebook(notebook_name, test_values, replacement_strings: Dict[str
     pm.execute_notebook(processed_notebook, output_notebook)
 
 
+def get_version_string():
+    time_version = int(time.time())
+    random_suffix = "".join(
+        random.choice(string.ascii_lowercase + string.digits) for _ in range(10)
+    )
+    return f"{time_version}__{random_suffix}"
+
+
 @pytest.mark.notebooks
 def test_responsibleaidashboard_housing_classification_model_debugging(
     component_config,
@@ -43,7 +53,7 @@ def test_responsibleaidashboard_housing_classification_model_debugging(
     nb_name = "responsibleaidashboard-housing-classification-model-debugging"
 
     version_string = component_config["version"]
-    train_version_string = int(time.time())
+    train_version_string = get_version_string()
 
     current_file_directory = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(
@@ -76,7 +86,7 @@ def test_responsibleaidashboard_housing_improvement(
     input_data_filename = "apartments-train.csv"
 
     version_string = component_config["version"]
-    train_version_string = int(time.time())
+    train_version_string = get_version_string()
 
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
@@ -97,7 +107,7 @@ def test_responsibleaidashboard_programmer_regression_model_debugging(
     nb_name = "responsibleaidashboard-programmer-regression-model-debugging"
 
     version_string = component_config["version"]
-    train_version_string = int(time.time())
+    train_version_string = get_version_string()
 
     current_file_directory = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(
@@ -128,7 +138,7 @@ def test_responsibleaidashboard_diabetes_regression_model_debugging(
     nb_name = "responsibleaidashboard-diabetes-regression-model-debugging"
 
     version_string = component_config["version"]
-    train_version_string = int(time.time())
+    train_version_string = get_version_string()
 
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
@@ -146,7 +156,7 @@ def test_responsibleaidashboard_diabetes_decision_making(
     nb_name = "responsibleaidashboard-diabetes-decision-making"
 
     version_string = component_config["version"]
-    train_version_string = int(time.time())
+    train_version_string = get_version_string()
 
     replacements = dict()
     replacements["version_string = '1'"] = f"version_string = '{version_string}'"
