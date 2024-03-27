@@ -6,7 +6,7 @@ type: command
 is_deterministic: False
 inputs:
   dataset_input_path:
-    type: path
+    type: uri_folder
   dataset_base_name:
     type: string
   dataset_name_suffix:

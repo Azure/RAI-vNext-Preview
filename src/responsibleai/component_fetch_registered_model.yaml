@@ -8,7 +8,7 @@ inputs:
     type: string
 outputs:
   model_info_output_path:
-    type: path
+    type: uri_folder
 code: ./src_fetch_registered/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-

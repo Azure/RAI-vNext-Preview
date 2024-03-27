@@ -6,15 +6,15 @@ type: command
 
 inputs:
   dashboard:
-    type: path
+    type: uri_folder
   pdf_generation_config:
-    type: path
+    type: uri_folder
   predefined_cohorts_json:
-    type: path
+    type: uri_folder
     optional: true
 outputs:
   scorecard:
-    type: path
+    type: uri_folder
 
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 

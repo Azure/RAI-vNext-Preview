@@ -10,7 +10,7 @@ inputs:
     type: string # [classification, regression, forecasting]
     enum: ['classification', 'regression', 'forecasting']
   model_info_path:
-    type: path # model_info.json
+    type: uri_folder # model_info.json
     optional: true
   model_input: # mlflow model name:version
     type: mlflow_model
@@ -19,9 +19,9 @@ inputs:
     type: string # model name:version
     optional: true
   train_dataset:
-    type: path # Parquet, or MLTable
+    type: mltable
   test_dataset:
-    type: path # Parquet, or MLTable
+    type: mltable
   target_column_name:
     type: string
   maximum_rows_for_test_dataset:
@@ -41,7 +41,7 @@ inputs:
     default: False
 outputs:
   rai_insights_dashboard:
-    type: path
+    type: uri_folder
 code: ./rai_analyse/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
