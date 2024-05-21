@@ -60,7 +60,7 @@ parameters:
 
 variables:
 - name: SubscriptionName
-  value: "Interpretability-Automation"
+  value: "Interpretability - Automation"
 - name: ConfigFileArtifact
   value: WorkspaceConfiguration
 
