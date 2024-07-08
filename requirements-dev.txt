@@ -7,6 +7,6 @@ jupyter
 pandas
 pyarrow
 shap
-responsibleai~=0.31.0
-raiwidgets~=0.31.0
+responsibleai~=0.36.0
+raiwidgets~=0.36.0
 numpy<1.24.0
