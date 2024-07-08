@@ -31,8 +31,8 @@ function Create-ComponentConfigJson(
 }
 
 
-Write-Host "=-= Creating conda environment '$EnvName' with python v3.8"
-conda create -y -n $EnvName python=3.8
+Write-Host "=-= Creating conda environment '$EnvName' with python v3.9"
+conda create -y -n $EnvName python=3.9
 conda activate $EnvName
 
 Write-Host "=-= Installing nbconda"

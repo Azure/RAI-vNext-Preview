@@ -27,7 +27,7 @@ echo
 
 echo "=-= Creating conda environment"
 source ~/miniconda3/etc/profile.d/conda.sh
-conda create -y -n ${condaEnv} python=3.8
+conda create -y -n ${condaEnv} python=3.9
 conda activate ${condaEnv}
 echo
 
