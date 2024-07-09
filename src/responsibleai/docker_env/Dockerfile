@@ -48,7 +48,7 @@ RUN pip install 'Werkzeug==2.2.3'
 RUN pip install 'cryptography>=42.0.4'
 
 # TODO: remove rai-core-flask pin with next raiwidgets release
-RUN pip install 'rai-core-flask==0.7.4'
+RUN pip install 'rai-core-flask>=0.7.6'
 
 # To resolve vulnerability issue
 RUN pip install 'gunicorn>=22.0.0'
