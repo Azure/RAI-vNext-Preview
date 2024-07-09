@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:{{latest-image-tag}}
+FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
 
 ENV AZUREML_CONDA_ENVIRONMENT_PATH /azureml-envs/responsibleai
 
@@ -31,10 +31,10 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
                           'domonic==0.9.10'
 
 # Install azureml packages
-RUN pip install 'azureml-dataset-runtime=={{latest-pypi-version}}' \
-                'azureml-core=={{latest-pypi-version}}' \
-                'azureml-mlflow=={{latest-pypi-version}}' \
-                'azureml-telemetry=={{latest-pypi-version}}' \
+RUN pip install 'azureml-dataset-runtime==1.56.0' \
+                'azureml-core==1.56.0' \
+                'azureml-mlflow==1.56.0' \
+                'azureml-telemetry==1.56.0' \
                 'azureml-rai-utils==0.0.6'
 
 # azureml-dataset-runtime[fuse] upper bound for pyarrow is 11.0.0
