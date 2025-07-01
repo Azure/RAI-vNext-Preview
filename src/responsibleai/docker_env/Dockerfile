@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:{{latest-image-tag}}
+FROM mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:latest-image-tag
 
 # Install wkhtmltopdf for pdf rendering from html
 RUN apt-get -y update && apt-get -y install wkhtmltopdf
@@ -29,7 +29,7 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
                           'domonic==0.9.10'
 
 # Install azureml packages
-RUN pip install 'azureml-dataset-runtime=={{latest-pypi-version}}' \
+RUN pip install 'azureml-dataset-runtime' \
                 'azureml-rai-utils==0.0.6'
 
 # azureml-dataset-runtime[fuse] upper bound for pyarrow is 11.0.0
