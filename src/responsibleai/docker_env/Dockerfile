@@ -30,6 +30,9 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
 
 # Install azureml packages
 RUN pip install 'azureml-dataset-runtime' \
+                'azureml-core' \
+                'azureml-mlflow' \
+                'azureml-telemetry' \
                 'azureml-rai-utils==0.0.6'
 
 # azureml-dataset-runtime[fuse] upper bound for pyarrow is 11.0.0
@@ -41,6 +44,10 @@ RUN pip install 'cryptography>=43.0.1'
 
 # TODO: remove rai-core-flask pin with next raiwidgets release
 RUN pip install 'rai-core-flask==0.7.6'
+
+# to resolve vulnerability mlflow (GHSA-wxj7-3fx5-pp9m) for mlflow < 3.1.0
+# from azureml-mlflow package
+RUN pip install 'mlflow>=3.1.0'
 
 # To resolve vulnerability issue
 RUN pip install 'gunicorn>=22.0.0'
