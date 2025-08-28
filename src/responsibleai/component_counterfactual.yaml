@@ -50,3 +50,5 @@ command: >-
   --features_to_vary '${{inputs.features_to_vary}}'
   --feature_importance '${{inputs.feature_importance}}'
   --counterfactual_path ${{outputs.counterfactual}}
+  --component_name rai_insights_counterfactual
+  --component_version VERSION_REPLACEMENT_STRING

@@ -23,3 +23,5 @@ command: >-
   --comment '${{inputs.comment}}'
   --rai_insights_dashboard ${{inputs.rai_insights_dashboard}}
   --explanation_path ${{outputs.explanation}}
+  --component_name rai_insights_explanation
+  --component_version VERSION_REPLACEMENT_STRING

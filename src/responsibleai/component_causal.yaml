@@ -80,3 +80,5 @@ command: >-
   --verbose ${{inputs.verbose}}
   --random_state '${{inputs.random_state}}'
   --causal_path ${{outputs.causal}}
+  --component_name rai_insights_causal
+  --component_version VERSION_REPLACEMENT_STRING

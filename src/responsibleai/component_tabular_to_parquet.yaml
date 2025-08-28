@@ -12,6 +12,7 @@ outputs:
 code: ./src_tabular_to_parquet/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
+  pip install -q azureml-core &&
   python tabular_to_parquet.py
   --tabular_dataset_name ${{inputs.tabular_dataset_name}}
   --dataset_output_path ${{outputs.dataset_output_path}}
