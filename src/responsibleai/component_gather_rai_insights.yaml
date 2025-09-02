@@ -38,3 +38,5 @@ command: >-
   $[[--insight_4 '${{inputs.insight_4}}']]
   --dashboard ${{outputs.dashboard}}
   --ux_json ${{outputs.ux_json}}
+  --component_name rai_insights_gather
+  --component_version VERSION_REPLACEMENT_STRING

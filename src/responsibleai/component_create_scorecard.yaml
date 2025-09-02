@@ -26,3 +26,5 @@ command: >-
   --pdf_generation_config ${{inputs.pdf_generation_config}}
   $[[--predefined_cohorts_json ${{inputs.predefined_cohorts_json}}]]
   --pdf_output_path ${{outputs.scorecard}}
+  --component_name rai_score_card
+  --component_version VERSION_REPLACEMENT_STRING

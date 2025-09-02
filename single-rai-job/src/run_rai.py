@@ -176,8 +176,6 @@ def load_tabular_dataset(tabular_ds_id: str, ws: Workspace):
 
 
 def load_mlflow_model(workspace: Workspace, model_id: str) -> Any:
-    mlflow.set_tracking_uri(workspace.get_mlflow_tracking_uri())
-
     model = Model._get(workspace, id=model_id)
     model_uri = "models:/{}/{}".format(model.name, model.version)
     return mlflow.pyfunc.load_model(model_uri)._model_impl

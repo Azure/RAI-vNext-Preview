@@ -60,3 +60,6 @@ command: >-
   --feature_metadata '${{inputs.feature_metadata}}'
   --use_model_dependency ${{inputs.use_model_dependency}}
   --output_path ${{outputs.rai_insights_dashboard}}
+  --component_name rai_insights_constructor
+  --component_version VERSION_REPLACEMENT_STRING
+

@@ -36,3 +36,5 @@ command: >-
   --min_child_samples ${{inputs.min_child_samples}}
   --filter_features '${{inputs.filter_features}}'
   --error_analysis_path ${{outputs.error_analysis}}
+  --component_name rai_insights_erroranalysis
+  --component_version VERSION_REPLACEMENT_STRING

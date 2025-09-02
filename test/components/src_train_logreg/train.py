@@ -10,7 +10,6 @@ import tempfile
 import mlflow
 import mlflow.sklearn
 import mltable
-from azureml.core import Run
 from sklearn.linear_model import LogisticRegression
 
 # Based on example:
@@ -37,11 +36,8 @@ def parse_args():
 
 
 def main(args):
-    current_experiment = Run.get_context().experiment
-    tracking_uri = current_experiment.workspace.get_mlflow_tracking_uri()
+    tracking_uri = mlflow.get_tracking_uri()
     print("tracking_uri: {0}".format(tracking_uri))
-    mlflow.set_tracking_uri(tracking_uri)
-    mlflow.set_experiment(current_experiment.name)
 
     # Read in data
     print("Reading data")

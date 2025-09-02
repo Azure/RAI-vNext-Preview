@@ -15,6 +15,7 @@ inputs:
 code: ./src_reg_tabular/
 environment: azureml:AML-RAI-Environment:VERSION_REPLACEMENT_STRING
 command: >-
+  pip install -q azureml-core &&
   python reg_tabular.py
   --dataset_input_path ${{inputs.dataset_input_path}}
   --dataset_base_name ${{inputs.dataset_base_name}}
