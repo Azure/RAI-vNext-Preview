@@ -36,8 +36,6 @@ RUN pip install 'azureml-dataset-runtime' \
 RUN pip install 'azureml-telemetry' --no-deps \
                 'applicationinsights'
 
-RUN pip install 'responsibleai-tabular-automl==0.14.0' --no-deps
-
 # azureml-dataset-runtime[fuse] upper bound for pyarrow is 11.0.0
 # so we install pyarrow in extra step to avoid conflict
 RUN pip install 'pyarrow>=14.0.1'
@@ -49,6 +47,7 @@ RUN pip install 'cryptography>=43.0.1'
 RUN pip install 'rai-core-flask==0.7.6'
 
 # To resolve vulnerability issue
+RUN pip install 'mlflow>=3.1.0,<3.1.2'
 RUN pip install 'gunicorn>=22.0.0'
 RUN pip install 'Werkzeug>=3.0.3'
 RUN pip install 'tqdm>=4.66.3'
