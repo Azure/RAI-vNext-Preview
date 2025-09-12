@@ -9,6 +9,7 @@ import time
 
 import mlflow
 import mlflow.sklearn
+import tempfile
 
 # Based on example:
 # https://docs.microsoft.com/en-us/azure/machine-learning/how-to-train-cli
@@ -42,6 +43,7 @@ def parse_args():
 def main(args):
     tracking_uri = mlflow.get_tracking_uri()
     print("tracking_uri: {0}".format(tracking_uri))
+    print("MLflow version: {0}".format(mlflow.__version__))
 
     print("Loading model")
     mlflow_model = mlflow.sklearn.load_model(args.model_input_path)
@@ -53,12 +55,17 @@ def main(args):
     registered_name = "{0}_{1}".format(args.model_base_name, suffix)
     print(f"Registering model as {registered_name}")
 
-    print("Registering via MLFlow")
-    mlflow.sklearn.log_model(
-        sk_model=mlflow_model,
-        registered_model_name=registered_name,
-        artifact_path=registered_name,
-    )
+    print("Logging model via MLFlow using save_model approach")
+    # Use save_model and log_artifacts approach to avoid the logged-models API
+    with tempfile.TemporaryDirectory() as temp_dir:
+        model_dir = os.path.join(temp_dir, registered_name)
+        mlflow.sklearn.save_model(mlflow_model, model_dir)
+        mlflow.log_artifacts(model_dir, artifact_path=registered_name)
+    
+    run_id = os.environ.get("AZUREML_RUN_ID")
+    run_uri = f"runs:/{run_id}/{registered_name}"
+    print("Registering model with run_uri: {0}".format(run_uri))
+    mlflow.register_model(run_uri, registered_name)
 
     print("Writing JSON")
     dict = {"id": "{0}:1".format(registered_name)}
