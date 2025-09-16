@@ -5,6 +5,7 @@
 import argparse
 import json
 import os
+import tempfile
 import time
 
 import mlflow
@@ -42,6 +43,7 @@ def parse_args():
 def main(args):
     tracking_uri = mlflow.get_tracking_uri()
     print("tracking_uri: {0}".format(tracking_uri))
+    print("MLflow version: {0}".format(mlflow.__version__))
 
     print("Loading model")
     mlflow_model = mlflow.sklearn.load_model(args.model_input_path)
@@ -53,12 +55,33 @@ def main(args):
     registered_name = "{0}_{1}".format(args.model_base_name, suffix)
     print(f"Registering model as {registered_name}")
 
-    print("Registering via MLFlow")
-    mlflow.sklearn.log_model(
-        sk_model=mlflow_model,
-        registered_model_name=registered_name,
-        artifact_path=registered_name,
-    )
+    print("Logging model via MLFlow using save_model approach")
+    # Use save_model and create_model_version with file:// URI to let Azure ML handle the upload
+    with tempfile.TemporaryDirectory() as temp_dir:
+        model_dir = os.path.join(temp_dir, registered_name)
+        mlflow.sklearn.save_model(mlflow_model, model_dir)
+
+        # Use the older model registry API directly to avoid logged-models search
+        from mlflow.tracking import MlflowClient
+        client = MlflowClient()
+
+        try:
+            # Try to create the registered model (will fail if it already exists)
+            client.create_registered_model(registered_name)
+            print(f"Created new registered model: {registered_name}")
+        except Exception as e:
+            print(f"Registered model {registered_name} already exists: {e}")
+
+        # Create a new version of the model using file:// URI
+        # Azure ML will handle the upload and generate the proper azureml:// URI
+        file_uri = f"file://{model_dir}"
+        print("Registering model with file_uri: {0}".format(file_uri))
+
+        model_version = client.create_model_version(
+            name=registered_name,
+            source=file_uri
+        )
+        print(f"Created model version {model_version.version} for {registered_name}")
 
     print("Writing JSON")
     dict = {"id": "{0}:1".format(registered_name)}
