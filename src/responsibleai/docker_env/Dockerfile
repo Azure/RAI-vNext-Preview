@@ -15,6 +15,9 @@ RUN conda env create -p $CONDA_PREFIX -f conda_dependencies.yaml -q && \
 # Prepend path to AzureML conda environment
 ENV PATH=$CONDA_PREFIX/bin:$PATH
 
+# Change to force rebuild
+RUN echo 'Test rebuild'
+
 RUN conda list
 
 RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
