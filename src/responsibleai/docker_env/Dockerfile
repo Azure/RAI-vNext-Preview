@@ -51,6 +51,7 @@ RUN pip install 'mlflow>=3.2.0,<=3.5.0'
 RUN pip install 'gunicorn>=22.0.0'
 RUN pip install 'Werkzeug>=3.0.3'
 RUN pip install 'tqdm>=4.66.3'
+RUN pip install 'mcp>=1.23.0'
 
 # clean conda and pip caches
 RUN conda run -p $CONDA_PREFIX pip cache purge && \
