@@ -68,7 +68,8 @@ def main(args):
     _logger.info("Computation complete")
 
     # Save
-    save_to_output_port(rai_i, args.explanation_path, RAIToolType.EXPLANATION)
+    # save_to_output_port(rai_i, args.explanation_path, RAIToolType.EXPLANATION)
+    rai_i.explainer._save(args.explanation_path)
     _logger.info("Saved to output port")
 
     # Copy the dashboard info file
