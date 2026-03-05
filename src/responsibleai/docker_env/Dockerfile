@@ -17,7 +17,7 @@ ENV PATH=$CONDA_PREFIX/bin:$PATH
 
 RUN conda list
 
-RUN pip install --pre 'azure-ai-ml' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0'
+RUN pip install --pre 'azure-ai-ml>=1.26.3' 'azure-storage-blob<=12.13.0' 'numpy<1.24.0' 'pandas<2.0.0'
 
 # no-deps install for domonic due to unresolvable dependencies requirment on urllib3 and requests.
 # score card rendering is using domonic only for the html elements composer which does not involve requests or urllib3
@@ -29,9 +29,10 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
                           'domonic==0.9.10'
 
 # Install azureml packages
-RUN pip install 'azureml-dataset-runtime' \
-                'azureml-mlflow==1.61.0' \
-                'azureml-rai-utils==0.0.7'
+RUN pip install 'azureml-dataset-runtime==1.62.0' \
+                'azureml-mlflow==1.62.0' \
+                'azureml-rai-utils==0.0.7' \
+                'numpy<1.24.0' 'pandas<2.0.0'
 
 RUN pip install 'azureml-telemetry==1.60.0' --no-deps \
                 'applicationinsights'
@@ -51,6 +52,8 @@ RUN pip install 'mlflow>=3.2.0,<=3.5.0'
 RUN pip install 'gunicorn>=22.0.0'
 RUN pip install 'Werkzeug>=3.0.3'
 RUN pip install 'tqdm>=4.66.3'
+# vulnerability of requests GHSA-9hjg-9r4m-mvj7
+RUN pip install 'requests>=2.32.4'
 RUN pip install 'mcp>=1.23.0'
 
 # clean conda and pip caches
