@@ -42,7 +42,7 @@ RUN pip install 'azureml-telemetry==1.60.0' --no-deps \
 
 # azureml-dataset-runtime[fuse] upper bound for pyarrow is 11.0.0
 # so we install pyarrow in extra step to avoid conflict
-RUN pip install 'pyarrow>=14.0.1'
+RUN pip install 'pyarrow>=23.0.1'
 
 # To resolve vulnerability issue regarding cryptography
 RUN pip install 'cryptography>=46.0.5'
@@ -51,7 +51,7 @@ RUN pip install 'cryptography>=46.0.5'
 RUN pip install 'rai-core-flask==0.7.6'
 
 # To resolve vulnerability issue (GHSA-xch3-2f9x-wh9f, GHSA-q2r8-vmq7-fpx2, GHSA-gq3w-7jj3-x7gr, GHSA-fh64-r2vc-xvhr)
-RUN pip install 'mlflow>=3.11.1'
+RUN pip install 'mlflow>=3.11.1,<3.14'
 RUN pip install 'gunicorn>=22.0.0'
 RUN pip install 'Werkzeug>=3.0.3'
 RUN pip install 'tqdm>=4.66.3'
