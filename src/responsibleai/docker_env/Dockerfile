@@ -32,8 +32,8 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
                           'domonic==0.9.10'
 
 # Install azureml packages
-RUN pip install 'azureml-dataset-runtime==1.62.0' \
-                'azureml-mlflow==1.62.0' \
+RUN pip install 'azureml-dataset-runtime==1.62.0.post1' \
+                'azureml-mlflow==1.62.0.post5' \
                 'azureml-rai-utils==0.0.7' \
                 'numpy<1.24.0' 'pandas<2.0.0'
 
@@ -46,6 +46,9 @@ RUN pip install 'pyarrow>=14.0.1'
 
 # To resolve vulnerability issue regarding cryptography
 RUN pip install 'cryptography>=46.0.5'
+
+# To resolve vulnerability issue regarding setuptools (GHSA-5rjg-fvgr-3xxf)
+RUN pip install 'setuptools>=78.1.1'
 
 # TODO: remove rai-core-flask pin with next raiwidgets release
 RUN pip install 'rai-core-flask==0.7.6'
