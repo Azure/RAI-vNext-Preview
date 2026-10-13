@@ -45,7 +45,7 @@ RUN pip install 'azureml-telemetry==1.60.0' --no-deps \
 RUN pip install 'pyarrow>=14.0.1'
 
 # To resolve vulnerability issue regarding cryptography
-RUN pip install 'cryptography>=46.0.5'
+RUN pip install 'cryptography>=50.0.0'
 
 # To resolve vulnerability issue regarding setuptools (GHSA-5rjg-fvgr-3xxf)
 RUN pip install 'setuptools>=78.1.1'
