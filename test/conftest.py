@@ -205,6 +205,7 @@ def registered_electro_model_id(ml_client, component_config):
     model_name_suffix = int(time.time())
     model_name = "common_fetch_model_electro"
 
+    # Keep all ten hourly series while fitting AutoML setup on D2 compute.
     electro_train = Input(
         type="mltable", path=f"electro_train:{version_string}", mode="download"
     )
