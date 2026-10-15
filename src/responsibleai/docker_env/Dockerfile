@@ -33,7 +33,7 @@ RUN pip install --no-deps 'charset-normalizer==2.0.12' \
 
 # Install azureml packages
 RUN pip install 'azureml-dataset-runtime==1.62.0.post1' \
-                'azureml-mlflow==1.62.0.post5' \
+                'azureml-mlflow==1.62.0.post6' \
                 'azureml-rai-utils==0.0.7' \
                 'numpy<1.24.0' 'pandas<2.0.0'
 
@@ -43,9 +43,6 @@ RUN pip install 'azureml-telemetry==1.60.0' --no-deps \
 # azureml-dataset-runtime[fuse] upper bound for pyarrow is 11.0.0
 # so we install pyarrow in extra step to avoid conflict
 RUN pip install 'pyarrow>=14.0.1'
-
-# To resolve vulnerability issue regarding cryptography
-RUN pip install 'cryptography>=50.0.0'
 
 # To resolve vulnerability issue regarding setuptools (GHSA-5rjg-fvgr-3xxf)
 RUN pip install 'setuptools>=78.1.1'
@@ -64,6 +61,10 @@ RUN pip install 'mcp>=1.23.0'
 # vulnerability fixes for skops (GHSA-m7f4-hrc6-fwg3, GHSA-4v6w-xpmh-gfgp, GHSA-378x-6p4f-8jgm)
 # --no-deps to prevent skops from upgrading numpy (skops>=0.13.0 requires numpy>=1.25 but we pin numpy<1.24)
 RUN pip install --no-deps 'skops>=0.13.0'
+
+# Must remain the final pip install until azureml-mlflow supports MLflow 3.16+.
+# MLflow 3.15 otherwise downgrades cryptography to 49.x.
+RUN pip install 'cryptography>=50.0.2,<51'
 
 # clean conda and pip caches
 RUN conda run -p $CONDA_PREFIX pip cache purge && \
