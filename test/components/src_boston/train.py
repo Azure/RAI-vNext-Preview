@@ -9,7 +9,6 @@ import shutil
 import tempfile
 
 import mlflow
-import mlflow.models
 import mlflow.sklearn
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -88,19 +87,7 @@ def main(args):
     with tempfile.TemporaryDirectory() as td:
         print("Saving model with MLFlow to temporary directory")
         tmp_output_dir = os.path.join(td, "my_model_dir")
-        mlflow.sklearn.save_model(
-            sk_model=model,
-            path=tmp_output_dir,
-            serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE,
-        )
-        mlflow.models.update_model_requirements(
-            tmp_output_dir, "remove", ["mlflow"]
-        )
-        mlflow.models.update_model_requirements(
-            tmp_output_dir,
-            "add",
-            [f"mlflow-skinny=={mlflow.__version__}", f"pandas=={pd.__version__}"],
-        )
+        mlflow.sklearn.save_model(sk_model=model, path=tmp_output_dir)
 
         print("Copying MLFlow model to output path")
         for file_name in os.listdir(tmp_output_dir):

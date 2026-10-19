@@ -7,10 +7,8 @@ import json
 import os
 import tempfile
 import time
-from importlib.metadata import version as package_version
 
 import mlflow
-import mlflow.models
 import mlflow.sklearn
 
 # Based on example:
@@ -61,20 +59,7 @@ def main(args):
     # Use save_model and create_model_version with file:// URI to let Azure ML handle the upload
     with tempfile.TemporaryDirectory() as temp_dir:
         model_dir = os.path.join(temp_dir, registered_name)
-        mlflow.sklearn.save_model(
-            mlflow_model,
-            model_dir,
-            serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE,
-        )
-        mlflow.models.update_model_requirements(model_dir, "remove", ["mlflow"])
-        mlflow.models.update_model_requirements(
-            model_dir,
-            "add",
-            [
-                f"mlflow-skinny=={mlflow.__version__}",
-                f"pandas=={package_version('pandas')}",
-            ],
-        )
+        mlflow.sklearn.save_model(mlflow_model, model_dir)
 
         # Use the older model registry API directly to avoid logged-models search
         from mlflow.tracking import MlflowClient
