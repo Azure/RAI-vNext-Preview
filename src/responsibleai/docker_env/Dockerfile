@@ -1,13 +1,7 @@
-FROM quay.io/pypa/manylinux_2_28_x86_64:latest AS security-wheels
-ENV PATH=/opt/python/cp310-cp310/bin:$PATH
-WORKDIR /build
-COPY prepare_security_backports.py build_security_wheels.sh test_security_backports.py ./
-RUN python prepare_security_backports.py && bash build_security_wheels.sh
-
 FROM mcr.microsoft.com/azureml/openmpi5.0-ubuntu24.04:latest
 
 # Install wkhtmltopdf with statically linked Qt to avoid system Qt5 vulnerabilities (USN-8076-1)
-RUN apt-get -y update && apt-get -y install --no-install-recommends xfonts-75dpi xfonts-base fontconfig libxrender1 libxext6 libfribidi0 libxcb1 && \
+RUN apt-get -y update && apt-get -y install --no-install-recommends xfonts-75dpi xfonts-base fontconfig libxrender1 libxext6 && \
     wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_amd64.deb && \
     dpkg -i wkhtmltox_0.12.6.1-3.jammy_amd64.deb || apt-get -y -f install && \
     rm wkhtmltox_0.12.6.1-3.jammy_amd64.deb
@@ -64,19 +58,16 @@ RUN pip install 'requests>=2.32.4'
 RUN pip install 'mcp>=1.23.0'
 # Apply security versions after azureml-mlflow, temporarily overriding its skinny
 # upper bound until the compatible SDK release. Keep this the final dependency resolve.
-# The local wheels contain fixed upstream sources with explicit Python 3.10 shims.
 # Restore skops after resolution, without its incompatible NumPy upgrade, to fix
 # GHSA-m7f4-hrc6-fwg3, GHSA-4v6w-xpmh-gfgp and GHSA-378x-6p4f-8jgm.
-COPY --from=security-wheels /wheels /tmp/security-wheels
-COPY patch_mlflow_sklearn.py prepare_security_backports.py test_security_backports.py /tmp/security-checks/
-RUN pip install --no-cache-dir --find-links=/tmp/security-wheels \
-        'pillow==13.0.0+rai.py310.1' 'filelock==4.2.1+rai.py310.1' \
+COPY patch_mlflow_sklearn.py /tmp/patch_mlflow_sklearn.py
+RUN pip install --no-cache-dir \
+        'pillow==13.0.0' 'filelock==4.2.1' \
         'mlflow==3.17.2' 'mlflow-skinny==3.17.2' 'mlflow-tracing==3.17.2' \
         'numpy<1.24.0' 'pandas<2.0.0' 'cryptography>=50.0.2,<51' && \
     pip install --no-cache-dir --no-deps 'skops==0.16.0' && \
-    python /tmp/security-checks/patch_mlflow_sklearn.py && \
-    python /tmp/security-checks/test_security_backports.py runtime && \
-    rm -rf /tmp/security-wheels /tmp/security-checks
+    python /tmp/patch_mlflow_sklearn.py && \
+    rm /tmp/patch_mlflow_sklearn.py
 
 # clean conda and pip caches
 RUN conda run -p $CONDA_PREFIX pip cache purge && \
