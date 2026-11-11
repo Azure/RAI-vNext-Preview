@@ -6,9 +6,9 @@ parameters:
 - name: pythonVersion
   displayName: Python Version
   type: string
-  default: "3.10"
+  default: "3.11"
   values:
-    - "3.10"
+    - "3.11"
 - name: subscriptionName
   type: string
 - name: cliSource
